@@ -1,0 +1,12 @@
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Local backups from the dev workflow (.bak1.html, .bak2.html, ...)
+*.bak*.html
