@@ -1,0 +1,35 @@
+# Cloudflare Pages reads this file automatically from the repo root and
+# applies these headers to every response. Drop this in alongside
+# index.html — no config needed on the Cloudflare dashboard side.
+#
+# CSP built from an actual audit of this file (2026-07-18), not a
+# generic template:
+#   - script-src needs 'unsafe-inline' because this is a single HTML
+#     file with an inline <script> block and no build step to add
+#     nonces/hashes. No eval(), no new Function(), no document.write()
+#     anywhere in the runtime code — confirmed by grep.
+#   - style-src needs 'unsafe-inline' for the same reason (inline
+#     <style> block + inline style="" attributes throughout), plus
+#     fonts.googleapis.com for the Google Fonts stylesheet.
+#   - font-src needs fonts.gstatic.com — that's where the actual font
+#     files the googleapis.com stylesheet points to are served from.
+#   - img-src needs data: — every image on the site (base64 embedded)
+#     and the favicon are data URIs, not external files.
+#   - connect-src is 'self' only — confirmed zero fetch()/XHR calls
+#     anywhere in the file. The transparency widget measures the
+#     page's own Performance API entries, it doesn't call out anywhere.
+#   - form-action 'none' — the contact <form> has no action attribute;
+#     JS intercepts submit and hands off to a mailto: link, it never
+#     does a real HTTP form submission.
+#   - frame-ancestors 'self' — prevents this site being framed
+#     elsewhere (clickjacking protection); harmless for the legitimate
+#     sandboxed-iframe-preview use case since that's framing the file
+#     FROM this origin's own tooling context, not the reverse.
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; base-uri 'none'; form-action 'none'; object-src 'none'
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
