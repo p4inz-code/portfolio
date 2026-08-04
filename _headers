@@ -8,6 +8,10 @@
 #     file with an inline <script> block and no build step to add
 #     nonces/hashes. No eval(), no new Function(), no document.write()
 #     anywhere in the runtime code — confirmed by grep.
+#     static.cloudflareinsights.com is added because Cloudflare Pages
+#     auto-injects the Web Analytics beacon (`beacon.min.js`) on the
+#     Pro plan; without it in script-src the beacon triggers a CSP
+#     console error (found in Lighthouse audit 2026-08-05).
 #   - style-src needs 'unsafe-inline' for the same reason (inline
 #     <style> block + inline style="" attributes throughout), plus
 #     fonts.googleapis.com for the Google Fonts stylesheet.
@@ -27,7 +31,7 @@
 #     FROM this origin's own tooling context, not the reverse.
 
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; base-uri 'none'; form-action 'none'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://cloudflareinsights.com; frame-ancestors 'self'; base-uri 'none'; form-action 'none'; object-src 'none'
   X-Frame-Options: SAMEORIGIN
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
