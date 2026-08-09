@@ -4,22 +4,7 @@ import Section from '../components/layout/Section.astro';
 import StatusPill from '../components/ui/StatusPill.astro';
 import { PROJECTS } from '../data/projects';
 import { SITE } from '../data/site';
-
-const CHANGELOG = [
-  {
-    version: 'v5.0-alpha',
-    kind: 'released' as const,
-    summary: 'Astro migration — file-system organization, component library, dual-theme system.',
-    body: [
-      'Full framework migration from single 15.9MB HTML file to Astro 5.18 with proper file-system organization: /src/pages, /src/components, /src/layouts, /src/data, /src/styles, /public. Zero-JS-by-default architecture with hydrated islands only where interactivity is needed (theme toggle, command palette).',
-      'Design token system rebuilt with dual themes — Ultraviolet Cathedral (dark, matches v4.x) + Parchment Manuscript (new light theme with WCAG-AA-verified pairings). Toggle stored in localStorage, prefers-color-scheme respected on first visit only. T key toggles anywhere on the site.',
-      'Data layer: single projects.ts + site.ts source of truth. All pages read from it — no hardcoded project metadata anywhere.',
-      'Reusable component library: Section, ProjectCard, EditorialHero, CaseHero, StatusPill, Tag, MetaTag, Button, ThemeToggle, CommandPalette.',
-      'Command palette (⌘K / press /) ported from v4.5. Now theme-aware and driven by data layer.',
-      'Signature move #1 layered: three-act narrative hero (borrowed from emilianmisera.com — chronological personal story, not skill-showcase grid).',
-    ],
-  },
-];
+import { CHANGELOG } from '../data/changelog';
 ---
 <BaseLayout title={`Status — ${SITE.title}`}>
   <Section eyebrow="Site status" heading="Real status, not a fixed claim." intro="This page tracks what's shipped, what's in flight, and every version-bump reasoning. No fabricated uptime figures.">
@@ -46,10 +31,10 @@ const CHANGELOG = [
     </div>
   </Section>
 
-  <Section eyebrow="Changelog">
+  <Section eyebrow="Changelog" intro={`${CHANGELOG.length} entries. Newest three expanded by default; click any older row to open.`}>
     <div class="changelog">
-      {CHANGELOG.map((entry) => (
-        <details class="cl-entry" open>
+      {CHANGELOG.map((entry, i) => (
+        <details class="cl-entry" open={i < 3}>
           <summary class="cl-summary">
             <span class="cl-version">{entry.version}</span>
             <span class="cl-text">{entry.summary}</span>
@@ -59,7 +44,6 @@ const CHANGELOG = [
           </div>
         </details>
       ))}
-      <p class="cl-note">Older entries (v4.7 → v3.16) live in the historical changelog on the previous build. They'll be brought forward as the migration completes.</p>
     </div>
   </Section>
 
@@ -130,6 +114,5 @@ const CHANGELOG = [
     .cl-text { font-family: var(--font-display); font-size: var(--text-md); color: var(--text); }
     .cl-body { margin-top: var(--sp-4); color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); }
     .cl-body p + p { margin-top: var(--sp-3); }
-    .cl-note { color: var(--muted-2); font-size: var(--text-xs); font-style: italic; padding: var(--sp-4); }
   </style>
 </BaseLayout>
