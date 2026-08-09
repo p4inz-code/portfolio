@@ -41,7 +41,8 @@ const { eyebrow, heading, headingEmphasis, intro, wide = false, class: cls = '',
     font-size: var(--text-xxs);
     letter-spacing: var(--tracking-eyebrow);
     text-transform: uppercase;
-    color: var(--muted-2);
+    /* Use --muted (not --muted-2) so 10.5px passes WCAG AA on --bg. */
+    color: var(--muted);
     margin-bottom: var(--sp-4);
   }
   .section-heading {

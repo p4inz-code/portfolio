@@ -12,7 +12,8 @@ const { label } = Astro.props;
     align-items: center;
     font-family: var(--font-mono);
     font-size: var(--text-xxs);
-    color: var(--muted-2);
+    /* --muted (not --muted-2) so 10.5px passes WCAG AA on --surface-1. */
+    color: var(--muted);
     border: 1px solid var(--line);
     padding: 3px 8px;
     border-radius: var(--radius-sm);

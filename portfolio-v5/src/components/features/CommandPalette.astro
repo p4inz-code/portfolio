@@ -29,7 +29,23 @@ const commands = [
       <svg class="cmdk-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
         <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
       </svg>
-      <input class="cmdk-input" id="cmdkInput" type="text" placeholder="Jump to a page, project, or action..." autocomplete="off" spellcheck="false" aria-label="Search commands">
+      <input
+        class="cmdk-input"
+        id="cmdkInput"
+        type="search"
+        name="cmdk-search-no-autofill"
+        placeholder="Jump to a page, project, or action..."
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        data-form-type="other"
+        data-lpignore="true"
+        data-1p-ignore="true"
+        aria-label="Search commands"
+        aria-autocomplete="list"
+        aria-controls="cmdkList"
+      />
       <span class="cmdk-kbd">ESC</span>
     </div>
     <div class="cmdk-list" id="cmdkList" role="listbox" aria-label="Results"></div>
@@ -40,7 +56,7 @@ const commands = [
   </div>
 </div>
 
-<style>
+<style is:global>
   .cmdk-backdrop {
     position: fixed; inset: 0;
     background: var(--scrim);
@@ -163,8 +179,12 @@ const commands = [
     let selected = 0;
     let lastFocus = null;
 
-    const routeIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
-    const extIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>';
+    // width/height attributes are the belt-and-braces safety net: even if scoped
+    // CSS ever misses these runtime-injected elements again, the SVG cannot render
+    // at its intrinsic 300x150 fallback and blow up the palette. Bug: seen in v5.2
+    // when Astro's scoped-styles didn't reach innerHTML-injected items.
+    const routeIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
+    const extIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>';
 
     function esc(str) {
       return String(str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

@@ -211,7 +211,8 @@ const currentPath = Astro.url.pathname;
       .footer-meta a:hover { color: var(--purple-bright); }
       .footer-meta .mono {
         font-family: var(--font-mono); font-size: var(--text-xs);
-        color: var(--muted-2); margin-top: var(--sp-2);
+        /* --muted (not --muted-2) so this small mono line passes WCAG AA on --bg. */
+        color: var(--muted); margin-top: var(--sp-2);
       }
 
       @media (max-width: 760px) {

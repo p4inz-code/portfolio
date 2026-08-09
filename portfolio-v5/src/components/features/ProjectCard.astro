@@ -17,7 +17,6 @@ const linkProps = project.isExternal
   href={project.href}
   class:list={['project-card', `variant-${variant}`]}
   {...linkProps}
-  aria-label={`${project.name} — ${project.tagline}`}
 >
   {variant === 'featured' && (
     <div class="card-media" aria-hidden="true">

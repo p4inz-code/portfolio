@@ -20,6 +20,18 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.2.1',
+    kind: 'released',
+    summary: 'Bug-fix batch — command palette rendered broken on v5, two WCAG-AA regressions from v5.0 fixed.',
+    body: [
+      'Command palette (⌘K / press /) was rendering with a giant right-arrow SVG filling most of the modal on the v5 build. Root cause: palette items are constructed at runtime via list.innerHTML, but Astro\'s scoped CSS only applies to compile-time elements — so the .cmdk-item-icon svg { width: 18px } rule never matched the injected SVGs and they fell back to intrinsic size. Fix: CommandPalette style block converted to <style is:global> so runtime-injected items pick up the styles, plus explicit width="18" height="18" attributes added on the SVG strings as a belt-and-braces safety net. The v4.7 monolith wasn\'t affected because it never had scoped styles to begin with.',
+      'Command palette input hardened against browser autofill: type="search", name attribute, autocorrect/autocapitalize/autocomplete=off, plus data-form-type / data-lpignore / data-1p-ignore hints for password managers and Chrome autofill. The stray "so / so l / sorry" suggestion tooltip should stop appearing.',
+      'Two WCAG-AA color-contrast regressions from v5.0-alpha (introduced when --muted-2 was pushed slightly darker than v4). The 10.5px .hero-eyebrow, .section-eyebrow, and .tag were scoring 4.06:1 and 3.84:1 respectively — below the 4.5:1 threshold for small text. Fix: those three selectors now use --muted (#9B95B0) instead of --muted-2 (#726d88), pushing them to ~7.9:1 on --bg and ~7.4:1 on --surface-1.',
+      'label-content-name-mismatch axe failure on all ProjectCard anchors. The aria-label was "{name} — {tagline}" but the visible card content also included the status pill text, description, and tags — axe wants the visible label to be a substring of the accessible name. Fix: aria-label dropped entirely; the anchor now derives its accessible name from the visible text, which is more informative anyway.',
+      'Verified with local Lighthouse mobile run: home page a11y back to 100, /mission-os/demo stays at 100, performance stays at 94.',
+    ],
+  },
+  {
     version: 'v5.2',
     kind: 'released',
     summary: 'Signature move 2/4 — interactive Mission OS concept demo at /mission-os/demo (Pouya-style OS metaphor).',
