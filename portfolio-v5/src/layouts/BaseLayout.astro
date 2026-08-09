@@ -1,6 +1,8 @@
 ---
 import '../styles/global.css';
 import ThemeToggle from '../components/ThemeToggle.astro';
+import CommandPalette from '../components/features/CommandPalette.astro';
+import { SITE, NAV, CONTACT } from '../data/site';
 
 interface Props {
   title: string;
@@ -10,12 +12,13 @@ interface Props {
 }
 const {
   title,
-  description = "Atharva Patil — software engineer, VFX and 3D student, founder of Northbyte Studios. Building Mission OS, Nexus, Kanvaz, Veris, and more.",
+  description = SITE.description,
   ogImage = "/og.png",
   themeColor = "#0A0517",
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const currentPath = Astro.url.pathname;
 ---
 <!doctype html>
 <html lang="en">
@@ -43,7 +46,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
 
-    <!-- Apply stored theme before first paint to avoid flash -->
     <script is:inline>
       (function () {
         try {
@@ -64,7 +66,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <div class="nav-inner wrap">
         <a href="/" class="brand" aria-label="Atharva Patil — home">
           <span class="brand-mark" aria-hidden="true">
-            <!-- Simplified NB monogram; real AP mark drops in when the PNG lands -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
               <path d="M5 19V5l9 12V5M14 19h5" />
             </svg>
@@ -72,12 +73,24 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
           <span class="brand-name">Atharva Patil</span>
         </a>
         <nav class="nav-links" aria-label="Primary">
-          <a href="/work">Work</a>
-          <a href="/3d">3D / VFX</a>
-          <a href="/services">Services</a>
-          <a href="/about">About</a>
-          <a href="/resume">Resume</a>
-          <a href="/contact" class="nav-cta">Get in touch</a>
+          {NAV.filter((n) => !n.cta).map((n) => (
+            <a href={n.href} class:list={[currentPath === n.href && 'active']}>{n.label}</a>
+          ))}
+          {NAV.filter((n) => n.cta).map((n) => (
+            <a href={n.href} class:list={['nav-cta', currentPath === n.href && 'active']}>{n.label}</a>
+          ))}
+          <button
+            type="button"
+            class="nav-cmdk"
+            id="cmdkTrigger"
+            aria-label="Open command palette (Ctrl+K)"
+            title="Search & jump (Ctrl+K)"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+            </svg>
+            <span>⌘K</span>
+          </button>
           <ThemeToggle />
         </nav>
       </div>
@@ -86,30 +99,124 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <main id="main"><slot /></main>
 
     <footer class="site-footer">
-      <div class="wrap">
-        <p>© 2026 Atharva Patil · Northbyte Studios · <span class="mono">v5.0-alpha</span></p>
+      <div class="wrap footer-inner">
+        <div class="footer-brand">
+          <p class="footer-name">Atharva Patil</p>
+          <p class="footer-role">{SITE.role} · {SITE.location}</p>
+        </div>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/work">Work</a>
+          <a href="/about">About</a>
+          <a href="/resume">Resume</a>
+          <a href="/contact">Contact</a>
+          <a href="/status">Status</a>
+          <a href="/accessibility">Accessibility</a>
+        </nav>
+        <div class="footer-meta">
+          <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+          <a href={CONTACT.github} target="_blank" rel="noopener noreferrer">{CONTACT.githubHandle}</a>
+          <span class="mono">© 2026 · {SITE.currentVersion}</span>
+        </div>
       </div>
     </footer>
 
+    <CommandPalette />
+
     <style>
-      .nav { padding: var(--sp-5) 0; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); background: color-mix(in oklab, var(--bg) 78%, transparent); border-bottom: 1px solid var(--line); }
+      .nav {
+        padding: var(--sp-5) 0;
+        position: sticky; top: 0; z-index: 100;
+        backdrop-filter: blur(12px);
+        background: color-mix(in oklab, var(--bg) 78%, transparent);
+        border-bottom: 1px solid var(--line);
+      }
       .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-6); }
       .brand { display: inline-flex; align-items: center; gap: var(--sp-3); color: var(--text); }
-      .brand-mark { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid var(--line-strong); color: var(--purple-bright); }
+      .brand-mark {
+        width: 34px; height: 34px;
+        display: inline-flex; align-items: center; justify-content: center;
+        border-radius: 50%; border: 1px solid var(--line-strong);
+        color: var(--purple-bright);
+      }
       .brand-mark svg { width: 16px; height: 16px; }
       .brand-name { font-family: var(--font-display); font-size: var(--text-md); font-style: italic; }
-      .nav-links { display: flex; align-items: center; gap: var(--sp-7); }
-      .nav-links a { color: var(--muted); font-size: var(--text-sm); transition: color var(--dur-fast) var(--ease-out); }
-      .nav-links a:hover { color: var(--text); }
-      .nav-links a.nav-cta { color: var(--text); padding: var(--sp-2) var(--sp-5); border: 1px solid var(--line-strong); border-radius: var(--radius-pill); }
-      .nav-links a.nav-cta:hover { border-color: var(--purple); color: var(--purple-bright); }
+      .nav-links { display: flex; align-items: center; gap: var(--sp-6); }
+      .nav-links a {
+        color: var(--muted); font-size: var(--text-sm);
+        transition: color var(--dur-fast) var(--ease-out);
+        position: relative;
+      }
+      .nav-links a:hover, .nav-links a.active { color: var(--text); }
+      .nav-links a.active::after {
+        content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 1px;
+        background: var(--purple-bright); border-radius: 1px;
+      }
+      .nav-cta {
+        color: var(--text) !important;
+        padding: var(--sp-2) var(--sp-5);
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius-pill);
+      }
+      .nav-cta:hover { border-color: var(--purple); color: var(--purple-bright) !important; }
+      .nav-cmdk {
+        display: inline-flex; align-items: center; gap: var(--sp-2);
+        padding: 6px 10px 6px 8px;
+        border-radius: var(--radius-pill);
+        border: 1px solid var(--line-strong);
+        background: color-mix(in oklab, var(--purple) 5%, transparent);
+        color: var(--muted);
+        font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
+        cursor: pointer;
+        transition: border-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out), background var(--dur) var(--ease-out);
+      }
+      .nav-cmdk svg { width: 13px; height: 13px; }
+      .nav-cmdk:hover {
+        border-color: var(--purple-bright);
+        color: var(--purple-bright);
+        background: color-mix(in oklab, var(--purple) 10%, transparent);
+      }
+      @media (max-width: 900px) {
+        .nav-cmdk { display: none; }
+      }
 
-      .site-footer { padding: var(--sp-10) 0 var(--sp-8); margin-top: var(--sp-12); border-top: 1px solid var(--line); color: var(--muted-2); font-size: var(--text-xs); }
-      .site-footer .mono { font-family: var(--font-mono); }
+      .site-footer {
+        padding: var(--sp-11) 0 var(--sp-8);
+        margin-top: var(--sp-12);
+        border-top: 1px solid var(--line);
+      }
+      .footer-inner {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr;
+        gap: var(--sp-8);
+        align-items: start;
+      }
+      @media (max-width: 760px) {
+        .footer-inner { grid-template-columns: 1fr; gap: var(--sp-6); }
+      }
+      .footer-name {
+        font-family: var(--font-display);
+        font-style: italic;
+        font-size: var(--text-lg);
+        color: var(--text);
+        margin-bottom: var(--sp-2);
+      }
+      .footer-role { color: var(--muted); font-size: var(--text-sm); }
+      .footer-nav { display: flex; flex-direction: column; gap: var(--sp-3); }
+      .footer-nav a {
+        color: var(--muted); font-size: var(--text-sm);
+        transition: color var(--dur-fast) var(--ease-out);
+      }
+      .footer-nav a:hover { color: var(--purple-bright); }
+      .footer-meta { display: flex; flex-direction: column; gap: var(--sp-3); font-size: var(--text-sm); color: var(--muted); }
+      .footer-meta a:hover { color: var(--purple-bright); }
+      .footer-meta .mono {
+        font-family: var(--font-mono); font-size: var(--text-xs);
+        color: var(--muted-2); margin-top: var(--sp-2);
+      }
 
       @media (max-width: 760px) {
         .nav-links { gap: var(--sp-4); }
-        .nav-links a:not(.nav-cta):not(.theme-toggle) { display: none; }
+        .nav-links a:not(.nav-cta) { display: none; }
       }
     </style>
   </body>

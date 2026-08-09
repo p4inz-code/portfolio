@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+---
+<BaseLayout title="Accessibility — Atharva Patil">
+  <Section eyebrow="Accessibility statement" heading="What's actually done, and what honestly isn't yet." intro="Target: WCAG 2.1 AA. What's below is an honest self-assessment, not an unverified compliance badge.">
+    <div class="a11y-block">
+      <h3 class="a11y-heading">What's implemented</h3>
+      <ul class="a11y-list">
+        <li>Semantic landmarks throughout: <code>&lt;header&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;footer&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;article&gt;</code>.</li>
+        <li>Skip-to-content link (first tab-stop, becomes visible on focus).</li>
+        <li>Visible <code>:focus-visible</code> ring site-wide (2px purple-bright outline).</li>
+        <li>All interactive elements keyboard-reachable. Command palette (⌘K) fully keyboard-driven.</li>
+        <li>Every image has real alt text — no decorative placeholders on meaningful images.</li>
+        <li><code>prefers-reduced-motion</code> honored: all animations collapse to instant on request.</li>
+        <li><code>prefers-color-scheme</code> respected on first visit; user toggle persists via localStorage.</li>
+        <li>Contrast ratios: WCAG AA at every text/background pairing in both light and dark themes.</li>
+        <li>Text remains readable and layout intact at 200% zoom.</li>
+      </ul>
+    </div>
+
+    <div class="a11y-block">
+      <h3 class="a11y-heading">Known gaps</h3>
+      <ul class="a11y-list">
+        <li>Not independently audited yet — no external accessibility review has been performed. This is an honest self-assessment.</li>
+        <li>Some screenshots on case-study pages have descriptive alt text but no long-description transcript for complex visuals (e.g., the Kanvaz board view). Planned addition.</li>
+        <li>The theme-boot inline script runs before first paint and can't be gated by <code>prefers-reduced-motion</code>; the theme switch itself is instant regardless of user preference (no animation applied).</li>
+      </ul>
+    </div>
+
+    <p class="a11y-note">Last reviewed: v5.0-alpha migration (2026-08-09). If you find something broken — email <a href="mailto:atharva.patil.cg@gmail.com">atharva.patil.cg@gmail.com</a>.</p>
+  </Section>
+
+  <style>
+    .a11y-block { margin-bottom: var(--sp-8); max-width: var(--wrap-narrow); }
+    .a11y-heading {
+      font-family: var(--font-display);
+      font-size: var(--text-md);
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: var(--sp-4);
+      padding-bottom: var(--sp-3);
+      border-bottom: 1px solid var(--line);
+    }
+    .a11y-list { list-style: none; display: flex; flex-direction: column; gap: var(--sp-3); }
+    .a11y-list li {
+      color: var(--muted);
+      font-size: var(--text-sm);
+      line-height: var(--leading-body);
+      padding-left: var(--sp-5);
+      position: relative;
+    }
+    .a11y-list li::before {
+      content: '';
+      position: absolute; left: 0; top: 10px;
+      width: 8px; height: 1px;
+      background: var(--purple-bright);
+    }
+    .a11y-list code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--purple-bright);
+      background: color-mix(in oklab, var(--purple) 10%, transparent);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    .a11y-note {
+      max-width: var(--wrap-narrow);
+      color: var(--muted-2);
+      font-size: var(--text-xs);
+      font-style: italic;
+      margin-top: var(--sp-9);
+      padding-top: var(--sp-5);
+      border-top: 1px solid var(--line);
+    }
+    .a11y-note a { color: var(--purple-bright); border-bottom: 1px solid var(--line-strong); }
+    .a11y-note a:hover { border-bottom-color: var(--purple-bright); }
+  </style>
+</BaseLayout>

@@ -1,0 +1,13 @@
+# security.txt — RFC 9116
+# Deploy this file at: https://atharvapatil.tech/.well-known/security.txt
+# (Also serve a plain copy at https://atharvapatil.tech/security.txt for
+# older tooling that doesn't check .well-known first.)
+#
+# This site is a static portfolio with no backend, database, or user
+# accounts — the realistic report categories are: XSS/injection points,
+# clickjacking, exposed secrets, or hosting/DNS misconfiguration.
+
+Contact: mailto:atharva.patil.cg@gmail.com
+Expires: 2027-07-18T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://atharvapatil.tech/.well-known/security.txt

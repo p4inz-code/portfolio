@@ -1,0 +1,72 @@
+---
+import type { Project } from '../../data/projects';
+import StatusPill from '../ui/StatusPill.astro';
+import MetaTag from '../ui/MetaTag.astro';
+import Button from '../ui/Button.astro';
+
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+---
+<header class="case-hero">
+  <div class="wrap">
+    <a href="/work" class="back-link">← Back to Work</a>
+    <div class="case-meta-row">
+      <StatusPill status={project.status} />
+      {project.metaTags.map((t) => <MetaTag label={t} />)}
+    </div>
+    <h1 class="case-title">{project.tagline}</h1>
+    <p class="case-desc">{project.description}</p>
+    <div class="case-actions">
+      {project.links.map((link) => (
+        <Button href={link.href} variant="ghost" external={link.external}>{link.label} →</Button>
+      ))}
+    </div>
+  </div>
+</header>
+
+<style>
+  .case-hero {
+    padding: var(--sp-11) 0 var(--sp-9);
+  }
+  .back-link {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    margin-bottom: var(--sp-7);
+    border-bottom: 1px solid transparent;
+    transition: color var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out);
+  }
+  .back-link:hover { color: var(--purple-bright); border-bottom-color: var(--purple-bright); }
+  .case-meta-row {
+    display: flex; align-items: center; gap: var(--sp-3);
+    margin-bottom: var(--sp-6);
+    flex-wrap: wrap;
+  }
+  .case-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-style: italic;
+    font-size: var(--text-h1);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-tight);
+    max-width: 1000px;
+    color: var(--text);
+    text-wrap: balance;
+  }
+  .case-desc {
+    margin-top: var(--sp-6);
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    line-height: var(--leading-body);
+    color: var(--muted);
+    max-width: 720px;
+  }
+  .case-actions {
+    margin-top: var(--sp-7);
+    display: flex; flex-wrap: wrap; gap: var(--sp-3);
+  }
+</style>

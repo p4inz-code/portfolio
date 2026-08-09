@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+import { SITE, CONTACT } from '../data/site';
+---
+<BaseLayout title="About — Atharva Patil">
+  <Section eyebrow="About" heading="Why I do both, and why I probably won't stop.">
+    <div class="about-lede">
+      <p>
+        Most people choose a lane. I haven't figured out why I should. The same instinct that goes into
+        designing <em>Nexus</em>'s lock screen goes into lighting a 3D scene: obsessing over how things
+        <em>feel</em> when you interact with them, not just how they look.
+      </p>
+      <p>
+        <em>Kanvaz</em> started as a tool I built for the VFX community I'm part of. <em>Obscura</em> started
+        because Roblox developers deserve professional-grade tooling without a paywall. Every project comes
+        from being inside the problem.
+      </p>
+    </div>
+  </Section>
+
+  <Section eyebrow="Background">
+    <div class="credential-list">
+      <article class="credential-row">
+        <span class="credential-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="6" width="20" height="12" rx="1.5"/><path d="M6 6v12M18 6v12M2 10h4M2 14h4M18 10h4M18 14h4M10 6v12M14 6v12"/>
+          </svg>
+        </span>
+        <div>
+          <h3 class="credential-title">VFX & 3D Animation, First Year Student</h3>
+          <p class="credential-desc">Currently studying 3D modeling, lighting, and animation, alongside a background in media studies.</p>
+        </div>
+      </article>
+      <article class="credential-row">
+        <span class="credential-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 22V4h11l1 3h5v10h-7l-1-3H6v8"/>
+          </svg>
+        </span>
+        <div>
+          <h3 class="credential-title">Founder, {SITE.studio}</h3>
+          <p class="credential-desc">Solo-founded software studio building Windows desktop tools, privacy, productivity, and creator tooling, all free-forever or open source.</p>
+        </div>
+      </article>
+      <article class="credential-row">
+        <span class="credential-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 8l10 7 10-7M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+        </span>
+        <div>
+          <h3 class="credential-title">Freelance Web & Brand Work</h3>
+          <p class="credential-desc">Independent client work spanning web development, UI/UX, and visual identity, including a full production website build for a performing arts academy.</p>
+        </div>
+      </article>
+    </div>
+  </Section>
+
+  <Section eyebrow="Contact" heading="Reach me directly." intro="No form to fill out. No routing. Email or Discord.">
+    <div class="contact-links">
+      <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+      <a href={CONTACT.github} target="_blank" rel="noopener noreferrer">{CONTACT.githubHandle}</a>
+      <span>Discord: {CONTACT.discord}</span>
+    </div>
+  </Section>
+
+  <style>
+    .about-lede {
+      max-width: var(--wrap-narrow);
+      color: var(--muted);
+      font-size: var(--text-md);
+      line-height: var(--leading-body);
+    }
+    .about-lede p + p { margin-top: var(--sp-5); }
+    .about-lede em {
+      color: var(--purple-bright);
+      font-style: italic;
+      font-weight: 400;
+    }
+    .credential-list {
+      display: flex; flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      background: var(--surface-1);
+    }
+    .credential-row {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: var(--sp-4);
+      padding: var(--sp-6);
+      align-items: flex-start;
+      border-bottom: 1px solid var(--line);
+      transition: background var(--dur) var(--ease-out);
+    }
+    .credential-row:last-child { border-bottom: none; }
+    .credential-row:hover { background: var(--surface-2); }
+    .credential-icon {
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: var(--radius);
+      border: 1px solid var(--line-strong);
+      color: var(--purple-bright);
+      background: color-mix(in oklab, var(--purple) 6%, transparent);
+    }
+    .credential-icon svg { width: 18px; height: 18px; }
+    .credential-title {
+      font-family: var(--font-display);
+      font-size: var(--text-md);
+      font-weight: 500;
+      margin-bottom: var(--sp-2);
+    }
+    .credential-desc {
+      color: var(--muted);
+      font-size: var(--text-sm);
+      line-height: var(--leading-body);
+    }
+    .contact-links {
+      display: flex; flex-wrap: wrap; gap: var(--sp-4) var(--sp-7);
+      font-size: var(--text-md);
+      color: var(--text);
+    }
+    .contact-links a {
+      color: var(--text);
+      border-bottom: 1px solid var(--line);
+      transition: border-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
+    }
+    .contact-links a:hover { color: var(--purple-bright); border-bottom-color: var(--purple-bright); }
+  </style>
+</BaseLayout>

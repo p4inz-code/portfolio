@@ -1,0 +1,77 @@
+---
+/**
+ * Three-act narrative hero — signature move borrowed from emilianmisera.com.
+ * Each line rises in sequence on load. Reduced-motion collapses to instant.
+ */
+interface Props {
+  eyebrow?: string;
+  lines: Array<{ text: string; emphasis?: string }>;
+  intro?: string;
+}
+const { eyebrow, lines, intro } = Astro.props;
+---
+<section class="hero wrap" aria-labelledby="hero-title">
+  {eyebrow && <p class="hero-eyebrow">{eyebrow}</p>}
+  <h1 id="hero-title" class="hero-title">
+    {lines.map((line, i) => (
+      <span class="act" style={`--i:${i}`}>
+        {line.emphasis && (<><em>{line.emphasis}</em> </>)}
+        {line.text}
+      </span>
+    ))}
+  </h1>
+  {intro && <p class="hero-sub">{intro}</p>}
+  <slot />
+</section>
+
+<style>
+  .hero {
+    padding: var(--sp-11) 0 var(--sp-9);
+  }
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--muted-2);
+    margin-bottom: var(--sp-7);
+  }
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: var(--text-h1);
+    font-weight: 400;
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-tight);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    max-width: 1050px;
+  }
+  .act {
+    display: block;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: rise 0.8s var(--ease-out) forwards;
+    animation-delay: calc(var(--i) * 220ms + 200ms);
+    text-wrap: balance;
+  }
+  .act em {
+    font-style: italic;
+    color: var(--purple-bright);
+    font-weight: 400;
+  }
+  @keyframes rise {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .act { animation: none; opacity: 1; transform: none; }
+  }
+  .hero-sub {
+    margin-top: var(--sp-7);
+    max-width: var(--wrap-narrow);
+    color: var(--muted);
+    font-size: var(--text-md);
+    line-height: var(--leading-body);
+  }
+</style>

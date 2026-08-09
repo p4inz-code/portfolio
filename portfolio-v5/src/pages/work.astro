@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+import ProjectCard from '../components/features/ProjectCard.astro';
+import { FEATURED_PROJECTS, SUPPORTING_PROJECTS } from '../data/projects';
+---
+<BaseLayout title="Selected Work — Atharva Patil">
+  <Section eyebrow="Selected work" heading="Everything here was designed, built, and shipped" headingEmphasis="by one person." intro="Two operating systems in active development. One encrypted vault in public beta. One reference workspace winding down after its final release. One investigation OS coming soon. Every case study links to real code, real screenshots, or a live download.">
+    <div class="stack">
+      {FEATURED_PROJECTS.map((p) => (
+        <ProjectCard project={p} variant={p.order === 0 ? 'featured' : 'default'} />
+      ))}
+    </div>
+  </Section>
+
+  <Section eyebrow="Also on the shelf" heading="Smaller work + older projects.">
+    <div class="secondary-grid">
+      {SUPPORTING_PROJECTS.map((p) => (
+        <ProjectCard project={p} variant="compact" />
+      ))}
+    </div>
+  </Section>
+
+  <style>
+    .stack {
+      display: flex; flex-direction: column; gap: var(--sp-5);
+    }
+    .secondary-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4);
+    }
+    @media (max-width: 760px) {
+      .secondary-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</BaseLayout>

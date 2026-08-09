@@ -1,0 +1,22 @@
+---
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+<span class="meta-tag">{label}</span>
+
+<style>
+  .meta-tag {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--muted);
+    border: 1px solid var(--line);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    background: color-mix(in oklab, var(--surface-1) 40%, transparent);
+    letter-spacing: 0.04em;
+  }
+</style>

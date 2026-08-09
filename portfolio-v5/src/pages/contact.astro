@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+import Button from '../components/ui/Button.astro';
+import { CONTACT } from '../data/site';
+---
+<BaseLayout title="Get in Touch — Atharva Patil">
+  <Section eyebrow="Get in touch" heading="Reach out directly." intro="Freelance, collaboration, or hiring — email is the fastest. Discord for the Nexus beta. GitHub for open-source work.">
+    <div class="contact-block">
+      <a class="contact-row" href={`mailto:${CONTACT.email}`}>
+        <span class="contact-label">Email</span>
+        <span class="contact-value">{CONTACT.email}</span>
+      </a>
+      <a class="contact-row" href={CONTACT.discordInvite} target="_blank" rel="noopener noreferrer">
+        <span class="contact-label">Discord</span>
+        <span class="contact-value">{CONTACT.discord} · <em>join the Nexus beta</em></span>
+      </a>
+      <a class="contact-row" href={CONTACT.github} target="_blank" rel="noopener noreferrer">
+        <span class="contact-label">GitHub</span>
+        <span class="contact-value">{CONTACT.githubHandle}</span>
+      </a>
+    </div>
+
+    <div class="contact-cta">
+      <Button href={`mailto:${CONTACT.email}?subject=Project inquiry`} variant="primary">
+        Start a conversation →
+      </Button>
+    </div>
+  </Section>
+
+  <style>
+    .contact-block {
+      display: flex; flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      background: var(--surface-1);
+      max-width: var(--wrap-narrow);
+    }
+    .contact-row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: var(--sp-5);
+      padding: var(--sp-6);
+      align-items: baseline;
+      border-bottom: 1px solid var(--line);
+      color: var(--text);
+      transition: background var(--dur) var(--ease-out);
+    }
+    .contact-row:last-child { border-bottom: none; }
+    .contact-row:hover { background: var(--surface-2); }
+    .contact-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--muted-2);
+    }
+    .contact-value {
+      font-family: var(--font-display);
+      font-size: var(--text-md);
+      color: var(--text);
+    }
+    .contact-value em { color: var(--purple-bright); font-style: italic; }
+    .contact-cta { margin-top: var(--sp-8); }
+  </style>
+</BaseLayout>

@@ -1,0 +1,61 @@
+---
+interface Props {
+  href: string;
+  variant?: 'primary' | 'ghost' | 'link';
+  external?: boolean;
+  class?: string;
+}
+const { href, variant = 'primary', external = false, class: cls = '' } = Astro.props;
+const externalProps = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+---
+<a href={href} class:list={['btn', `btn-${variant}`, cls]} {...externalProps}>
+  <slot />
+</a>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-3) var(--sp-6);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition:
+      transform var(--dur-fast) var(--ease-out),
+      border-color var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out),
+      background var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out);
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: var(--text);
+    color: var(--bg);
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 30px color-mix(in oklab, var(--text) 20%, transparent);
+  }
+  .btn-ghost {
+    color: var(--text);
+    border-color: var(--line-strong);
+    background: transparent;
+  }
+  .btn-ghost:hover {
+    border-color: var(--purple);
+    color: var(--purple-bright);
+  }
+  .btn-link {
+    padding: 0;
+    color: var(--purple-bright);
+    background: transparent;
+    border-radius: 0;
+    border-bottom: 1px solid transparent;
+  }
+  .btn-link:hover {
+    border-bottom-color: var(--purple-bright);
+  }
+</style>

@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CaseHero from '../components/layout/CaseHero.astro';
+import Section from '../components/layout/Section.astro';
+import { PROJECTS } from '../data/projects';
+
+const project = PROJECTS.find((p) => p.slug === 'nexus')!;
+---
+<BaseLayout title={`${project.name} — ${project.tagline}`}>
+  <CaseHero project={project} />
+
+  <section class="stat-row-wrap">
+    <div class="wrap">
+      <dl class="stat-row">
+        <div class="stat-cell"><dt>Authenticated cipher</dt><dd>AES-256-GCM</dd></div>
+        <div class="stat-cell"><dt>Network calls</dt><dd>0</dd></div>
+        <div class="stat-cell"><dt>Current build</dt><dd>v10.12.0</dd></div>
+        <div class="stat-cell"><dt>Dark themes</dt><dd>12</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <Section eyebrow="The problem" heading="Most 'secure' tools still trust someone else with your data.">
+    <div class="body-copy">
+      <p>Password managers, note apps, file vaults — most are excellent at encryption in transit. But the data still lives on someone else's server. A breach, a policy change, a shutdown, a subpoena — any of these can expose what was supposed to be private.</p>
+      <p>Nexus is a single vault for the things that actually matter — files, passwords, notes, bookmarks, contacts — that <strong>never leaves the device it's created on.</strong> Not "encrypted in the cloud." Not stored locally either. Built so there's no cloud to begin with.</p>
+    </div>
+  </Section>
+
+  <Section heading="One vault. Everything sealed behind a single master password.">
+    <div class="feature-grid">
+      <article class="feature-card"><h3 class="feature-name">Credentials + TOTP</h3><p class="feature-desc">Passwords, usernames, built-in TOTP — no separate authenticator app needed.</p></article>
+      <article class="feature-card"><h3 class="feature-name">Notes + Journal</h3><p class="feature-desc">Markdown-formatted encrypted notes, plus a private daily journal with a 30-day calendar view.</p></article>
+      <article class="feature-card"><h3 class="feature-name">Zero-Trace Launcher</h3><p class="feature-desc">Run any app through Nexus in a monitored session — temp files are securely deleted when you're done.</p></article>
+      <article class="feature-card"><h3 class="feature-name">Streamer Mode</h3><p class="feature-desc">Makes Nexus invisible to screen capture, OBS, and screenshots — your vault stays private even on stream.</p></article>
+      <article class="feature-card"><h3 class="feature-name">Smart Collections</h3><p class="feature-desc">Auto-grouped views that surface related files, notes, and credentials across the vault.</p></article>
+      <article class="feature-card"><h3 class="feature-name">Multiple + decoy vaults</h3><p class="feature-desc">Run several independent vaults side by side, including decoy vaults that unlock in place of your primary.</p></article>
+    </div>
+  </Section>
+
+  <Section heading="Current status + what's next.">
+    <div class="feature-grid feature-grid-4">
+      <article class="feature-card"><h3 class="feature-name">v10.12.0 · In-app updater</h3><p class="feature-desc">Settings → Updates. SHA-256-verified downloads, manual restart-to-install always required. Off / Notify / Automatic modes.</p></article>
+      <article class="feature-card"><h3 class="feature-name">v10.12.0 · AES-256-GCM upgrade</h3><p class="feature-desc">Vault cipher upgraded to real AES-256-GCM under a new NXG1 format. Old vaults stay readable forever; new writes get GCM automatically.</p></article>
+      <article class="feature-card"><h3 class="feature-name">Windows Hello unlock</h3><p class="feature-desc">Optional Windows Hello unlock on top of the master password — face, fingerprint, or PIN, backed by the platform TPM.</p></article>
+      <article class="feature-card"><h3 class="feature-name">v10.11.0 · Theme consistency</h3><p class="feature-desc">Whole-app theme pass across 17 screens and all 12 themes. Visible keyboard-focus indicator app-wide. Destructive-action styling fixed on Factory Reset.</p></article>
+    </div>
+  </Section>
+
+  <style>
+    .stat-row-wrap { padding: 0 0 var(--sp-8); }
+    .stat-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1px; background: var(--line); border: 1px solid var(--line);
+      border-radius: var(--radius-xl); overflow: hidden;
+    }
+    @media (max-width: 760px) { .stat-row { grid-template-columns: 1fr 1fr; } }
+    .stat-cell { background: var(--surface-1); padding: var(--sp-6); display: flex; flex-direction: column-reverse; gap: var(--sp-2); }
+    .stat-cell dt { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--muted-2); }
+    .stat-cell dd { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 400; color: var(--text); letter-spacing: -0.01em; }
+    .body-copy { max-width: var(--wrap-narrow); color: var(--muted); font-size: var(--text-md); line-height: var(--leading-body); }
+    .body-copy p + p { margin-top: var(--sp-4); }
+    .body-copy strong { color: var(--text); font-weight: 500; }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); }
+    .feature-grid-4 { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 900px) { .feature-grid, .feature-grid-4 { grid-template-columns: 1fr; } }
+    .feature-card { padding: var(--sp-6); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface-1); }
+    .feature-name { font-family: var(--font-display); font-size: var(--text-md); font-weight: 500; margin-bottom: var(--sp-3); }
+    .feature-desc { color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); }
+  </style>
+</BaseLayout>
