@@ -9,6 +9,16 @@ const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
 <BaseLayout title={`${project.name} — ${project.tagline}`}>
   <CaseHero project={project} />
 
+  <section class="demo-cta-wrap">
+    <div class="wrap">
+      <a href="/mission-os/demo" class="demo-cta">
+        <span class="demo-cta-eyebrow">Concept demo · playable</span>
+        <span class="demo-cta-title">Try Mission OS in your browser <span aria-hidden="true">→</span></span>
+        <span class="demo-cta-help">Boots into a desktop with the real Installer walkthrough. Not a live OS.</span>
+      </a>
+    </div>
+  </section>
+
   <section class="stat-row-wrap">
     <div class="wrap">
       <dl class="stat-row">
@@ -73,6 +83,41 @@ const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
   </Section>
 
   <style>
+    .demo-cta-wrap { padding: var(--sp-6) 0 var(--sp-4); }
+    .demo-cta {
+      display: grid;
+      gap: 6px;
+      padding: var(--sp-6) var(--sp-7);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-lg);
+      background:
+        radial-gradient(ellipse 60% 100% at 90% 50%, color-mix(in oklab, var(--purple) 12%, transparent), transparent 70%),
+        color-mix(in oklab, var(--surface-1) 92%, transparent);
+      color: var(--text);
+      text-decoration: none;
+      transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+    }
+    .demo-cta:hover, .demo-cta:focus-visible {
+      transform: translateY(-2px);
+      border-color: var(--purple-bright);
+      outline: none;
+    }
+    .demo-cta:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 3px; }
+    .demo-cta-eyebrow {
+      font-family: var(--font-mono); font-size: var(--text-xxs);
+      letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
+      color: var(--purple-bright);
+    }
+    .demo-cta-title {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: var(--text-xl);
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .demo-cta-help { color: var(--muted); font-size: var(--text-sm); }
+
     .stat-row-wrap { padding: 0 0 var(--sp-8); }
     .stat-row {
       display: grid; grid-template-columns: repeat(4, 1fr);

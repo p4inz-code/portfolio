@@ -15,6 +15,8 @@
  */
 import DemoWindow from './DemoWindow.astro';
 import InstallerApp from './apps/InstallerApp.astro';
+import SettingsApp from './apps/SettingsApp.astro';
+import AboutApp from './apps/AboutApp.astro';
 ---
 <div class="desktop-root" data-desktop-root data-window-active="">
   <!-- Wallpaper (inline SVG, Mission OS palette, no external image) -->
@@ -101,20 +103,19 @@ import InstallerApp from './apps/InstallerApp.astro';
 
     <DemoWindow
       title="Mission Settings"
-      subtitle="phase 2 placeholder"
+      subtitle="privacy defaults"
       appSlug="settings"
+      wide
     >
-      <p class="ph-body">Mission Settings will render here.</p>
-      <p class="ph-body">Phase 4 wires real privacy toggles (Telemetry, Location, Default browser, Tor preinstalled) with plain-text explanations.</p>
+      <SettingsApp />
     </DemoWindow>
 
     <DemoWindow
       title="About Mission OS"
-      subtitle="phase 2 placeholder"
+      subtitle="real data from projects.ts"
       appSlug="about"
     >
-      <p class="ph-body">About panel will render here.</p>
-      <p class="ph-body">Phase 4 pulls real version + status from projects.ts — no fabricated info.</p>
+      <AboutApp />
     </DemoWindow>
   </div>
 

@@ -20,6 +20,21 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.2',
+    kind: 'released',
+    summary: 'Signature move 2/4 — interactive Mission OS concept demo at /mission-os/demo (Pouya-style OS metaphor).',
+    body: [
+      'A new route puts the visitor through a cold-boot → login → desktop → open-an-app sequence for Mission OS, clearly labeled as a concept demo. Every other portfolio has a video or screenshot carousel; this one has a playable metaphor of the product itself.',
+      'Boot sequence (Phase 1): typed boot line → GNU GRUB single-entry with countdown → six kernel-style log lines → login card for user "p4inz". Enter advances any stage; Escape exits to the case study; prefers-reduced-motion collapses straight to login.',
+      'Desktop chrome (Phase 2): inline-SVG wallpaper in the Mission OS palette (no external image), top bar with a live local-time clock, Offline indicator, battery chip, "p4inz@mission-os" identity, and a bottom dock with three app icons. Single-window model; clicking a dock icon opens the app, clicking again closes it.',
+      'Installer app (Phase 3): 5 of the 13 real installer screens — Welcome, Privacy Setup, Security Options, Summary, Completion. Elided steps show as honest "…" gaps in the step-dot strip so we never imply we walk all 13. Every advanced option lists benefit, limitation, compatibility, and trade-off in plain text — the case study\'s ethos on screen, not just in copy. Next/Back buttons, dot clicks, and Left/Right arrow keys all navigate.',
+      'Settings + About apps (Phase 4): Mission Settings shows real privacy toggles (Telemetry locked off, Location, Default browser, Tor preinstalled locked on, Wi-Fi auto-connect) each with plain-text explanation. About Mission OS reads directly from projects.ts — status, current version, license, next milestone, stack — so nothing here can drift from the real project record.',
+      'Persistent "Concept demo of Mission OS · Not a live operating system" ribbon across every stage, with role="status" for assistive tech and a keyboard-focusable Exit button. Site nav + footer hidden on this route via body:has(.demo-scope) so the metaphor holds.',
+      'Zero external assets. Zero font additions. ~4KB inline JS total for the whole demo (state machine + window manager + installer carousel + live clock). No animation libraries, no islands, no dependencies. Route stays consistent with the site\'s zero-JS-by-default posture.',
+      'Case study updated with a "Try Mission OS in your browser →" CTA linking to the demo. Nothing else on the case study or any other page was touched.',
+    ],
+  },
+  {
     version: 'v5.1-beta',
     kind: 'released',
     summary: 'Full historical changelog ported to v5 — 19 entries, v3.1 → v5.1-alpha now visible on /status.',
