@@ -14,6 +14,7 @@
  * with real content; Phase 4 does the same for Settings and About.
  */
 import DemoWindow from './DemoWindow.astro';
+import InstallerApp from './apps/InstallerApp.astro';
 ---
 <div class="desktop-root" data-desktop-root data-window-active="">
   <!-- Wallpaper (inline SVG, Mission OS palette, no external image) -->
@@ -91,11 +92,11 @@ import DemoWindow from './DemoWindow.astro';
   <div class="window-area" data-window-area>
     <DemoWindow
       title="Mission Installer"
-      subtitle="phase 2 placeholder"
+      subtitle="5 of 13 real screens shown"
       appSlug="installer"
+      wide
     >
-      <p class="ph-body">Installer app will render here.</p>
-      <p class="ph-body">Phase 3 wires the real screen carousel: Welcome, Privacy Setup, Security Options, Summary, Completion — pulled from the case study's 13-screen sequence with honest "…" gaps for the elided steps.</p>
+      <InstallerApp />
     </DemoWindow>
 
     <DemoWindow

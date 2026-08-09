@@ -78,9 +78,13 @@ import Desktop from '../../components/features/MissionDemo/Desktop.astro';
 
       document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') { e.preventDefault(); exitDemo(); return; }
+        // Arrow keys navigate the installer when it's open
+        if (desktop.getAttribute('data-window-active') === 'installer') {
+          if (e.key === 'ArrowRight') { e.preventDefault(); installerStep(+1); return; }
+          if (e.key === 'ArrowLeft')  { e.preventDefault(); installerStep(-1); return; }
+        }
         if (e.key === 'Enter')  {
-          // If a dock icon is focused, let default click handler run
-          if (document.activeElement && document.activeElement.matches('[data-dock-app], [data-window-close]')) return;
+          if (document.activeElement && document.activeElement.matches('[data-dock-app], [data-window-close], [data-installer-next], [data-installer-back], [data-goto]')) return;
           e.preventDefault(); advance(); return;
         }
       });
@@ -108,6 +112,35 @@ import Desktop from '../../components/features/MissionDemo/Desktop.astro';
 
       desktop.querySelectorAll('[data-window-close]').forEach(function (btn) {
         btn.addEventListener('click', function () { setWindow(''); });
+      });
+
+      // -------- Installer app: step carousel --------
+      const installer = desktop.querySelector('[data-installer-root]');
+      const installerTotalShown = 5;
+
+      function setInstallerStep(n) {
+        if (!installer) return;
+        const clamped = Math.max(0, Math.min(installerTotalShown - 1, n));
+        installer.setAttribute('data-installer-step', String(clamped));
+        const progress = installer.querySelector('[data-installer-progress]');
+        if (progress) progress.textContent = 'Step ' + (clamped + 1) + ' of ' + installerTotalShown + ' shown · 13 total';
+      }
+      function installerStep(delta) {
+        if (!installer) return;
+        const current = parseInt(installer.getAttribute('data-installer-step') || '0', 10);
+        setInstallerStep(current + delta);
+      }
+      if (installer) {
+        installer.querySelector('[data-installer-next]').addEventListener('click', function () { installerStep(+1); });
+        installer.querySelector('[data-installer-back]').addEventListener('click', function () { installerStep(-1); });
+        installer.querySelectorAll('[data-goto]').forEach(function (dot) {
+          dot.addEventListener('click', function () { setInstallerStep(parseInt(dot.getAttribute('data-goto'), 10)); });
+        });
+      }
+      // When Installer window opens, reset to step 0 for a predictable entry.
+      const dockInstallerBtn = desktop.querySelector('[data-dock-app="installer"]');
+      if (dockInstallerBtn) dockInstallerBtn.addEventListener('click', function () {
+        if (desktop.getAttribute('data-window-active') === 'installer') setInstallerStep(0);
       });
 
       // Live clock in the top bar. Format HH:MM in the visitor's local time.

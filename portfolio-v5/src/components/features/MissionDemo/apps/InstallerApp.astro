@@ -1,0 +1,376 @@
+---
+/**
+ * Mission Installer — 5-screen subset of the real 13-screen installer.
+ *
+ * Real 13 screens (from the case study):
+ *   Welcome -> Language -> Keyboard -> Network -> Privacy Setup ->
+ *   Disk Selection -> Partition Manager -> User Account -> Encryption ->
+ *   Security Options -> Summary -> Installation -> Completion
+ *
+ * The demo shows: Welcome, Privacy Setup, Security Options, Summary,
+ * Completion. Elided steps are shown as honest "…" gaps in the step-dot
+ * strip so we don't imply we're walking through all 13.
+ *
+ * State is per-app: [data-installer-step] on the .installer-root.
+ * Next / Back buttons + Left / Right arrow keys advance the carousel.
+ */
+---
+<div class="installer-root" data-installer-root data-installer-step="0" data-total-steps="13">
+  <!-- Step dots (honest: highlighted = shown, dimmed = elided) -->
+  <div class="i-steps" aria-label="Installer progress · showing 5 of 13 real steps">
+    <button type="button" class="i-dot i-dot-shown" data-goto="0" aria-label="Welcome">1</button>
+    <span class="i-dot-gap" aria-hidden="true">…</span>
+    <button type="button" class="i-dot i-dot-shown" data-goto="1" aria-label="Privacy Setup">5</button>
+    <span class="i-dot-gap" aria-hidden="true">…</span>
+    <button type="button" class="i-dot i-dot-shown" data-goto="2" aria-label="Security Options">10</button>
+    <button type="button" class="i-dot i-dot-shown" data-goto="3" aria-label="Summary">11</button>
+    <span class="i-dot-gap" aria-hidden="true">…</span>
+    <button type="button" class="i-dot i-dot-shown" data-goto="4" aria-label="Completion">13</button>
+  </div>
+
+  <!-- Screen: Welcome -->
+  <section class="i-screen" data-step="0">
+    <header class="i-head">
+      <p class="i-eyebrow">Step 1 · Welcome</p>
+      <h3 class="i-title">Install Mission OS</h3>
+    </header>
+    <div class="i-main">
+      <p>You're about to install a privacy-first, offline-first Linux operating system built on Debian Stable + KDE Plasma. Nothing here calls home, ever.</p>
+      <p>Before we start: the installer will explain every advanced choice you make — Secure Boot, TPM, disk encryption, recovery keys — with the benefits, limitations, and trade-offs on the same screen as the toggle.</p>
+    </div>
+    <aside class="i-help">
+      <p class="i-help-title">Contextual help</p>
+      <p>You can quit any time before the "Install" step — no changes are written to disk until then.</p>
+    </aside>
+  </section>
+
+  <!-- Screen: Privacy Setup -->
+  <section class="i-screen" data-step="1">
+    <header class="i-head">
+      <p class="i-eyebrow">Step 5 · Privacy Setup</p>
+      <h3 class="i-title">Set your defaults up front, not later.</h3>
+    </header>
+    <div class="i-main">
+      <fieldset class="i-fieldset">
+        <legend class="i-legend">Telemetry</legend>
+        <label class="i-choice i-choice-locked">
+          <input type="radio" name="telemetry" checked disabled />
+          <span class="i-choice-body">
+            <span class="i-choice-name">Disabled (only choice)</span>
+            <span class="i-choice-help">Mission OS ships without telemetry hooks compiled in. There is no "enable" toggle — the code isn't there.</span>
+          </span>
+        </label>
+      </fieldset>
+      <fieldset class="i-fieldset">
+        <legend class="i-legend">Default browser</legend>
+        <label class="i-choice">
+          <input type="radio" name="browser" checked />
+          <span class="i-choice-body">
+            <span class="i-choice-name">Firefox <em>(preinstalled)</em></span>
+            <span class="i-choice-help">Preinstalled with strict privacy defaults. Recommended.</span>
+          </span>
+        </label>
+        <label class="i-choice">
+          <input type="radio" name="browser" />
+          <span class="i-choice-body">
+            <span class="i-choice-name">Tor Browser <em>(preinstalled)</em></span>
+            <span class="i-choice-help">Slower than Firefox. Use when you need network-layer anonymity, not for general browsing.</span>
+          </span>
+        </label>
+      </fieldset>
+    </div>
+    <aside class="i-help">
+      <p class="i-help-title">Why we ask up front</p>
+      <p>Post-install privacy settings get ignored. Set here, you actually see them; set later, they live in a Settings panel nobody opens.</p>
+    </aside>
+  </section>
+
+  <!-- Screen: Security Options -->
+  <section class="i-screen" data-step="2">
+    <header class="i-head">
+      <p class="i-eyebrow">Step 10 · Security Options</p>
+      <h3 class="i-title">Understand what you're enabling.</h3>
+    </header>
+    <div class="i-main">
+      <label class="i-choice">
+        <input type="checkbox" checked />
+        <span class="i-choice-body">
+          <span class="i-choice-name">Full-disk encryption (LUKS2 + Argon2id)</span>
+          <span class="i-choice-help"><strong>Benefit:</strong> Cold-boot theft protection. <strong>Limitation:</strong> Password loss = data loss. <strong>Trade-off:</strong> ~1-3% write overhead. Recovery key printed at Step 11.</span>
+        </span>
+      </label>
+      <label class="i-choice">
+        <input type="checkbox" checked />
+        <span class="i-choice-body">
+          <span class="i-choice-name">Secure Boot</span>
+          <span class="i-choice-help"><strong>Benefit:</strong> Blocks unsigned bootloaders. <strong>Compatibility:</strong> Works on most 2016+ hardware. <strong>Trade-off:</strong> Prevents booting unsigned custom kernels — you can turn it off later.</span>
+        </span>
+      </label>
+      <label class="i-choice">
+        <input type="checkbox" />
+        <span class="i-choice-body">
+          <span class="i-choice-name">TPM-sealed unlock (optional)</span>
+          <span class="i-choice-help"><strong>Benefit:</strong> Disk unlocks silently on the bound hardware. <strong>Limitation:</strong> Data becomes hardware-locked — motherboard failure requires recovery key. <strong>Recommendation:</strong> only if you have secure recovery-key storage.</span>
+        </span>
+      </label>
+    </div>
+    <aside class="i-help">
+      <p class="i-help-title">The ethos</p>
+      <p>Every advanced option explains its benefits, limitations, compatibility, and trade-offs. Users should understand what they're enabling.</p>
+    </aside>
+  </section>
+
+  <!-- Screen: Summary -->
+  <section class="i-screen" data-step="3">
+    <header class="i-head">
+      <p class="i-eyebrow">Step 11 · Summary</p>
+      <h3 class="i-title">Confirm before anything writes to disk.</h3>
+    </header>
+    <div class="i-main">
+      <dl class="i-summary">
+        <div><dt>Base</dt><dd>Debian Stable · KDE Plasma</dd></div>
+        <div><dt>Telemetry</dt><dd>Disabled (compile-time)</dd></div>
+        <div><dt>Default browser</dt><dd>Firefox</dd></div>
+        <div><dt>Disk encryption</dt><dd>LUKS2 · Argon2id · slot 0</dd></div>
+        <div><dt>Secure Boot</dt><dd>Enabled</dd></div>
+        <div><dt>TPM-sealed unlock</dt><dd>Off</dd></div>
+        <div><dt>User account</dt><dd>p4inz</dd></div>
+        <div><dt>Recovery key</dt><dd>Will be printed and shown once</dd></div>
+      </dl>
+      <p class="i-warn">Clicking Install writes changes to the selected disk. Nothing before this step has modified anything.</p>
+    </div>
+    <aside class="i-help">
+      <p class="i-help-title">Reversible up to here</p>
+      <p>Cancel now and Mission OS leaves your system untouched. After the next screen, the write is committed.</p>
+    </aside>
+  </section>
+
+  <!-- Screen: Completion -->
+  <section class="i-screen" data-step="4">
+    <header class="i-head">
+      <p class="i-eyebrow">Step 13 · Completion</p>
+      <h3 class="i-title">Mission OS is installed.</h3>
+    </header>
+    <div class="i-main">
+      <p>First boot will open a short welcome tour covering Mission Settings, Mission Store, and where recovery-key backup lives. All of it can be dismissed.</p>
+      <p class="i-note">Concept demo. In the real installer this closes and reboots into the new system; here, close the window to return to the desktop.</p>
+    </div>
+    <aside class="i-help">
+      <p class="i-help-title">Next</p>
+      <p>Try the Mission Settings app in the dock (Phase 4). About panel shows the real current status.</p>
+    </aside>
+  </section>
+
+  <footer class="i-actions">
+    <button type="button" class="i-btn i-btn-ghost" data-installer-back>← Back</button>
+    <p class="i-progress" data-installer-progress>Step 1 of 5 shown · 13 total</p>
+    <button type="button" class="i-btn i-btn-primary" data-installer-next>Next →</button>
+  </footer>
+</div>
+
+<style>
+  .installer-root {
+    display: flex;
+    flex-direction: column;
+    min-height: 480px;
+    max-height: 100%;
+  }
+
+  /* ---- Step dot strip ---- */
+  .i-steps {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 0 0 var(--sp-5);
+    margin-bottom: var(--sp-4);
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .i-dot {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    color: var(--muted-2);
+    font-family: var(--font-mono); font-size: 10px;
+    cursor: pointer;
+    transition: color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+  }
+  .i-dot:hover, .i-dot:focus-visible {
+    color: var(--purple-bright);
+    outline: none; border-color: var(--purple-bright);
+  }
+  .installer-root[data-installer-step='0'] .i-dot[data-goto='0'],
+  .installer-root[data-installer-step='1'] .i-dot[data-goto='1'],
+  .installer-root[data-installer-step='2'] .i-dot[data-goto='2'],
+  .installer-root[data-installer-step='3'] .i-dot[data-goto='3'],
+  .installer-root[data-installer-step='4'] .i-dot[data-goto='4'] {
+    background: var(--purple-bright); color: var(--bg); border-color: var(--purple-bright);
+  }
+  .i-dot-gap {
+    color: var(--muted-2);
+    font-family: var(--font-mono); font-size: 12px;
+    padding: 0 2px;
+  }
+
+  /* ---- Screens ---- */
+  .i-screen { display: none; }
+  .installer-root[data-installer-step='0'] .i-screen[data-step='0'],
+  .installer-root[data-installer-step='1'] .i-screen[data-step='1'],
+  .installer-root[data-installer-step='2'] .i-screen[data-step='2'],
+  .installer-root[data-installer-step='3'] .i-screen[data-step='3'],
+  .installer-root[data-installer-step='4'] .i-screen[data-step='4'] {
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    gap: var(--sp-6);
+    flex: 1;
+    min-height: 0;
+  }
+  @media (max-width: 640px) {
+    .installer-root .i-screen { grid-template-columns: 1fr !important; }
+  }
+
+  .i-head {
+    grid-column: 1 / -1;
+    padding-bottom: var(--sp-4);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: var(--sp-2);
+  }
+  .i-eyebrow {
+    font-family: var(--font-mono); font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
+    color: var(--muted-2); margin-bottom: 6px;
+  }
+  .i-title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .i-main { color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); }
+  .i-main > * + * { margin-top: var(--sp-3); }
+  .i-main strong { color: var(--text); font-weight: 500; }
+  .i-main em { color: var(--purple-bright); font-style: italic; }
+
+  .i-help {
+    padding: var(--sp-4);
+    background: color-mix(in oklab, var(--purple) 5%, transparent);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font-size: var(--text-xs);
+    line-height: 1.6;
+    color: var(--muted);
+    align-self: start;
+  }
+  .i-help-title {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
+    color: var(--purple-bright);
+    margin-bottom: 6px;
+  }
+
+  .i-fieldset {
+    border: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .i-fieldset + .i-fieldset { margin-top: var(--sp-4); }
+  .i-legend {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
+    color: var(--muted-2);
+    margin-bottom: 6px;
+  }
+  .i-choice {
+    display: grid; grid-template-columns: 20px 1fr;
+    gap: var(--sp-3);
+    padding: var(--sp-3) var(--sp-4);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    cursor: pointer;
+    background: color-mix(in oklab, var(--surface-2) 45%, transparent);
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+  .i-choice:hover, .i-choice:focus-within { border-color: var(--purple-bright); }
+  .i-choice-locked { opacity: 0.85; cursor: default; }
+  .i-choice input { accent-color: var(--purple-bright); margin-top: 3px; }
+  .i-choice-body { display: flex; flex-direction: column; gap: 4px; }
+  .i-choice-name {
+    color: var(--text); font-family: var(--font-display); font-size: var(--text-sm);
+  }
+  .i-choice-help {
+    color: var(--muted); font-size: var(--text-xs); line-height: 1.6;
+  }
+  .i-choice-help strong { color: var(--text); font-weight: 500; }
+
+  .i-summary {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .i-summary > div {
+    background: var(--surface-1);
+    padding: var(--sp-3) var(--sp-4);
+    display: flex; flex-direction: column-reverse; gap: 2px;
+  }
+  .i-summary dt {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
+    color: var(--muted-2);
+  }
+  .i-summary dd { color: var(--text); font-size: var(--text-sm); }
+  .i-warn {
+    margin-top: var(--sp-4);
+    padding: var(--sp-3) var(--sp-4);
+    border-left: 3px solid var(--purple-bright);
+    background: color-mix(in oklab, var(--purple) 8%, transparent);
+    color: var(--text); font-size: var(--text-xs); line-height: 1.6;
+  }
+  @media (max-width: 640px) {
+    .i-summary { grid-template-columns: 1fr; }
+  }
+
+  .i-note {
+    padding: var(--sp-3);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius);
+    color: var(--muted-2); font-size: var(--text-xs);
+  }
+
+  /* ---- Action bar ---- */
+  .i-actions {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: var(--sp-4);
+    margin-top: var(--sp-5);
+    padding-top: var(--sp-4);
+    border-top: 1px solid var(--line);
+  }
+  .i-btn {
+    padding: 8px 16px;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--muted);
+    transition: color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+  }
+  .i-btn-primary { background: var(--purple-bright); color: var(--bg); border-color: var(--purple-bright); }
+  .i-btn-primary:hover { background: var(--purple); }
+  .i-btn-ghost:hover { color: var(--text); border-color: var(--purple-bright); }
+  .i-btn:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
+  .i-btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+  .installer-root[data-installer-step='0'] [data-installer-back] { opacity: 0.4; pointer-events: none; }
+  .installer-root[data-installer-step='4'] [data-installer-next] { opacity: 0.4; pointer-events: none; }
+
+  .i-progress {
+    color: var(--muted-2);
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
+  }
+  @media (max-width: 480px) { .i-progress { display: none; } }
+</style>
