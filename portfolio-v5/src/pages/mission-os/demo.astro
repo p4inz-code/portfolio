@@ -2,36 +2,37 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import DemoRibbon from '../../components/features/MissionDemo/DemoRibbon.astro';
 import BootSequence from '../../components/features/MissionDemo/BootSequence.astro';
-import { PROJECTS } from '../../data/projects';
-
-const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
+import Desktop from '../../components/features/MissionDemo/Desktop.astro';
 ---
 <BaseLayout title={`Mission OS · Concept Demo — Atharva Patil`}>
   <div class="demo-scope">
     <DemoRibbon />
     <BootSequence username="p4inz" />
+    <Desktop />
   </div>
 
   <script is:inline>
     (function () {
-      const root = document.querySelector('[data-boot-root]');
-      if (!root) return;
+      const bootRoot = document.querySelector('[data-boot-root]');
+      const desktop  = document.querySelector('[data-desktop-root]');
+      if (!bootRoot || !desktop) return;
 
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+      // -------- Boot stage state machine --------
       const STAGES = ['boot', 'grub', 'kernel', 'login', 'desktop'];
       let idx = reduce ? STAGES.indexOf('login') : 0;
 
-      const secsEl = root.querySelector('[data-boot-secs]');
-      const loginBtn = root.querySelector('[data-boot-login]');
-      const skipLink = root.querySelector('[data-boot-skip]');
+      const secsEl = bootRoot.querySelector('[data-boot-secs]');
+      const loginBtn = bootRoot.querySelector('[data-boot-login]');
+      const skipLink = bootRoot.querySelector('[data-boot-skip]');
 
       let stageTimer = null;
       let grubCountdown = null;
 
       function setStage(next) {
         idx = Math.max(0, Math.min(STAGES.length - 1, next));
-        root.setAttribute('data-stage', STAGES[idx]);
+        bootRoot.setAttribute('data-stage', STAGES[idx]);
         clearTimeout(stageTimer);
         clearInterval(grubCountdown);
         arm();
@@ -50,29 +51,38 @@ const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
           }, 1000);
         }
         if (stage === 'kernel') stageTimer = setTimeout(() => setStage(idx + 1), 1900);
-        // login: no auto-advance; user must press Enter or click the button
+        // login: no auto-advance; Enter or button click finishes login
       }
 
       function advance() {
         const stage = STAGES[idx];
-        if (stage === 'login') { finishLogin(); return; }
+        if (stage === 'login')   { finishLogin(); return; }
+        if (stage === 'desktop') { return; } // desktop uses Escape only; Enter is inert
         setStage(idx + 1);
       }
 
       function finishLogin() {
-        // Phase 2 will replace this with the Desktop reveal.
-        // For Phase 1 we mark the sequence as 'desktop' so the boot chrome
-        // fades away and any downstream sibling can take over.
         setStage(STAGES.indexOf('desktop'));
+        // Fade in desktop after boot chrome starts fading out
+        setTimeout(() => desktop.setAttribute('data-desktop-active', 'true'), 200);
       }
 
       function exitDemo() {
+        // If a window is open, close it first — Escape twice to exit fully.
+        if (desktop.getAttribute('data-window-active')) {
+          setWindow('');
+          return;
+        }
         window.location.href = '/mission-os';
       }
 
       document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') { e.preventDefault(); exitDemo(); return; }
-        if (e.key === 'Enter')  { e.preventDefault(); advance(); return; }
+        if (e.key === 'Enter')  {
+          // If a dock icon is focused, let default click handler run
+          if (document.activeElement && document.activeElement.matches('[data-dock-app], [data-window-close]')) return;
+          e.preventDefault(); advance(); return;
+        }
       });
 
       if (loginBtn) loginBtn.addEventListener('click', finishLogin);
@@ -81,9 +91,40 @@ const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
         setStage(STAGES.indexOf('login'));
       });
 
-      // Kick off
-      root.setAttribute('data-stage', STAGES[idx]);
-      arm();
+      // -------- Desktop: window manager + clock --------
+      function setWindow(name) {
+        desktop.setAttribute('data-window-active', name || '');
+        const active = desktop.querySelector('[data-topbar-active]');
+        if (active) active.textContent = name ? (name.charAt(0).toUpperCase() + name.slice(1)) : 'Desktop';
+      }
+
+      desktop.querySelectorAll('[data-dock-app]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const app = btn.getAttribute('data-dock-app');
+          const current = desktop.getAttribute('data-window-active');
+          setWindow(current === app ? '' : app);
+        });
+      });
+
+      desktop.querySelectorAll('[data-window-close]').forEach(function (btn) {
+        btn.addEventListener('click', function () { setWindow(''); });
+      });
+
+      // Live clock in the top bar. Format HH:MM in the visitor's local time.
+      const clockEl = desktop.querySelector('[data-topbar-clock]');
+      function tickClock() {
+        if (!clockEl) return;
+        const d = new Date();
+        const hh = String(d.getHours()).padStart(2, '0');
+        const mm = String(d.getMinutes()).padStart(2, '0');
+        clockEl.textContent = hh + ':' + mm;
+      }
+      tickClock();
+      setInterval(tickClock, 30000);
+
+      // Kick off boot
+      bootRoot.setAttribute('data-stage', STAGES[idx]);
+      if (reduce) { finishLogin(); } else { arm(); }
     })();
   </script>
 
@@ -94,9 +135,6 @@ const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
     body:has(.demo-scope) .site-footer,
     body:has(.demo-scope) .skip-nav { display: none !important; }
     body:has(.demo-scope) main { padding: 0 !important; margin: 0 !important; max-width: none !important; }
-    body:has(.demo-scope) { background: #050210; margin: 0; }
-    /* Fallback for engines without :has(...) — the demo covers the viewport anyway
-       via position:fixed on .boot-root, so unhidden chrome sits behind it and is
-       visually irrelevant. Nothing to do here; noted for future reference. */
+    body:has(.demo-scope) { background: #050210; margin: 0; overflow: hidden; }
   </style>
 </BaseLayout>
