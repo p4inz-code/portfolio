@@ -1,0 +1,87 @@
+---
+/**
+ * Persistent "Concept demo, not a live OS" ribbon.
+ * Always visible across every stage of the demo. Announced to assistive tech
+ * via role="status". Escape or the Exit button both return to /mission-os.
+ */
+---
+<div class="demo-ribbon" role="status" aria-live="polite">
+  <span class="ribbon-dot" aria-hidden="true"></span>
+  <span class="ribbon-text">
+    <strong>Concept demo of Mission OS.</strong>
+    Not a live operating system. The real ISO is in internal testing.
+  </span>
+  <a href="/mission-os" class="ribbon-exit" data-demo-exit>
+    Exit demo
+    <span aria-hidden="true"> ↵</span>
+  </a>
+</div>
+
+<style>
+  .demo-ribbon {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 9000;
+    display: flex; align-items: center; gap: var(--sp-4);
+    padding: 10px var(--sp-6);
+    background: color-mix(in oklab, var(--bg) 90%, var(--purple-deep) 10%);
+    border-bottom: 1px solid var(--line-strong);
+    font-family: var(--font-mono);
+    font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--text);
+    backdrop-filter: blur(8px);
+  }
+  .ribbon-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--purple-bright);
+    box-shadow: 0 0 10px var(--purple-bright);
+    flex-shrink: 0;
+    animation: ribbon-pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes ribbon-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .ribbon-text {
+    flex: 1;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+  }
+  .ribbon-text strong {
+    color: var(--text);
+    font-weight: 500;
+    margin-right: 6px;
+  }
+  .ribbon-exit {
+    flex-shrink: 0;
+    color: var(--purple-bright);
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .ribbon-exit:hover, .ribbon-exit:focus-visible {
+    background: var(--purple-bright);
+    color: var(--bg);
+    outline: none;
+  }
+  .ribbon-exit:focus-visible {
+    outline: 2px solid var(--purple-bright);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ribbon-dot { animation: none; }
+  }
+  @media (max-width: 640px) {
+    .demo-ribbon { flex-wrap: wrap; padding: 8px var(--sp-4); gap: var(--sp-2); }
+    .ribbon-text { font-size: var(--text-xs); flex: 1 1 100%; order: 2; }
+    .ribbon-exit { order: 3; }
+  }
+</style>

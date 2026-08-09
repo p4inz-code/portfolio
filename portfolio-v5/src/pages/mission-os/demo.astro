@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DemoRibbon from '../../components/features/MissionDemo/DemoRibbon.astro';
+import BootSequence from '../../components/features/MissionDemo/BootSequence.astro';
+import { PROJECTS } from '../../data/projects';
+
+const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
+---
+<BaseLayout title={`Mission OS · Concept Demo — Atharva Patil`}>
+  <div class="demo-scope">
+    <DemoRibbon />
+    <BootSequence username="p4inz" />
+  </div>
+
+  <script is:inline>
+    (function () {
+      const root = document.querySelector('[data-boot-root]');
+      if (!root) return;
+
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const STAGES = ['boot', 'grub', 'kernel', 'login', 'desktop'];
+      let idx = reduce ? STAGES.indexOf('login') : 0;
+
+      const secsEl = root.querySelector('[data-boot-secs]');
+      const loginBtn = root.querySelector('[data-boot-login]');
+      const skipLink = root.querySelector('[data-boot-skip]');
+
+      let stageTimer = null;
+      let grubCountdown = null;
+
+      function setStage(next) {
+        idx = Math.max(0, Math.min(STAGES.length - 1, next));
+        root.setAttribute('data-stage', STAGES[idx]);
+        clearTimeout(stageTimer);
+        clearInterval(grubCountdown);
+        arm();
+      }
+
+      function arm() {
+        const stage = STAGES[idx];
+        if (stage === 'boot')   stageTimer = setTimeout(() => setStage(idx + 1), 1400);
+        if (stage === 'grub') {
+          let s = 2;
+          if (secsEl) secsEl.textContent = String(s);
+          grubCountdown = setInterval(() => {
+            s -= 1;
+            if (secsEl) secsEl.textContent = String(Math.max(0, s));
+            if (s <= 0) { clearInterval(grubCountdown); setStage(idx + 1); }
+          }, 1000);
+        }
+        if (stage === 'kernel') stageTimer = setTimeout(() => setStage(idx + 1), 1900);
+        // login: no auto-advance; user must press Enter or click the button
+      }
+
+      function advance() {
+        const stage = STAGES[idx];
+        if (stage === 'login') { finishLogin(); return; }
+        setStage(idx + 1);
+      }
+
+      function finishLogin() {
+        // Phase 2 will replace this with the Desktop reveal.
+        // For Phase 1 we mark the sequence as 'desktop' so the boot chrome
+        // fades away and any downstream sibling can take over.
+        setStage(STAGES.indexOf('desktop'));
+      }
+
+      function exitDemo() {
+        window.location.href = '/mission-os';
+      }
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { e.preventDefault(); exitDemo(); return; }
+        if (e.key === 'Enter')  { e.preventDefault(); advance(); return; }
+      });
+
+      if (loginBtn) loginBtn.addEventListener('click', finishLogin);
+      if (skipLink) skipLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        setStage(STAGES.indexOf('login'));
+      });
+
+      // Kick off
+      root.setAttribute('data-stage', STAGES[idx]);
+      arm();
+    })();
+  </script>
+
+  <style is:global>
+    /* Hide site chrome for the immersive demo — nav + footer would break the metaphor.
+       Scoped by .demo-scope's presence in the DOM so no other route is affected. */
+    body:has(.demo-scope) .nav,
+    body:has(.demo-scope) .site-footer,
+    body:has(.demo-scope) .skip-nav { display: none !important; }
+    body:has(.demo-scope) main { padding: 0 !important; margin: 0 !important; max-width: none !important; }
+    body:has(.demo-scope) { background: #050210; margin: 0; }
+    /* Fallback for engines without :has(...) — the demo covers the viewport anyway
+       via position:fixed on .boot-root, so unhidden chrome sits behind it and is
+       visually irrelevant. Nothing to do here; noted for future reference. */
+  </style>
+</BaseLayout>
