@@ -1,0 +1,112 @@
+---
+/**
+ * Screenshot frame — consistent framing for product captures across case studies.
+ *
+ * Every image gets:
+ *  - fixed aspect-ratio container (default 16:10) so the grid stays rhythmic
+ *  - object-fit:contain so nothing gets cropped, regardless of source aspect
+ *  - subtle "window chrome" (three dots) that reads as "this is a real app"
+ *  - dark surface background so letterboxing looks intentional in dark theme,
+ *    parchment surface in light theme (both handled by --surface-2 token)
+ *  - monospace caption underneath, styled like the rest of the site
+ *  - native lazy-loading (loading="lazy") + width/height hints to reserve
+ *    space and keep CLS ~0
+ */
+interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+  aspect?: string;   // e.g. "16 / 10", "4 / 3", "3 / 4"
+  span?: 'full' | 'half' | 'third';
+  chrome?: boolean;  // draw window dots
+  width?: number;    // intrinsic width for CLS hint
+  height?: number;
+}
+const {
+  src,
+  alt,
+  caption,
+  aspect = '16 / 10',
+  span = 'half',
+  chrome = true,
+  width = 1600,
+  height = 1000,
+} = Astro.props;
+---
+<figure class:list={['shot', `span-${span}`]}>
+  <div class="frame" style={`--frame-aspect:${aspect};`}>
+    {chrome && (
+      <div class="chrome" aria-hidden="true">
+        <span class="dot d1"></span>
+        <span class="dot d2"></span>
+        <span class="dot d3"></span>
+      </div>
+    )}
+    <img src={src} alt={alt} loading="lazy" decoding="async" width={width} height={height} />
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .shot {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    min-width: 0;
+  }
+  .span-full  { grid-column: 1 / -1; }
+  .span-half  { grid-column: span 6; }
+  .span-third { grid-column: span 4; }
+  @media (max-width: 900px) {
+    .span-half, .span-third { grid-column: 1 / -1; }
+  }
+  .frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: var(--frame-aspect);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    background: var(--surface-2);
+    overflow: hidden;
+    transition:
+      border-color var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out),
+      box-shadow var(--dur) var(--ease-out);
+  }
+  .shot:hover .frame {
+    border-color: var(--line-strong);
+    transform: translateY(-2px);
+    box-shadow: 0 20px 50px color-mix(in oklab, var(--bg) 60%, transparent);
+  }
+  .chrome {
+    position: absolute;
+    top: 10px; left: 12px;
+    display: flex; gap: 6px;
+    z-index: 2;
+    opacity: 0.7;
+  }
+  .chrome .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: color-mix(in oklab, var(--muted) 60%, transparent);
+  }
+  .chrome .d1 { background: color-mix(in oklab, #ff5f56 90%, var(--muted-2)); }
+  .chrome .d2 { background: color-mix(in oklab, #ffbd2e 90%, var(--muted-2)); }
+  .chrome .d3 { background: color-mix(in oklab, #27c93f 80%, var(--muted-2)); }
+  .frame img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+  }
+  figcaption {
+    font-family: var(--font-mono);
+    font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+    color: var(--muted-2);
+    padding: 0 var(--sp-1);
+  }
+</style>
