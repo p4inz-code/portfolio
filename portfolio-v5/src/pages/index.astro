@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Atharva Patil — software engineer, VFX student, builder of quiet privacy tools">
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <p class="hero-eyebrow">Building Northbyte Studios · Navi Mumbai, India</p>
+
+    <!--
+      Three-act narrative hero (signature move borrowed from emilianmisera.com):
+      the story of who Atharva is, in three lines. Each line reveals on scroll.
+      No skill-showcase grid. The person comes first.
+    -->
+    <h1 id="hero-title" class="hero-title">
+      <span class="act" style="--i:0"><em>I write software</em> during the day.</span>
+      <span class="act" style="--i:1"><em>I study VFX</em> on the side.</span>
+      <span class="act" style="--i:2"><em>I build Mission OS</em> on my own.</span>
+    </h1>
+
+    <p class="hero-sub">
+      Solo founder building privacy-first Windows software, an open-source Linux OS,
+      developer tools, and freelance web work. Everything here was designed, built, and
+      shipped by one person.
+    </p>
+
+    <div class="hero-actions">
+      <a href="/work" class="btn btn-primary">See selected work →</a>
+      <a href="/contact" class="btn btn-ghost">Get in touch</a>
+    </div>
+  </section>
+
+  <section class="featured wrap">
+    <p class="section-eyebrow">Selected work</p>
+    <div class="cards">
+      <a class="card card-featured" href="/mission-os">
+        <div class="card-media" aria-hidden="true">
+          <span class="card-media-title">Mission OS</span>
+          <span class="card-media-sub">Concept preview</span>
+        </div>
+        <div class="card-body">
+          <p class="card-status"><span class="dot"></span>Active development</p>
+          <h2 class="card-title">Mission OS</h2>
+          <p class="card-desc">A privacy-first, offline-first Linux OS on Debian Stable + KDE Plasma. QML/Qt installer, four pillars: privacy, security, portability, offline. GPLv3.</p>
+          <div class="tags"><span>Linux</span><span>GPLv3</span><span>Privacy</span></div>
+        </div>
+      </a>
+
+      <a class="card" href="/nexus">
+        <div class="card-body">
+          <p class="card-status"><span class="dot"></span>Public beta · v10.12.0</p>
+          <h2 class="card-title">Nexus</h2>
+          <p class="card-desc">Encrypted personal vault for Windows. AES-256-GCM authenticated encryption, Argon2id, fully offline. Zero telemetry.</p>
+          <div class="tags"><span>WPF</span><span>AES-256-GCM</span></div>
+        </div>
+      </a>
+
+      <a class="card" href="/kanvaz">
+        <div class="card-body">
+          <p class="card-status"><span class="dot"></span>Final release · v4.2.2</p>
+          <h2 class="card-title">Kanvaz</h2>
+          <p class="card-desc">Visual reference workspace for VFX and 3D artists. Plugin system, safer .kanvaz format, free forever. MIT.</p>
+          <div class="tags"><span>Electron</span><span>MIT</span></div>
+        </div>
+      </a>
+
+      <a class="card" href="/pursue-os">
+        <div class="card-body">
+          <p class="card-status"><span class="dot dot-warn"></span>Coming soon</p>
+          <h2 class="card-title">Pursue OS</h2>
+          <p class="card-desc">Investigation-focused Linux OS for OSINT, DFIR, and evidence-driven work. Purpose-built terminal + browser. Apache 2.0.</p>
+          <div class="tags"><span>Linux</span><span>OSINT</span><span>Apache 2.0</span></div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <style>
+    .hero { padding: var(--sp-11) 0 var(--sp-10); }
+    .hero-eyebrow { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--muted-2); margin-bottom: var(--sp-7); }
+    .hero-title { font-family: var(--font-display); font-size: var(--text-h1); font-weight: 400; line-height: var(--leading-display); letter-spacing: var(--tracking-tight); color: var(--text); display: flex; flex-direction: column; gap: var(--sp-2); max-width: 1000px; }
+    .hero-title .act { display: block; opacity: 0; transform: translateY(20px); animation: rise 0.8s var(--ease-out) forwards; animation-delay: calc(var(--i) * 220ms + 200ms); text-wrap: balance; }
+    .hero-title em { font-style: italic; color: var(--purple-bright); font-weight: 400; }
+    @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-title .act { animation: none; opacity: 1; transform: none; }
+    }
+
+    .hero-sub { margin-top: var(--sp-7); max-width: 640px; color: var(--muted); font-size: var(--text-md); line-height: var(--leading-body); }
+    .hero-actions { margin-top: var(--sp-8); display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+    .btn { display: inline-flex; align-items: center; gap: var(--sp-2); padding: var(--sp-3) var(--sp-6); border-radius: var(--radius-pill); font-family: var(--font-display); font-size: var(--text-sm); border: 1px solid transparent; transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out), background var(--dur) var(--ease-out); }
+    .btn-primary { background: var(--text); color: var(--bg); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 30px color-mix(in oklab, var(--text) 20%, transparent); }
+    .btn-ghost { color: var(--text); border-color: var(--line-strong); }
+    .btn-ghost:hover { border-color: var(--purple); color: var(--purple-bright); }
+
+    .featured { padding: var(--sp-9) 0 var(--sp-11); }
+    .section-eyebrow { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--muted-2); margin-bottom: var(--sp-6); }
+    .cards { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--sp-5); }
+    /* Bento: featured spans wider, rest tight — breaks the "all cards look same" pattern. */
+    .card { grid-column: span 6; padding: var(--sp-6); border: 1px solid var(--line); border-radius: var(--radius-xl); background: var(--surface-1); color: var(--text); transition: border-color var(--dur) var(--ease-out), transform var(--dur) var(--ease-out), background var(--dur) var(--ease-out); }
+    .card:hover { border-color: var(--line-strong); transform: translateY(-3px); background: var(--surface-2); }
+    .card-featured { grid-column: span 12; display: grid; grid-template-columns: 320px 1fr; gap: var(--sp-7); align-items: center; }
+    .card-media { min-height: 200px; border-radius: var(--radius-lg); border: 1px solid var(--line); background: var(--aurora), linear-gradient(180deg, var(--surface-2), var(--surface-1)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--sp-2); }
+    .card-media-title { font-family: var(--font-display); font-size: var(--text-lg); font-style: italic; color: var(--text); }
+    .card-media-sub { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--muted-2); }
+    .card-status { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-mono); text-transform: uppercase; color: var(--purple-bright); display: inline-flex; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-3); }
+    .card-status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--purple); box-shadow: 0 0 8px var(--purple); }
+    .card-status .dot-warn { background: #FFC04D; box-shadow: 0 0 8px rgba(255, 192, 77, 0.6); }
+    .card-title { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 400; letter-spacing: -0.015em; margin-bottom: var(--sp-2); }
+    .card-desc { color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); margin-bottom: var(--sp-4); }
+    .tags { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+    .tags span { font-family: var(--font-mono); font-size: var(--text-xxs); color: var(--muted-2); border: 1px solid var(--line); padding: 3px 8px; border-radius: var(--radius-sm); }
+
+    @media (max-width: 900px) {
+      .card, .card-featured { grid-column: span 12; }
+      .card-featured { grid-template-columns: 1fr; }
+    }
+  </style>
+</BaseLayout>

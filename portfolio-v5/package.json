@@ -1,0 +1,17 @@
+{
+  "name": "atharvapatil-portfolio-v5",
+  "version": "5.0.0-alpha",
+  "private": true,
+  "type": "module",
+  "description": "atharvapatil.tech — Astro rebuild. Ultraviolet Cathedral palette, PP Editorial New typography, light/dark toggle, cmd+K palette, four signature moves layered per reference-site inspiration.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.0.0"
+  }
+}

@@ -1,0 +1,83 @@
+---
+/**
+ * Theme toggle island. Injects an inline script early in <head> to
+ * apply the stored theme before first paint (no flash). The visible
+ * button is a hydration-free interactive: pure DOM listener attached
+ * once on load.
+ */
+---
+
+<button
+  type="button"
+  class="theme-toggle"
+  id="themeToggle"
+  aria-label="Toggle color theme"
+  title="Toggle theme (T)"
+>
+  <svg class="theme-icon theme-icon--dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+  </svg>
+  <svg class="theme-icon theme-icon--light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+  </svg>
+</button>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: rgba(184, 157, 255, 0.04);
+    color: var(--muted);
+    transition: border-color var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out),
+      background var(--dur) var(--ease-out);
+  }
+  .theme-toggle:hover {
+    border-color: var(--purple);
+    color: var(--purple-bright);
+    background: rgba(184, 157, 255, 0.10);
+  }
+  .theme-icon {
+    width: 16px;
+    height: 16px;
+  }
+  /* Dark theme shows moon (offers switch to light); light shows sun. */
+  :root[data-theme='light'] .theme-icon--dark { display: none; }
+  :root[data-theme='dark']  .theme-icon--light { display: none; }
+  :root:not([data-theme='light']) .theme-icon--light { display: none; }
+</style>
+
+<script>
+  // Guard against multiple hydrations if the component appears twice on a page.
+  if (!(window as any).__themeToggleBound) {
+    (window as any).__themeToggleBound = true;
+
+    const btn = document.getElementById('themeToggle');
+    if (btn) {
+      btn.addEventListener('click', () => {
+        const root = document.documentElement;
+        const current = root.getAttribute('data-theme') || 'dark';
+        const next = current === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('nb-theme', next); } catch (e) { /* private mode */ }
+      });
+    }
+
+    // Keyboard shortcut: "T" toggles theme (skipped while typing).
+    document.addEventListener('keydown', (e) => {
+      const target = e.target as HTMLElement | null;
+      const typing = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+      if (typing) return;
+      if (e.key === 't' || e.key === 'T') {
+        e.preventDefault();
+        btn?.click();
+      }
+    });
+  }
+</script>

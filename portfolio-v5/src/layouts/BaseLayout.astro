@@ -1,0 +1,116 @@
+---
+import '../styles/global.css';
+import ThemeToggle from '../components/ThemeToggle.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  themeColor?: string;
+}
+const {
+  title,
+  description = "Atharva Patil — software engineer, VFX and 3D student, founder of Northbyte Studios. Building Mission OS, Nexus, Kanvaz, Veris, and more.",
+  ogImage = "/og.png",
+  themeColor = "#0A0517",
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <meta name="theme-color" content={themeColor} media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F3EDDD" media="(prefers-color-scheme: light)" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+
+    <!-- Apply stored theme before first paint to avoid flash -->
+    <script is:inline>
+      (function () {
+        try {
+          const stored = localStorage.getItem('nb-theme');
+          const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+          const theme = stored || (prefersLight ? 'light' : 'dark');
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <a href="#main" class="skip-nav">Skip to content</a>
+
+    <header class="nav">
+      <div class="nav-inner wrap">
+        <a href="/" class="brand" aria-label="Atharva Patil — home">
+          <span class="brand-mark" aria-hidden="true">
+            <!-- Simplified NB monogram; real AP mark drops in when the PNG lands -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 19V5l9 12V5M14 19h5" />
+            </svg>
+          </span>
+          <span class="brand-name">Atharva Patil</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="/work">Work</a>
+          <a href="/3d">3D / VFX</a>
+          <a href="/services">Services</a>
+          <a href="/about">About</a>
+          <a href="/resume">Resume</a>
+          <a href="/contact" class="nav-cta">Get in touch</a>
+          <ThemeToggle />
+        </nav>
+      </div>
+    </header>
+
+    <main id="main"><slot /></main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>© 2026 Atharva Patil · Northbyte Studios · <span class="mono">v5.0-alpha</span></p>
+      </div>
+    </footer>
+
+    <style>
+      .nav { padding: var(--sp-5) 0; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); background: color-mix(in oklab, var(--bg) 78%, transparent); border-bottom: 1px solid var(--line); }
+      .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-6); }
+      .brand { display: inline-flex; align-items: center; gap: var(--sp-3); color: var(--text); }
+      .brand-mark { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid var(--line-strong); color: var(--purple-bright); }
+      .brand-mark svg { width: 16px; height: 16px; }
+      .brand-name { font-family: var(--font-display); font-size: var(--text-md); font-style: italic; }
+      .nav-links { display: flex; align-items: center; gap: var(--sp-7); }
+      .nav-links a { color: var(--muted); font-size: var(--text-sm); transition: color var(--dur-fast) var(--ease-out); }
+      .nav-links a:hover { color: var(--text); }
+      .nav-links a.nav-cta { color: var(--text); padding: var(--sp-2) var(--sp-5); border: 1px solid var(--line-strong); border-radius: var(--radius-pill); }
+      .nav-links a.nav-cta:hover { border-color: var(--purple); color: var(--purple-bright); }
+
+      .site-footer { padding: var(--sp-10) 0 var(--sp-8); margin-top: var(--sp-12); border-top: 1px solid var(--line); color: var(--muted-2); font-size: var(--text-xs); }
+      .site-footer .mono { font-family: var(--font-mono); }
+
+      @media (max-width: 760px) {
+        .nav-links { gap: var(--sp-4); }
+        .nav-links a:not(.nav-cta):not(.theme-toggle) { display: none; }
+      }
+    </style>
+  </body>
+</html>

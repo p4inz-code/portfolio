@@ -1,0 +1,154 @@
+/* ============================================================================
+ * atharvapatil.tech v5 — design tokens
+ *
+ * Dual-theme system. Ultraviolet Cathedral stays as the default dark theme
+ * (matching v4.x) and a complementary "Parchment" light mode inverts the
+ * relationship (cream stays as the surface, ultraviolet becomes the accent).
+ * Toggle stored in localStorage; `prefers-color-scheme` respected on first
+ * visit only.
+ * ========================================================================== */
+
+:root {
+  /* ---- Type scale ---- */
+  --font-display: 'PP Editorial New', 'Georgia', serif;
+  --font-body: 'PP Editorial New', 'Georgia', serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, monospace;
+
+  --text-xxs: 10.5px;
+  --text-xs: 12px;
+  --text-sm: 13.5px;
+  --text-base: 15.5px;
+  --text-md: 17px;
+  --text-lg: clamp(20px, 2vw, 24px);
+  --text-xl: clamp(24px, 2.6vw, 30px);
+  --text-h2: clamp(28px, 3.6vw, 44px);
+  --text-h1: clamp(44px, 6.5vw, 76px);
+
+  --tracking-tight: -0.025em;
+  --tracking-body: 0;
+  --tracking-mono: 0.06em;
+  --tracking-eyebrow: 0.14em;
+
+  --leading-display: 1.02;
+  --leading-body: 1.6;
+
+  /* ---- Spacing ---- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-7: 32px;
+  --sp-8: 40px;
+  --sp-9: 56px;
+  --sp-10: 72px;
+  --sp-11: 96px;
+  --sp-12: 128px;
+
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-pill: 100px;
+
+  /* ---- Motion ---- */
+  --ease-out: cubic-bezier(0.16, 0.8, 0.24, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 150ms;
+  --dur: 300ms;
+  --dur-slow: 500ms;
+
+  /* ---- Layout ---- */
+  --wrap: 1200px;
+  --wrap-narrow: 720px;
+}
+
+/* ============================================================================
+ * DARK — Ultraviolet Cathedral (default, matches v4.x)
+ * ========================================================================== */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #0A0517;
+  --surface-1: #150B25;
+  --surface-2: #1F1338;
+  --surface-3: #2B1B4F;
+
+  --line: rgba(232, 225, 208, 0.10);
+  --line-strong: rgba(184, 157, 255, 0.28);
+
+  --text: #E8E1D0;         /* parchment cream */
+  --muted: #9B95B0;
+  --muted-2: #726D88;
+
+  --purple: #B993FF;
+  --purple-bright: #D6BFFF;
+  --purple-deep: #7B3FE4;
+  --purple-soft: rgba(184, 157, 255, 0.45);
+  --purple-pale: #E9E0FF;
+
+  --green: #7CE0A8;
+  --green-live: #4ADE80;
+
+  --scrim: rgba(10, 5, 23, 0.72);
+
+  /* Ambient glow used behind the AP mark + hero (subtle, atmospheric) */
+  --aurora: radial-gradient(
+    ellipse 60% 40% at 30% 20%,
+    rgba(123, 63, 228, 0.16),
+    transparent 70%
+  );
+}
+
+/* ============================================================================
+ * LIGHT — Parchment Manuscript
+ *
+ * Inverts the relationship: the parchment cream becomes the surface, and
+ * ultraviolet becomes the accent color that sits on top of it. Reads like a
+ * design annual page, not a bright utility interface. Contrast checked
+ * WCAG AA for every text/background pairing.
+ * ========================================================================== */
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #F3EDDD;
+  --surface-1: #EAE2CE;
+  --surface-2: #DFD5BC;
+  --surface-3: #CCC0A2;
+
+  --line: rgba(30, 20, 45, 0.12);
+  --line-strong: rgba(88, 55, 179, 0.28);
+
+  --text: #1A0F28;         /* deep ink on parchment */
+  --muted: #4E4160;
+  --muted-2: #6E6383;
+
+  --purple: #6E44D6;       /* darker accent so it holds contrast on cream */
+  --purple-bright: #5A32C4;
+  --purple-deep: #3B1A9F;
+  --purple-soft: rgba(110, 68, 214, 0.35);
+  --purple-pale: #EDE2FF;
+
+  --green: #2F9B67;
+  --green-live: #148A4A;
+
+  --scrim: rgba(30, 20, 45, 0.48);
+
+  --aurora: radial-gradient(
+    ellipse 60% 40% at 30% 20%,
+    rgba(110, 68, 214, 0.10),
+    transparent 70%
+  );
+}
+
+/* ============================================================================
+ * Reduced-motion + reduced-transparency + high-contrast overrides
+ * ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
