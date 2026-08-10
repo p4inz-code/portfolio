@@ -20,6 +20,19 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.6.1',
+    kind: 'released',
+    summary: 'Contact page — terminal UI/UX restored from v4, with mailto composer that never touches a server.',
+    body: [
+      'The v5 /contact was a plain three-row link list — missed the whole point of the v4 terminal-form treatment. Restored the terminal metaphor and made it better than v4.',
+      'Left column: identity anchor (name, role, location), a mono-tagged channel list (Email / Discord / GitHub / Studio), and an availability indicator with a real pulsing dot ("Freelance capacity: selective, taking new work"). Sticky on desktop so it stays visible as the form scrolls.',
+      'Right column: proper macOS-style terminal card with three traffic-light dots + "msg — mailto composer · no data leaves this page" title bar. Five fields — name, email, service (custom select), budget (custom select), message — all styled as `› field` prompts. Underline-only inputs that light up in purple-bright on focus. Selects are custom keyboard-accessible listboxes (ArrowDown/ArrowUp/Enter/Escape all work), not native controls.',
+      'Submit builds a mailto: URL with a formatted subject + body carrying every field, opens the visitor\'s mail client. There is no backend, no fetch, no third-party form service — the "no data leaves this page" claim is literal. Guaranteed to always work, guaranteed to never leak.',
+      'iOS Safari auto-zoom guard: all inputs bump to 16px below 640px viewport width so tapping into a field never triggers the auto-zoom.',
+      'Skills used: taste-skill, redesign-skill, ui-ux-pro-max (form a11y + keyboard nav), receiving-code-review, verification-before-completion.',
+    ],
+  },
+  {
     version: 'v5.6.0',
     kind: 'released',
     summary: 'Completeness pass — humans.txt, ai.txt, opensearch.xml, manifest.webmanifest, browserconfig.xml, RSS feed, and every rel/meta link tag wired up.',

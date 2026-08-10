@@ -1,67 +1,463 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
-import Button from '../components/ui/Button.astro';
-import { CONTACT } from '../data/site';
+import { CONTACT, SITE } from '../data/site';
 ---
 <BaseLayout title="Get in Touch — Atharva Patil">
-  <Section eyebrow="Get in touch" heading="Reach out directly." intro="Freelance, collaboration, or hiring — email is the fastest. Discord for the Nexus beta. GitHub for open-source work.">
-    <div class="contact-block">
-      <a class="contact-row" href={`mailto:${CONTACT.email}`}>
-        <span class="contact-label">Email</span>
-        <span class="contact-value">{CONTACT.email}</span>
-      </a>
-      <a class="contact-row" href={CONTACT.discordInvite} target="_blank" rel="noopener noreferrer">
-        <span class="contact-label">Discord</span>
-        <span class="contact-value">{CONTACT.discord} · <em>join the Nexus beta</em></span>
-      </a>
-      <a class="contact-row" href={CONTACT.github} target="_blank" rel="noopener noreferrer">
-        <span class="contact-label">GitHub</span>
-        <span class="contact-value">{CONTACT.githubHandle}</span>
-      </a>
-    </div>
+  <Section
+    wide
+    eyebrow="Get in touch"
+    heading="Send it as a real message, not a form to no one."
+    headingEmphasis="Write to me directly."
+    intro="I read every message myself and reply within 1–2 days. Freelance, collaboration, hiring, security disclosure — whatever it is, it lands in my inbox."
+  >
+    <div class="contact-grid">
 
-    <div class="contact-cta">
-      <Button href={`mailto:${CONTACT.email}?subject=Project inquiry`} variant="primary">
-        Start a conversation →
-      </Button>
+      <!-- LEFT: identity + channels -->
+      <aside class="contact-left">
+        <p class="cl-name">Atharva Patil</p>
+        <p class="cl-role">Founder · Developer · 3D Artist · Navi Mumbai, IN</p>
+
+        <ul class="cl-channels" role="list">
+          <li>
+            <span class="cl-key">Email</span>
+            <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+          </li>
+          <li>
+            <span class="cl-key">Discord</span>
+            <a href={CONTACT.discordInvite} target="_blank" rel="noopener noreferrer">{CONTACT.discord} · <em>Nexus beta</em></a>
+          </li>
+          <li>
+            <span class="cl-key">GitHub</span>
+            <a href={CONTACT.github} target="_blank" rel="noopener noreferrer">{CONTACT.githubHandle}</a>
+          </li>
+          <li>
+            <span class="cl-key">Studio</span>
+            <span>{SITE.studio} · founded {SITE.studioFounded}</span>
+          </li>
+        </ul>
+
+        <p class="cl-avail">
+          <span class="cl-dot" aria-hidden="true"></span>
+          Freelance capacity: <em>selective, taking new work</em>
+        </p>
+      </aside>
+
+      <!-- RIGHT: terminal-style form -->
+      <div class="term-card">
+        <header class="term-head">
+          <span class="term-dot term-dot-close" aria-hidden="true"></span>
+          <span class="term-dot term-dot-min"   aria-hidden="true"></span>
+          <span class="term-dot term-dot-max"   aria-hidden="true"></span>
+          <span class="term-title">msg — mailto composer · <span class="term-title-secondary">no data leaves this page</span></span>
+        </header>
+
+        <form class="term-form" id="contactForm" novalidate>
+          <div class="term-line">
+            <label for="c-name" class="term-prompt"><span class="term-caret">›</span> name</label>
+            <input type="text" id="c-name" class="term-input" placeholder="your name" required autocomplete="name" />
+          </div>
+
+          <div class="term-line">
+            <label for="c-email" class="term-prompt"><span class="term-caret">›</span> email</label>
+            <input type="email" id="c-email" class="term-input" placeholder="you@example.com" required autocomplete="email" />
+          </div>
+
+          <div class="term-line">
+            <label id="c-service-label" class="term-prompt"><span class="term-caret">›</span> service</label>
+            <div class="term-select" data-term-select data-selected="">
+              <button type="button" class="term-select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="c-service-label">
+                <span data-term-select-value>select one</span>
+                <span class="term-select-chev" aria-hidden="true">▾</span>
+              </button>
+              <ul class="term-select-list" role="listbox" hidden>
+                <li role="option" data-value="Product / Web Development">Product / Web Development</li>
+                <li role="option" data-value="UI / UX & Product Design">UI / UX &amp; Product Design</li>
+                <li role="option" data-value="Branding & Visual Identity">Branding &amp; Visual Identity</li>
+                <li role="option" data-value="3D / VFX & Visualization">3D / VFX &amp; Visualization</li>
+                <li role="option" data-value="Security / Privacy consulting">Security / Privacy consulting</li>
+                <li role="option" data-value="Something else">Something else</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="term-line">
+            <label id="c-budget-label" class="term-prompt"><span class="term-caret">›</span> budget</label>
+            <div class="term-select" data-term-select data-selected="">
+              <button type="button" class="term-select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="c-budget-label">
+                <span data-term-select-value>select one</span>
+                <span class="term-select-chev" aria-hidden="true">▾</span>
+              </button>
+              <ul class="term-select-list" role="listbox" hidden>
+                <li role="option" data-value="Under $1k">Under $1k</li>
+                <li role="option" data-value="$1k – $5k">$1k – $5k</li>
+                <li role="option" data-value="$5k – $15k">$5k – $15k</li>
+                <li role="option" data-value="$15k+">$15k+</li>
+                <li role="option" data-value="Not sure yet">Not sure yet</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="term-line term-line-block">
+            <label for="c-message" class="term-prompt"><span class="term-caret">›</span> message</label>
+            <textarea id="c-message" class="term-textarea" placeholder="What are you trying to build, and what's the timeline?" required></textarea>
+          </div>
+
+          <div class="term-actions">
+            <button type="submit" class="term-submit">
+              <span class="term-caret" aria-hidden="true">›</span> send message
+            </button>
+            <p class="term-hint">
+              Opens your mail client with everything pre-filled to <span>{CONTACT.email}</span>.
+              Nothing is stored, POSTed, or logged.
+            </p>
+          </div>
+
+          <p class="term-status" id="c-status" role="status" aria-live="polite" hidden></p>
+        </form>
+      </div>
+
     </div>
   </Section>
 
+  <script is:inline>
+    (function () {
+      // -------- Custom terminal-style select dropdowns --------
+      document.querySelectorAll('[data-term-select]').forEach(function (root) {
+        const trigger = root.querySelector('.term-select-trigger');
+        const list = root.querySelector('.term-select-list');
+        const valueEl = root.querySelector('[data-term-select-value]');
+        if (!trigger || !list || !valueEl) return;
+
+        function open() {
+          list.hidden = false;
+          trigger.setAttribute('aria-expanded', 'true');
+          root.classList.add('open');
+        }
+        function close() {
+          list.hidden = true;
+          trigger.setAttribute('aria-expanded', 'false');
+          root.classList.remove('open');
+        }
+        trigger.addEventListener('click', function () {
+          list.hidden ? open() : close();
+        });
+        list.querySelectorAll('[role="option"]').forEach(function (opt) {
+          opt.addEventListener('click', function () {
+            const val = opt.getAttribute('data-value') || '';
+            root.setAttribute('data-selected', val);
+            valueEl.textContent = val || 'select one';
+            close();
+            trigger.focus();
+          });
+        });
+        document.addEventListener('click', function (e) {
+          if (!root.contains(e.target)) close();
+        });
+        trigger.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') { close(); return; }
+          if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            if (list.hidden) open();
+            const first = list.querySelector('[role="option"]');
+            if (first && typeof first.focus === 'function') first.focus();
+          }
+        });
+        list.querySelectorAll('[role="option"]').forEach(function (opt, i, arr) {
+          opt.setAttribute('tabindex', '-1');
+          opt.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') { close(); trigger.focus(); return; }
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); opt.click(); return; }
+            if (e.key === 'ArrowDown') { e.preventDefault(); (arr[i+1] || arr[0]).focus(); return; }
+            if (e.key === 'ArrowUp')   { e.preventDefault(); (arr[i-1] || arr[arr.length-1]).focus(); return; }
+          });
+        });
+      });
+
+      // -------- Submit -> mailto composer --------
+      const form = document.getElementById('contactForm');
+      const status = document.getElementById('c-status');
+      if (!form) return;
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = /** @type {HTMLInputElement} */ (document.getElementById('c-name')).value.trim();
+        const email = /** @type {HTMLInputElement} */ (document.getElementById('c-email')).value.trim();
+        const message = /** @type {HTMLTextAreaElement} */ (document.getElementById('c-message')).value.trim();
+        const selects = form.querySelectorAll('[data-term-select]');
+        const service = selects[0] ? selects[0].getAttribute('data-selected') : '';
+        const budget  = selects[1] ? selects[1].getAttribute('data-selected') : '';
+
+        if (!name || !email || !message) {
+          if (status) { status.hidden = false; status.textContent = 'name, email, and message are required.'; }
+          return;
+        }
+
+        const subject = 'Project inquiry — ' + name;
+        const bodyLines = [
+          '(sent from atharvapatil.tech/contact — mailto composer)',
+          '',
+          'from:     ' + name + ' <' + email + '>',
+          'service:  ' + (service || '(not specified)'),
+          'budget:   ' + (budget  || '(not specified)'),
+          '',
+          '--',
+          '',
+          message,
+        ];
+        const href = 'mailto:atharva.patil.cg@gmail.com'
+          + '?subject=' + encodeURIComponent(subject)
+          + '&body='    + encodeURIComponent(bodyLines.join('\n'));
+        window.location.href = href;
+
+        if (status) {
+          status.hidden = false;
+          status.textContent = 'opened your mail client — if nothing happened, email me directly at atharva.patil.cg@gmail.com';
+        }
+      });
+    })();
+  </script>
+
   <style>
-    .contact-block {
-      display: flex; flex-direction: column;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
-      overflow: hidden;
-      background: var(--surface-1);
-      max-width: var(--wrap-narrow);
-    }
-    .contact-row {
+    /* ============ Layout ============ */
+    .contact-grid {
       display: grid;
-      grid-template-columns: 120px 1fr;
-      gap: var(--sp-5);
-      padding: var(--sp-6);
-      align-items: baseline;
-      border-bottom: 1px solid var(--line);
-      color: var(--text);
-      transition: background var(--dur) var(--ease-out);
+      grid-template-columns: 1fr 1.4fr;
+      gap: var(--sp-8);
+      align-items: start;
     }
-    .contact-row:last-child { border-bottom: none; }
-    .contact-row:hover { background: var(--surface-2); }
-    .contact-label {
+    @media (max-width: 900px) {
+      .contact-grid { grid-template-columns: 1fr; gap: var(--sp-6); }
+    }
+
+    /* ============ LEFT column ============ */
+    .contact-left {
+      position: sticky; top: 120px;
+    }
+    .cl-name {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: var(--text-xl);
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .cl-role {
       font-family: var(--font-mono);
-      font-size: var(--text-xs);
+      font-size: var(--text-xxs);
       letter-spacing: var(--tracking-eyebrow);
       text-transform: uppercase;
-      color: var(--muted-2);
+      color: var(--muted);
+      margin-bottom: var(--sp-6);
     }
-    .contact-value {
-      font-family: var(--font-display);
-      font-size: var(--text-md);
+    .cl-channels { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--sp-3); }
+    .cl-channels li {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: var(--sp-4);
+      align-items: baseline;
+      padding: var(--sp-3) 0;
+      border-top: 1px solid var(--line);
+    }
+    .cl-channels li:last-child { border-bottom: 1px solid var(--line); }
+    .cl-key {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .cl-channels a, .cl-channels span:not(.cl-key) {
       color: var(--text);
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
     }
-    .contact-value em { color: var(--purple-bright); font-style: italic; }
-    .contact-cta { margin-top: var(--sp-8); }
+    .cl-channels a:hover { color: var(--purple-bright); }
+    .cl-channels em { color: var(--purple-bright); font-style: italic; }
+    .cl-avail {
+      margin-top: var(--sp-5);
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+    .cl-avail em { color: var(--purple-bright); font-style: italic; }
+    .cl-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: cl-pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes cl-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.55; transform: scale(0.9); }
+    }
+    @media (prefers-reduced-motion: reduce) { .cl-dot { animation: none; } }
+
+    /* ============ Terminal card ============ */
+    .term-card {
+      background:
+        radial-gradient(ellipse 100% 100% at 100% 0%, color-mix(in oklab, var(--purple-deep) 10%, transparent), transparent 55%),
+        var(--surface-1);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow:
+        0 30px 80px color-mix(in oklab, #000 40%, transparent),
+        0 0 0 1px color-mix(in oklab, var(--purple) 6%, transparent);
+    }
+    .term-head {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 16px;
+      background: color-mix(in oklab, var(--surface-2) 85%, transparent);
+      border-bottom: 1px solid var(--line);
+    }
+    .term-dot {
+      width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0;
+    }
+    .term-dot-close { background: #FF5F56; }
+    .term-dot-min   { background: #FFBD2E; }
+    .term-dot-max   { background: #27C93F; }
+    .term-title {
+      margin-left: var(--sp-3);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .term-title-secondary { color: var(--muted); opacity: 0.75; }
+
+    /* ============ Form ============ */
+    .term-form {
+      padding: var(--sp-6) var(--sp-7) var(--sp-7);
+      font-family: var(--font-mono);
+    }
+    .term-line {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: var(--sp-4);
+      align-items: center;
+      padding: var(--sp-3) 0;
+      border-bottom: 1px dashed var(--line);
+    }
+    .term-line-block { grid-template-columns: 110px 1fr; align-items: start; }
+    .term-line:last-of-type { border-bottom: none; }
+    .term-prompt {
+      font-family: var(--font-mono);
+      font-size: var(--text-xxs);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--muted);
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .term-caret { color: var(--purple-bright); }
+    .term-input, .term-textarea {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid transparent;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 15px;
+      padding: 6px 0;
+      width: 100%;
+      outline: none;
+      transition: border-color var(--dur) var(--ease-out);
+    }
+    .term-input::placeholder, .term-textarea::placeholder { color: var(--muted-2); font-style: italic; }
+    .term-input:focus, .term-textarea:focus { border-bottom-color: var(--purple-bright); }
+    .term-textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+    /* Custom select */
+    .term-select { position: relative; }
+    .term-select-trigger {
+      width: 100%;
+      display: inline-flex; align-items: center; justify-content: space-between;
+      background: transparent;
+      border: none; border-bottom: 1px solid transparent;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 15px;
+      padding: 6px 0;
+      cursor: pointer;
+      transition: border-color var(--dur) var(--ease-out);
+    }
+    .term-select-trigger:hover { border-bottom-color: var(--line-strong); }
+    .term-select-trigger:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 3px; border-radius: 4px; }
+    .term-select.open .term-select-trigger { border-bottom-color: var(--purple-bright); }
+    .term-select-chev { color: var(--muted); transition: transform var(--dur-fast) var(--ease-out); }
+    .term-select.open .term-select-chev { transform: rotate(180deg); color: var(--purple-bright); }
+    .term-select[data-selected=""] .term-select-trigger > span:first-child { color: var(--muted-2); font-style: italic; }
+    .term-select-list {
+      list-style: none; padding: 6px; margin: 6px 0 0;
+      position: absolute; top: 100%; left: 0; right: 0;
+      background: var(--surface-2);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px color-mix(in oklab, #000 40%, transparent);
+      z-index: 20;
+      max-height: 240px; overflow-y: auto;
+    }
+    .term-select-list li {
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--text);
+      font-family: var(--font-mono); font-size: 13px;
+    }
+    .term-select-list li:hover,
+    .term-select-list li:focus {
+      background: color-mix(in oklab, var(--purple) 15%, transparent);
+      color: var(--purple-bright);
+      outline: none;
+    }
+
+    /* Actions */
+    .term-actions {
+      display: flex; align-items: center; gap: var(--sp-5);
+      margin-top: var(--sp-5);
+      padding-top: var(--sp-5);
+      border-top: 1px solid var(--line);
+      flex-wrap: wrap;
+    }
+    .term-submit {
+      background: var(--purple-bright);
+      color: var(--bg);
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: 10px 20px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: transform var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+    }
+    .term-submit .term-caret { color: var(--bg); }
+    .term-submit:hover { background: var(--purple); transform: translateY(-1px); }
+    .term-submit:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 3px; }
+    .term-hint {
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.5;
+      flex: 1; min-width: 240px;
+    }
+    .term-hint span { color: var(--purple-bright); }
+    .term-status {
+      margin-top: var(--sp-4);
+      padding: var(--sp-3) var(--sp-4);
+      background: color-mix(in oklab, var(--purple) 10%, transparent);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--font-mono); font-size: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .term-form { padding: var(--sp-5) var(--sp-5) var(--sp-6); }
+      .term-line, .term-line-block { grid-template-columns: 1fr; gap: 4px; }
+      .term-input, .term-textarea, .term-select-trigger { font-size: 16px; } /* iOS zoom prevention */
+      .term-actions { gap: var(--sp-3); }
+    }
   </style>
 </BaseLayout>
