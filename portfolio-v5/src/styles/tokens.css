@@ -81,7 +81,11 @@
 
   --text: #E8E1D0;         /* parchment cream */
   --muted: #9B95B0;
-  --muted-2: #726D88;
+  /* --muted-2 brightened from #726D88 (4.06:1, failed AA at small text)
+     to #8A83A5 (~5.3:1) so every 10.5-12px use passes WCAG-AA on --bg.
+     Still visibly dimmer than --muted (~7.9:1), so the tertiary
+     hierarchy is preserved. Audit v5.4.0. */
+  --muted-2: #8A83A5;
 
   --purple: #B993FF;
   --purple-bright: #D6BFFF;
@@ -91,6 +95,12 @@
 
   --green: #7CE0A8;
   --green-live: #4ADE80;
+
+  /* --warn is the visual amber (dots, borders, subtle tint). --warn-text is
+     the contrast-safe amber used ONLY for text — same value in dark theme
+     because pure amber passes AA on --bg. Overridden in light theme. */
+  --warn: #FFC04D;
+  --warn-text: #FFC04D;
 
   --scrim: rgba(10, 5, 23, 0.72);
 
@@ -123,7 +133,10 @@
 
   --text: #1A0F28;         /* deep ink on parchment */
   --muted: #4E4160;
-  --muted-2: #6E6383;
+  /* --muted-2 slightly darkened from #6E6383 to #5E5378 so small text on
+     the darker surface tiers (--surface-2 #DFD5BC, --surface-3 #CCC0A2)
+     also passes AA, not just on --bg. Audit v5.4.0. */
+  --muted-2: #5E5378;
 
   --purple: #6E44D6;       /* darker accent so it holds contrast on cream */
   --purple-bright: #5A32C4;
@@ -133,6 +146,12 @@
 
   --green: #2F9B67;
   --green-live: #148A4A;
+
+  /* Warn tokens for light theme: --warn stays pure amber so dots and
+     background tints keep their identity, but --warn-text is a darker
+     amber (~5.3:1 on --bg #F3EDDD) so text passes WCAG-AA on cream. */
+  --warn: #FFC04D;
+  --warn-text: #8A5A00;
 
   --scrim: rgba(30, 20, 45, 0.48);
 

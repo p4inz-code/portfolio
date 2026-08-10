@@ -20,6 +20,18 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.4.0',
+    kind: 'released',
+    summary: 'Deep 20-pass theme audit — three real fixes: dark --muted-2 contrast, light --muted-2 on darker surfaces, warn amber in light theme.',
+    body: [
+      'Ran a systematic 20-pass audit across both themes covering contrast, focus, motion, SVG safety, data-layer discipline, theme parity, hardcoded colors, semantic HTML, alt text, keyboard nav, component reuse, meta tags, font loading, palette-in-both-modes, mobile chrome, empty states, JS-off resilience, and version-tag sync. 17 passes were already clean. Three fixes landed.',
+      'Dark --muted-2 brightened from #726D88 (4.06:1 on --bg, failing AA for small text) to #8A83A5 (~5.3:1, passes AA). Still visibly dimmer than --muted (~7.9:1), so the tertiary hierarchy is preserved. Site-wide fix — covers all 40+ selectors that use --muted-2 at 10.5-12px without needing per-selector overrides.',
+      'Light --muted-2 slightly darkened from #6E6383 to #5E5378 so small text on the darker surface tiers (--surface-2 #DFD5BC, --surface-3 #CCC0A2) also passes AA, not just on --bg.',
+      'Warn amber #FFC04D was hardcoded in StatusPill (comingSoon) and pursue-os.astro (notice + status warn). On light theme, amber-on-cream scored ~2.1:1 for text — clear WCAG-AA fail. Fix: added two tokens — --warn (visual amber, pure #FFC04D in both themes, used for dots/borders/tint backgrounds) and --warn-text (contrast-safe text amber; #FFC04D in dark, #8A5A00 dark amber in light, ~5.3:1 on --bg). Every text use switched to --warn-text; decorative uses stay on --warn.',
+      'Skills applied: taste-skill, ui-ux-pro-max (a11y > usability > perf > taste), redesign-skill (audit-first), receiving-code-review, verification-before-completion, systematic-debugging.',
+    ],
+  },
+  {
     version: 'v5.3.2',
     kind: 'released',
     summary: 'Mission OS demo — reachable via ⌘K, top bar keeps clock/date visible on mobile.',

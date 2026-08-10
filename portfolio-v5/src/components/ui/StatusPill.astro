@@ -17,7 +17,7 @@ const dotColor: Record<ProjectStatus['kind'], string> = {
   polish: 'var(--purple)',
   onHold: 'var(--muted)',
   testing: 'var(--muted)',
-  comingSoon: '#FFC04D',
+  comingSoon: 'var(--warn)',
 };
 ---
 <span class:list={['status-pill', `size-${size}`]} data-kind={status.kind}>
