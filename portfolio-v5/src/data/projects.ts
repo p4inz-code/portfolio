@@ -49,9 +49,9 @@ export const PROJECTS: Project[] = [
   {
     slug: 'mission-os',
     name: 'Mission OS',
-    tagline: 'A privacy-first Linux OS, designed like a product.',
+    tagline: 'A privacy-first Linux OS built for developers, designers, and systems engineers who ship.',
     description:
-      'A privacy-first, offline-first Linux operating system built on Debian Stable and KDE Plasma. Not "another distro" — a focused OS designed around four pillars: privacy-first, security-conscious, portable-first, offline-first. No telemetry, ever.',
+      'A privacy-first, offline-first Linux operating system built on Debian Stable and KDE Plasma. Not "another distro." Four pillars: privacy-first, security-conscious, portable-first, offline-first — held to the level of a real product. Designed for the developer who wants their laptop to work without phoning home, the designer who wants a real color-managed KDE desktop without spyware bundled in, and the systems engineer who wants an audit-friendly Debian base with hardened defaults out of the box. No telemetry, ever.',
     status: { kind: 'active', label: 'Active Development' },
     tags: ['Linux', 'GPLv3', 'Privacy'],
     metaTags: ['Debian Stable', 'KDE Plasma', 'QML / Qt', 'GPLv3'],

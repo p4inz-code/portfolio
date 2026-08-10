@@ -44,6 +44,29 @@ const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
     </div>
   </Section>
 
+  <Section eyebrow="Who this is for" heading="Three people who should try Mission OS on day one.">
+    <div class="persona-grid">
+      <article class="persona-card">
+        <p class="persona-role">The developer</p>
+        <p class="persona-body">
+          Wants a Linux laptop that doesn't phone home to Ubuntu One or Snap Store telemetry. Wants apt + a real KDE Plasma desktop + Docker + VS Code + a browser that resists fingerprinting, all preconfigured. <strong>Mission OS ships all of that on first boot</strong> — no post-install hardening script needed.
+        </p>
+      </article>
+      <article class="persona-card">
+        <p class="persona-role">The designer</p>
+        <p class="persona-body">
+          Wants color-managed KDE, real font rendering, Blender / Krita / Inkscape / GIMP available in <code>mission-store</code>, and a wallpaper that isn't a stock corporate photo. Wants privacy without giving up a beautiful desktop. <strong>Mission OS treats the desktop as the product</strong> — not a shell over a server.
+        </p>
+      </article>
+      <article class="persona-card">
+        <p class="persona-role">The systems engineer</p>
+        <p class="persona-body">
+          Wants an audit-friendly Debian base with hardened defaults, LUKS2 + Argon2id disk encryption, secure-boot on, TPM-sealed unlock available, and a Signed-update path. Wants to read the diff between "vanilla Debian" and "Mission OS" and understand every deviation. <strong>Mission OS is GPLv3</strong> — every change is inspectable.
+        </p>
+      </article>
+    </div>
+  </Section>
+
   <Section eyebrow="Four pillars">
     <div class="feature-grid">
       <article class="feature-card">
@@ -158,6 +181,40 @@ const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
     .body-copy p + p { margin-top: var(--sp-4); }
     .body-copy strong { color: var(--text); font-weight: 500; }
     .body-copy em { color: var(--purple-bright); font-style: italic; }
+    /* Persona grid (v5.10.1 add) — "who this is for" cards */
+    .persona-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-4);
+    }
+    @media (max-width: 900px) { .persona-grid { grid-template-columns: 1fr; } }
+    .persona-card {
+      padding: var(--sp-6);
+      border-top: 2px solid var(--purple-bright);
+      background: color-mix(in oklab, var(--surface-1) 60%, transparent);
+    }
+    .persona-role {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--purple-bright);
+      margin-bottom: var(--sp-3);
+    }
+    .persona-body {
+      color: var(--muted);
+      font-size: var(--text-sm);
+      line-height: var(--leading-body);
+    }
+    .persona-body strong { color: var(--text); font-weight: 500; }
+    .persona-body code {
+      font-family: var(--font-mono);
+      background: color-mix(in oklab, var(--purple) 12%, transparent);
+      color: var(--purple-bright);
+      padding: 1px 5px;
+      border-radius: 2px;
+      font-size: 12px;
+    }
+
     .feature-grid {
       display: grid; grid-template-columns: repeat(2, 1fr);
       gap: var(--sp-4);

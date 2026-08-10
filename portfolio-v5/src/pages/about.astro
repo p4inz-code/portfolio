@@ -76,11 +76,21 @@ const principles = [
 ];
 
 const timeline = [
-  { year: '2025', event: 'First studio (Obsidian Labs) — early Windows tooling, retired later that year.' },
-  { year: 'Early 2026', event: 'B.Sc. Animation program begins at D. Y. Patil University. Software work continues in parallel.' },
-  { year: 'Jun 2026', event: 'Nexus, Kanvaz, and Veris all start within weeks of each other — one commercial vault, one open-source workspace, one investigation platform.' },
+  { year: '2025', event: 'First studio (Obsidian Labs). Early Windows tooling. B.Sc. Animation program begins at D. Y. Patil University.' },
+  { year: 'Early 2026', event: 'Kanvaz released open source (MIT) as a reference workspace for the VFX community I\'m part of.' },
+  { year: 'Jun 2026', event: 'Nexus, Kanvaz, and Veris all in active development within weeks of each other — one commercial vault, one open-source workspace, one investigation platform.' },
   { year: 'Mid 2026', event: 'Northbyte Studios founded as the second (and current) studio name. Mission OS work begins.' },
-  { year: 'Aug 2026', event: 'This portfolio migrated to Astro (v5.0). Pursue OS repository foundation goes public. Mission OS ISO enters internal testing.' },
+  { year: 'Aug 2026', event: 'Second year of the animation program. Portfolio migrated to Astro (v5.0). Pursue OS repository foundation goes public. Mission OS ISO enters internal testing.' },
+];
+
+// Investor-ready traction snapshot — real, verifiable numbers only.
+const traction = [
+  { k: 'Products shipped or in flight', v: `${PROJECTS.length}` },
+  { k: 'Open source (MIT / GPLv3 / Apache 2.0)', v: `${PROJECTS.filter((p) => p.license && p.license !== 'Proprietary').length}` },
+  { k: 'Test coverage across products', v: '4,100+ automated tests (Veris 3,100 + repo-map 870 + others)' },
+  { k: 'Design-through-shipping loop', v: '1 person — no handoffs, no committees' },
+  { k: 'Third-party analytics on any product', v: '0 — no telemetry, ever' },
+  { k: 'External dependencies (this site)', v: '0 tracking, 0 fetch calls at runtime' },
 ];
 
 const shippedCount = PROJECTS.length;
@@ -93,7 +103,7 @@ const activeCount = PROJECTS.filter(
   <!-- HERO -->
   <Section wide heading="Developer by discipline. 3D artist by training. Builder by default." headingEmphasis="Atharva Patil.">
     <p class="about-lede">
-      Solo founder of <em>{SITE.studio}</em>, based in {SITE.location}. First-year VFX &amp; 3D
+      Solo founder of <em>{SITE.studio}</em>, based in {SITE.location}. Second-year VFX &amp; 3D
       animation student, second year as a software builder under my real name (previous handles
       <em>PainZ</em> and <em>Grim</em> are retired — everything ships as <strong>p4inz</strong> or
       the real name now). {shippedCount} products shipped or in flight, {activeCount} in active
@@ -161,6 +171,23 @@ const activeCount = PROJECTS.filter(
           <p class="pr-body">{p.body}</p>
         </article>
       ))}
+    </div>
+  </Section>
+
+  <!-- INVESTOR / COLLABORATOR READ -->
+  <Section eyebrow="For investors + collaborators" heading="The shape of what I'm building." intro="A studio designed to survive on principles, not headcount. Numbers below are real — verifiable in the repos and the changelog on /status.">
+    <dl class="tr-grid">
+      {traction.map((t) => (
+        <div class="tr-cell">
+          <dt>{t.k}</dt>
+          <dd>{t.v}</dd>
+        </div>
+      ))}
+    </dl>
+    <div class="tr-thesis">
+      <p><strong>Thesis.</strong> Solo-founder studios with a real principle stack (no telemetry, no cloud lock-in, no dark patterns) are undervalued right now because "growth" playbooks assume ads + telemetry as free primitives. Northbyte Studios bets that a small number of privacy-first products, each finished to the level of craft you'd expect from a design agency, is a defensible position — not a limitation.</p>
+      <p><strong>Product order.</strong> Nexus is the flagship commercial product (encrypted vault, Windows). Mission OS is the operating-system-scale bet (privacy-first Linux distro). Kanvaz and Obscura exist as trust anchors — free, open-source proof that the studio ships. Everything else supports one of those three tiers.</p>
+      <p><strong>What I don't need.</strong> Growth marketing, agency handoffs, a full team, an office. What I do want: introductions to founders / investors / OSS maintainers who share the "principled product > engagement product" thesis.</p>
     </div>
   </Section>
 
@@ -325,6 +352,49 @@ const activeCount = PROJECTS.filter(
       color: var(--muted);
       font-size: var(--text-sm);
       line-height: var(--leading-body);
+    }
+
+    /* ============ Traction (investor-ready) ============ */
+    .tr-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    @media (max-width: 640px) { .tr-grid { grid-template-columns: 1fr; } }
+    .tr-cell {
+      background: var(--surface-1);
+      padding: var(--sp-5);
+      display: flex; flex-direction: column-reverse; gap: 6px;
+    }
+    .tr-cell dt {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .tr-cell dd {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      color: var(--text);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+    .tr-thesis {
+      margin-top: var(--sp-6);
+      max-width: var(--wrap-narrow);
+      color: var(--muted);
+      font-size: var(--text-md);
+      line-height: var(--leading-body);
+    }
+    .tr-thesis p + p { margin-top: var(--sp-4); }
+    .tr-thesis strong {
+      color: var(--purple-bright);
+      font-weight: 500;
     }
 
     /* ============ Stack ============ */

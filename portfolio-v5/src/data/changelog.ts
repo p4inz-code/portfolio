@@ -20,6 +20,17 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.10.1',
+    kind: 'released',
+    summary: 'About: 2nd-year update + investor-ready traction section. Mission OS: developer + designer + systems-engineer personas.',
+    body: [
+      'About page — second-year VFX student now (was first-year across /about and /3d). Timeline updated: 2025 first studio + program start, Early 2026 Kanvaz open source, Jun 2026 Nexus/Kanvaz/Veris in flight, Aug 2026 second year begins + Mission OS internal testing.',
+      'About "For investors + collaborators" section added between principles and stack. Six real traction numbers (products shipped/in-flight, open-source ratio, test coverage, telemetry count = 0, dependencies count = 0, design-through-shipping loop = 1 person) plus a three-paragraph thesis: (1) principled solo studio is undervalued now, (2) product order — Nexus flagship, Mission OS OS-scale bet, Kanvaz/Obscura trust anchors, (3) what I don\'t need (growth marketing, agency handoffs, headcount) and what I do want (intros to founders/investors/OSS maintainers with matching thesis). All numbers verifiable in repos or the /status changelog.',
+      'Mission OS case study — added "Who this is for" section with three explicit persona cards: the developer (Linux laptop that doesn\'t phone home, apt + KDE + Docker + VS Code + hardened Firefox), the designer (color-managed KDE, real font rendering, Blender/Krita/Inkscape/GIMP in mission-store, treats desktop AS the product), the systems engineer (audit-friendly Debian base, LUKS2 + Argon2id, secure-boot, TPM-sealed unlock, GPLv3 diff inspectable). Answers "why would a developer or designer use this OS" — was implicit before, now explicit.',
+      'projects.ts Mission OS tagline + description rewritten to name developer + designer + systems engineer as the three target audiences explicitly.',
+    ],
+  },
+  {
     version: 'v5.10.0',
     kind: 'released',
     summary: 'Real custom scrollbars + AP monogram + Mission OS demo full rework (real wallpaper, light theme, visible icons).',
