@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.10.2',
+    kind: 'released',
+    summary: 'Nexus case study — v11 preview section added (UI overhaul in prep, security core unchanged).',
+    body: [
+      'Added a "v11 · in prep" section to /nexus. Explains what changes (full visual rebuild — lock screen, vault browser, credential and note detail, settings, updater), what does NOT change (every v10.x vault opens unchanged, AES-256-GCM stays, Argon2id stays, Windows Hello stays, portable mode stays, zero telemetry stays), when it lands (no fixed date — external hardening pass + a11y audit must both be green), where the mockups are (internal PDF pack, will replace concept mockups on this page once v11 ships).',
+      'v11 is framed as a design + interaction refresh, NOT a security rewrite — protects reader trust while acknowledging the visible overhaul.',
+    ],
+  },
+  {
     version: 'v5.10.1',
     kind: 'released',
     summary: 'About: 2nd-year update + investor-ready traction section. Mission OS: developer + designer + systems-engineer personas.',

@@ -47,6 +47,34 @@ const project = PROJECTS.find((p) => p.slug === 'nexus')!;
     </div>
   </Section>
 
+  <!-- v11 preview — new UI overhaul in prep. Case study will refresh
+       with real screens once v11 ships. -->
+  <Section eyebrow="v11 · in prep" heading="A ground-up UI overhaul is coming.">
+    <div class="v11-block">
+      <p class="v11-lede">
+        Nexus <em>v11 · final release</em> is being finished right now — a complete UI redesign on top of the v10.x security architecture. Every screen redrawn from scratch: lock screen, vault browser, credential detail, notes editor, settings, updater. The cryptographic core (AES-256-GCM · Argon2id · Windows Hello · signed updates) stays untouched — v11 is a design + interaction refresh, not a rewrite of trust.
+      </p>
+      <dl class="v11-list">
+        <div class="v11-item">
+          <dt>What changes in v11</dt>
+          <dd>Full visual system rebuild, new lock screen, refreshed vault browser, cleaner credential and note detail views, tighter settings, redesigned updater flow. Kept: every keyboard shortcut, every existing vault format, every security guarantee.</dd>
+        </div>
+        <div class="v11-item">
+          <dt>What does NOT change</dt>
+          <dd>Every v10.x vault opens in v11 unchanged. AES-256-GCM stays. Argon2id stays. Windows Hello stays. Portable mode stays. Zero telemetry stays. This is a UI ship, not a security ship.</dd>
+        </div>
+        <div class="v11-item">
+          <dt>When it lands</dt>
+          <dd>Ships once the external hardening pass + accessibility audit on the new UI are green. No fixed date; shipped when it's honest to ship.</dd>
+        </div>
+        <div class="v11-item">
+          <dt>Where the mockups are</dt>
+          <dd>Full preview mockup pack (all screens, all themes) exists as a PDF — held internally until v11 ships, at which point real screens replace concept mockups on this page. Watch the Discord (link above) for the v11 announcement.</dd>
+        </div>
+      </dl>
+    </div>
+  </Section>
+
   <style>
     .stat-row-wrap { padding: 0 0 var(--sp-8); }
     .stat-row {
@@ -67,5 +95,39 @@ const project = PROJECTS.find((p) => p.slug === 'nexus')!;
     .feature-card { padding: var(--sp-6); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface-1); }
     .feature-name { font-family: var(--font-display); font-size: var(--text-md); font-weight: 500; margin-bottom: var(--sp-3); }
     .feature-desc { color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); }
+
+    /* v11 preview block */
+    .v11-block { max-width: var(--wrap-narrow); }
+    .v11-lede {
+      color: var(--text);
+      font-size: var(--text-md);
+      line-height: var(--leading-body);
+      margin-bottom: var(--sp-6);
+      padding: var(--sp-5) var(--sp-6);
+      border-left: 3px solid var(--purple-bright);
+      background: color-mix(in oklab, var(--purple) 6%, transparent);
+    }
+    .v11-lede em { color: var(--purple-bright); font-style: italic; font-weight: 500; }
+    .v11-list { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+    .v11-item {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: var(--sp-5);
+      padding: var(--sp-4) 0;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+    }
+    @media (max-width: 640px) { .v11-item { grid-template-columns: 1fr; gap: 4px; } }
+    .v11-item dt {
+      color: var(--text);
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      font-weight: 500;
+    }
+    .v11-item dd {
+      color: var(--muted);
+      font-size: var(--text-sm);
+      line-height: var(--leading-body);
+    }
   </style>
 </BaseLayout>
