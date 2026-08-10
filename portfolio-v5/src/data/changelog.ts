@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.3.2',
+    kind: 'released',
+    summary: 'Mission OS demo — reachable via ⌘K, top bar keeps clock/date visible on mobile.',
+    body: [
+      'Added "Mission OS · concept demo" to the ⌘K command palette under Case studies. Also indexed on the search keywords "demo", "os", "desktop", "boot". Previously the demo route was only reachable via the "Try Mission OS in your browser →" CTA on the case study — now it\'s one keystroke away from any page.',
+      'Mobile top bar polish: clock + date stayed hidden below 900px, which was aggressive since a phone-sized OS chrome benefits most from a visible clock. Chips + workspace pips + active-app label drop first; clock + date stay through the smallest breakpoint. Font-sizes trimmed on the smallest screens to keep the whole strip on one line.',
+    ],
+  },
+  {
     version: 'v5.3.1',
     kind: 'released',
     summary: 'Mission OS demo — every dock app is now clickable. Files / Terminal / Firefox open real informational panels.',

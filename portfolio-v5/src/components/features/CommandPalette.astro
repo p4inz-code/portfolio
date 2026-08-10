@@ -15,6 +15,7 @@ const commands = [
   ...PROJECTS.filter((p) => !p.isExternal).map((p) => ({
     g: 'Case studies', t: p.name, s: `${p.href} · ${p.tagline}`, k: p.tags.map((t) => t.toLowerCase()), act: `route:${p.href}`,
   })),
+  { g: 'Case studies', t: 'Mission OS · concept demo', s: '/mission-os/demo · try Mission OS in your browser', k: ['demo','os','desktop','boot'], act: 'route:/mission-os/demo' },
   ...PROJECTS.filter((p) => p.isExternal).map((p) => ({
     g: 'Projects on GitHub', t: p.name, s: p.href.replace('https://', ''), k: p.tags.map((t) => t.toLowerCase()), act: `ext:${p.href}`,
   })),

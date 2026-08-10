@@ -12,7 +12,7 @@ export const SITE = {
   location: 'Navi Mumbai, India',
   studio: 'Northbyte Studios',
   studioFounded: '2026',
-  currentVersion: 'v5.3.1',
+  currentVersion: 'v5.3.2',
   domain: 'atharvapatil.tech',
 } as const;
 

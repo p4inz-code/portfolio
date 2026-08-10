@@ -363,14 +363,17 @@ import FirefoxApp from './apps/FirefoxApp.astro';
     width: 6px; height: 6px; border-radius: 50%;
     background: var(--green); box-shadow: 0 0 6px var(--green);
   }
+  /* Mobile: keep the clock/date visible (it's the most useful chrome
+     element on a phone). Drop the chips + workspace pips + active-app
+     label first. */
   @media (max-width: 900px) {
-    .topbar { grid-template-columns: 1fr auto; }
-    .tb-center { display: none; }
-    .tb-chip, .tb-workspaces { display: none; }
+    .tb-chip, .tb-workspaces, .tb-active, .tb-sep { display: none; }
   }
   @media (max-width: 640px) {
-    .topbar { padding: 6px var(--sp-4); }
-    .tb-active, .tb-user, .tb-item[aria-label^='Battery'] { display: none; }
+    .topbar { padding: 6px var(--sp-4); grid-template-columns: auto 1fr auto; }
+    .tb-user, .tb-item[aria-label^='Battery'] { display: none; }
+    .tb-brand { font-size: 11px; }
+    .tb-date, .tb-clock { font-size: 11px; }
   }
 
   /* ================== WINDOWS ================== */
