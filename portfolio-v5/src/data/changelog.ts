@@ -20,6 +20,18 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.6.2',
+    kind: 'released',
+    summary: 'Light theme parchment grain — cream now reads as real cotton paper, not flat #F3EDDD.',
+    body: [
+      'The Parchment Manuscript light theme was correct color-wise but felt flat — cream without texture is just a beige rectangle. Added a two-layer paper-grain effect that turns it into something that reads like real cotton paper / parchment.',
+      'Two inline-SVG feTurbulence layers on ::before + ::after of body: layer 1 is fine noise at 240px tiles (like fiber specks), layer 2 is coarser fractal at 480px tiles (like paper grain). Both apply mix-blend-mode: multiply so they darken the cream selectively rather than adding white noise. Combined opacity keeps it as texture, not visual noise — subtle enough not to distract, clear enough to feel intentional the moment you switch to light theme.',
+      'Zero external assets — SVG is inline data-URI, no HTTP request, works offline. Fixed positioning so the paper stays put as you scroll (matches how a real sheet behaves). z-index -1 so it sits behind all content and never affects interactions.',
+      'Dark theme skips this entirely (Ultraviolet Cathedral doesn\'t want parchment grain). The Mission OS demo route also skips it — the OS-metaphor forces its own dark aesthetic and paper texture would leak through as dust over the desktop.',
+      'Skills used: taste-skill, minimalist-skill (texture is texture, not decoration), frontend-design (chose SVG feTurbulence over PNG/base64 for scale + weight + control), verification-before-completion.',
+    ],
+  },
+  {
     version: 'v5.6.1',
     kind: 'released',
     summary: 'Contact page — terminal UI/UX restored from v4, with mailto composer that never touches a server.',
