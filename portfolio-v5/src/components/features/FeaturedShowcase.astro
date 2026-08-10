@@ -1,0 +1,256 @@
+---
+import type { Project } from '../../data/projects';
+import StatusPill from '../ui/StatusPill.astro';
+
+/**
+ * Featured works showcase — the main-hero replacement for the compact
+ * "Four things I'm shipping right now" grid. Each featured project gets
+ * a full-width hero-scale card, and each card's position is scroll-linked
+ * via CSS animation-timeline: view() — cards rise + settle as they enter
+ * viewport, then quietly release as they exit. No JS.
+ *
+ * Fallback for browsers without animation-timeline: cards render in their
+ * final state, no motion. Reduced-motion: same as fallback.
+ */
+interface Props {
+  projects: Project[];
+}
+const { projects } = Astro.props;
+---
+<section class="showcase" aria-label="Featured projects showcase">
+  {projects.map((p, i) => (
+    <article
+      class="show-card"
+      style={`--i:${i};--total:${projects.length};`}
+      data-slug={p.slug}
+    >
+      <div class="show-index" aria-hidden="true">
+        <span>{String(i + 1).padStart(2, '0')}</span>
+        <span class="show-index-total">/ {String(projects.length).padStart(2, '0')}</span>
+      </div>
+
+      <a class="show-body" href={p.href}>
+        <StatusPill status={p.status} size="sm" />
+
+        <h3 class="show-name">{p.name}</h3>
+        <p class="show-tag"><em>{p.tagline}</em></p>
+        <p class="show-desc">{p.description}</p>
+
+        <ul class="show-meta" role="list">
+          {p.metaTags.slice(0, 4).map((t) => <li>{t}</li>)}
+        </ul>
+
+        <span class="show-cta">
+          Open case study
+          <span aria-hidden="true" class="show-cta-arrow">→</span>
+        </span>
+      </a>
+
+      <!-- Visual side — placeholder frame with project mark until real
+           hero screenshots ship. Reads intentional, not blob-y. -->
+      <aside class="show-visual" aria-hidden="true">
+        <div class="show-visual-frame">
+          <span class="show-visual-slug">{p.slug}</span>
+          <span class="show-visual-name">{p.name}</span>
+          <span class="show-visual-role">{p.license || 'proprietary'}</span>
+        </div>
+      </aside>
+    </article>
+  ))}
+</section>
+
+<style>
+  .showcase {
+    display: flex; flex-direction: column;
+    gap: var(--sp-9);
+    /* Adds room at top so the first card can rise into place without
+       fighting the manifest bridge above. */
+    padding-top: var(--sp-6);
+  }
+  .show-card {
+    display: grid;
+    grid-template-columns: 60px 1.15fr 1fr;
+    gap: var(--sp-7);
+    align-items: stretch;
+    min-height: 60vh;
+    padding: var(--sp-8) 0;
+    border-top: 1px solid var(--line);
+    position: relative;
+  }
+  .show-card:first-child { border-top: none; padding-top: 0; }
+  @media (max-width: 900px) {
+    .show-card { grid-template-columns: 1fr; min-height: 0; gap: var(--sp-5); padding: var(--sp-6) 0; }
+    .show-index { flex-direction: row; gap: 8px; }
+  }
+
+  /* Left column: giant serial index — an editorial marker, not a badge */
+  .show-index {
+    display: flex; flex-direction: column; gap: 4px;
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    position: sticky;
+    top: 120px;
+    align-self: flex-start;
+    height: fit-content;
+  }
+  .show-index > span:first-child {
+    font-family: var(--font-display);
+    font-size: 44px;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .show-index-total { color: var(--muted); }
+  @media (max-width: 900px) {
+    .show-index { position: static; }
+    .show-index > span:first-child { font-size: 32px; }
+  }
+
+  /* Middle column: content */
+  .show-body {
+    display: flex; flex-direction: column;
+    gap: var(--sp-4);
+    color: var(--text);
+    text-decoration: none;
+    padding-right: var(--sp-4);
+  }
+  .show-name {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4.2vw, 52px);
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+    margin-top: var(--sp-2);
+  }
+  .show-tag {
+    color: var(--purple-bright);
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 400;
+  }
+  .show-tag em { font-style: italic; }
+  .show-desc {
+    color: var(--muted);
+    font-size: var(--text-md);
+    line-height: var(--leading-body);
+    max-width: 540px;
+  }
+  .show-meta {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-wrap: wrap; gap: 6px 8px;
+    margin-top: var(--sp-2);
+  }
+  .show-meta li {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    padding: 3px 8px;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+  }
+  .show-cta {
+    margin-top: var(--sp-4);
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--purple-bright);
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--purple-bright);
+    align-self: flex-start;
+    transition: gap var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
+  }
+  .show-body:hover .show-cta { gap: 14px; }
+  .show-cta-arrow { transition: transform var(--dur) var(--ease-out); }
+  .show-body:hover .show-cta-arrow { transform: translateX(4px); }
+  .show-body:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 8px; border-radius: 2px; }
+
+  /* Right column: visual (placeholder frame) */
+  .show-visual {
+    display: flex; align-items: center; justify-content: center;
+    background:
+      linear-gradient(135deg, color-mix(in oklab, var(--purple-deep) 45%, transparent), color-mix(in oklab, var(--surface-2) 90%, transparent));
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    min-height: 360px;
+    position: relative;
+    overflow: hidden;
+  }
+  .show-visual::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 30%, color-mix(in oklab, var(--purple-bright) 20%, transparent), transparent 50%),
+      radial-gradient(circle at 80% 70%, color-mix(in oklab, var(--purple) 15%, transparent), transparent 55%);
+    pointer-events: none;
+  }
+  .show-visual-frame {
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    position: relative; z-index: 1;
+    padding: var(--sp-6);
+    text-align: center;
+  }
+  .show-visual-slug {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .show-visual-name {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 48px);
+    color: var(--text);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    font-weight: 500;
+  }
+  .show-visual-role {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--purple-bright);
+    padding: 3px 8px;
+    border: 1px solid color-mix(in oklab, var(--purple-bright) 40%, transparent);
+    border-radius: 2px;
+    margin-top: 4px;
+  }
+  @media (max-width: 900px) {
+    .show-visual { min-height: 200px; }
+    .show-visual-name { font-size: clamp(24px, 5vw, 36px); }
+  }
+
+  /* Scroll-linked entrance: each card rises + fades from below as it
+     enters the viewport, then settles into place near center. Uses
+     animation-timeline: view() where supported; falls back to static
+     end-state otherwise. */
+  @supports (animation-timeline: view()) {
+    .show-card {
+      opacity: 0;
+      transform: translateY(60px) scale(0.97);
+      animation: show-rise 1s var(--ease-out) forwards;
+      animation-timeline: view();
+      animation-range: entry 0% cover 40%;
+    }
+    /* Slight lateral drift per card so they don't all move identically —
+       reads as designed choreography, not a single motion applied N times. */
+    .show-card:nth-child(2n) {
+      transform: translateY(60px) translateX(-16px) scale(0.97);
+    }
+    .show-card:nth-child(3n) {
+      transform: translateY(60px) translateX(20px) scale(0.97);
+    }
+  }
+  @keyframes show-rise {
+    to { opacity: 1; transform: translateY(0) translateX(0) scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .show-card { animation: none; opacity: 1; transform: none; }
+  }
+</style>

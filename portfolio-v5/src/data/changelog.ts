@@ -20,6 +20,17 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.7.0',
+    kind: 'released',
+    summary: 'Home hero: featured works showcase — hero-scale cards with scroll-linked position animations replaces the compact grid.',
+    body: [
+      'Home page was flagged as too empty — the featured projects were stuffed into a 2-column bento grid where each card got about ~200px of screen. Replaced with a proper showcase: each featured project gets a full-width, hero-scale card (~60vh tall on desktop) with its own three-column layout — serial index / body / visual — and its own scroll-linked entrance.',
+      'Each card is a three-column grid: big serial index ("01 / 04") on the left as an editorial marker, content in the middle (status marker + huge project name at clamp(32-52px) + italic-purple tagline + description + meta tags + CTA link with animated arrow), placeholder visual frame on the right (colored gradient carrying the project name/slug/license — will hold real screenshots once assets ship).',
+      'Scroll-linked position animations via CSS animation-timeline: view(): each card rises + fades + scales from below as it enters the viewport, settles into place near center. Cards get slightly different lateral drifts (2nd card drifts left, 3rd drifts right) so the sequence reads as designed choreography, not one motion applied N times. Zero JS. Falls back to static end-state in browsers without scroll-driven animations, and honors prefers-reduced-motion.',
+      'New FeaturedShowcase.astro component under features/. Old ProjectCard is still used unchanged in the Supporting grid ("Also on the shelf") below.',
+    ],
+  },
+  {
     version: 'v5.6.6',
     kind: 'released',
     summary: 'Command palette polish — recent searches, match highlighting, richer keyboard nav, better empty state.',

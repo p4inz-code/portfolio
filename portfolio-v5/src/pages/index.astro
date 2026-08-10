@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import EditorialHero from '../components/features/EditorialHero.astro';
 import Section from '../components/layout/Section.astro';
 import ProjectCard from '../components/features/ProjectCard.astro';
+import FeaturedShowcase from '../components/features/FeaturedShowcase.astro';
 import Button from '../components/ui/Button.astro';
 import { FEATURED_PROJECTS, SUPPORTING_PROJECTS } from '../data/projects';
 import { SITE } from '../data/site';
@@ -32,16 +33,7 @@ import { SITE } from '../data/site';
   </div>
 
   <Section heading="Four things I'm shipping right now.">
-    <div class="cards-grid">
-      <div class="card-slot card-slot-featured">
-        <ProjectCard project={FEATURED_PROJECTS[0]} variant="featured" />
-      </div>
-      {FEATURED_PROJECTS.slice(1).map((p) => (
-        <div class="card-slot card-slot-half">
-          <ProjectCard project={p} />
-        </div>
-      ))}
-    </div>
+    <FeaturedShowcase projects={FEATURED_PROJECTS} />
   </Section>
 
   <Section eyebrow="Also on the shelf" heading="Open source, on hold, or maintained." intro="Smaller work, older projects, and things that don't need a case study of their own.">
@@ -56,16 +48,6 @@ import { SITE } from '../data/site';
     .hero-actions {
       margin-top: var(--sp-8);
       display: flex; flex-wrap: wrap; gap: var(--sp-3);
-    }
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: var(--sp-5);
-    }
-    .card-slot-featured { grid-column: span 12; }
-    .card-slot-half { grid-column: span 6; }
-    @media (max-width: 900px) {
-      .card-slot-half { grid-column: span 12; }
     }
     .secondary-grid {
       display: grid;
