@@ -1,0 +1,8 @@
+# security.txt — RFC 9116 · preferred canonical path
+# Also served at https://atharvapatil.tech/security.txt for legacy tooling.
+
+Contact: mailto:atharva.patil.cg@gmail.com
+Expires: 2027-08-10T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://atharvapatil.tech/.well-known/security.txt
+Canonical: https://atharvapatil.tech/security.txt

@@ -20,6 +20,20 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.5.0',
+    kind: 'released',
+    summary: 'SEO + discoverability pass — real sitemap, refreshed llms.txt, RFC 9116 security.txt at both paths, JSON-LD person/org/website graph.',
+    body: [
+      'robots.txt: uncommented the sitemap directive (was blocked on "single-page-app" v4 assumption — v5 has 14 real crawlable URLs). Added explicit Allow blocks for the current generation of AI crawlers: OAI-SearchBot, ChatGPT-User, anthropic-ai, Claude-Web, GoogleOther, Perplexity-User, Applebot, Applebot-Extended, cohere-ai, Bytespider, Meta-ExternalAgent — on top of the existing GPTBot / ClaudeBot / Google-Extended / CCBot / PerplexityBot.',
+      'sitemap.xml: added at /sitemap.xml as an Astro API endpoint. Emits all 14 real routes with priority + changefreq matched to how often each page updates (home + status = weekly, contact + accessibility = yearly, etc). lastmod is stamped at build time so every deploy refreshes it.',
+      'llms.txt: full rewrite. The v4 version referenced #-fragment routes ("visit /#/work") which are dead in the v5 build. Now points at real routes, adds Pursue OS (was missing entirely), updates every project status to reality, and adds a dedicated "Identity resolution" section mapping Atharva Patil ↔ p4inz ↔ p4inz-code ↔ Northbyte Studios so AI systems can resolve queries against any of those handles.',
+      'security.txt: served at both /.well-known/security.txt (RFC 9116 preferred path) and /security.txt (legacy tooling). Both list Canonical for both paths per spec. Expires bumped to 2027-08-10.',
+      '_headers: rewrote the comment block — the previous notes described the v4 single-HTML monolith which is no longer the case. CSP unchanged (still correctly allows Astro\'s inline theme-boot script + component-scoped styles + Fontshare + Google Fonts + Cloudflare Insights beacon). Added Content-Type overrides for /sitemap.xml (application/xml) and /.well-known/security.txt (text/plain). Added Cross-Origin-Opener-Policy: same-origin, Cross-Origin-Resource-Policy: same-site, and interest-cohort=() to Permissions-Policy as modern hardening.',
+      'JSON-LD entity graph in BaseLayout — one <script type="application/ld+json"> on every page with a schema.org @graph of Person (Atharva Patil, alternateName p4inz + p4inz-code) + Organization (Northbyte Studios) + WebSite. Person node has sameAs links to GitHub profile, Discord invite, and every open-source repo. This is the change that most directly helps Google + LLM search queries for "p4inz" resolve back to this site as the canonical source. Added <link rel="sitemap"> and <link rel="me"> pointing at the GitHub profile for good measure.',
+      'Skills applied: writing-plans (audit scope), taste-skill (killed stale copy), verification-before-completion.',
+    ],
+  },
+  {
     version: 'v5.4.0',
     kind: 'released',
     summary: 'Deep 20-pass theme audit — three real fixes: dark --muted-2 contrast, light --muted-2 on darker surfaces, warn amber in light theme.',

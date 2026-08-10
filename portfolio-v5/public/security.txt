@@ -1,13 +1,19 @@
 # security.txt — RFC 9116
-# Deploy this file at: https://atharvapatil.tech/.well-known/security.txt
-# (Also serve a plain copy at https://atharvapatil.tech/security.txt for
-# older tooling that doesn't check .well-known first.)
+# Preferred path: https://atharvapatil.tech/.well-known/security.txt
+# Legacy path (also served): https://atharvapatil.tech/security.txt
 #
-# This site is a static portfolio with no backend, database, or user
-# accounts — the realistic report categories are: XSS/injection points,
-# clickjacking, exposed secrets, or hosting/DNS misconfiguration.
+# This site is a static Astro build with no backend, database, or user
+# accounts. Realistic report categories: XSS/injection points,
+# clickjacking, exposed secrets in built HTML/JS, or hosting/DNS
+# misconfiguration on Cloudflare Pages.
+#
+# For issues in the software this portfolio hosts case studies for
+# (Mission OS, Nexus, Kanvaz, Veris, Pursue OS, repo-map, Obscura,
+# Glint), please open an issue on the respective GitHub repository OR
+# contact directly for embargoed / non-public disclosure.
 
 Contact: mailto:atharva.patil.cg@gmail.com
-Expires: 2027-07-18T00:00:00.000Z
+Expires: 2027-08-10T00:00:00.000Z
 Preferred-Languages: en
 Canonical: https://atharvapatil.tech/.well-known/security.txt
+Canonical: https://atharvapatil.tech/security.txt

@@ -19,6 +19,84 @@ const {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const currentPath = Astro.url.pathname;
+
+// Structured data (JSON-LD) — helps Google, Bing, and LLM crawlers
+// resolve "p4inz" / "p4inz github" queries back to Atharva Patil, and
+// ties the site + person + studio + external repos together as one
+// entity graph. The Person node is the anchor; WebSite + Organization
+// reference it via @id. Emitted on every page so social/AI previews
+// on any deep link resolve correctly.
+const person = {
+  '@type': 'Person',
+  '@id': 'https://atharvapatil.tech/#person',
+  name: 'Atharva Patil',
+  alternateName: ['p4inz', 'p4inz-code'],
+  url: 'https://atharvapatil.tech/',
+  image: 'https://atharvapatil.tech/og.png',
+  jobTitle: SITE.role,
+  worksFor: { '@id': 'https://atharvapatil.tech/#studio' },
+  email: `mailto:${CONTACT.email}`,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Navi Mumbai',
+    addressRegion: 'Maharashtra',
+    addressCountry: 'IN',
+  },
+  alumniOf: {
+    '@type': 'EducationalOrganization',
+    name: 'D. Y. Patil University',
+  },
+  knowsAbout: [
+    'Software engineering',
+    'Windows desktop development',
+    'Linux systems',
+    '3D animation',
+    'Visual effects',
+    'Privacy-first design',
+    'Applied cryptography',
+  ],
+  sameAs: [
+    CONTACT.github,
+    CONTACT.discordInvite,
+    'https://github.com/p4inz-code/mission-os',
+    'https://github.com/p4inz-code/nexus-desktop',
+    'https://github.com/p4inz-code/kanvaz',
+    'https://github.com/p4inz-code/pursue-os',
+  ],
+};
+
+const studio = {
+  '@type': 'Organization',
+  '@id': 'https://atharvapatil.tech/#studio',
+  name: SITE.studio,
+  url: 'https://atharvapatil.tech/',
+  founder: { '@id': 'https://atharvapatil.tech/#person' },
+  foundingDate: SITE.studioFounded,
+  location: {
+    '@type': 'Place',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Navi Mumbai',
+      addressCountry: 'IN',
+    },
+  },
+};
+
+const website = {
+  '@type': 'WebSite',
+  '@id': 'https://atharvapatil.tech/#website',
+  url: 'https://atharvapatil.tech/',
+  name: `${SITE.title} — ${SITE.tagline}`,
+  description: SITE.description,
+  inLanguage: 'en',
+  author: { '@id': 'https://atharvapatil.tech/#person' },
+  publisher: { '@id': 'https://atharvapatil.tech/#studio' },
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [person, studio, website],
+};
 ---
 <!doctype html>
 <html lang="en">
@@ -42,6 +120,14 @@ const currentPath = Astro.url.pathname;
     <meta name="twitter:description" content={description} />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap.xml" />
+    <link rel="me" href={CONTACT.github} />
+
+    <!-- Structured data — Person / Organization / WebSite entity graph.
+         Ties p4inz / p4inz-code / Atharva Patil / Northbyte Studios into
+         one linked graph so search + LLM crawlers resolve consistently. -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://api.fontshare.com" crossorigin />

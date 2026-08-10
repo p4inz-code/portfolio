@@ -1,34 +1,31 @@
-# Cloudflare Pages reads this file automatically from the repo root and
-# applies these headers to every response. Drop this in alongside
-# index.html — no config needed on the Cloudflare dashboard side.
+# Cloudflare Pages reads this file at the root of the published site
+# (portfolio-v5/dist/_headers after Astro build) and applies these headers
+# to every response. No dashboard configuration needed.
 #
-# CSP built from an actual audit of this file (2026-07-18), not a
-# generic template:
-#   - script-src needs 'unsafe-inline' because this is a single HTML
-#     file with an inline <script> block and no build step to add
-#     nonces/hashes. No eval(), no new Function(), no document.write()
-#     anywhere in the runtime code — confirmed by grep.
-#     static.cloudflareinsights.com is added because Cloudflare Pages
-#     auto-injects the Web Analytics beacon (`beacon.min.js`) on the
-#     Pro plan; without it in script-src the beacon triggers a CSP
-#     console error (found in Lighthouse audit 2026-08-05).
-#   - style-src needs 'unsafe-inline' for the same reason (inline
-#     <style> block + inline style="" attributes throughout), plus
-#     fonts.googleapis.com for the Google Fonts stylesheet.
-#   - font-src needs fonts.gstatic.com — that's where the actual font
-#     files the googleapis.com stylesheet points to are served from.
-#   - img-src needs data: — every image on the site (base64 embedded)
-#     and the favicon are data URIs, not external files.
-#   - connect-src is 'self' only — confirmed zero fetch()/XHR calls
-#     anywhere in the file. The transparency widget measures the
-#     page's own Performance API entries, it doesn't call out anywhere.
-#   - form-action 'none' — the contact <form> has no action attribute;
-#     JS intercepts submit and hands off to a mailto: link, it never
-#     does a real HTTP form submission.
-#   - frame-ancestors 'self' — prevents this site being framed
-#     elsewhere (clickjacking protection); harmless for the legitimate
-#     sandboxed-iframe-preview use case since that's framing the file
-#     FROM this origin's own tooling context, not the reverse.
+# ── CSP notes for the v5 Astro build ────────────────────────────────
+#   - script-src needs 'unsafe-inline' because BaseLayout ships a short
+#     inline <script is:inline> block that reads localStorage['nb-theme']
+#     and sets [data-theme] before first paint to avoid a theme flash.
+#     Astro also inlines a small hydration script per-page. No eval(),
+#     no new Function(), no document.write() anywhere in runtime code.
+#     static.cloudflareinsights.com is allowed because Cloudflare Pages
+#     auto-injects the Web Analytics beacon; without it in script-src
+#     the beacon triggers a CSP console error.
+#   - style-src needs 'unsafe-inline' — Astro scoped styles are compiled
+#     to per-component <style> blocks in the HTML head. Also allows
+#     Fontshare (api.fontshare.com) and Google Fonts (fonts.googleapis.com)
+#     stylesheets used for PP Editorial New + JetBrains Mono.
+#   - font-src allows fonts.gstatic.com (Google Fonts binary files) and
+#     cdn.fontshare.com (Fontshare binary files).
+#   - img-src allows data: for the inline SVG favicon and any inline
+#     data-uri images.
+#   - connect-src is 'self' + cloudflareinsights.com for the beacon.
+#     No first-party fetch/XHR calls in runtime code.
+#   - form-action 'none' — the contact form defers to a mailto: link,
+#     no real HTTP form submission.
+#   - frame-ancestors 'self' — clickjacking protection; the site itself
+#     can still frame its own routes.
+#   - object-src 'none' + base-uri 'none' — modern hardening defaults.
 
 /*
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.fontshare.com; font-src 'self' https://fonts.gstatic.com https://cdn.fontshare.com; img-src 'self' data:; connect-src 'self' https://cloudflareinsights.com; frame-ancestors 'self'; base-uri 'none'; form-action 'none'; object-src 'none'
@@ -36,4 +33,14 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-  Permissions-Policy: geolocation=(), microphone=(), camera=()
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-site
+
+# XML sitemap should serve as XML, not the default text/html fallback.
+/sitemap.xml
+  Content-Type: application/xml; charset=utf-8
+
+# .well-known files serve as plaintext for RFC 9116 tooling.
+/.well-known/security.txt
+  Content-Type: text/plain; charset=utf-8

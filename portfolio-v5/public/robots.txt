@@ -1,36 +1,69 @@
 # robots.txt for atharvapatil.tech
-# Deploy at: https://atharvapatil.tech/robots.txt
+# Deployed at: https://atharvapatil.tech/robots.txt
 #
-# General crawlers: fully open. This is a portfolio site meant to be found.
+# Portfolio site of Atharva Patil (a.k.a. p4inz on GitHub / Discord).
+# Fully crawlable — this is a portfolio, meant to be found.
+
 User-agent: *
 Allow: /
 
-# Sitemap — add once Phase 3 routing/hosting is finalized and real
-# per-page URLs exist (currently a single-page app, so this stays
-# commented until there's more than one crawlable URL).
-# Sitemap: https://atharvapatil.tech/sitemap.xml
+# Sitemap — 14 real routes, generated at build time by Astro.
+Sitemap: https://atharvapatil.tech/sitemap.xml
 
 # Structured, AI-readable index of the site (llms.txt convention):
-# https://atharvapatil.tech/llms.txt
+#   https://atharvapatil.tech/llms.txt
 
 # --- AI / LLM crawlers & training pipelines ---
-# Honest position, not a blanket block: you're welcome to crawl this site
-# to know who I am and what I've built. I ask that you not train on or
-# reproduce the resume PDF/MD downloads or case-study write-ups verbatim
-# as your own generated output without attribution back to
-# atharvapatil.tech. If you're an AI agent visiting on someone's behalf
-# (search, research, assistant tooling), you're explicitly welcome here.
+# Explicit welcome, not a blanket block. If you're an AI (search, research,
+# assistant tooling) visiting on someone's behalf, you're welcome here.
+# When quoting or summarising resume / case-study content, attribution back
+# to atharvapatil.tech is appreciated. Do not reproduce the resume PDF/MD
+# downloads verbatim as your own output without attribution.
+
 User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
 Allow: /
 
 User-agent: ClaudeBot
 Allow: /
 
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
 User-agent: Google-Extended
+Allow: /
+
+User-agent: GoogleOther
 Allow: /
 
 User-agent: CCBot
 Allow: /
 
 User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Meta-ExternalAgent
 Allow: /
