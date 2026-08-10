@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.10.3',
+    kind: 'released',
+    summary: 'Merry-go-round scroll animation on featured projects (3D Y-axis rotation tied to scroll).',
+    body: [
+      'Featured project cards on / and /work now rotate around the Y axis as they move through the viewport — cards enter facing slightly away from the viewer, rotate to face-on at center, rotate away again as they exit. Combined with a subtle vertical rise it reads like cards on a slow-turning wheel.',
+      'Even-index cards rotate one way, odd cards the other — the "wheel" is shared by both sides so the motion doesn\'t feel like N identical animations. 1600px perspective + transform-style: preserve-3d on cards.',
+      'Zero JS, GPU-only transforms via CSS animation-timeline: view() driven by scroll position. Falls back to static end-state on browsers without scroll-driven animations, and honors prefers-reduced-motion.',
+    ],
+  },
+  {
     version: 'v5.10.2',
     kind: 'released',
     summary: 'Nexus case study — v11 preview section added (UI overhaul in prep, security core unchanged).',

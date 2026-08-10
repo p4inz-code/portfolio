@@ -226,29 +226,41 @@ const { projects } = Astro.props;
     .show-visual-name { font-size: clamp(24px, 5vw, 36px); }
   }
 
-  /* Scroll-linked entrance: each card rises + fades from below as it
-     enters the viewport, then settles into place near center. Uses
-     animation-timeline: view() where supported; falls back to static
-     end-state otherwise. */
+  /* v5.10.3 "merry-go-round" scroll animation. Each card rotates around
+     the Y axis as it moves through the viewport — enters facing slightly
+     away from the viewer, rotates to face-on at center, rotates away
+     again as it exits. Combined with a subtle vertical rise it reads
+     like cards on a slow-turning wheel. Uses animation-timeline: view()
+     — zero JS, GPU-only transforms. Falls back to static end-state on
+     unsupported browsers and prefers-reduced-motion. */
+  .showcase { perspective: 1600px; }
+  .show-card { transform-style: preserve-3d; }
+
   @supports (animation-timeline: view()) {
     .show-card {
       opacity: 0;
-      transform: translateY(60px) scale(0.97);
-      animation: show-rise 1s var(--ease-out) forwards;
+      animation: show-wheel linear both;
       animation-timeline: view();
-      animation-range: entry 0% cover 40%;
+      animation-range: cover 0% cover 100%;
     }
-    /* Slight lateral drift per card so they don't all move identically —
-       reads as designed choreography, not a single motion applied N times. */
+    /* Even-index cards rotate one way, odd rotate the other — the wheel
+       is "shared" by both sides of the showcase so it doesn't just look
+       like the same motion N times. */
     .show-card:nth-child(2n) {
-      transform: translateY(60px) translateX(-16px) scale(0.97);
-    }
-    .show-card:nth-child(3n) {
-      transform: translateY(60px) translateX(20px) scale(0.97);
+      animation-name: show-wheel-alt;
     }
   }
-  @keyframes show-rise {
-    to { opacity: 1; transform: translateY(0) translateX(0) scale(1); }
+  @keyframes show-wheel {
+    0%   { opacity: 0.15; transform: perspective(1600px) rotateY(-22deg) translateY(80px) scale(0.94); }
+    28%  { opacity: 1;    transform: perspective(1600px) rotateY(0deg)   translateY(0)    scale(1); }
+    72%  { opacity: 1;    transform: perspective(1600px) rotateY(0deg)   translateY(0)    scale(1); }
+    100% { opacity: 0.35; transform: perspective(1600px) rotateY(22deg)  translateY(-40px) scale(0.97); }
+  }
+  @keyframes show-wheel-alt {
+    0%   { opacity: 0.15; transform: perspective(1600px) rotateY(22deg)  translateY(80px) scale(0.94); }
+    28%  { opacity: 1;    transform: perspective(1600px) rotateY(0deg)   translateY(0)    scale(1); }
+    72%  { opacity: 1;    transform: perspective(1600px) rotateY(0deg)   translateY(0)    scale(1); }
+    100% { opacity: 0.35; transform: perspective(1600px) rotateY(-22deg) translateY(-40px) scale(0.97); }
   }
   @media (prefers-reduced-motion: reduce) {
     .show-card { animation: none; opacity: 1; transform: none; }
