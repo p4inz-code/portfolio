@@ -123,6 +123,11 @@
     rgba(123, 63, 228, 0.16),
     transparent 70%
   );
+
+  /* Scrollbar thumb — dark theme gets a metallic-purple gradient.
+     v5.10.3 addition per user ask: "metallic shine on dark scroll." */
+  --sb-thumb: linear-gradient(180deg, #6c3fd6 0%, #b993ff 50%, #6c3fd6 100%);
+  --sb-thumb-hover: linear-gradient(180deg, #8b5cff 0%, #d6bfff 50%, #8b5cff 100%);
 }
 
 /* ============================================================================
@@ -173,6 +178,13 @@
     rgba(110, 68, 214, 0.10),
     transparent 70%
   );
+
+  /* Scrollbar thumb — light theme gets a "cream / paper" gradient with
+     a warm parchment feel. Not just a purple bar — reads as a warm
+     tan-cream ribbon on the parchment page. Per v5.10.3 "creamy effect
+     on light scroll" ask. */
+  --sb-thumb: linear-gradient(180deg, #C8B48A 0%, #E6D9B8 50%, #C8B48A 100%);
+  --sb-thumb-hover: linear-gradient(180deg, #6E44D6 0%, #B993FF 50%, #6E44D6 100%);
 }
 
 /* ============================================================================

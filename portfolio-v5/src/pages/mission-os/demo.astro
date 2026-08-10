@@ -178,6 +178,10 @@ import Desktop from '../../components/features/MissionDemo/Desktop.astro';
     body:has(.demo-scope) .scroll-progress,
     body:has(.demo-scope) .skip-nav { display: none !important; }
     body:has(.demo-scope) main { padding: 0 !important; margin: 0 !important; max-width: none !important; }
-    body:has(.demo-scope) { background: #050210; margin: 0; overflow: hidden; }
+    /* v5.10.0 — demo now respects theme. Dark = ultraviolet OS look, light
+       = parchment OS look (still Mission-OS-branded, just day-mode). */
+    body:has(.demo-scope) { margin: 0; overflow: hidden; }
+    :root[data-theme='dark']  body:has(.demo-scope) { background: #050210; }
+    :root[data-theme='light'] body:has(.demo-scope) { background: #EFE6CE; }
   </style>
 </BaseLayout>

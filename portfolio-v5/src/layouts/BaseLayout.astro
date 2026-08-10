@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import CommandPalette from '../components/features/CommandPalette.astro';
+import APMark from '../components/APMark.astro';
 import { SITE, NAV, CONTACT } from '../data/site';
 
 interface Props {
@@ -173,11 +174,7 @@ const jsonLd = {
     <header class="nav">
       <div class="nav-inner wrap">
         <a href="/" class="brand" aria-label="Atharva Patil — home">
-          <span class="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 19V5l9 12V5M14 19h5" />
-            </svg>
-          </span>
+          <APMark size={38} />
           <span class="brand-name">Atharva Patil</span>
         </a>
         <nav class="nav-links" aria-label="Primary">
@@ -264,14 +261,8 @@ const jsonLd = {
         border-bottom: 1px solid var(--line);
       }
       .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-6); }
-      .brand { display: inline-flex; align-items: center; gap: var(--sp-3); color: var(--text); }
-      .brand-mark {
-        width: 34px; height: 34px;
-        display: inline-flex; align-items: center; justify-content: center;
-        border-radius: 50%; border: 1px solid var(--line-strong);
-        color: var(--purple-bright);
-      }
-      .brand-mark svg { width: 16px; height: 16px; }
+      .brand { display: inline-flex; align-items: center; gap: var(--sp-3); color: var(--text); transition: opacity var(--dur-fast) var(--ease-out); }
+      .brand:hover { opacity: 0.85; }
       .brand-name { font-family: var(--font-display); font-size: var(--text-md); font-style: italic; }
       .nav-links { display: flex; align-items: center; gap: var(--sp-6); }
       .nav-links a {

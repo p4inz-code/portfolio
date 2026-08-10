@@ -20,6 +20,18 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.10.0',
+    kind: 'released',
+    summary: 'Real custom scrollbars + AP monogram + Mission OS demo full rework (real wallpaper, light theme, visible icons).',
+    body: [
+      'Custom scrollbars — actually custom this time. Killed the browser buttons/arrows at the top and bottom of the track that were leaking through (::-webkit-scrollbar-button + all its permutations set to display:none + width:0). Thumb switched from a plain purple bar to per-theme visual: dark gets a metallic-purple gradient (matches the "metallic shine on scroll" ask); light gets a cream-parchment gradient (matches the "creamy effect" ask), both going to purple on hover.',
+      'AP monogram — recreated as inline SVG from the reference image. Silver A+P letters inside a purple ring with a soft glow. Now the nav brand mark on every page. Pure vector, scales to any size, dims the glow in light theme so it doesn\'t clash with the parchment cream.',
+      'Mission OS demo wallpaper — proper composition. Killed the tiny "created by p4inz@mission-os" text watermark and replaced with a real wallpaper: big centered M monogram inside a triple concentric ring system with four orbit dots at the cardinal points, "MISSION OS" wordmark below, mono version tag, an outlined chip listing the four pillars with icons, and mono corner marks (build meta top-left, author bottom-right). Reads like a real OS wallpaper made by a designer.',
+      'Mission OS demo light theme — the demo used to hard-lock body background to #050210 regardless of site theme. Now respects the site\'s theme: dark theme gets ultraviolet OS, light theme gets a day-mode parchment OS with softer purple glows and inverted dot grid. Both stay Mission-OS-branded.',
+      'Dock icon visibility — icons + labels were "muted grey" which was nearly invisible on the dark wallpaper. Now: labels are bright cream + uppercase + slightly wider tracking, glyphs are purple-bright with a soft drop-shadow glow, hover deepens with a purple tint and lifts 3px. Focus rings still work.',
+    ],
+  },
+  {
     version: 'v5.9.0',
     kind: 'released',
     summary: 'Awwwards polish — scroll-progress hairline, motion QA both themes.',

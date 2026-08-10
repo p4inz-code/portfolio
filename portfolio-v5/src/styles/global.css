@@ -121,46 +121,68 @@ button {
 }
 
 /* ============================================================================
- * Custom scrollbars — themed, minimal, both directions, both themes.
+ * Custom scrollbars — v5.9.1 fix: kill the browser buttons (arrows) that
+ * were showing on some engines. Thumb now uses a real per-theme visual
+ * (cream/paper on light, metallic-purple gradient on dark) — v5.10.3 add
+ * — matches the "creamy / metallic shine on scroll" ask.
  *
  * Chromium/Edge/Safari:  ::-webkit-scrollbar family
  * Firefox:               scrollbar-width + scrollbar-color
- *
- * Track = transparent so it doesn't fight the page background.
- * Thumb = subtle line that darkens on hover — reads as intentional, not
- * as a system default that leaked through.
  * ========================================================================== */
 html {
   scrollbar-width: thin;
-  scrollbar-color: var(--muted-2) transparent;
+  scrollbar-color: var(--purple) transparent;
 }
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
 }
-::-webkit-scrollbar-track {
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-track-piece {
   background: transparent;
+  border: none;
 }
-::-webkit-scrollbar-thumb {
-  background: color-mix(in oklab, var(--muted-2) 55%, transparent);
-  border-radius: 999px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-  transition: background var(--dur-fast) var(--ease-out);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--purple);
-  background-clip: content-box;
+/* Kill the browser button arrows at the top / bottom of the track —
+   these were still showing on some engines and reading as "system
+   default leaked through." */
+::-webkit-scrollbar-button,
+::-webkit-scrollbar-button:start,
+::-webkit-scrollbar-button:end,
+::-webkit-scrollbar-button:single-button,
+::-webkit-scrollbar-button:double-button,
+::-webkit-scrollbar-button:vertical:decrement,
+::-webkit-scrollbar-button:vertical:increment,
+::-webkit-scrollbar-button:horizontal:decrement,
+::-webkit-scrollbar-button:horizontal:increment {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
-/* Narrower thumb inside overflow containers so app-scale scrollbars
-   inside modals/windows/dropdowns don't fight the page-scale one. */
+/* THUMB — theme-specific accent. Set on :root so both light + dark can
+   override with their own visual treatment. */
+::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb, var(--purple));
+  background-clip: content-box;
+  border: 3px solid transparent;
+  border-radius: 999px;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sb-thumb-hover, var(--purple-bright));
+  background-clip: content-box;
+}
+/* Narrower thumb inside modals/dropdowns so app-scale scrollbars
+   inside them don't fight the page-scale one. */
 .cmdk-list::-webkit-scrollbar,
 .dw-body::-webkit-scrollbar,
-.term-select-list::-webkit-scrollbar {
-  width: 6px;
+.term-select-list::-webkit-scrollbar,
+.a-meta::-webkit-scrollbar,
+.s-nav::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
 .wrap {

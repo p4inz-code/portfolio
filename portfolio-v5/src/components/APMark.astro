@@ -1,0 +1,74 @@
+---
+/**
+ * AP monogram — recreated as SVG from the reference image the user
+ * provided (silver A+P letters inside a purple ring with a soft
+ * purple glow). Pure vector, scales cleanly at any size, works in
+ * both dark + light themes (letters + ring both use currentColor with
+ * a purple gradient overlay).
+ *
+ * Used in the site nav in place of the earlier N-arrow placeholder.
+ */
+interface Props {
+  size?: number;
+  glow?: boolean;
+}
+const { size = 34, glow = true } = Astro.props;
+---
+<span class="ap-mark" style={`--size:${size}px;`} data-glow={glow ? 'on' : 'off'} aria-hidden="true">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="ap-letter-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#F5F0E0" />
+        <stop offset="50%" stop-color="#D6D0E8" />
+        <stop offset="100%" stop-color="#B993FF" />
+      </linearGradient>
+      <linearGradient id="ap-ring-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#B993FF" />
+        <stop offset="50%" stop-color="#7B3FE4" />
+        <stop offset="100%" stop-color="#B993FF" />
+      </linearGradient>
+      <filter id="ap-glow" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="1.4" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+
+    <!-- Outer purple ring -->
+    <circle cx="50" cy="50" r="46" fill="none" stroke="url(#ap-ring-grad)" stroke-width="2" filter="url(#ap-glow)" />
+
+    <!-- The A / P monogram, drawn as a single continuous mark -->
+    <g fill="url(#ap-letter-grad)" stroke="url(#ap-letter-grad)" stroke-width="0.6" stroke-linejoin="round">
+      <!-- A — asymmetric triangular, right leg goes long and joins the P stem -->
+      <path d="M 30 78 L 46 22 L 58 46 L 40 46 Z" />
+      <!-- P — inherits the right leg of the A -->
+      <path d="M 52 78 L 52 30 L 68 30 Q 78 30 78 42 Q 78 54 68 54 L 60 54 L 60 78 Z M 60 38 L 60 46 L 66 46 Q 70 46 70 42 Q 70 38 66 38 Z" fill-rule="evenodd" />
+    </g>
+  </svg>
+</span>
+
+<style>
+  .ap-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--size, 34px);
+    height: var(--size, 34px);
+    position: relative;
+  }
+  .ap-mark svg { width: 100%; height: 100%; }
+  .ap-mark[data-glow='on']::before {
+    content: '';
+    position: absolute;
+    inset: -25%;
+    background: radial-gradient(circle, rgba(184, 147, 255, 0.18), transparent 60%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  /* Light theme: dim the glow — cream doesn't want a purple aura */
+  :root[data-theme='light'] .ap-mark[data-glow='on']::before {
+    background: radial-gradient(circle, rgba(110, 68, 214, 0.10), transparent 60%);
+  }
+</style>

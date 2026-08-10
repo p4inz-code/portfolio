@@ -24,18 +24,79 @@ import FirefoxApp from './apps/FirefoxApp.astro';
 <div class="desktop-root" data-desktop-root data-window-active="">
 
   <!-- ================== WALLPAPER ================== -->
-  <!-- Minimalist by design: atmosphere only. Composition tried to assert
-       identity too hard in v5.2.2; per user feedback the desktop should
-       feel like clean background surface with a single tiny author-mark. -->
+  <!-- v5.10.0 rewrite: proper wallpaper composition. Big centered M
+       monogram inside a triple-ring system with orbit dots + a mock
+       kernel-status line + the four pillars as icons + build meta.
+       Reads like a real OS wallpaper made by a designer, not a text
+       watermark. Light theme gets its own palette (day-mode). -->
   <div class="wallpaper" aria-hidden="true">
     <div class="wp-base"></div>
     <div class="wp-glow-1"></div>
     <div class="wp-glow-2"></div>
     <div class="wp-grid"></div>
 
-    <p class="wp-signature">
-      created by <span class="wp-signature-handle">p4inz@mission-os</span>
-    </p>
+    <!-- Central composition -->
+    <div class="wp-composition">
+      <svg class="wp-mark" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="wp-m-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#D6BFFF" />
+            <stop offset="100%" stop-color="#7B3FE4" />
+          </linearGradient>
+          <linearGradient id="wp-ring-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%"  stop-color="#7B3FE4" stop-opacity="0.5"/>
+            <stop offset="50%" stop-color="#B993FF" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#7B3FE4" stop-opacity="0.5"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Triple concentric ring system -->
+        <circle cx="200" cy="200" r="185" fill="none" stroke="currentColor" stroke-width="1" opacity="0.35"/>
+        <circle cx="200" cy="200" r="150" fill="none" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+        <circle cx="200" cy="200" r="110" fill="none" stroke="url(#wp-ring-grad)" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+        <!-- Orbit tick marks around outer ring — the four cardinal points -->
+        <g fill="#B993FF">
+          <circle cx="200" cy="15"  r="3"/>
+          <circle cx="385" cy="200" r="3"/>
+          <circle cx="200" cy="385" r="3"/>
+          <circle cx="15"  cy="200" r="3"/>
+        </g>
+
+        <!-- Central M monogram -->
+        <g transform="translate(200,200)">
+          <path d="M -70 60 L -70 -60 L 0 20 L 70 -60 L 70 60" fill="none" stroke="url(#wp-m-grad)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="0" cy="0" r="4" fill="#D6BFFF"/>
+        </g>
+      </svg>
+
+      <p class="wp-wordmark">Mission&nbsp;OS</p>
+      <p class="wp-tag">v0.1 · <span>Debian Stable + KDE Plasma</span> · <span>concept demo</span></p>
+
+      <!-- Four pillars as inline icons -->
+      <ul class="wp-pillars" role="list">
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/></svg>
+          <span>Privacy-first</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <span>Security-conscious</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12h16M14 5l7 7-7 7"/></svg>
+          <span>Portable-first</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 8a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8 16a5 5 0 0 1 8 0M4 4l16 16"/></svg>
+          <span>Offline-first</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Corner build meta — feels like a real OS wallpaper -->
+    <p class="wp-corner-tl">no telemetry · no phone-home · builds signed · gplv3</p>
+    <p class="wp-corner-br">p4inz@mission-os · <span>2026</span></p>
   </div>
 
   <!-- ================== TOP BAR ================== -->
@@ -245,44 +306,133 @@ import FirefoxApp from './apps/FirefoxApp.astro';
     position: absolute; inset: 0;
     pointer-events: none;
   }
+  /* Dark theme (default) wallpaper base */
   .wp-base {
     background:
       radial-gradient(ellipse 90% 60% at 50% 100%, #050210 0%, transparent 60%),
       linear-gradient(180deg, #0A0517 0%, #060213 100%);
   }
-  .wp-glow-1 {
-    background: radial-gradient(ellipse 70% 55% at 15% 15%,
-      rgba(123, 63, 228, 0.30), transparent 60%);
-  }
-  .wp-glow-2 {
-    background: radial-gradient(ellipse 60% 50% at 85% 85%,
-      rgba(184, 147, 255, 0.16), transparent 65%);
-  }
-  /* Nothing-style dot grid — very subtle, dense enough to read as pattern. */
+  .wp-glow-1 { background: radial-gradient(ellipse 70% 55% at 15% 15%, rgba(123, 63, 228, 0.30), transparent 60%); }
+  .wp-glow-2 { background: radial-gradient(ellipse 60% 50% at 85% 85%, rgba(184, 147, 255, 0.16), transparent 65%); }
   .wp-grid {
-    background-image:
-      radial-gradient(circle, rgba(232, 225, 208, 0.06) 1px, transparent 1.4px);
+    background-image: radial-gradient(circle, rgba(232, 225, 208, 0.06) 1px, transparent 1.4px);
     background-size: 22px 22px;
-    background-position: 0 0;
     mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 85%);
     -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 85%);
   }
 
-  .wp-signature {
+  /* v5.10.0 LIGHT THEME wallpaper — day mode for Mission OS. Cream base,
+     softer purple glows, dot grid inverted so it still shows. */
+  :root[data-theme='light'] .wp-base {
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 100%, #E4D9B8 0%, transparent 60%),
+      linear-gradient(180deg, #EFE6CE 0%, #E7DDBF 100%);
+  }
+  :root[data-theme='light'] .wp-glow-1 { background: radial-gradient(ellipse 70% 55% at 15% 15%, rgba(110, 68, 214, 0.15), transparent 60%); }
+  :root[data-theme='light'] .wp-glow-2 { background: radial-gradient(ellipse 60% 50% at 85% 85%, rgba(123, 63, 228, 0.10), transparent 65%); }
+  :root[data-theme='light'] .wp-grid {
+    background-image: radial-gradient(circle, rgba(26, 15, 40, 0.08) 1px, transparent 1.4px);
+  }
+
+  /* v5.10.0 wallpaper composition (replacing the tiny text watermark). */
+  .desktop-root {
+    /* Wallpaper accent tokens — overrideable by light theme below. */
+    --wp-accent: #7B3FE4;
+    --wp-accent-bright: #B993FF;
+    --wp-line: rgba(232, 225, 208, 0.10);
+    --wp-text: rgba(232, 225, 208, 0.88);
+    --wp-text-dim: rgba(232, 225, 208, 0.55);
+    --wp-corner: rgba(155, 149, 176, 0.45);
+  }
+  :root[data-theme='light'] .desktop-root {
+    --wp-accent: #6E44D6;
+    --wp-accent-bright: #7B3FE4;
+    --wp-line: rgba(26, 15, 40, 0.14);
+    --wp-text: rgba(26, 15, 40, 0.88);
+    --wp-text-dim: rgba(26, 15, 40, 0.55);
+    --wp-corner: rgba(78, 65, 96, 0.55);
+    --wp-chrome: #EFE6CE;
+  }
+  :root[data-theme='dark'] .desktop-root {
+    --wp-chrome: #0A0517;
+  }
+
+  .wp-composition {
     position: absolute;
     inset: 0;
-    display: grid;
-    place-items: center;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: var(--tracking-eyebrow);
-    text-transform: uppercase;
-    color: rgba(155, 149, 176, 0.32);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: var(--sp-3);
+    text-align: center;
+    padding: 12vh var(--sp-6) 20vh;
     pointer-events: none;
   }
-  .wp-signature-handle {
-    color: rgba(184, 147, 255, 0.55);
-    margin-left: 6px;
+  .wp-mark {
+    width: min(320px, 48vmin);
+    height: min(320px, 48vmin);
+    color: var(--wp-text-dim);
+    filter: drop-shadow(0 0 32px color-mix(in oklab, var(--wp-accent) 30%, transparent));
+  }
+  .wp-wordmark {
+    font-family: var(--font-display, 'Neue Machina'), sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 4.5vw, 52px);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--wp-text);
+    margin-top: var(--sp-4);
+  }
+  .wp-tag {
+    font-family: var(--font-mono, 'Supply Mono'), monospace;
+    font-size: 11px;
+    letter-spacing: var(--tracking-eyebrow, 0.14em);
+    text-transform: uppercase;
+    color: var(--wp-text-dim);
+  }
+  .wp-tag span { color: var(--wp-text-dim); }
+  .wp-pillars {
+    list-style: none; padding: 0; margin: 0;
+    display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: center;
+    gap: var(--sp-3) var(--sp-5);
+    margin-top: var(--sp-6);
+    padding: var(--sp-3) var(--sp-5);
+    border: 1px solid var(--wp-line);
+    border-radius: 4px;
+    max-width: 720px;
+  }
+  .wp-pillars li {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--wp-text);
+    font-family: var(--font-mono, 'Supply Mono'), monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .wp-pillars li svg {
+    width: 14px; height: 14px;
+    color: var(--wp-accent-bright);
+  }
+  .wp-corner-tl, .wp-corner-br {
+    position: absolute;
+    font-family: var(--font-mono, 'Supply Mono'), monospace;
+    font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow, 0.14em);
+    text-transform: uppercase;
+    color: var(--wp-corner);
+    pointer-events: none;
+    max-width: 60vw;
+  }
+  .wp-corner-tl { top: 100px; left: var(--sp-6); }
+  .wp-corner-br { bottom: 110px; right: var(--sp-6); }
+  .wp-corner-br span { color: var(--wp-accent-bright); }
+
+  @media (max-width: 640px) {
+    .wp-mark { width: 200px; height: 200px; }
+    .wp-wordmark { font-size: 24px; letter-spacing: 0.14em; }
+    .wp-pillars { padding: 8px 12px; gap: 4px 10px; }
+    .wp-pillars li { font-size: 9.5px; }
+    .wp-corner-tl, .wp-corner-br { font-size: 9px; max-width: 45vw; }
   }
 
   /* ================== TOP BAR ================== */
@@ -295,7 +445,7 @@ import FirefoxApp from './apps/FirefoxApp.astro';
     align-items: center;
     gap: var(--sp-4);
     padding: 6px var(--sp-5);
-    background: color-mix(in oklab, #0A0517 82%, transparent);
+    background: color-mix(in oklab, var(--wp-chrome, #0A0517) 82%, transparent);
     border-bottom: 1px solid var(--line);
     backdrop-filter: blur(12px);
     font-family: var(--font-os);
@@ -409,7 +559,7 @@ import FirefoxApp from './apps/FirefoxApp.astro';
     display: inline-flex; align-items: center;
     gap: var(--sp-3);
     padding: 10px 14px;
-    background: color-mix(in oklab, #0A0517 82%, transparent);
+    background: color-mix(in oklab, var(--wp-chrome, #0A0517) 82%, transparent);
     border: 1px solid var(--line-strong);
     border-radius: var(--radius-lg);
     backdrop-filter: blur(12px);
@@ -421,32 +571,41 @@ import FirefoxApp from './apps/FirefoxApp.astro';
     background: var(--line);
     margin: 0 4px;
   }
+  /* v5.10.0 dock icon visibility fix — icons + labels were reading as
+     "muted grey" which is nearly invisible on the dark wallpaper. Now
+     text is bright cream, glyphs are purple, hover deepens. */
   .dock-icon {
     display: inline-flex; flex-direction: column; align-items: center;
-    gap: 4px;
-    padding: 8px 12px 6px;
+    gap: 6px;
+    padding: 10px 14px 8px;
     background: transparent;
     border: 1px solid transparent;
-    border-radius: var(--radius);
-    color: var(--muted);
-    font-family: var(--font-os); font-size: 10px;
-    letter-spacing: 0.06em;
+    border-radius: 4px;
+    color: var(--wp-text, #E8E1D0);
+    font-family: var(--font-os); font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
     cursor: pointer;
     transition: color var(--dur-fast) var(--ease-out),
                 background var(--dur-fast) var(--ease-out),
                 transform var(--dur-fast) var(--ease-out);
-    min-width: 62px;
+    min-width: 70px;
   }
   .dock-icon:hover, .dock-icon:focus-visible {
     color: var(--purple-bright);
-    background: color-mix(in oklab, var(--purple) 10%, transparent);
-    transform: translateY(-2px);
+    background: color-mix(in oklab, var(--purple) 18%, transparent);
+    transform: translateY(-3px);
     outline: none;
   }
   .dock-icon:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
-  .dock-icon-glyph { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; }
-  .dock-icon-glyph svg { width: 22px; height: 22px; }
-  .dock-label { color: currentColor; font-weight: 500; }
+  .dock-icon-glyph {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px;
+    color: var(--purple-bright);
+    filter: drop-shadow(0 0 6px color-mix(in oklab, var(--purple) 30%, transparent));
+  }
+  .dock-icon-glyph svg { width: 24px; height: 24px; }
+  .dock-label { color: currentColor; text-transform: uppercase; }
 
   /* Highlight the active app in the dock (all 6 apps functional now). */
   .desktop-root[data-window-active='installer'] .dock-icon[data-dock-app='installer'],
