@@ -1,0 +1,61 @@
+---
+import type { ProjectStatus } from '../../data/projects';
+
+interface Props {
+  status: ProjectStatus;
+  size?: 'sm' | 'md';
+}
+const { status, size = 'md' } = Astro.props;
+
+// Every status kind maps to a single dot color. Live indicators use a real semantic
+// meaning (active pulses, on-hold stays quiet, coming-soon uses warn amber).
+const dotColor: Record<ProjectStatus['kind'], string> = {
+  active: 'var(--purple)',
+  beta: 'var(--purple)',
+  released: 'var(--green)',
+  final: 'var(--green)',
+  polish: 'var(--purple)',
+  onHold: 'var(--muted)',
+  testing: 'var(--muted)',
+  comingSoon: '#FFC04D',
+};
+---
+<span class:list={['status-pill', `size-${size}`]} data-kind={status.kind}>
+  <span class="dot" style={`background:${dotColor[status.kind]};box-shadow:0 0 8px ${dotColor[status.kind]};`}></span>
+  {status.label}
+</span>
+
+<style>
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-family: var(--font-mono);
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+    color: var(--text);
+    border: 1px solid var(--line-strong);
+    background: color-mix(in oklab, var(--purple) 6%, transparent);
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
+  }
+  .size-sm {
+    font-size: var(--text-xxs);
+    padding: 4px 10px;
+  }
+  .size-md {
+    font-size: var(--text-xs);
+    padding: 6px 14px;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  /* On-hold + coming-soon quiet the dot glow */
+  [data-kind='onHold'] .dot,
+  [data-kind='comingSoon'] .dot {
+    box-shadow: none !important;
+  }
+</style>

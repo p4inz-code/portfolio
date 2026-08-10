@@ -1,0 +1,134 @@
+---
+/**
+ * About Mission OS — pulls real project data from projects.ts.
+ * No fabrication: everything shown maps to a field on the Mission OS
+ * Project record. If the roster changes, this panel updates.
+ */
+import { PROJECTS } from '../../../../data/projects';
+const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
+---
+<div class="about-root">
+  <header class="a-head">
+    <div class="a-mark" aria-hidden="true">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="24" cy="24" r="16" />
+        <path d="M24 8v32M8 24h32" />
+      </svg>
+    </div>
+    <p class="a-eyebrow">Concept demo of</p>
+    <h3 class="a-name">{project.name}</h3>
+    <p class="a-tag">{project.tagline}</p>
+  </header>
+
+  <dl class="a-meta">
+    <div><dt>Status</dt><dd>{project.status.label}</dd></div>
+    <div><dt>Current version</dt><dd>{project.currentVersion}</dd></div>
+    <div><dt>License</dt><dd>{project.license}</dd></div>
+    <div><dt>Started</dt><dd>{project.started}</dd></div>
+    <div><dt>Next milestone</dt><dd>{project.nextMilestone}</dd></div>
+    <div><dt>Role</dt><dd>{project.role}</dd></div>
+  </dl>
+
+  <section class="a-stack">
+    <p class="a-eyebrow">Stack</p>
+    <ul class="a-tags" role="list">
+      {project.stack?.map((s) => <li class="a-tag-item">{s}</li>)}
+    </ul>
+  </section>
+
+  {project.notes && (
+    <p class="a-note">{project.notes}</p>
+  )}
+
+  <footer class="a-foot">
+    <a href={project.links[0].href} target="_blank" rel="noopener noreferrer" class="a-link">
+      {project.links[0].label} ↗
+    </a>
+    <a href="/mission-os" class="a-link a-link-ghost">Full case study →</a>
+  </footer>
+</div>
+
+<style>
+  .about-root { display: flex; flex-direction: column; gap: var(--sp-5); }
+  .a-head { text-align: center; padding-bottom: var(--sp-4); border-bottom: 1px solid var(--line); }
+  .a-mark {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 56px; height: 56px;
+    color: var(--purple-bright);
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    margin-bottom: var(--sp-3);
+  }
+  .a-mark svg { width: 32px; height: 32px; }
+  .a-eyebrow {
+    font-family: var(--font-mono); font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
+    color: var(--muted-2);
+    margin-bottom: 4px;
+  }
+  .a-name {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--text-xl);
+    font-weight: 400;
+    color: var(--text);
+  }
+  .a-tag { color: var(--muted); font-size: var(--text-sm); margin-top: 4px; }
+
+  .a-meta {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .a-meta > div {
+    background: var(--surface-1);
+    padding: var(--sp-3) var(--sp-4);
+    display: flex; flex-direction: column-reverse; gap: 2px;
+  }
+  .a-meta dt {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
+    color: var(--muted-2);
+  }
+  .a-meta dd { color: var(--text); font-size: var(--text-sm); }
+  @media (max-width: 640px) { .a-meta { grid-template-columns: 1fr; } }
+
+  .a-stack { display: flex; flex-direction: column; gap: var(--sp-3); }
+  .a-tags { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .a-tag-item {
+    padding: 4px 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    color: var(--purple-bright);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+  }
+
+  .a-note {
+    padding: var(--sp-3) var(--sp-4);
+    border-left: 3px solid var(--purple-bright);
+    background: color-mix(in oklab, var(--purple) 8%, transparent);
+    color: var(--text); font-size: var(--text-xs); line-height: 1.6;
+  }
+
+  .a-foot { display: flex; flex-wrap: wrap; gap: var(--sp-3); padding-top: var(--sp-3); border-top: 1px solid var(--line); }
+  .a-link {
+    padding: 8px 14px;
+    border: 1px solid var(--purple-bright);
+    border-radius: var(--radius-pill);
+    color: var(--purple-bright);
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .a-link:hover, .a-link:focus-visible { background: var(--purple-bright); color: var(--bg); outline: none; }
+  .a-link:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
+  .a-link-ghost { border-color: var(--line-strong); color: var(--muted); }
+  .a-link-ghost:hover, .a-link-ghost:focus-visible { background: transparent; color: var(--text); border-color: var(--text); }
+</style>

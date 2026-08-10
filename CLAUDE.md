@@ -1,5 +1,23 @@
 # Project Instructions — atharvapatil.tech portfolio
 
+## Skill orchestration protocol (2026-08-09, standing)
+
+Every task on this project must go through **classify → select smallest strong skill combo → implement → verify with evidence** before completion. Never skip a relevant skill; never invoke skills as theater. The full matrix (visual redesign, typography, layout, a11y, perf, SEO, security, bug fix, refactor, new feature, testing, code review, planning, git/release, deployment) plus the design-first rule (REMOVE → REFINE → ALIGN → TYPOGRAPHY → ADD) plus the taste gate plus the skill conflict priority (Production safety → Existing architecture → Existing brand identity → Accessibility → Usability → Performance → Taste → Novelty) live in `memory/feedback_skill_orchestration_protocol.md`. Read that at session start.
+
+Response format at completion is fixed:
+```
+TASK:
+SKILLS USED:
+CHANGED:
+PRESERVED:
+TESTED:
+REVIEWED:
+REGRESSIONS:
+STATUS:
+```
+
+Final principle: maximize `QUALITY / CONTEXT COST`. Minimalism > decoration. Consistency > novelty. Evidence > assumption.
+
 ## Mandatory skills for this project
 
 For **every** design, UI, UX, layout, typography, color, animation, or component decision on this project — including reviews, critiques, and small polish — always load and follow these skills first:

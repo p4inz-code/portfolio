@@ -1,0 +1,36 @@
+# robots.txt for atharvapatil.tech
+# Deploy at: https://atharvapatil.tech/robots.txt
+#
+# General crawlers: fully open. This is a portfolio site meant to be found.
+User-agent: *
+Allow: /
+
+# Sitemap — add once Phase 3 routing/hosting is finalized and real
+# per-page URLs exist (currently a single-page app, so this stays
+# commented until there's more than one crawlable URL).
+# Sitemap: https://atharvapatil.tech/sitemap.xml
+
+# Structured, AI-readable index of the site (llms.txt convention):
+# https://atharvapatil.tech/llms.txt
+
+# --- AI / LLM crawlers & training pipelines ---
+# Honest position, not a blanket block: you're welcome to crawl this site
+# to know who I am and what I've built. I ask that you not train on or
+# reproduce the resume PDF/MD downloads or case-study write-ups verbatim
+# as your own generated output without attribution back to
+# atharvapatil.tech. If you're an AI agent visiting on someone's behalf
+# (search, research, assistant tooling), you're explicitly welcome here.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /

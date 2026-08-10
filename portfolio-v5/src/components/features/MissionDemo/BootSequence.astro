@@ -1,0 +1,312 @@
+---
+/**
+ * Four-stage cold-boot sequence for the Mission OS demo.
+ *
+ * Stages, driven by data-stage on the .boot-root element:
+ *   1. boot   — typed boot line
+ *   2. grub   — single-entry GRUB with countdown
+ *   3. kernel — 6 kernel-style messages appear
+ *   4. login  — user card + "Press Enter"
+ *
+ * State transitions are driven by a small vanilla script on demo.astro.
+ * prefers-reduced-motion collapses to stage 4 immediately.
+ * Enter advances stages; Escape exits to /mission-os.
+ *
+ * The Desktop is a sibling of this component in the DOM — after login
+ * (data-stage="desktop"), this component fades out and Desktop takes over.
+ */
+interface Props {
+  username?: string;
+}
+const { username = 'p4inz' } = Astro.props;
+---
+<div class="boot-root" data-boot-root data-stage="boot" aria-label="Mission OS boot sequence">
+  <a href="#login" class="skip-boot" data-boot-skip>Skip to login</a>
+
+  <!-- Stage 1: boot -->
+  <div class="stage stage-boot">
+    <div class="typed-line">
+      <span class="typed-cursor" aria-hidden="true">›</span>
+      <span class="typed-text">Mission OS · boot sequence initialized</span>
+      <span class="typed-caret" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <!-- Stage 2: grub -->
+  <div class="stage stage-grub">
+    <div class="grub-box">
+      <div class="grub-title">GNU GRUB · version 2.06</div>
+      <ul class="grub-entries" role="list">
+        <li class="grub-entry grub-entry-active" aria-current="true">
+          <span class="grub-arrow" aria-hidden="true">▸</span>
+          Mission OS (Debian Stable · KDE Plasma)
+        </li>
+        <li class="grub-entry grub-dim">Advanced options for Mission OS</li>
+        <li class="grub-entry grub-dim">System setup</li>
+      </ul>
+      <p class="grub-hint">
+        Use ↑ ↓ to select. <span class="grub-countdown" data-boot-countdown>Booting in <span data-boot-secs>2</span>s…</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Stage 3: kernel -->
+  <div class="stage stage-kernel">
+    <div class="kernel-log" aria-hidden="true">
+      <p class="k-line"><span class="k-time">[    0.00]</span> Linux version 6.8.0-mission (mission@build) · Debian Stable base</p>
+      <p class="k-line"><span class="k-time">[    0.12]</span> Command line: BOOT_IMAGE=/vmlinuz root=UUID=… ro quiet splash</p>
+      <p class="k-line"><span class="k-time">[    0.31]</span> mission-privacy: telemetry_hooks=disabled (compile-time)</p>
+      <p class="k-line"><span class="k-time">[    0.57]</span> mission-crypto: LUKS2 + Argon2id · slot 0 verified</p>
+      <p class="k-line"><span class="k-time">[    0.83]</span> mission-net: no radio auto-associate · offline-first policy engaged</p>
+      <p class="k-line"><span class="k-time">[    1.02]</span> KDE Plasma session: ready</p>
+    </div>
+  </div>
+
+  <!-- Stage 4: login -->
+  <div class="stage stage-login" id="login">
+    <div class="login-card">
+      <div class="login-avatar" aria-hidden="true">
+        <span class="avatar-mono">{username.slice(0, 1).toUpperCase()}</span>
+      </div>
+      <p class="login-name">{username}</p>
+      <p class="login-hint">
+        Press <kbd>Enter</kbd> to continue<span class="login-hint-mouse"> · or click below</span>
+      </p>
+      <button type="button" class="login-btn" data-boot-login>
+        Enter Mission OS
+      </button>
+      <p class="login-foot">Session encrypted · biometric optional</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .boot-root {
+    position: fixed;
+    inset: 0;
+    z-index: 8000;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 80% 60% at 50% 30%, color-mix(in oklab, var(--purple-deep) 25%, transparent), transparent 65%),
+      linear-gradient(180deg, var(--bg) 0%, #050210 100%);
+    color: var(--text);
+    display: grid;
+    place-items: center;
+    padding: var(--sp-11) var(--sp-6) var(--sp-6);
+    overflow: hidden;
+    transition: opacity 400ms var(--ease-out);
+  }
+  .boot-root[data-stage='desktop'] {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .skip-boot {
+    position: absolute;
+    top: 54px; left: var(--sp-6);
+    padding: 8px 14px;
+    background: var(--surface-1);
+    color: var(--purple-bright);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono); font-size: var(--text-xxs);
+    text-transform: uppercase; letter-spacing: var(--tracking-eyebrow);
+    text-decoration: none;
+    transform: translateY(-200%);
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .skip-boot:focus-visible {
+    transform: translateY(0);
+    outline: 2px solid var(--purple-bright);
+    outline-offset: 2px;
+  }
+
+  .stage {
+    grid-area: 1 / 1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 300ms var(--ease-out);
+  }
+  .boot-root[data-stage='boot']   .stage-boot,
+  .boot-root[data-stage='grub']   .stage-grub,
+  .boot-root[data-stage='kernel'] .stage-kernel,
+  .boot-root[data-stage='login']  .stage-login {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ---- Stage 1: boot line ---- */
+  .typed-line {
+    font-family: var(--font-mono);
+    font-size: clamp(14px, 2vw, 20px);
+    letter-spacing: 0.02em;
+    color: var(--text);
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .typed-cursor { color: var(--purple-bright); }
+  .typed-text {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 0;
+    max-width: 0;
+    animation: typing 1.1s steps(38, end) forwards;
+  }
+  .boot-root[data-stage='boot'] .typed-text {
+    animation-play-state: running;
+  }
+  .typed-caret {
+    display: inline-block;
+    width: 8px; height: 1em;
+    background: var(--purple-bright);
+    animation: blink 0.9s steps(2, start) infinite;
+  }
+  @keyframes typing { to { max-width: 40ch; } }
+  @keyframes blink  { 50% { opacity: 0; } }
+
+  /* ---- Stage 2: GRUB ---- */
+  .grub-box {
+    width: min(720px, 92vw);
+    padding: var(--sp-6) var(--sp-7);
+    background: #04010c;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    line-height: 1.9;
+  }
+  .grub-title {
+    color: var(--muted-2);
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+    font-size: var(--text-xxs);
+    padding-bottom: var(--sp-3);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: var(--sp-3);
+  }
+  .grub-entries { list-style: none; padding: 0; margin: 0; }
+  .grub-entry { padding: 4px 12px; border-radius: 4px; color: var(--text); }
+  .grub-entry-active {
+    background: var(--purple-bright);
+    color: var(--bg);
+    font-weight: 500;
+  }
+  .grub-entry-active .grub-arrow { margin-right: 6px; }
+  .grub-dim { color: var(--muted-2); }
+  .grub-hint {
+    margin-top: var(--sp-4);
+    color: var(--muted-2);
+    font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+  }
+  .grub-countdown { color: var(--purple-bright); margin-left: 8px; }
+
+  /* ---- Stage 3: kernel messages ---- */
+  .kernel-log {
+    width: min(860px, 94vw);
+    font-family: var(--font-mono);
+    font-size: clamp(11px, 1.4vw, 13px);
+    line-height: 1.85;
+    color: var(--muted);
+  }
+  .k-line {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  .boot-root[data-stage='kernel'] .k-line {
+    animation: k-in 300ms var(--ease-out) forwards;
+  }
+  .boot-root[data-stage='kernel'] .k-line:nth-child(1) { animation-delay:   0ms; }
+  .boot-root[data-stage='kernel'] .k-line:nth-child(2) { animation-delay: 240ms; }
+  .boot-root[data-stage='kernel'] .k-line:nth-child(3) { animation-delay: 480ms; }
+  .boot-root[data-stage='kernel'] .k-line:nth-child(4) { animation-delay: 720ms; }
+  .boot-root[data-stage='kernel'] .k-line:nth-child(5) { animation-delay: 960ms; }
+  .boot-root[data-stage='kernel'] .k-line:nth-child(6) { animation-delay: 1200ms; }
+  @keyframes k-in { to { opacity: 1; transform: translateX(0); } }
+  .k-time { color: var(--purple); margin-right: 10px; }
+
+  /* ---- Stage 4: login ---- */
+  .login-card {
+    width: min(360px, 90vw);
+    padding: var(--sp-8) var(--sp-7);
+    background: color-mix(in oklab, var(--surface-1) 88%, transparent);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-xl);
+    text-align: center;
+    backdrop-filter: blur(12px);
+  }
+  .login-avatar {
+    width: 72px; height: 72px; margin: 0 auto var(--sp-4);
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple-bright), var(--purple-deep));
+    display: grid; place-items: center;
+    color: var(--bg);
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 500;
+    box-shadow: 0 8px 24px color-mix(in oklab, var(--purple-deep) 40%, transparent);
+  }
+  .login-name {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    color: var(--text);
+    margin-bottom: var(--sp-4);
+  }
+  .login-hint {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+    margin-bottom: var(--sp-5);
+  }
+  .login-hint kbd {
+    font-family: var(--font-mono);
+    background: var(--surface-2);
+    color: var(--text);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--line);
+  }
+  .login-btn {
+    display: block; width: 100%;
+    padding: 12px 20px;
+    background: var(--purple-bright);
+    color: var(--bg);
+    border: none; border-radius: var(--radius-pill);
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+  }
+  .login-btn:hover { background: var(--purple); transform: translateY(-1px); }
+  .login-btn:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 3px; }
+  .login-foot {
+    margin-top: var(--sp-5);
+    color: var(--muted-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 640px) {
+    .login-hint-mouse { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .boot-root, .stage, .typed-text, .k-line, .typed-caret, .ribbon-dot {
+      animation: none !important;
+      transition: none !important;
+    }
+    .typed-text { max-width: 40ch; }
+    .k-line { opacity: 1; transform: none; }
+    /* User with reduced-motion sees the boot chrome collapsed straight to login. */
+    .boot-root[data-stage='boot']   .stage-boot,
+    .boot-root[data-stage='grub']   .stage-grub,
+    .boot-root[data-stage='kernel'] .stage-kernel { opacity: 0; pointer-events: none; }
+    .boot-root .stage-login { opacity: 1; pointer-events: auto; }
+  }
+</style>

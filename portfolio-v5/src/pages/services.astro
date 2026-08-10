@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+import Button from '../components/ui/Button.astro';
+import { SERVICES } from '../data/site';
+---
+<BaseLayout title="Services — Atharva Patil">
+  <Section eyebrow="Services" heading="One person. Real deliverables." headingEmphasis="Three disciplines." intro="Most clients hire a developer, a designer, and a 3D artist separately. I'm one person who covers all three — fewer handoffs, a coherent visual language, and someone who understands the full picture from architecture to render.">
+    <div class="services-grid">
+      {SERVICES.map((s, i) => (
+        <article class="service-card">
+          <p class="service-num">{String(i + 1).padStart(2, '0')}</p>
+          <h3 class="service-name">{s.name}</h3>
+          <p class="service-short">{s.short}</p>
+          <ul class="service-bullets">
+            {s.bullets.map((b) => <li>{b}</li>)}
+          </ul>
+          {s.cta && (
+            <div class="service-cta">
+              <a href={s.cta.href} class="service-link">{s.cta.label}</a>
+            </div>
+          )}
+        </article>
+      ))}
+    </div>
+
+    <div class="services-cta">
+      <Button href="/contact" variant="primary">Start a project →</Button>
+    </div>
+  </Section>
+
+  <style>
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-5);
+    }
+    @media (max-width: 760px) {
+      .services-grid { grid-template-columns: 1fr; }
+    }
+    .service-card {
+      padding: var(--sp-7);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: var(--surface-1);
+      transition: border-color var(--dur) var(--ease-out), background var(--dur) var(--ease-out);
+      display: flex; flex-direction: column;
+    }
+    .service-card:hover { border-color: var(--line-strong); background: var(--surface-2); }
+    .service-num {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: 0.12em;
+      color: var(--purple-bright);
+      margin-bottom: var(--sp-4);
+    }
+    .service-name {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 400;
+      letter-spacing: -0.015em;
+      margin-bottom: var(--sp-3);
+    }
+    .service-short {
+      color: var(--muted);
+      font-size: var(--text-sm);
+      line-height: var(--leading-body);
+      margin-bottom: var(--sp-5);
+    }
+    .service-bullets {
+      list-style: none;
+      display: flex; flex-direction: column;
+      gap: var(--sp-2);
+      margin-bottom: var(--sp-5);
+      flex-grow: 1;
+    }
+    .service-bullets li {
+      font-size: var(--text-sm);
+      color: var(--text);
+      padding-left: var(--sp-4);
+      position: relative;
+    }
+    .service-bullets li::before {
+      content: '';
+      position: absolute; left: 0; top: 10px;
+      width: 6px; height: 1px; background: var(--purple-bright);
+    }
+    .service-link {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: var(--text-sm);
+      color: var(--purple-bright);
+      border-bottom: 1px solid transparent;
+      transition: border-color var(--dur) var(--ease-out);
+      display: inline-block;
+    }
+    .service-link:hover { border-bottom-color: var(--purple-bright); }
+    .services-cta { margin-top: var(--sp-9); }
+  </style>
+</BaseLayout>

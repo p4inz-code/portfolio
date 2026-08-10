@@ -1,0 +1,22 @@
+---
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+<span class="tag">{label}</span>
+
+<style>
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: var(--text-xxs);
+    /* --muted (not --muted-2) so 10.5px passes WCAG AA on --surface-1. */
+    color: var(--muted);
+    border: 1px solid var(--line);
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    letter-spacing: 0.02em;
+  }
+</style>

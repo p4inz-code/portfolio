@@ -1,0 +1,191 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CaseHero from '../components/layout/CaseHero.astro';
+import Section from '../components/layout/Section.astro';
+import { PROJECTS } from '../data/projects';
+
+const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
+---
+<BaseLayout title={`${project.name} — ${project.tagline}`}>
+  <CaseHero project={project} />
+
+  <section class="demo-cta-wrap">
+    <div class="wrap">
+      <a href="/mission-os/demo" class="demo-cta">
+        <span class="demo-cta-eyebrow">Concept demo · playable</span>
+        <span class="demo-cta-title">Try Mission OS in your browser <span aria-hidden="true">→</span></span>
+        <span class="demo-cta-help">Boots into a desktop with the real Installer walkthrough. Not a live OS.</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="stat-row-wrap">
+    <div class="wrap">
+      <dl class="stat-row">
+        <div class="stat-cell"><dt>Product pillars</dt><dd>4</dd></div>
+        <div class="stat-cell"><dt>Pixel checks passed</dt><dd>141/141</dd></div>
+        <div class="stat-cell"><dt>Installer screens</dt><dd>13</dd></div>
+        <div class="stat-cell"><dt>Telemetry calls</dt><dd>0</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <Section eyebrow="The problem" heading="Privacy-focused OSes look like they were built for hackers, not people.">
+    <div class="body-copy">
+      <p>Most privacy-oriented Linux distributions signal intent through aesthetics — dark terminals, green text, cyberpunk imagery. That's a signal to the wrong audience. It reads as "for experts only," and the UX usually lives up to it: unexplained toggles, dense options, security features you enable without understanding the trade-offs.</p>
+      <p>If you want a well-designed, modern desktop OS that also treats your privacy as the default rather than an add-on, the market is thin.</p>
+    </div>
+  </Section>
+
+  <Section heading="Product-grade design applied to a serious operating system.">
+    <div class="body-copy">
+      <p>Mission OS is designed around the principles of any modern product — clarity, consistency, careful defaults, honest explanations. The visual direction takes cues from Apple, Proton, Arc Browser, Linear, Vercel, and Nothing.</p>
+      <p>Every advanced security feature in the installer explains its benefits, limitations, compatibility, and trade-offs. <strong>Users should understand what they're enabling.</strong></p>
+    </div>
+  </Section>
+
+  <Section eyebrow="Four pillars">
+    <div class="feature-grid">
+      <article class="feature-card">
+        <h3 class="feature-name">Privacy-first</h3>
+        <p class="feature-desc">Sensible defaults, honest choices, no telemetry — ever. Firefox and Tor Browser preinstalled; Brave and Chrome optional.</p>
+      </article>
+      <article class="feature-card">
+        <h3 class="feature-name">Security-conscious</h3>
+        <p class="feature-desc">Full disk encryption, Secure Boot, TPM, recovery keys — each explained in the installer, not hidden behind unlabelled toggles.</p>
+      </article>
+      <article class="feature-card">
+        <h3 class="feature-name">Portable-first</h3>
+        <p class="feature-desc">Designed to travel — installable on the machines you actually use, with sensible driver and hardware defaults.</p>
+      </article>
+      <article class="feature-card">
+        <h3 class="feature-name">Offline-first</h3>
+        <p class="feature-desc">Core system components work without a network. The OS assumes you might not have connectivity — and doesn't degrade when you don't.</p>
+      </article>
+    </div>
+  </Section>
+
+  <Section eyebrow="Installer experience" heading="13 screens, each explaining trade-offs instead of hiding them.">
+    <div class="body-copy">
+      <p>Welcome → Language → Keyboard → Network → Privacy Setup → Disk Selection → Partition Manager → User Account → Encryption → <strong>Security Options</strong> → Summary → Installation → Completion.</p>
+      <p>Structure stays consistent on every screen: Header → Stepper → Main Content → Contextual Help Panel → Action Bar.</p>
+    </div>
+    <div class="screenshot-placeholder">
+      <div class="ph-title">Installer — Security Options screen</div>
+      <div class="ph-sub">Concept · Installer prototype · Real capture lands next week</div>
+    </div>
+  </Section>
+
+  <Section eyebrow="Current status" heading="Active development. Not shipping yet.">
+    <div class="body-copy">
+      <p>Installer foundation validated end-to-end. Core system components (Mission Settings, Store, Update, Recovery, Driver Manager, Diagnostics) are in architecture and early implementation. <em>ISO under internal testing (August 2026)</em> — public release notice will land here first.</p>
+    </div>
+  </Section>
+
+  <style>
+    .demo-cta-wrap { padding: var(--sp-6) 0 var(--sp-4); }
+    .demo-cta {
+      display: grid;
+      gap: 6px;
+      padding: var(--sp-6) var(--sp-7);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-lg);
+      background:
+        radial-gradient(ellipse 60% 100% at 90% 50%, color-mix(in oklab, var(--purple) 12%, transparent), transparent 70%),
+        color-mix(in oklab, var(--surface-1) 92%, transparent);
+      color: var(--text);
+      text-decoration: none;
+      transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+    }
+    .demo-cta:hover, .demo-cta:focus-visible {
+      transform: translateY(-2px);
+      border-color: var(--purple-bright);
+      outline: none;
+    }
+    .demo-cta:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 3px; }
+    .demo-cta-eyebrow {
+      font-family: var(--font-mono); font-size: var(--text-xxs);
+      letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
+      color: var(--purple-bright);
+    }
+    .demo-cta-title {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: var(--text-xl);
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .demo-cta-help { color: var(--muted); font-size: var(--text-sm); }
+
+    .stat-row-wrap { padding: 0 0 var(--sp-8); }
+    .stat-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+    @media (max-width: 760px) {
+      .stat-row { grid-template-columns: 1fr 1fr; }
+    }
+    .stat-cell {
+      background: var(--surface-1);
+      padding: var(--sp-6);
+      display: flex; flex-direction: column-reverse; gap: var(--sp-2);
+    }
+    .stat-cell dt {
+      font-family: var(--font-mono);
+      font-size: var(--text-xxs);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--muted-2);
+    }
+    .stat-cell dd {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .body-copy {
+      max-width: var(--wrap-narrow);
+      color: var(--muted);
+      font-size: var(--text-md);
+      line-height: var(--leading-body);
+    }
+    .body-copy p + p { margin-top: var(--sp-4); }
+    .body-copy strong { color: var(--text); font-weight: 500; }
+    .body-copy em { color: var(--purple-bright); font-style: italic; }
+    .feature-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-4);
+    }
+    @media (max-width: 760px) { .feature-grid { grid-template-columns: 1fr; } }
+    .feature-card {
+      padding: var(--sp-6);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface-1);
+    }
+    .feature-name {
+      font-family: var(--font-display);
+      font-size: var(--text-md);
+      font-weight: 500;
+      margin-bottom: var(--sp-3);
+    }
+    .feature-desc { color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); }
+    .screenshot-placeholder {
+      margin-top: var(--sp-7);
+      min-height: 280px;
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius-xl);
+      background: var(--aurora), var(--surface-1);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: var(--sp-2); padding: var(--sp-7);
+    }
+    .ph-title { font-family: var(--font-display); font-style: italic; font-size: var(--text-lg); color: var(--text); }
+    .ph-sub { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--muted-2); text-align: center; }
+  </style>
+</BaseLayout>

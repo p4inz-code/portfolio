@@ -1,0 +1,182 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DemoRibbon from '../../components/features/MissionDemo/DemoRibbon.astro';
+import BootSequence from '../../components/features/MissionDemo/BootSequence.astro';
+import Desktop from '../../components/features/MissionDemo/Desktop.astro';
+---
+<BaseLayout title={`Mission OS · Concept Demo — Atharva Patil`}>
+  <div class="demo-scope">
+    <DemoRibbon />
+    <BootSequence username="p4inz" />
+    <Desktop />
+  </div>
+
+  <script is:inline>
+    (function () {
+      const bootRoot = document.querySelector('[data-boot-root]');
+      const desktop  = document.querySelector('[data-desktop-root]');
+      if (!bootRoot || !desktop) return;
+
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // -------- Boot stage state machine --------
+      const STAGES = ['boot', 'grub', 'kernel', 'login', 'desktop'];
+      let idx = reduce ? STAGES.indexOf('login') : 0;
+
+      const secsEl = bootRoot.querySelector('[data-boot-secs]');
+      const loginBtn = bootRoot.querySelector('[data-boot-login]');
+      const skipLink = bootRoot.querySelector('[data-boot-skip]');
+
+      let stageTimer = null;
+      let grubCountdown = null;
+
+      function setStage(next) {
+        idx = Math.max(0, Math.min(STAGES.length - 1, next));
+        bootRoot.setAttribute('data-stage', STAGES[idx]);
+        clearTimeout(stageTimer);
+        clearInterval(grubCountdown);
+        arm();
+      }
+
+      function arm() {
+        const stage = STAGES[idx];
+        if (stage === 'boot')   stageTimer = setTimeout(() => setStage(idx + 1), 1400);
+        if (stage === 'grub') {
+          let s = 2;
+          if (secsEl) secsEl.textContent = String(s);
+          grubCountdown = setInterval(() => {
+            s -= 1;
+            if (secsEl) secsEl.textContent = String(Math.max(0, s));
+            if (s <= 0) { clearInterval(grubCountdown); setStage(idx + 1); }
+          }, 1000);
+        }
+        if (stage === 'kernel') stageTimer = setTimeout(() => setStage(idx + 1), 1900);
+        // login: no auto-advance; Enter or button click finishes login
+      }
+
+      function advance() {
+        const stage = STAGES[idx];
+        if (stage === 'login')   { finishLogin(); return; }
+        if (stage === 'desktop') { return; } // desktop uses Escape only; Enter is inert
+        setStage(idx + 1);
+      }
+
+      function finishLogin() {
+        setStage(STAGES.indexOf('desktop'));
+        // Fade in desktop after boot chrome starts fading out
+        setTimeout(() => desktop.setAttribute('data-desktop-active', 'true'), 200);
+      }
+
+      function exitDemo() {
+        // If a window is open, close it first — Escape twice to exit fully.
+        if (desktop.getAttribute('data-window-active')) {
+          setWindow('');
+          return;
+        }
+        window.location.href = '/mission-os';
+      }
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { e.preventDefault(); exitDemo(); return; }
+        // Arrow keys navigate the installer when it's open
+        if (desktop.getAttribute('data-window-active') === 'installer') {
+          if (e.key === 'ArrowRight') { e.preventDefault(); installerStep(+1); return; }
+          if (e.key === 'ArrowLeft')  { e.preventDefault(); installerStep(-1); return; }
+        }
+        if (e.key === 'Enter')  {
+          if (document.activeElement && document.activeElement.matches('[data-dock-app], [data-window-close], [data-installer-next], [data-installer-back], [data-goto]')) return;
+          e.preventDefault(); advance(); return;
+        }
+      });
+
+      if (loginBtn) loginBtn.addEventListener('click', finishLogin);
+      if (skipLink) skipLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        setStage(STAGES.indexOf('login'));
+      });
+
+      // -------- Desktop: window manager + clock --------
+      function setWindow(name) {
+        desktop.setAttribute('data-window-active', name || '');
+        const active = desktop.querySelector('[data-topbar-active]');
+        if (active) active.textContent = name ? (name.charAt(0).toUpperCase() + name.slice(1)) : 'Desktop';
+      }
+
+      desktop.querySelectorAll('[data-dock-app]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const app = btn.getAttribute('data-dock-app');
+          const current = desktop.getAttribute('data-window-active');
+          setWindow(current === app ? '' : app);
+        });
+      });
+
+      desktop.querySelectorAll('[data-window-close]').forEach(function (btn) {
+        btn.addEventListener('click', function () { setWindow(''); });
+      });
+
+      // -------- Installer app: step carousel --------
+      const installer = desktop.querySelector('[data-installer-root]');
+      const installerTotalShown = 5;
+
+      function setInstallerStep(n) {
+        if (!installer) return;
+        const clamped = Math.max(0, Math.min(installerTotalShown - 1, n));
+        installer.setAttribute('data-installer-step', String(clamped));
+        const progress = installer.querySelector('[data-installer-progress]');
+        if (progress) progress.textContent = 'Step ' + (clamped + 1) + ' of ' + installerTotalShown + ' shown · 13 total';
+      }
+      function installerStep(delta) {
+        if (!installer) return;
+        const current = parseInt(installer.getAttribute('data-installer-step') || '0', 10);
+        setInstallerStep(current + delta);
+      }
+      if (installer) {
+        installer.querySelector('[data-installer-next]').addEventListener('click', function () { installerStep(+1); });
+        installer.querySelector('[data-installer-back]').addEventListener('click', function () { installerStep(-1); });
+        installer.querySelectorAll('[data-goto]').forEach(function (dot) {
+          dot.addEventListener('click', function () { setInstallerStep(parseInt(dot.getAttribute('data-goto'), 10)); });
+        });
+      }
+      // When Installer window opens, reset to step 0 for a predictable entry.
+      const dockInstallerBtn = desktop.querySelector('[data-dock-app="installer"]');
+      if (dockInstallerBtn) dockInstallerBtn.addEventListener('click', function () {
+        if (desktop.getAttribute('data-window-active') === 'installer') setInstallerStep(0);
+      });
+
+      // Live clock + date in the top bar. Format HH:MM + short weekday +
+      // month + day in the visitor's local time. Ticks once per 30s (clock
+      // needs at most minute resolution; nothing else needs faster).
+      const clockEl = desktop.querySelector('[data-topbar-clock]');
+      const dateEl  = desktop.querySelector('[data-topbar-date]');
+      const DAY = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      function tickClock() {
+        const d = new Date();
+        if (clockEl) {
+          const hh = String(d.getHours()).padStart(2, '0');
+          const mm = String(d.getMinutes()).padStart(2, '0');
+          clockEl.textContent = hh + ':' + mm;
+        }
+        if (dateEl) {
+          dateEl.textContent = DAY[d.getDay()] + ' · ' + MON[d.getMonth()] + ' ' + d.getDate();
+        }
+      }
+      tickClock();
+      setInterval(tickClock, 30000);
+
+      // Kick off boot
+      bootRoot.setAttribute('data-stage', STAGES[idx]);
+      if (reduce) { finishLogin(); } else { arm(); }
+    })();
+  </script>
+
+  <style is:global>
+    /* Hide site chrome for the immersive demo — nav + footer would break the metaphor.
+       Scoped by .demo-scope's presence in the DOM so no other route is affected. */
+    body:has(.demo-scope) .nav,
+    body:has(.demo-scope) .site-footer,
+    body:has(.demo-scope) .skip-nav { display: none !important; }
+    body:has(.demo-scope) main { padding: 0 !important; margin: 0 !important; max-width: none !important; }
+    body:has(.demo-scope) { background: #050210; margin: 0; overflow: hidden; }
+  </style>
+</BaseLayout>

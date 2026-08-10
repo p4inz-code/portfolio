@@ -1,0 +1,72 @@
+---
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  headingEmphasis?: string;   // portion to italic-purple emphasize
+  intro?: string;
+  wide?: boolean;
+  class?: string;
+  id?: string;
+}
+const { eyebrow, heading, headingEmphasis, intro, wide = false, class: cls = '', id } = Astro.props;
+---
+<section class:list={['section', cls]} id={id}>
+  <div class:list={['wrap', wide && 'wrap-wide']}>
+    {eyebrow && <p class="section-eyebrow">{eyebrow}</p>}
+    {heading && (
+      <h2 class="section-heading">
+        {headingEmphasis ? (
+          <>
+            <em>{headingEmphasis}</em> {heading}
+          </>
+        ) : (
+          heading
+        )}
+      </h2>
+    )}
+    {intro && <p class="section-intro">{intro}</p>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .section {
+    padding: var(--sp-11) 0;
+  }
+  .wrap-wide {
+    max-width: 1400px;
+  }
+  .section-eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    /* Use --muted (not --muted-2) so 10.5px passes WCAG AA on --bg. */
+    color: var(--muted);
+    margin-bottom: var(--sp-4);
+  }
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: var(--text);
+    margin-bottom: var(--sp-6);
+    max-width: 900px;
+    text-wrap: balance;
+  }
+  .section-heading em {
+    font-style: italic;
+    color: var(--purple-bright);
+    font-weight: 400;
+  }
+  .section-intro {
+    max-width: var(--wrap-narrow);
+    color: var(--muted);
+    font-size: var(--text-md);
+    line-height: var(--leading-body);
+    margin-bottom: var(--sp-8);
+  }
+</style>

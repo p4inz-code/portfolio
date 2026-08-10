@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+---
+<BaseLayout title="3D / VFX — Atharva Patil">
+  <Section eyebrow="3D and VFX" heading="of what I do." headingEmphasis="The other half" intro="Renders, lighting studies, and motion work — the visual craft alongside the code. This page is being rebuilt around fresh 2026 work: full turntables and process videos landing shortly.">
+    <div class="in-progress">
+      <p class="in-progress-note">
+        <em>Coming soon.</em> New renders, lighting breakdowns, and short process videos landing this month.
+        Until then, the code side of my work is on <a href="/work">Selected Work</a>.
+      </p>
+    </div>
+  </Section>
+
+  <style>
+    .in-progress {
+      padding: var(--sp-9) var(--sp-7);
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius-xl);
+      background: color-mix(in oklab, var(--surface-1) 60%, transparent);
+      text-align: center;
+    }
+    .in-progress-note {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: var(--leading-body);
+    }
+    .in-progress-note em { color: var(--purple-bright); font-style: italic; }
+    .in-progress-note a { color: var(--purple-bright); border-bottom: 1px solid var(--line-strong); }
+    .in-progress-note a:hover { border-bottom-color: var(--purple-bright); }
+  </style>
+</BaseLayout>

@@ -1,0 +1,525 @@
+---
+/**
+ * Post-login Mission OS desktop.
+ *
+ * v5.2.2 polish: wallpaper redesigned around a real identity (bold M
+ * monogram + four-pillar band + dot grid), chrome switched to a
+ * system-UI font stack so it stops leaking the portfolio's editorial
+ * serif into what is meant to read as an OS, top bar densified with
+ * date + workspace pips, dock expanded to 6 icons (3 functional +
+ * 3 clearly-inert placeholder apps).
+ *
+ * Window state is managed by data-window-active on .desktop-root:
+ *   ""            = no window open
+ *   "installer"   | "settings" | "about" = that window open
+ */
+import DemoWindow from './DemoWindow.astro';
+import InstallerApp from './apps/InstallerApp.astro';
+import SettingsApp from './apps/SettingsApp.astro';
+import AboutApp from './apps/AboutApp.astro';
+---
+<div class="desktop-root" data-desktop-root data-window-active="">
+
+  <!-- ================== WALLPAPER ================== -->
+  <div class="wallpaper" aria-hidden="true">
+    <div class="wp-base"></div>
+    <div class="wp-glow-1"></div>
+    <div class="wp-glow-2"></div>
+    <div class="wp-grid"></div>
+
+    <!-- The identity hero — a real OS wallpaper composition, not a blob. -->
+    <div class="wp-hero">
+      <div class="wp-monogram">
+        <svg viewBox="0 0 120 120" fill="none" aria-hidden="true">
+          <!-- Concentric ring backdrop -->
+          <circle cx="60" cy="60" r="54" stroke="currentColor" stroke-opacity="0.18" stroke-width="1" />
+          <circle cx="60" cy="60" r="42" stroke="currentColor" stroke-opacity="0.10" stroke-width="1" />
+          <!-- Mission OS "M" mark -->
+          <path d="M28 88 V 32 L 60 68 L 92 32 V 88" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+          <!-- Center dot -->
+          <circle cx="60" cy="60" r="3" fill="currentColor" />
+        </svg>
+      </div>
+      <p class="wp-brand">mission&nbsp;os</p>
+      <p class="wp-tag">v0.1 · pre-release · debian stable + kde plasma</p>
+
+      <div class="wp-pillars">
+        <span class="wp-pillar"><span class="wp-pillar-dot"></span>privacy-first</span>
+        <span class="wp-pillar"><span class="wp-pillar-dot"></span>security-conscious</span>
+        <span class="wp-pillar"><span class="wp-pillar-dot"></span>portable-first</span>
+        <span class="wp-pillar"><span class="wp-pillar-dot"></span>offline-first</span>
+      </div>
+    </div>
+
+    <!-- Corner watermark -->
+    <p class="wp-corner">no telemetry · no phone-home · builds signed · gplv3</p>
+  </div>
+
+  <!-- ================== TOP BAR ================== -->
+  <header class="topbar" role="banner">
+    <div class="tb-left">
+      <span class="tb-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 20V6l8 10L20 6v14" />
+        </svg>
+      </span>
+      <span class="tb-brand">Mission&nbsp;OS</span>
+      <span class="tb-sep" aria-hidden="true">·</span>
+      <span class="tb-active" data-topbar-active>Desktop</span>
+      <span class="tb-workspaces" role="group" aria-label="Workspaces">
+        <span class="tb-ws tb-ws-active" aria-current="true">1</span>
+        <span class="tb-ws">2</span>
+        <span class="tb-ws">3</span>
+      </span>
+    </div>
+
+    <div class="tb-center" aria-hidden="true">
+      <span class="tb-date" data-topbar-date>—</span>
+      <span class="tb-dot">·</span>
+      <span class="tb-clock" data-topbar-clock>--:--</span>
+    </div>
+
+    <div class="tb-right">
+      <span class="tb-chip tb-chip-good" title="Telemetry hooks not compiled — locked off">
+        <span class="tb-chip-dot" aria-hidden="true"></span>Privacy
+      </span>
+      <span class="tb-chip tb-chip-good" title="Full-disk encryption enabled (LUKS2 + Argon2id)">
+        <span class="tb-chip-dot" aria-hidden="true"></span>Crypto
+      </span>
+      <span class="tb-item" role="img" aria-label="Network offline — offline-first policy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+          <path d="M2 8a15 15 0 0 1 20 0" />
+          <path d="M5 12a10 10 0 0 1 14 0" />
+          <path d="M8 16a5 5 0 0 1 8 0" />
+          <line x1="4" y1="4" x2="20" y2="20" />
+        </svg>
+      </span>
+      <span class="tb-item" role="img" aria-label="Battery 87 percent">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+          <rect x="2" y="7" width="18" height="10" rx="2" />
+          <line x1="22" y1="11" x2="22" y2="13" />
+          <rect x="4" y="9" width="12" height="6" fill="currentColor" stroke="none" />
+        </svg>
+        <span class="tb-batt" aria-hidden="true">87%</span>
+      </span>
+      <span class="tb-user">
+        <span class="tb-user-dot" aria-hidden="true"></span>
+        p4inz@mission-os
+      </span>
+    </div>
+  </header>
+
+  <!-- ================== WINDOWS ================== -->
+  <div class="window-area" data-window-area>
+    <DemoWindow
+      title="Mission Installer"
+      subtitle="5 of 13 real screens shown"
+      appSlug="installer"
+      wide
+    >
+      <InstallerApp />
+    </DemoWindow>
+
+    <DemoWindow
+      title="Mission Settings"
+      subtitle="privacy defaults"
+      appSlug="settings"
+      wide
+    >
+      <SettingsApp />
+    </DemoWindow>
+
+    <DemoWindow
+      title="About Mission OS"
+      subtitle="real data from projects.ts"
+      appSlug="about"
+    >
+      <AboutApp />
+    </DemoWindow>
+  </div>
+
+  <!-- ================== DOCK ================== -->
+  <nav class="dock" aria-label="Applications">
+    <!-- System apps — inert placeholders. Tooltip explains why they don't open. -->
+    <div class="dock-group" aria-label="System">
+      <button type="button" class="dock-icon dock-icon-inert" data-dock-inert title="Files — not part of the concept demo" aria-label="Files (not in demo)">
+        <span class="dock-icon-glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
+          </svg>
+        </span>
+        <span class="dock-label">Files</span>
+      </button>
+      <button type="button" class="dock-icon dock-icon-inert" data-dock-inert title="Terminal — not part of the concept demo" aria-label="Terminal (not in demo)">
+        <span class="dock-icon-glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="16" rx="2" />
+            <path d="M7 9l3 3-3 3M12 15h5" />
+          </svg>
+        </span>
+        <span class="dock-label">Terminal</span>
+      </button>
+      <button type="button" class="dock-icon dock-icon-inert" data-dock-inert title="Firefox — not part of the concept demo" aria-label="Firefox (not in demo)">
+        <span class="dock-icon-glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
+          </svg>
+        </span>
+        <span class="dock-label">Firefox</span>
+      </button>
+    </div>
+
+    <div class="dock-divider" aria-hidden="true"></div>
+
+    <!-- Info apps — functional in the demo. -->
+    <div class="dock-group" aria-label="Info">
+      <button type="button" class="dock-icon" data-dock-app="installer" aria-label="Open Mission Installer">
+        <span class="dock-icon-glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="3" />
+            <path d="M8 12h8M12 8v8" />
+          </svg>
+        </span>
+        <span class="dock-label">Installer</span>
+      </button>
+      <button type="button" class="dock-icon" data-dock-app="settings" aria-label="Open Mission Settings">
+        <span class="dock-icon-glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9c.4.6 1 1 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
+          </svg>
+        </span>
+        <span class="dock-label">Settings</span>
+      </button>
+      <button type="button" class="dock-icon" data-dock-app="about" aria-label="Open About Mission OS">
+        <span class="dock-icon-glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 16v-4M12 8h.01" />
+          </svg>
+        </span>
+        <span class="dock-label">About</span>
+      </button>
+    </div>
+  </nav>
+</div>
+
+<style>
+  /* System-UI font stack for OS chrome — the portfolio's PP Editorial New
+     is beautiful editorial serif but it leaks brand into what should read
+     as an OS. Keep PP Editorial inside app windows (editorial content
+     in windows is fine); chrome speaks a system-UI voice. */
+  .desktop-root {
+    --font-os: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+               Ubuntu, 'Helvetica Neue', Arial, system-ui, sans-serif;
+
+    position: fixed;
+    inset: 0;
+    z-index: 7000;
+    color: var(--text);
+    font-family: var(--font-os);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 400ms var(--ease-out);
+  }
+  .desktop-root[data-desktop-active='true'] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ================== WALLPAPER ================== */
+  .wallpaper {
+    position: absolute; inset: 0; z-index: 0;
+    overflow: hidden;
+  }
+  .wp-base, .wp-glow-1, .wp-glow-2, .wp-grid {
+    position: absolute; inset: 0;
+    pointer-events: none;
+  }
+  .wp-base {
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 100%, #050210 0%, transparent 60%),
+      linear-gradient(180deg, #0A0517 0%, #060213 100%);
+  }
+  .wp-glow-1 {
+    background: radial-gradient(ellipse 70% 55% at 15% 15%,
+      rgba(123, 63, 228, 0.30), transparent 60%);
+  }
+  .wp-glow-2 {
+    background: radial-gradient(ellipse 60% 50% at 85% 85%,
+      rgba(184, 147, 255, 0.16), transparent 65%);
+  }
+  /* Nothing-style dot grid — very subtle, dense enough to read as pattern. */
+  .wp-grid {
+    background-image:
+      radial-gradient(circle, rgba(232, 225, 208, 0.06) 1px, transparent 1.4px);
+    background-size: 22px 22px;
+    background-position: 0 0;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 85%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 85%);
+  }
+
+  .wp-hero {
+    position: absolute;
+    inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: var(--sp-4);
+    text-align: center;
+    padding: 0 var(--sp-6);
+  }
+  .wp-monogram {
+    width: 96px; height: 96px;
+    color: rgba(214, 191, 255, 0.55);
+    filter: drop-shadow(0 0 30px rgba(123, 63, 228, 0.35));
+  }
+  .wp-monogram svg { width: 100%; height: 100%; }
+  .wp-brand {
+    font-family: var(--font-os);
+    font-weight: 500;
+    font-size: clamp(24px, 3.6vw, 42px);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(232, 225, 208, 0.82);
+    margin-top: var(--sp-3);
+  }
+  .wp-tag {
+    font-family: var(--font-mono);
+    font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: rgba(184, 147, 255, 0.65);
+  }
+  .wp-pillars {
+    display: inline-flex; flex-wrap: wrap; justify-content: center;
+    gap: var(--sp-2) var(--sp-4);
+    margin-top: var(--sp-6);
+    padding: 10px 18px;
+    border: 1px solid rgba(232, 225, 208, 0.08);
+    border-radius: var(--radius-pill);
+    background: rgba(10, 5, 23, 0.35);
+    backdrop-filter: blur(6px);
+  }
+  .wp-pillar {
+    font-family: var(--font-os);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: rgba(232, 225, 208, 0.72);
+    display: inline-flex; align-items: center; gap: 6px;
+    white-space: nowrap;
+  }
+  .wp-pillar-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: rgba(184, 147, 255, 0.75);
+    box-shadow: 0 0 6px rgba(184, 147, 255, 0.6);
+  }
+  .wp-corner {
+    position: absolute;
+    left: var(--sp-6); bottom: var(--sp-6);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: rgba(155, 149, 176, 0.4);
+    max-width: 60vw;
+  }
+
+  @media (max-width: 640px) {
+    .wp-monogram { width: 72px; height: 72px; }
+    .wp-pillars { padding: 8px 12px; gap: 4px 10px; }
+    .wp-pillar { font-size: 10px; }
+    .wp-corner { font-size: 9px; }
+  }
+
+  /* ================== TOP BAR ================== */
+  .topbar {
+    position: absolute;
+    top: 44px; left: 0; right: 0;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--sp-4);
+    padding: 6px var(--sp-5);
+    background: color-mix(in oklab, #0A0517 82%, transparent);
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(12px);
+    font-family: var(--font-os);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .tb-left  { display: inline-flex; align-items: center; gap: var(--sp-3); justify-self: start; }
+  .tb-right { display: inline-flex; align-items: center; gap: var(--sp-3); justify-self: end; }
+  .tb-center { display: inline-flex; align-items: center; gap: 8px; justify-self: center;
+               color: var(--text); font-weight: 500; }
+  .tb-mark {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; color: var(--purple-bright);
+  }
+  .tb-mark svg { width: 16px; height: 16px; }
+  .tb-brand   { color: var(--text); font-weight: 600; letter-spacing: 0.02em; }
+  .tb-sep     { color: var(--muted-2); }
+  .tb-active  { color: var(--muted); }
+  .tb-workspaces {
+    display: inline-flex; align-items: center; gap: 2px;
+    margin-left: 6px;
+    padding: 2px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+  .tb-ws {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px;
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--muted-2);
+    border-radius: 4px;
+  }
+  .tb-ws-active { background: color-mix(in oklab, var(--purple) 22%, transparent); color: var(--text); }
+  .tb-date, .tb-clock {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+  .tb-dot { color: var(--muted-2); }
+  .tb-item {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--muted);
+  }
+  .tb-item svg { width: 14px; height: 14px; }
+  .tb-batt { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+  .tb-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    color: var(--muted);
+    cursor: help;
+  }
+  .tb-chip-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted-2); }
+  .tb-chip-good { color: var(--text); border-color: color-mix(in oklab, var(--green) 30%, var(--line)); }
+  .tb-chip-good .tb-chip-dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .tb-user {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--purple-bright);
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  .tb-user-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 6px var(--green);
+  }
+  @media (max-width: 900px) {
+    .topbar { grid-template-columns: 1fr auto; }
+    .tb-center { display: none; }
+    .tb-chip, .tb-workspaces { display: none; }
+  }
+  @media (max-width: 640px) {
+    .topbar { padding: 6px var(--sp-4); }
+    .tb-active, .tb-user, .tb-item[aria-label^='Battery'] { display: none; }
+  }
+
+  /* ================== WINDOWS ================== */
+  .window-area {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    padding: 140px var(--sp-4) 140px;
+    pointer-events: none;
+  }
+  .window-area :global(.demo-window) {
+    display: none;
+    pointer-events: auto;
+  }
+  .desktop-root[data-window-active='installer'] .window-area :global([data-window='installer']),
+  .desktop-root[data-window-active='settings']  .window-area :global([data-window='settings']),
+  .desktop-root[data-window-active='about']     .window-area :global([data-window='about']) {
+    display: flex;
+  }
+
+  /* ================== DOCK ================== */
+  .dock {
+    position: absolute;
+    left: 50%;
+    bottom: var(--sp-5);
+    transform: translateX(-50%);
+    z-index: 4;
+    display: inline-flex; align-items: center;
+    gap: var(--sp-3);
+    padding: 10px 14px;
+    background: color-mix(in oklab, #0A0517 82%, transparent);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 42px color-mix(in oklab, #000 45%, transparent);
+  }
+  .dock-group { display: inline-flex; gap: var(--sp-2); align-items: center; }
+  .dock-divider {
+    width: 1px; height: 40px;
+    background: var(--line);
+    margin: 0 4px;
+  }
+  .dock-icon {
+    display: inline-flex; flex-direction: column; align-items: center;
+    gap: 4px;
+    padding: 8px 12px 6px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    color: var(--muted);
+    font-family: var(--font-os); font-size: 10px;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: color var(--dur-fast) var(--ease-out),
+                background var(--dur-fast) var(--ease-out),
+                transform var(--dur-fast) var(--ease-out);
+    min-width: 62px;
+  }
+  .dock-icon:hover, .dock-icon:focus-visible {
+    color: var(--purple-bright);
+    background: color-mix(in oklab, var(--purple) 10%, transparent);
+    transform: translateY(-2px);
+    outline: none;
+  }
+  .dock-icon:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
+  .dock-icon-glyph { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; }
+  .dock-icon-glyph svg { width: 22px; height: 22px; }
+  .dock-label { color: currentColor; font-weight: 500; }
+
+  /* Inert (placeholder) apps read as dimmer than functional ones. */
+  .dock-icon-inert { color: var(--muted-2); cursor: not-allowed; }
+  .dock-icon-inert:hover, .dock-icon-inert:focus-visible {
+    color: var(--muted);
+    background: color-mix(in oklab, var(--surface-2) 40%, transparent);
+    transform: none;
+  }
+
+  /* Highlight the active app in the dock */
+  .desktop-root[data-window-active='installer'] .dock-icon[data-dock-app='installer'],
+  .desktop-root[data-window-active='settings']  .dock-icon[data-dock-app='settings'],
+  .desktop-root[data-window-active='about']     .dock-icon[data-dock-app='about'] {
+    color: var(--purple-bright);
+    background: color-mix(in oklab, var(--purple) 14%, transparent);
+    border-color: var(--line-strong);
+  }
+
+  @media (max-width: 760px) {
+    .dock { padding: 8px 10px; }
+    .dock-icon { min-width: 0; padding: 6px 8px; }
+    .dock-label { display: none; }
+    .dock-divider { height: 28px; }
+  }
+  @media (max-width: 640px) {
+    .dock {
+      left: var(--sp-3); right: var(--sp-3); bottom: var(--sp-3);
+      transform: none; justify-content: space-around;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .desktop-root, .dock-icon { transition: none; }
+  }
+</style>

@@ -1,0 +1,113 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CaseHero from '../components/layout/CaseHero.astro';
+import Section from '../components/layout/Section.astro';
+import { PROJECTS } from '../data/projects';
+
+const project = PROJECTS.find((p) => p.slug === 'pursue-os')!;
+---
+<BaseLayout title={`${project.name} — ${project.tagline}`}>
+  <CaseHero project={project} />
+
+  <section class="notice-wrap">
+    <div class="wrap">
+      <p class="notice">
+        <strong>Development notice.</strong> PURSUE OS is not ready for production use. The project is currently entering implementation and has no stable release or installation image.
+      </p>
+    </div>
+  </section>
+
+  <Section eyebrow="The idea" heading="One operating system for the investigation workflow.">
+    <div class="body-copy">
+      <p>Instead of assembling a large collection of unrelated tools, PURSUE aims to provide a coherent environment where investigators can research, collect, analyze, connect, preserve, and report information from one system.</p>
+      <p>Two flagship interfaces sit alongside the broader investigation platform:</p>
+      <ul class="dash-list">
+        <li><strong>Investigation Terminal</strong> — a purpose-built command-line environment for investigators.</li>
+        <li><strong>Investigation Browser</strong> — secure, configurable browsing and research workflows with integrated Tor capabilities.</li>
+      </ul>
+    </div>
+  </Section>
+
+  <Section eyebrow="Core areas" heading="What it's being designed to support.">
+    <div class="tag-grid">
+      {['OSINT + intelligence gathering', 'Secure investigation browsing', 'Integrated Tor workflows', 'Investigation-focused terminal', 'Case management', 'Evidence storage + provenance', 'Investigation graphs', 'Timelines + org', 'DFIR workflows', 'GEOINT', 'Infrastructure intelligence', 'CTI workflows', 'Media analysis', 'Reporting + export', 'Modular investigation tools', 'Plugin extensibility', 'Optional local AI'].map((t) => <span class="area-chip">{t}</span>)}
+    </div>
+  </Section>
+
+  <Section eyebrow="AI policy" heading="Assistant, not authority.">
+    <div class="body-copy">
+      <p>AI in PURSUE may help with: <strong>organizing information</strong>, <strong>summarizing investigator-selected material</strong>, <strong>explaining technical output</strong>, <strong>assisting terminal workflows</strong>, and <strong>helping navigate supported tasks</strong>.</p>
+      <p>AI must not silently manipulate evidence or replace the investigator's judgment. <em>The source remains the source of truth.</em> AI functionality is optional and configurable.</p>
+    </div>
+  </Section>
+
+  <Section eyebrow="Privacy + security">
+    <div class="feature-grid">
+      <article class="feature-card"><h3 class="feature-name">Privacy-first workflows</h3><p class="feature-desc">Sensible defaults that respect investigator autonomy.</p></article>
+      <article class="feature-card"><h3 class="feature-name">Integrated Tor</h3><p class="feature-desc">First-class Tor capabilities across the browser and research tooling.</p></article>
+      <article class="feature-card"><h3 class="feature-name">Evidence integrity</h3><p class="feature-desc">Provenance and traceability built into the case system.</p></article>
+      <article class="feature-card"><h3 class="feature-name">Minimal telemetry</h3><p class="feature-desc">Strong defaults, user-controlled environment. Nothing hidden.</p></article>
+    </div>
+  </Section>
+
+  <Section eyebrow="Development status" heading="The foundation is ready. The build begins now.">
+    <div class="status-grid">
+      <div class="status-cell"><span class="status-label">Planning</span><span class="status-value">Complete</span></div>
+      <div class="status-cell"><span class="status-label">Repository foundation</span><span class="status-value">Complete</span></div>
+      <div class="status-cell"><span class="status-label">Architecture foundation</span><span class="status-value">Established</span></div>
+      <div class="status-cell"><span class="status-label">Implementation</span><span class="status-value warn">Starting</span></div>
+      <div class="status-cell"><span class="status-label">Stable release</span><span class="status-value">Not available</span></div>
+    </div>
+    <p class="body-copy" style="margin-top: var(--sp-6)">
+      Apache 2.0. Third-party software distributed with future releases may use separate licenses.
+      An independent project created and maintained by <strong>P4inz</strong>.
+    </p>
+  </Section>
+
+  <style>
+    .notice-wrap { padding: 0 0 var(--sp-7); }
+    .notice {
+      max-width: var(--wrap-narrow);
+      padding: var(--sp-4) var(--sp-6);
+      border-left: 3px solid #FFC04D;
+      background: color-mix(in oklab, #FFC04D 6%, transparent);
+      border-radius: var(--radius-sm);
+      color: var(--text); font-size: var(--text-sm); line-height: var(--leading-body);
+    }
+    .notice strong { color: #FFC04D; }
+    .body-copy { max-width: var(--wrap-narrow); color: var(--muted); font-size: var(--text-md); line-height: var(--leading-body); }
+    .body-copy p + p { margin-top: var(--sp-4); }
+    .body-copy strong { color: var(--text); font-weight: 500; }
+    .body-copy em { color: var(--purple-bright); font-style: italic; }
+    .dash-list { list-style: none; margin-top: var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-3); }
+    .dash-list li { padding-left: var(--sp-5); position: relative; }
+    .dash-list li::before { content: ''; position: absolute; left: 0; top: 14px; width: 12px; height: 1px; background: var(--purple-bright); }
+    .tag-grid { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+    .area-chip {
+      font-family: var(--font-mono);
+      font-size: var(--text-xxs);
+      letter-spacing: 0.06em;
+      color: var(--text);
+      background: var(--surface-1);
+      border: 1px solid var(--line);
+      padding: var(--sp-2) var(--sp-3);
+      border-radius: var(--radius-sm);
+    }
+    .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
+    @media (max-width: 760px) { .feature-grid { grid-template-columns: 1fr; } }
+    .feature-card { padding: var(--sp-6); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface-1); }
+    .feature-name { font-family: var(--font-display); font-size: var(--text-md); font-weight: 500; margin-bottom: var(--sp-3); }
+    .feature-desc { color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); }
+    .status-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      gap: 1px; background: var(--line);
+      border: 1px solid var(--line); border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+    @media (max-width: 900px) { .status-grid { grid-template-columns: 1fr 1fr; } }
+    .status-cell { background: var(--surface-1); padding: var(--sp-5); display: flex; flex-direction: column; gap: var(--sp-2); }
+    .status-label { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--muted-2); }
+    .status-value { font-family: var(--font-display); font-size: var(--text-md); color: var(--text); }
+    .status-value.warn { color: #FFC04D; }
+  </style>
+</BaseLayout>

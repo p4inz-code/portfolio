@@ -1,0 +1,158 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CaseHero from '../components/layout/CaseHero.astro';
+import Section from '../components/layout/Section.astro';
+import Screenshot from '../components/features/Screenshot.astro';
+import { PROJECTS } from '../data/projects';
+
+const project = PROJECTS.find((p) => p.slug === 'kanvaz')!;
+---
+<BaseLayout title={`${project.name} — ${project.tagline}`}>
+  <CaseHero project={project} />
+
+  <!-- Screenshots first — visual hook before the wall of text. The Board view
+       is the product's whole thesis; put it front and center. -->
+  <Section eyebrow="What Kanvaz looks like">
+    <div class="shot-grid">
+      <!-- HERO SHOT: full-width board view. Wide-screen source, 16:10 fits it -->
+      <Screenshot
+        src="/assets/kanvaz/kanvaz-02-board.png"
+        alt="Kanvaz board view — seven reference cards on an infinite grid canvas: character concept art, code excerpts, VFX shield artwork, glitch/matrix backgrounds, and typed connection lines between related items."
+        caption="Board view · typed connections between reference cards"
+        aspect="16 / 10"
+        span="full"
+      />
+
+      <!-- SETTINGS PAIR: two tall panels side-by-side. Portrait-ish aspect -->
+      <Screenshot
+        src="/assets/kanvaz/kanvaz-03-settings-appearance.png"
+        alt="Kanvaz Settings panel — Appearance section with theme, minimap, grid lines, card shadows, animations, snap-to-grid, and autosave toggles."
+        caption="Settings · appearance + behavior"
+        aspect="3 / 4"
+        span="half"
+      />
+      <Screenshot
+        src="/assets/kanvaz/kanvaz-04-settings-developer.png"
+        alt="Kanvaz Settings panel — Developer section with FPS overlay, diagnostics, generate test cards, and the Theme Creator plugin (v1.0.0) enabled with color pickers for background, surface, accent, and text."
+        caption="Developer + Theme Creator plugin"
+        aspect="3 / 4"
+        span="half"
+      />
+
+      <!-- SMALLER DIALOGS: three across, 4:3 works for centered modals -->
+      <Screenshot
+        src="/assets/kanvaz/kanvaz-01-start.png"
+        alt="Kanvaz start screen — Recent Boards dialog with 'latest board.kanvaz' listed and a 'Start with empty board' button on a dark grid canvas."
+        caption="Start screen · recent boards"
+        aspect="4 / 3"
+        span="third"
+      />
+      <Screenshot
+        src="/assets/kanvaz/kanvaz-05-about.png"
+        alt="Kanvaz About dialog — v4.2.1 build shown here; v4.2.2 is the current shipping version. Reads 'Your canvas. Your references. Made by Atharva Patil, Northbyte Studios. Built for VFX artists, 3D artists, and the people who teach them.'"
+        caption="About · v4.2.1 build shown (v4.2.2 is current)"
+        aspect="4 / 3"
+        span="third"
+      />
+      <Screenshot
+        src="/assets/kanvaz/kanvaz-06-shortcuts.png"
+        alt="Kanvaz keyboard shortcuts reference — sections for Canvas, Cards, View, and File. Shortcuts include Space+drag to pan, Ctrl+F to search, M to toggle Board/Map view, T for Always on Top."
+        caption="Keyboard shortcuts reference"
+        aspect="4 / 3"
+        span="third"
+      />
+    </div>
+  </Section>
+
+  <Section eyebrow="Why it exists">
+    <div class="body-copy">
+      <p>Before Kanvaz was a public release, it was a gift — built for the VFX and 3D community I'm part of, for the friends and teachers who needed a fast, no-friction place to drop reference images while working. Most reference tools are either too heavyweight or built for a different workflow entirely.</p>
+      <p>Kanvaz does one thing: give you a canvas, let you throw images, GIFs, and video references onto it, and stay out of your way.</p>
+    </div>
+  </Section>
+
+  <Section eyebrow="What's inside">
+    <div class="feature-grid">
+      <article class="feature-card">
+        <h3 class="feature-name">Plugin system (v4.2)</h3>
+        <p class="feature-desc"><code>window.KanvazPluginAPI</code> — plugins register new card types, ship full alternate themes, add their own Settings panels. Every install goes through a main-process consent dialog; plugins can't self-approve.</p>
+      </article>
+      <article class="feature-card">
+        <h3 class="feature-name">Theme Creator (v4.2)</h3>
+        <p class="feature-desc">First official plugin: in-app theme editor, live preview, presets, one-click reset. Shipped with the design-system audit that unified radii, shadows, and animation tokens.</p>
+      </article>
+      <article class="feature-card">
+        <h3 class="feature-name">Safer .kanvaz format (v4.1)</h3>
+        <p class="feature-desc">Moved from a giant base64-inline JSON blob to a real zip container with per-asset SHA-256 integrity hashes. Roughly 33% smaller files; one damaged asset degrades gracefully instead of losing the whole board. Backward compatible.</p>
+      </article>
+      <article class="feature-card">
+        <h3 class="feature-name">URL + File cards (v4.1)</h3>
+        <p class="feature-desc">Two new reference card types on top of the original six. File cards block executable/script types on open for safety. No new dependencies, no telemetry.</p>
+      </article>
+    </div>
+  </Section>
+
+  <Section heading="Kanvaz is at v4.2.2. Its final release.">
+    <div class="body-copy">
+      <p>Board View, the Connection System, and Map View are all stable. Dev is winding down: no v5 planned. <em>v4.3.0 stabilization</em> is the last major work before the project enters maintenance-only mode.</p>
+      <p>No subscription, no feature paywall, no telemetry, no internet connection required. Your files never leave your machine, and it stays free forever.</p>
+    </div>
+  </Section>
+
+  <style>
+    /* 12-col grid so <Screenshot span="..."> lands where expected */
+    .shot-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: var(--sp-5);
+    }
+    .body-copy {
+      max-width: var(--wrap-narrow);
+      color: var(--muted);
+      font-size: var(--text-md);
+      line-height: var(--leading-body);
+    }
+    .body-copy p + p { margin-top: var(--sp-4); }
+    .body-copy strong { color: var(--text); font-weight: 500; }
+    .body-copy em { color: var(--purple-bright); font-style: italic; }
+    .body-copy code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--purple-bright);
+      background: color-mix(in oklab, var(--purple) 10%, transparent);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-4);
+    }
+    @media (max-width: 760px) { .feature-grid { grid-template-columns: 1fr; } }
+    .feature-card {
+      padding: var(--sp-6);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface-1);
+    }
+    .feature-name {
+      font-family: var(--font-display);
+      font-size: var(--text-md);
+      font-weight: 500;
+      margin-bottom: var(--sp-3);
+    }
+    .feature-desc {
+      color: var(--muted);
+      font-size: var(--text-sm);
+      line-height: var(--leading-body);
+    }
+    .feature-desc code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--purple-bright);
+      background: color-mix(in oklab, var(--purple) 10%, transparent);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+  </style>
+</BaseLayout>

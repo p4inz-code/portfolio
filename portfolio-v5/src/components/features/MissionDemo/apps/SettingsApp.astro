@@ -1,0 +1,230 @@
+---
+/**
+ * Mission Settings — skeleton with real privacy toggles.
+ * Every toggle has a plain-text explanation right below the switch,
+ * mirroring the case study's "understand what you're enabling" ethos.
+ * Toggles are cosmetic (checkbox inputs); no state is persisted since
+ * this is a concept demo, not a live OS.
+ */
+---
+<div class="settings-root">
+  <nav class="s-nav" aria-label="Settings sections">
+    <p class="s-nav-title">Mission Settings</p>
+    <button type="button" class="s-nav-item s-nav-item-active">Privacy</button>
+    <button type="button" class="s-nav-item" disabled>Network <span class="s-nav-lock">demo</span></button>
+    <button type="button" class="s-nav-item" disabled>Storage <span class="s-nav-lock">demo</span></button>
+    <button type="button" class="s-nav-item" disabled>Appearance <span class="s-nav-lock">demo</span></button>
+    <button type="button" class="s-nav-item" disabled>Updates <span class="s-nav-lock">demo</span></button>
+  </nav>
+
+  <section class="s-panel" aria-labelledby="s-privacy">
+    <header class="s-panel-head">
+      <p class="s-eyebrow">Section</p>
+      <h3 class="s-panel-title" id="s-privacy">Privacy</h3>
+      <p class="s-panel-desc">The defaults you picked in the installer. Change them here, or lock them so nothing changes them without your knowledge.</p>
+    </header>
+
+    <div class="s-row s-row-locked">
+      <label class="s-toggle">
+        <input type="checkbox" checked disabled />
+        <span class="s-switch" aria-hidden="true"><span></span></span>
+        <span class="s-row-body">
+          <span class="s-row-name">Telemetry <span class="s-locked-tag">locked off</span></span>
+          <span class="s-row-help">Mission OS ships without telemetry hooks compiled in. This isn't a toggle you can flip — the code isn't there.</span>
+        </span>
+      </label>
+    </div>
+
+    <div class="s-row">
+      <label class="s-toggle">
+        <input type="checkbox" />
+        <span class="s-switch" aria-hidden="true"><span></span></span>
+        <span class="s-row-body">
+          <span class="s-row-name">Location services</span>
+          <span class="s-row-help">Off by default. When enabled, apps that request location must ask each time; nothing is granted silently.</span>
+        </span>
+      </label>
+    </div>
+
+    <div class="s-row">
+      <label class="s-toggle">
+        <input type="checkbox" checked />
+        <span class="s-switch" aria-hidden="true"><span></span></span>
+        <span class="s-row-body">
+          <span class="s-row-name">Firefox as default browser</span>
+          <span class="s-row-help">Preinstalled with strict privacy defaults. Toggle off if you'd rather set Tor Browser as default (also preinstalled).</span>
+        </span>
+      </label>
+    </div>
+
+    <div class="s-row s-row-locked">
+      <label class="s-toggle">
+        <input type="checkbox" checked disabled />
+        <span class="s-switch" aria-hidden="true"><span></span></span>
+        <span class="s-row-body">
+          <span class="s-row-name">Tor Browser preinstalled <span class="s-locked-tag">locked on</span></span>
+          <span class="s-row-help">Ships in the base image so it's available even offline. You can uninstall it later; you cannot uninstall it during first-run.</span>
+        </span>
+      </label>
+    </div>
+
+    <div class="s-row">
+      <label class="s-toggle">
+        <input type="checkbox" />
+        <span class="s-switch" aria-hidden="true"><span></span></span>
+        <span class="s-row-body">
+          <span class="s-row-name">Auto-connect Wi-Fi radios on boot</span>
+          <span class="s-row-help">Off by default (offline-first policy). Turn on if you want the machine to associate with known networks automatically.</span>
+        </span>
+      </label>
+    </div>
+
+    <p class="s-foot">Changes made here would persist across reboots on a real install. This is a concept demo — nothing is written to disk.</p>
+  </section>
+</div>
+
+<style>
+  .settings-root {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: var(--sp-5);
+    min-height: 420px;
+  }
+  @media (max-width: 640px) {
+    .settings-root { grid-template-columns: 1fr; }
+    .s-nav { flex-direction: row; overflow-x: auto; }
+    .s-nav-title { display: none; }
+    .s-nav-item { white-space: nowrap; }
+  }
+
+  /* ---- Left nav ---- */
+  .s-nav {
+    display: flex; flex-direction: column; gap: 2px;
+    padding: var(--sp-3);
+    background: color-mix(in oklab, var(--surface-2) 45%, transparent);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .s-nav-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--muted-2);
+    padding: 6px 10px 10px;
+  }
+  .s-nav-item {
+    display: inline-flex; align-items: center; justify-content: space-between;
+    gap: var(--sp-2);
+    padding: 8px 10px;
+    background: transparent;
+    border: none; border-radius: 6px;
+    color: var(--muted);
+    text-align: left;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    transition: color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+  }
+  .s-nav-item:hover, .s-nav-item:focus-visible { color: var(--text); background: color-mix(in oklab, var(--purple) 8%, transparent); outline: none; }
+  .s-nav-item:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
+  .s-nav-item-active { color: var(--text); background: color-mix(in oklab, var(--purple) 15%, transparent); }
+  .s-nav-item[disabled] { cursor: not-allowed; color: var(--muted-2); }
+  .s-nav-lock {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--muted-2);
+    padding: 2px 6px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+  }
+
+  /* ---- Panel ---- */
+  .s-panel { display: flex; flex-direction: column; gap: var(--sp-3); }
+  .s-panel-head { padding-bottom: var(--sp-3); border-bottom: 1px solid var(--line); margin-bottom: var(--sp-3); }
+  .s-eyebrow {
+    font-family: var(--font-mono); font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
+    color: var(--muted-2);
+  }
+  .s-panel-title { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 400; color: var(--text); margin: 4px 0 6px; }
+  .s-panel-desc { color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); }
+
+  .s-row {
+    padding: var(--sp-4);
+    background: color-mix(in oklab, var(--surface-2) 45%, transparent);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .s-row-locked { opacity: 0.9; }
+
+  .s-toggle {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: var(--sp-4);
+    cursor: pointer;
+    align-items: start;
+  }
+  .s-toggle input { display: none; }
+  .s-switch {
+    position: relative;
+    width: 42px; height: 24px; border-radius: 999px;
+    background: var(--surface-3);
+    border: 1px solid var(--line-strong);
+    transition: background var(--dur-fast) var(--ease-out);
+    margin-top: 2px;
+  }
+  .s-switch > span {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--muted);
+    transition: transform var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+  }
+  .s-toggle input:checked ~ .s-switch {
+    background: var(--purple-bright);
+    border-color: var(--purple-bright);
+  }
+  .s-toggle input:checked ~ .s-switch > span {
+    transform: translateX(18px);
+    background: var(--bg);
+  }
+  .s-toggle input:focus-visible ~ .s-switch {
+    outline: 2px solid var(--purple-bright);
+    outline-offset: 3px;
+  }
+  .s-row-body { display: flex; flex-direction: column; gap: 4px; }
+  .s-row-name {
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    display: inline-flex; align-items: center; gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+  .s-row-help { color: var(--muted); font-size: var(--text-xs); line-height: 1.6; }
+  .s-locked-tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--purple-bright);
+    padding: 2px 6px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+  }
+
+  .s-foot {
+    margin-top: var(--sp-3);
+    color: var(--muted-2);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .s-switch, .s-switch > span, .s-nav-item { transition: none; }
+  }
+</style>

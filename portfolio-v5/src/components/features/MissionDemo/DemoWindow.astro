@@ -1,0 +1,107 @@
+---
+/**
+ * Reusable window chrome for the Mission OS demo.
+ * Title bar with traffic-light close/minimize/maximize (no-op except Close),
+ * body slot for the app content, optional footer slot.
+ *
+ * Windows are single-instance and centered inside the desktop area.
+ * Close is wired via [data-window-close] which the parent Desktop's script
+ * listens for.
+ */
+interface Props {
+  title: string;
+  subtitle?: string;
+  appSlug: string;      // used as the value of data-window-active
+  wide?: boolean;
+}
+const { title, subtitle, appSlug, wide = false } = Astro.props;
+---
+<section class:list={['demo-window', wide && 'demo-window-wide']} data-window={appSlug} role="dialog" aria-label={title}>
+  <header class="dw-titlebar">
+    <div class="dw-controls" aria-hidden="true">
+      <button type="button" class="dw-dot dw-dot-close" data-window-close aria-label="Close window"></button>
+      <span class="dw-dot dw-dot-min" aria-hidden="true"></span>
+      <span class="dw-dot dw-dot-max" aria-hidden="true"></span>
+    </div>
+    <div class="dw-title-wrap">
+      <p class="dw-title">{title}</p>
+      {subtitle && <p class="dw-subtitle">{subtitle}</p>}
+    </div>
+    <div class="dw-titlebar-spacer" aria-hidden="true"></div>
+  </header>
+  <div class="dw-body">
+    <slot />
+  </div>
+  <slot name="footer" />
+</section>
+
+<style>
+  .demo-window {
+    width: min(720px, 92vw);
+    max-height: min(560px, 78vh);
+    background: color-mix(in oklab, var(--surface-1) 92%, transparent);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 60px color-mix(in oklab, #000 60%, transparent),
+                0 0 0 1px color-mix(in oklab, var(--purple) 8%, transparent);
+    backdrop-filter: blur(14px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: dw-in 260ms var(--ease-out);
+  }
+  .demo-window-wide { width: min(920px, 96vw); }
+  @keyframes dw-in {
+    from { opacity: 0; transform: translateY(12px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0)   scale(1); }
+  }
+
+  .dw-titlebar {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--sp-4);
+    padding: 10px 14px;
+    background: color-mix(in oklab, var(--surface-2) 88%, transparent);
+    border-bottom: 1px solid var(--line);
+  }
+  .dw-controls { display: inline-flex; gap: 8px; }
+  .dw-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    border: none; padding: 0; cursor: default;
+  }
+  .dw-dot-close { background: #FF5F57; cursor: pointer; }
+  .dw-dot-close:hover { transform: scale(1.1); }
+  .dw-dot-close:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
+  .dw-dot-min   { background: #FEBC2E; }
+  .dw-dot-max   { background: #28C840; }
+  .dw-title-wrap { text-align: center; min-width: 0; }
+  .dw-title {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .dw-subtitle {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted-2);
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .dw-titlebar-spacer { width: 60px; }
+  @media (max-width: 640px) { .dw-titlebar-spacer { display: none; } .dw-titlebar { grid-template-columns: auto 1fr; } }
+
+  .dw-body {
+    padding: var(--sp-6);
+    overflow-y: auto;
+    color: var(--text);
+    font-size: var(--text-sm);
+    line-height: var(--leading-body);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .demo-window { animation: none; }
+  }
+</style>
