@@ -20,6 +20,19 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.8.0',
+    kind: 'released',
+    summary: 'Full 11-route Lighthouse audit + fixes — 99 perf / 100 a11y / 100 BP / 100 SEO across every page. MetaTag redesigned.',
+    body: [
+      'Ran Lighthouse mobile against every real route (11 pages) after the typography + StatusPill redesign. Results: Perf 99 on every route (up from 91 live earlier — the typography swap kept the numbers, the Neue Machina/Neue Montreal families load fast on Fontshare). BP 100 and SEO 100 across every route. A11y 100 on 9 of 11.',
+      'Two a11y issues surfaced and fixed:',
+      '/contact — label-content-name-mismatch on the two custom select buttons (service + budget). aria-labelledby pointed only at the outer prompt label, but the visible text inside the button was "select one" (or the selected value). axe wants the visible text to be part of the accessible name. Fix: added an id to the inner value span and made aria-labelledby reference both the outer label AND the inner value ("c-service-label c-service-value"). Screen readers now announce "› service, select one" — matches what users see.',
+      '/kanvaz — heading-order: the "What\'s inside" Section only had an eyebrow, no heading prop, so it emitted no <h2> — and the feature-cards inside used <h3>. h1 → (nothing) → h3 skipped a level. Fix: added a real heading ("Plugin system, safer container, real CI.") to the Section so the sequence is now h1 → h2 → h3.',
+      'MetaTag redesigned (v5.6.3 continuation): dropped the rounded-pill + surface-tint treatment (Vercel-adjacent AI-tell). Now plain small-caps mono with a bar marker on the left, matching the new editorial StatusPill language.',
+      'Full audit results archived in scratchpad for reference.',
+    ],
+  },
+  {
     version: 'v5.7.2',
     kind: 'released',
     summary: 'Content audit — Mission OS milestone softened to honest, Nexus v11-in-prep flagged.',
