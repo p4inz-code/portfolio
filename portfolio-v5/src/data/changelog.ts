@@ -20,6 +20,17 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.7.1',
+    kind: 'released',
+    summary: 'Info-page polish — /services editorial rewrite + FAQ, /work uses FeaturedShowcase, /3d gains meta + queue.',
+    body: [
+      '/services: killed the "01 / 02 / 03 / 04 bento" AI pattern. Rewritten as editorial rows — each service is a big sticky-indexed row with room for name / short pitch / bullets / CTA. Added lede-meta grid (How to start / How I bill / Where I\'m based) and a real FAQ section (NDAs / subcontracting / IP / warranty / availability).',
+      '/work: replaced the flat vertical ProjectCard stack with FeaturedShowcase (the same scroll-animated hero-scale cards as the home page). The Supporting grid stays as ProjectCard compact.',
+      '/3d: still awaiting real 3D renders, but the page now shows intent — meta grid (Program, Stack, Focus, Availability), a "What\'s landing here soon" queue with R1-R4 items, and a real CTA for shot-scoped freelance work. Honest placeholder, not a lorem-ipsum wait screen.',
+      'All three pages consistent with the v5.6.3 typography (Neue Machina + Neue Montreal + Supply Mono) and the v5.6.3 rules against numbered-bento + Vercel-pill AI-tells.',
+    ],
+  },
+  {
     version: 'v5.7.0',
     kind: 'released',
     summary: 'Home hero: featured works showcase — hero-scale cards with scroll-linked position animations replaces the compact grid.',

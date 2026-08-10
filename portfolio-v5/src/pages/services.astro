@@ -2,99 +2,223 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
 import Button from '../components/ui/Button.astro';
-import { SERVICES } from '../data/site';
+import { SERVICES, CONTACT } from '../data/site';
 ---
 <BaseLayout title="Services — Atharva Patil">
-  <Section eyebrow="Services" heading="One person. Real deliverables." headingEmphasis="Three disciplines." intro="Most clients hire a developer, a designer, and a 3D artist separately. I'm one person who covers all three — fewer handoffs, a coherent visual language, and someone who understands the full picture from architecture to render.">
-    <div class="services-grid">
+
+  <Section
+    wide
+    heading="Fewer handoffs. One coherent visual language."
+    headingEmphasis="One person. Three disciplines."
+    intro="Most clients hire a developer, a designer, and a 3D artist separately. I'm one person who covers all three — the same instinct that shapes a lock-screen shapes a landing page, and the same eye that lights a 3D scene picks the type on a hero. The result is fewer handoffs, fewer misalignments, and a coherent visual voice from architecture to render."
+  >
+    <div class="s-lede-meta">
+      <div class="s-lede-item">
+        <span class="s-lede-key">How to start</span>
+        <span class="s-lede-val">Email <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> with the shape of what you want built. First response inside 24-48h.</span>
+      </div>
+      <div class="s-lede-item">
+        <span class="s-lede-key">How I bill</span>
+        <span class="s-lede-val">Fixed price for short-loop work. Weekly for longer builds. Never per-hour — nobody wins that arrangement.</span>
+      </div>
+      <div class="s-lede-item">
+        <span class="s-lede-key">Where I'm based</span>
+        <span class="s-lede-val">Navi Mumbai, India — but every client so far has been remote. Async-friendly, timezone-agnostic.</span>
+      </div>
+    </div>
+  </Section>
+
+  <!-- Editorial rows — each service is a substantive row, not a card in a grid.
+       Kills the "01 / 02 / 03 / 04 bento" AI pattern in favour of an
+       editorial-magazine layout. -->
+  <Section eyebrow="What I take on">
+    <div class="s-rows">
       {SERVICES.map((s, i) => (
-        <article class="service-card">
-          <p class="service-num">{String(i + 1).padStart(2, '0')}</p>
-          <h3 class="service-name">{s.name}</h3>
-          <p class="service-short">{s.short}</p>
-          <ul class="service-bullets">
-            {s.bullets.map((b) => <li>{b}</li>)}
-          </ul>
-          {s.cta && (
-            <div class="service-cta">
-              <a href={s.cta.href} class="service-link">{s.cta.label}</a>
-            </div>
-          )}
+        <article class="s-row" style={`--i:${i}`}>
+          <div class="s-row-index">
+            <span class="s-row-num">{String(i + 1).padStart(2, '0')}</span>
+            <span class="s-row-total">of {String(SERVICES.length).padStart(2, '0')}</span>
+          </div>
+
+          <div class="s-row-body">
+            <h3 class="s-row-name">{s.name}</h3>
+            <p class="s-row-short">{s.short}</p>
+
+            <ul class="s-row-bullets" role="list">
+              {s.bullets.map((b) => <li>{b}</li>)}
+            </ul>
+
+            {s.cta && (
+              <a href={s.cta.href} class="s-row-cta">
+                {s.cta.label}
+              </a>
+            )}
+          </div>
         </article>
       ))}
     </div>
+  </Section>
 
-    <div class="services-cta">
-      <Button href="/contact" variant="primary">Start a project →</Button>
+  <!-- FAQ-style trust anchor — actual answers to actual client questions. -->
+  <Section eyebrow="Before you write" heading="Questions clients actually ask.">
+    <dl class="faq-list">
+      <div class="faq-item">
+        <dt>Do you sign NDAs?</dt>
+        <dd>Yes, for real client work. Not for portfolio reviews or evaluation calls — those aren't confidential.</dd>
+      </div>
+      <div class="faq-item">
+        <dt>Do you subcontract?</dt>
+        <dd>No. Everything I ship is me. If a project needs specialists I can't cover (native mobile, specific 3D shots), I recommend, not resell.</dd>
+      </div>
+      <div class="faq-item">
+        <dt>Who owns the code?</dt>
+        <dd>You do, on delivery. I keep the right to reference the work in this portfolio unless you specifically ask me not to.</dd>
+      </div>
+      <div class="faq-item">
+        <dt>What if something breaks after launch?</dt>
+        <dd>30 days of free bug-fixes on any build I ship. Beyond that, small retainer or per-fix.</dd>
+      </div>
+      <div class="faq-item">
+        <dt>Are you available right now?</dt>
+        <dd>Selective — taking one or two new projects at a time. If timing is tight, ask; I'll be honest about whether I can hit it.</dd>
+      </div>
+    </dl>
+  </Section>
+
+  <Section>
+    <div class="s-final-cta">
+      <Button href="/contact/" variant="primary">Start a project →</Button>
+      <p class="s-final-note">No form to fill out. Mailto composer + real inbox.</p>
     </div>
   </Section>
 
   <style>
-    .services-grid {
+    /* ============ Lede meta ============ */
+    .s-lede-meta {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: var(--sp-6);
+    }
+    @media (max-width: 760px) { .s-lede-meta { grid-template-columns: 1fr; } }
+    .s-lede-item {
+      background: var(--surface-1);
+      padding: var(--sp-5);
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .s-lede-key {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--purple-bright);
+    }
+    .s-lede-val { color: var(--text); font-size: var(--text-sm); line-height: 1.6; }
+    .s-lede-val a { color: var(--purple-bright); border-bottom: 1px solid currentColor; }
+
+    /* ============ Editorial rows ============ */
+    .s-rows { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+    .s-row {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--sp-5);
+      grid-template-columns: 120px 1fr;
+      gap: var(--sp-8);
+      padding: var(--sp-8) 0;
+      border-bottom: 1px solid var(--line);
+      align-items: start;
     }
     @media (max-width: 760px) {
-      .services-grid { grid-template-columns: 1fr; }
+      .s-row { grid-template-columns: 1fr; gap: var(--sp-3); }
     }
-    .service-card {
-      padding: var(--sp-7);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
-      background: var(--surface-1);
-      transition: border-color var(--dur) var(--ease-out), background var(--dur) var(--ease-out);
-      display: flex; flex-direction: column;
-    }
-    .service-card:hover { border-color: var(--line-strong); background: var(--surface-2); }
-    .service-num {
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
-      letter-spacing: 0.12em;
-      color: var(--purple-bright);
-      margin-bottom: var(--sp-4);
-    }
-    .service-name {
+    .s-row-index { display: flex; flex-direction: column; gap: 4px; position: sticky; top: 120px; }
+    .s-row-num {
       font-family: var(--font-display);
-      font-size: var(--text-xl);
-      font-weight: 400;
-      letter-spacing: -0.015em;
-      margin-bottom: var(--sp-3);
+      font-size: 44px;
+      color: var(--text);
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: -0.02em;
     }
-    .service-short {
+    .s-row-total {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
       color: var(--muted);
-      font-size: var(--text-sm);
+    }
+    .s-row-body { display: flex; flex-direction: column; gap: var(--sp-4); }
+    .s-row-name {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 3vw, 32px);
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: -0.015em;
+      line-height: 1.1;
+    }
+    .s-row-short {
+      color: var(--muted);
+      font-size: var(--text-md);
       line-height: var(--leading-body);
-      margin-bottom: var(--sp-5);
+      max-width: 620px;
     }
-    .service-bullets {
+    .s-row-bullets {
       list-style: none;
-      display: flex; flex-direction: column;
-      gap: var(--sp-2);
-      margin-bottom: var(--sp-5);
-      flex-grow: 1;
+      display: flex; flex-direction: column; gap: var(--sp-2);
     }
-    .service-bullets li {
+    .s-row-bullets li {
       font-size: var(--text-sm);
       color: var(--text);
       padding-left: var(--sp-4);
       position: relative;
     }
-    .service-bullets li::before {
+    .s-row-bullets li::before {
       content: '';
       position: absolute; left: 0; top: 10px;
-      width: 6px; height: 1px; background: var(--purple-bright);
+      width: 8px; height: 1px; background: var(--purple-bright);
     }
-    .service-link {
-      font-family: var(--font-display);
-      font-style: italic;
-      font-size: var(--text-sm);
+    .s-row-cta {
+      align-self: flex-start;
       color: var(--purple-bright);
-      border-bottom: 1px solid transparent;
-      transition: border-color var(--dur) var(--ease-out);
-      display: inline-block;
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      padding-bottom: 3px;
+      border-bottom: 1px solid var(--purple-bright);
     }
-    .service-link:hover { border-bottom-color: var(--purple-bright); }
-    .services-cta { margin-top: var(--sp-9); }
+    .s-row-cta:hover { color: var(--text); border-bottom-color: var(--text); }
+
+    /* ============ FAQ ============ */
+    .faq-list { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+    .faq-item {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: var(--sp-6);
+      padding: var(--sp-4) 0;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+    }
+    @media (max-width: 760px) { .faq-item { grid-template-columns: 1fr; gap: 4px; } }
+    .faq-item dt {
+      color: var(--text);
+      font-family: var(--font-display);
+      font-size: var(--text-md);
+      font-weight: 500;
+    }
+    .faq-item dd {
+      color: var(--muted);
+      font-size: var(--text-sm);
+      line-height: var(--leading-body);
+    }
+
+    /* ============ Final CTA ============ */
+    .s-final-cta { display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-3); }
+    .s-final-note {
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: var(--text-xxs);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+    }
   </style>
 </BaseLayout>
