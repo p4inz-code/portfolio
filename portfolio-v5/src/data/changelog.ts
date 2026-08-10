@@ -20,6 +20,18 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.3.1',
+    kind: 'released',
+    summary: 'Mission OS demo — every dock app is now clickable. Files / Terminal / Firefox open real informational panels.',
+    body: [
+      'v5.2.2 shipped Files, Terminal, Firefox as visually-dimmed "not part of demo" placeholders. All six dock apps are now clickable and open a real window.',
+      'Files (FilesApp) — informational panel: encrypted-container browsing, thumbnails off by default (privacy), per-folder encryption profiles, recent-files not indexed. Framed as what makes Mission OS Files different, not a fake filesystem browser.',
+      'Terminal (TerminalApp) — static Konsole-style shell frame showing three real Mission OS commands and their output: mission-status (four pillars OK), mission-audit encryption (LUKS2 · Argon2id · secure-boot), mission-net status (offline-first). Blinking prompt caret honors prefers-reduced-motion. Explicitly labeled non-interactive.',
+      'Firefox (FirefoxApp) — an about:privacy-style read-only panel showing the strict defaults Mission OS ships Firefox with: DNS-over-HTTPS on, Resist Fingerprinting on, third-party cookies blocked, HTTPS-only mode, Referer trimming strict, Telemetry OFF (compile-time locked). Not a browser mockup — that would oversell — but an honest look at day-one privacy posture.',
+      'All three new apps use the existing DemoWindow chrome, plug into the same window-manager state machine, get the same dock highlight when active, and honor Escape / click-to-close consistent with the other three apps.',
+    ],
+  },
+  {
     version: 'v5.3.0',
     kind: 'released',
     summary: 'Mission OS demo — wallpaper simplified to a single author-mark, atmospheric background only.',

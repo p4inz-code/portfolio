@@ -1,0 +1,82 @@
+---
+/**
+ * Files — informational panel. The real Mission OS ships a Dolphin-based
+ * file manager; the concept demo shows what makes it different rather than
+ * simulating a full filesystem browser.
+ */
+---
+<div class="info-root">
+  <p class="info-lead">
+    The real Mission OS ships a <em>Dolphin-based file manager</em>, hardened for private workflows.
+  </p>
+
+  <dl class="info-list">
+    <div class="info-item">
+      <dt>Encrypted-container browsing</dt>
+      <dd>Mount and browse LUKS2 volumes inline. Unlock happens once per session, not once per file.</dd>
+    </div>
+    <div class="info-item">
+      <dt>Thumbnails disabled by default</dt>
+      <dd>Preview generation writes to disk and leaks structure — off unless you opt in per folder.</dd>
+    </div>
+    <div class="info-item">
+      <dt>Per-folder encryption profiles</dt>
+      <dd>Different vaults, different keys. No single-key-rules-them-all mistake.</dd>
+    </div>
+    <div class="info-item">
+      <dt>Recent files not indexed</dt>
+      <dd>Unless you opt in. Recent lists on most OSes are a privacy leak — Mission OS defaults to off.</dd>
+    </div>
+  </dl>
+
+  <p class="info-foot">
+    Not launchable in the concept demo — this window is informational. Try Installer or Settings for real Mission OS UX.
+  </p>
+</div>
+
+<style>
+  .info-root { display: flex; flex-direction: column; gap: var(--sp-5); }
+  .info-lead {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .info-lead em { color: var(--purple-bright); font-style: italic; }
+  .info-list {
+    display: flex; flex-direction: column;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .info-item {
+    background: var(--surface-1);
+    padding: var(--sp-4);
+  }
+  .info-item dt {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--purple-bright);
+    margin-bottom: 4px;
+  }
+  .info-item dd {
+    color: var(--muted);
+    font-size: var(--text-sm);
+    line-height: var(--leading-body);
+  }
+  .info-foot {
+    padding: var(--sp-3) var(--sp-4);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius);
+    color: var(--muted-2);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    text-align: center;
+  }
+</style>

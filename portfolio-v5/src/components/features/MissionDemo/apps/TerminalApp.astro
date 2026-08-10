@@ -1,0 +1,100 @@
+---
+/**
+ * Terminal — a static shell mockup with real-looking Mission OS commands.
+ * Not interactive. Concept demo, honest label at bottom.
+ */
+---
+<div class="term-root">
+  <div class="term-frame" role="img" aria-label="Mission OS terminal session — static example, not interactive">
+    <p class="term-header">Konsole · p4inz@mission-os · ~</p>
+
+    <div class="term-scroll">
+      <p><span class="term-prompt">p4inz@mission-os</span><span class="term-arrow">$</span> mission-status</p>
+      <p class="term-out">
+        <span class="term-ok">●</span> privacy-first &nbsp;·&nbsp;
+        <span class="term-ok">●</span> security-conscious &nbsp;·&nbsp;
+        <span class="term-ok">●</span> portable-first &nbsp;·&nbsp;
+        <span class="term-ok">●</span> offline-first
+      </p>
+
+      <p><span class="term-prompt">p4inz@mission-os</span><span class="term-arrow">$</span> mission-audit encryption</p>
+      <p class="term-out">
+        LUKS2 · slot 0 · Argon2id · verified 2h ago<br />
+        secure-boot: enabled &nbsp;·&nbsp; tpm-sealed: off &nbsp;·&nbsp; recovery-key: escrowed
+      </p>
+
+      <p><span class="term-prompt">p4inz@mission-os</span><span class="term-arrow">$</span> mission-net status</p>
+      <p class="term-out">
+        radios: off (offline-first policy)<br />
+        wg0: down &nbsp;·&nbsp; tor: standby &nbsp;·&nbsp; dns-cache: 0 entries
+      </p>
+
+      <p><span class="term-prompt">p4inz@mission-os</span><span class="term-arrow">$</span> <span class="term-caret">_</span></p>
+    </div>
+  </div>
+
+  <p class="term-note">
+    Not runnable here — this is a concept demo. The commands shown (<code>mission-status</code>, <code>mission-audit</code>, <code>mission-net</code>) are real Mission OS system utilities documented in the case study.
+  </p>
+</div>
+
+<style>
+  .term-root { display: flex; flex-direction: column; gap: var(--sp-4); }
+  .term-frame {
+    background: #04010c;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .term-header {
+    padding: 6px var(--sp-4);
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--line);
+    color: var(--muted-2);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+  }
+  .term-scroll {
+    padding: var(--sp-4) var(--sp-5);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.85;
+    color: var(--text);
+  }
+  .term-scroll p + p { margin-top: 2px; }
+  .term-prompt { color: var(--purple-bright); }
+  .term-arrow { color: var(--muted-2); margin: 0 6px; }
+  .term-out { color: var(--muted); padding-bottom: 6px; border-bottom: 1px dashed rgba(232,225,208,0.05); }
+  .term-out:last-of-type { border-bottom: none; }
+  .term-ok { color: var(--green); font-size: 10px; margin-right: 2px; }
+  .term-caret {
+    display: inline-block;
+    background: var(--purple-bright);
+    color: transparent;
+    width: 7px;
+    animation: term-blink 1.1s steps(2, start) infinite;
+  }
+  @keyframes term-blink { 50% { background: transparent; } }
+  @media (prefers-reduced-motion: reduce) {
+    .term-caret { animation: none; background: var(--purple-bright); }
+  }
+
+  .term-note {
+    color: var(--muted-2);
+    font-size: var(--text-xs);
+    line-height: 1.6;
+    padding: var(--sp-3);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius);
+  }
+  .term-note code {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--purple-bright);
+    background: color-mix(in oklab, var(--purple) 8%, transparent);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+</style>

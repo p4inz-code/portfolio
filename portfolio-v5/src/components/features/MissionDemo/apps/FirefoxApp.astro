@@ -1,0 +1,140 @@
+---
+/**
+ * Firefox — an "about:privacy" style read-only panel showing the strict
+ * defaults Mission OS ships with. Not a fake browser (that would oversell).
+ */
+---
+<div class="ff-root">
+  <div class="ff-head">
+    <span class="ff-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
+      </svg>
+    </span>
+    <div class="ff-head-text">
+      <p class="ff-eyebrow">Firefox · about:privacy · Mission OS defaults</p>
+      <p class="ff-title">Preinstalled with strict privacy on day one.</p>
+    </div>
+  </div>
+
+  <dl class="ff-list">
+    <div class="ff-item ff-on">
+      <dt>DNS-over-HTTPS</dt>
+      <dd>Enabled by default. Queries never travel plaintext.</dd>
+      <span class="ff-badge">ON</span>
+    </div>
+    <div class="ff-item ff-on">
+      <dt>Resist Fingerprinting</dt>
+      <dd>Standardises canvas/audio/webgl surfaces. Sites see less about your device.</dd>
+      <span class="ff-badge">ON</span>
+    </div>
+    <div class="ff-item ff-on">
+      <dt>Third-party cookies</dt>
+      <dd>Blocked. Sites you visit stay sandboxed from each other.</dd>
+      <span class="ff-badge ff-badge-block">BLOCKED</span>
+    </div>
+    <div class="ff-item ff-on">
+      <dt>Referer trimming</dt>
+      <dd>Strict origin-only for cross-site requests.</dd>
+      <span class="ff-badge">STRICT</span>
+    </div>
+    <div class="ff-item ff-on">
+      <dt>HTTPS-only mode</dt>
+      <dd>Non-HTTPS pages require explicit confirmation.</dd>
+      <span class="ff-badge">ON</span>
+    </div>
+    <div class="ff-item ff-off">
+      <dt>Telemetry</dt>
+      <dd>Disabled at build. There is no toggle to re-enable — the code is compiled out.</dd>
+      <span class="ff-badge ff-badge-off">OFF · locked</span>
+    </div>
+  </dl>
+
+  <p class="ff-note">
+    Tor Browser is also preinstalled (see Installer step 5) for anonymity workflows. This is a concept demo — real browsing isn't wired here.
+  </p>
+</div>
+
+<style>
+  .ff-root { display: flex; flex-direction: column; gap: var(--sp-4); }
+  .ff-head {
+    display: grid; grid-template-columns: 48px 1fr;
+    gap: var(--sp-4);
+    padding-bottom: var(--sp-4);
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .ff-mark {
+    width: 48px; height: 48px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--purple-bright);
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+  }
+  .ff-mark svg { width: 28px; height: 28px; }
+  .ff-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--muted-2);
+  }
+  .ff-title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--text-lg);
+    color: var(--text);
+    margin-top: 4px;
+  }
+
+  .ff-list { display: flex; flex-direction: column; gap: var(--sp-2); }
+  .ff-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    row-gap: 4px;
+    padding: var(--sp-3) var(--sp-4);
+    background: color-mix(in oklab, var(--surface-2) 45%, transparent);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .ff-item dt {
+    grid-column: 1; grid-row: 1;
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+  }
+  .ff-item dd {
+    grid-column: 1 / -1; grid-row: 2;
+    color: var(--muted);
+    font-size: var(--text-xs);
+    line-height: 1.6;
+  }
+  .ff-badge {
+    grid-column: 2; grid-row: 1;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: var(--radius-pill);
+    border: 1px solid color-mix(in oklab, var(--green) 30%, var(--line));
+    color: var(--green);
+    align-self: start;
+  }
+  .ff-badge-block { color: var(--purple-bright); border-color: color-mix(in oklab, var(--purple) 30%, var(--line)); }
+  .ff-badge-off { color: var(--muted); border-color: var(--line); }
+
+  .ff-note {
+    color: var(--muted-2);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    padding: var(--sp-3);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius);
+    text-align: center;
+  }
+</style>

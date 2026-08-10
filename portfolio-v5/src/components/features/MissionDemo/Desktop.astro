@@ -17,6 +17,9 @@ import DemoWindow from './DemoWindow.astro';
 import InstallerApp from './apps/InstallerApp.astro';
 import SettingsApp from './apps/SettingsApp.astro';
 import AboutApp from './apps/AboutApp.astro';
+import FilesApp from './apps/FilesApp.astro';
+import TerminalApp from './apps/TerminalApp.astro';
+import FirefoxApp from './apps/FirefoxApp.astro';
 ---
 <div class="desktop-root" data-desktop-root data-window-active="">
 
@@ -116,13 +119,38 @@ import AboutApp from './apps/AboutApp.astro';
     >
       <AboutApp />
     </DemoWindow>
+
+    <DemoWindow
+      title="Files"
+      subtitle="what makes Mission OS Files different"
+      appSlug="files"
+    >
+      <FilesApp />
+    </DemoWindow>
+
+    <DemoWindow
+      title="Terminal"
+      subtitle="static shell example"
+      appSlug="terminal"
+    >
+      <TerminalApp />
+    </DemoWindow>
+
+    <DemoWindow
+      title="Firefox — about:privacy"
+      subtitle="mission os defaults"
+      appSlug="firefox"
+      wide
+    >
+      <FirefoxApp />
+    </DemoWindow>
   </div>
 
   <!-- ================== DOCK ================== -->
   <nav class="dock" aria-label="Applications">
-    <!-- System apps — inert placeholders. Tooltip explains why they don't open. -->
+    <!-- System apps — informational panels (not full simulations). -->
     <div class="dock-group" aria-label="System">
-      <button type="button" class="dock-icon dock-icon-inert" data-dock-inert title="Files — not part of the concept demo" aria-label="Files (not in demo)">
+      <button type="button" class="dock-icon" data-dock-app="files" aria-label="Open Files (informational)">
         <span class="dock-icon-glyph" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
@@ -130,7 +158,7 @@ import AboutApp from './apps/AboutApp.astro';
         </span>
         <span class="dock-label">Files</span>
       </button>
-      <button type="button" class="dock-icon dock-icon-inert" data-dock-inert title="Terminal — not part of the concept demo" aria-label="Terminal (not in demo)">
+      <button type="button" class="dock-icon" data-dock-app="terminal" aria-label="Open Terminal (static example)">
         <span class="dock-icon-glyph" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="4" width="18" height="16" rx="2" />
@@ -139,7 +167,7 @@ import AboutApp from './apps/AboutApp.astro';
         </span>
         <span class="dock-label">Terminal</span>
       </button>
-      <button type="button" class="dock-icon dock-icon-inert" data-dock-inert title="Firefox — not part of the concept demo" aria-label="Firefox (not in demo)">
+      <button type="button" class="dock-icon" data-dock-app="firefox" aria-label="Open Firefox privacy defaults">
         <span class="dock-icon-glyph" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="9" />
@@ -361,7 +389,10 @@ import AboutApp from './apps/AboutApp.astro';
   }
   .desktop-root[data-window-active='installer'] .window-area :global([data-window='installer']),
   .desktop-root[data-window-active='settings']  .window-area :global([data-window='settings']),
-  .desktop-root[data-window-active='about']     .window-area :global([data-window='about']) {
+  .desktop-root[data-window-active='about']     .window-area :global([data-window='about']),
+  .desktop-root[data-window-active='files']     .window-area :global([data-window='files']),
+  .desktop-root[data-window-active='terminal']  .window-area :global([data-window='terminal']),
+  .desktop-root[data-window-active='firefox']   .window-area :global([data-window='firefox']) {
     display: flex;
   }
 
@@ -414,18 +445,13 @@ import AboutApp from './apps/AboutApp.astro';
   .dock-icon-glyph svg { width: 22px; height: 22px; }
   .dock-label { color: currentColor; font-weight: 500; }
 
-  /* Inert (placeholder) apps read as dimmer than functional ones. */
-  .dock-icon-inert { color: var(--muted-2); cursor: not-allowed; }
-  .dock-icon-inert:hover, .dock-icon-inert:focus-visible {
-    color: var(--muted);
-    background: color-mix(in oklab, var(--surface-2) 40%, transparent);
-    transform: none;
-  }
-
-  /* Highlight the active app in the dock */
+  /* Highlight the active app in the dock (all 6 apps functional now). */
   .desktop-root[data-window-active='installer'] .dock-icon[data-dock-app='installer'],
   .desktop-root[data-window-active='settings']  .dock-icon[data-dock-app='settings'],
-  .desktop-root[data-window-active='about']     .dock-icon[data-dock-app='about'] {
+  .desktop-root[data-window-active='about']     .dock-icon[data-dock-app='about'],
+  .desktop-root[data-window-active='files']     .dock-icon[data-dock-app='files'],
+  .desktop-root[data-window-active='terminal']  .dock-icon[data-dock-app='terminal'],
+  .desktop-root[data-window-active='firefox']   .dock-icon[data-dock-app='firefox'] {
     color: var(--purple-bright);
     background: color-mix(in oklab, var(--purple) 14%, transparent);
     border-color: var(--line-strong);
