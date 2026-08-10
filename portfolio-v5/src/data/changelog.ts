@@ -20,6 +20,21 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.6.0',
+    kind: 'released',
+    summary: 'Completeness pass — humans.txt, ai.txt, opensearch.xml, manifest.webmanifest, browserconfig.xml, RSS feed, and every rel/meta link tag wired up.',
+    body: [
+      'This is the "the website is itself a project" pass — a portfolio should carry every discoverability + politeness doc the web has, not just the two everyone ships. Extra points for reviewers who look for it, real interoperability with the tools that consume these files, zero user-visible surface change.',
+      'humans.txt — the counterpart to robots.txt (TXT authored by / for humans). Lists team, site, technology stack, and a short notes section. Convention since 2011, still a signature of considered work when present.',
+      'ai.txt — emerging complement to llms.txt. Explicit stance on training, verbatim reproduction, personality-cloning, and identity resolution. Reduces ambiguity for AI systems parsing the site.',
+      'opensearch.xml — OpenSearch description. Browsers offer "Add this site as a search engine" when this exists, letting a visitor search the portfolio directly from their URL bar.',
+      'manifest.webmanifest — Progressive Web App manifest. Site can be installed to home screen on Android / iOS / desktop, shows with the right name, colors, and icon.',
+      'browserconfig.xml — Windows tile / Edge pinned-site metadata. Small file, matches theme color.',
+      '/feed.xml — RSS 2.0 feed for the changelog. Every version bump becomes an <item>, readers can subscribe via any RSS client. New Astro endpoint.',
+      'BaseLayout <head> now carries the full complement of link + meta tags to advertise all of the above: rel="manifest", rel="mask-icon", rel="apple-touch-icon", rel="alternate" for RSS, rel="search" for OpenSearch, rel="author" pointing at humans.txt, rel="license", rel="me" for GitHub + email, plus application-name, apple-mobile-web-app-* pack, msapplication-*, format-detection=telephone=no, author. Ten+ new discovery hints per page.',
+    ],
+  },
+  {
     version: 'v5.5.0',
     kind: 'released',
     summary: 'SEO + discoverability pass — real sitemap, refreshed llms.txt, RFC 9116 security.txt at both paths, JSON-LD person/org/website graph.',

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>Atharva Patil</ShortName>
+  <Description>Search Atharva Patil's portfolio — projects, case studies, resume.</Description>
+  <InputEncoding>UTF-8</InputEncoding>
+  <Image width="32" height="32" type="image/svg+xml">https://atharvapatil.tech/favicon.svg</Image>
+  <Url type="text/html" method="get" template="https://atharvapatil.tech/?q={searchTerms}"/>
+  <Url type="application/opensearchdescription+xml" rel="self" template="https://atharvapatil.tech/opensearch.xml"/>
+  <SearchForm>https://atharvapatil.tech/</SearchForm>
+  <moz:SearchForm xmlns:moz="http://www.mozilla.org/2006/browser/search/">https://atharvapatil.tech/</moz:SearchForm>
+</OpenSearchDescription>

@@ -120,8 +120,24 @@ const jsonLd = {
     <meta name="twitter:description" content={description} />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="mask-icon" href="/favicon.svg" color="#7B3FE4" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="sitemap" href="/sitemap.xml" />
     <link rel="me" href={CONTACT.github} />
+    <link rel="me" href={`mailto:${CONTACT.email}`} />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.title} — changelog`} href="/feed.xml" />
+    <link rel="search" type="application/opensearchdescription+xml" title="Atharva Patil" href="/opensearch.xml" />
+    <link rel="author" href="/humans.txt" />
+    <link rel="license" href="/LICENSE" />
+    <meta name="application-name" content={SITE.title} />
+    <meta name="apple-mobile-web-app-title" content={SITE.title} />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="msapplication-TileColor" content="#0A0517" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="author" content={SITE.title} />
 
     <!-- Structured data — Person / Organization / WebSite entity graph.
          Ties p4inz / p4inz-code / Atharva Patil / Northbyte Studios into

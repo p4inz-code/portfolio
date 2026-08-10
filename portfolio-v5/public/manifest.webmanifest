@@ -1,0 +1,21 @@
+{
+  "name": "Atharva Patil — Portfolio",
+  "short_name": "Atharva Patil",
+  "description": "Solo founder building privacy-first Windows software, an open-source Linux OS, developer tools, and freelance web work.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "lang": "en",
+  "categories": ["portfolio", "developer", "design", "personal"],
+  "background_color": "#0A0517",
+  "theme_color": "#0A0517",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
