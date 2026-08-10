@@ -51,7 +51,12 @@ const commands = [
     </div>
     <div class="cmdk-list" id="cmdkList" role="listbox" aria-label="Results"></div>
     <div class="cmdk-footer">
-      <span><span class="cmdk-kbd">↑↓</span> navigate <span class="cmdk-kbd">↵</span> open</span>
+      <span>
+        <span class="cmdk-kbd">↑↓</span> nav
+        <span class="cmdk-kbd">⇞⇟</span> jump
+        <span class="cmdk-kbd">↵</span> open
+        <span class="cmdk-kbd">Esc</span> close
+      </span>
       <span><span class="cmdk-kbd">⌘K</span> or <span class="cmdk-kbd">/</span> anywhere</span>
     </div>
   </div>
@@ -157,8 +162,40 @@ const commands = [
     flex-wrap: wrap; gap: var(--sp-4);
   }
   .cmdk-empty {
-    padding: var(--sp-8) var(--sp-5); text-align: center; color: var(--muted);
-    font-family: var(--font-display); font-style: italic;
+    padding: var(--sp-8) var(--sp-5); text-align: center;
+    display: flex; flex-direction: column; gap: var(--sp-4);
+  }
+  .cmdk-empty-title {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    color: var(--text);
+  }
+  .cmdk-empty-hint {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--muted);
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+    align-items: center;
+  }
+  .cmdk-suggest {
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    color: var(--purple-bright);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .cmdk-suggest:hover,
+  .cmdk-suggest:focus-visible { background: var(--purple-bright); color: var(--bg); outline: none; }
+  /* Match highlight inside result titles / subs */
+  .cmdk-item mark {
+    background: color-mix(in oklab, var(--purple-bright) 22%, transparent);
+    color: var(--text);
+    border-radius: 2px;
+    padding: 0 2px;
   }
   @media (max-width: 640px) {
     .cmdk-backdrop { padding: 10vh 12px 12px; }
@@ -191,9 +228,51 @@ const commands = [
       return String(str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     }
 
+    // v5.6.6 polish — recent searches, match highlighting, richer nav keys.
+    const RECENT_KEY = 'nb-cmdk-recent';
+    const RECENT_MAX = 5;
+    function loadRecent() {
+      try {
+        const raw = localStorage.getItem(RECENT_KEY);
+        if (!raw) return [];
+        const arr = JSON.parse(raw);
+        return Array.isArray(arr) ? arr.slice(0, RECENT_MAX) : [];
+      } catch (e) { return []; }
+    }
+    function saveRecent(cmd) {
+      try {
+        const key = cmd.act;
+        const existing = loadRecent().filter((r) => r.act !== key);
+        existing.unshift({ g: 'Recent', t: cmd.t, s: cmd.s, k: cmd.k || [], act: cmd.act });
+        localStorage.setItem(RECENT_KEY, JSON.stringify(existing.slice(0, RECENT_MAX)));
+      } catch (e) { /* no-op */ }
+    }
+    let currentQuery = '';
+
+    // Highlight a query's matched substrings inside a string. Case-insensitive,
+    // preserves original casing, escapes HTML. Returns a safe HTML string.
+    function highlight(str, q) {
+      const safe = esc(str);
+      if (!q) return safe;
+      const tokens = q.trim().split(/\s+/).filter(Boolean).map(esc);
+      if (!tokens.length) return safe;
+      const pattern = new RegExp('(' + tokens.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')', 'gi');
+      return safe.replace(pattern, '<mark>$1</mark>');
+    }
+
     function render() {
       if (!filtered.length) {
-        list.innerHTML = '<div class="cmdk-empty">No matches. Try a different search.</div>';
+        list.innerHTML =
+          '<div class="cmdk-empty">' +
+            '<p class="cmdk-empty-title">No matches for "' + esc(currentQuery) + '"</p>' +
+            '<p class="cmdk-empty-hint">Try: ' +
+              '<button type="button" class="cmdk-suggest" data-cmdk-suggest="work">work</button>' +
+              '<button type="button" class="cmdk-suggest" data-cmdk-suggest="mission">mission</button>' +
+              '<button type="button" class="cmdk-suggest" data-cmdk-suggest="nexus">nexus</button>' +
+              '<button type="button" class="cmdk-suggest" data-cmdk-suggest="resume">resume</button>' +
+              '<button type="button" class="cmdk-suggest" data-cmdk-suggest="github">github</button>' +
+            '</p>' +
+          '</div>';
         return;
       }
       let html = '';
@@ -207,8 +286,8 @@ const commands = [
         html += '<div class="cmdk-item" role="option" aria-selected="' + (i === selected) + '" data-idx="' + i + '">' +
           '<div class="cmdk-item-icon">' + (isExt ? extIcon : routeIcon) + '</div>' +
           '<div class="cmdk-item-body">' +
-          '<div class="cmdk-item-title">' + esc(cmd.t) + '</div>' +
-          '<div class="cmdk-item-sub">' + esc(cmd.s) + '</div>' +
+          '<div class="cmdk-item-title">' + highlight(cmd.t, currentQuery) + '</div>' +
+          '<div class="cmdk-item-sub">' + highlight(cmd.s, currentQuery) + '</div>' +
           '</div>' +
           '<span class="cmdk-item-arrow" aria-hidden="true">↵</span>' +
           '</div>';
@@ -219,10 +298,15 @@ const commands = [
     }
 
     function filter(q) {
-      q = (q || '').trim().toLowerCase();
-      if (!q) { filtered = commands.slice(); }
-      else {
-        const tokens = q.split(/\s+/);
+      q = (q || '').trim();
+      currentQuery = q;
+      const ql = q.toLowerCase();
+      if (!ql) {
+        // Empty query: show recents (if any) first, then rest of commands.
+        const recent = loadRecent();
+        filtered = recent.length ? recent.concat(commands.filter((c) => !recent.some((r) => r.act === c.act))) : commands.slice();
+      } else {
+        const tokens = ql.split(/\s+/);
         filtered = commands.filter((c) => {
           const hay = (c.t + ' ' + c.s + ' ' + (c.k || []).join(' ')).toLowerCase();
           return tokens.every((tok) => hay.indexOf(tok) !== -1);
@@ -250,6 +334,7 @@ const commands = [
       }, 200);
     }
     function run(cmd) {
+      saveRecent(cmd);
       close();
       const act = cmd.act;
       if (act.indexOf('route:') === 0) {
@@ -272,12 +357,25 @@ const commands = [
       if (backdrop.hidden) return;
       if (e.key === 'Escape') { e.preventDefault(); close(); return; }
       if (e.key === 'ArrowDown') { e.preventDefault(); selected = Math.min(filtered.length - 1, selected + 1); render(); return; }
-      if (e.key === 'ArrowUp') { e.preventDefault(); selected = Math.max(0, selected - 1); render(); return; }
-      if (e.key === 'Enter') { e.preventDefault(); if (filtered[selected]) run(filtered[selected]); return; }
+      if (e.key === 'ArrowUp')   { e.preventDefault(); selected = Math.max(0, selected - 1); render(); return; }
+      if (e.key === 'Home')      { e.preventDefault(); selected = 0; render(); return; }
+      if (e.key === 'End')       { e.preventDefault(); selected = Math.max(0, filtered.length - 1); render(); return; }
+      if (e.key === 'PageDown')  { e.preventDefault(); selected = Math.min(filtered.length - 1, selected + 5); render(); return; }
+      if (e.key === 'PageUp')    { e.preventDefault(); selected = Math.max(0, selected - 5); render(); return; }
+      if (e.key === 'Enter')     { e.preventDefault(); if (filtered[selected]) run(filtered[selected]); return; }
     });
 
     input.addEventListener('input', () => filter(input.value));
     list.addEventListener('click', (e) => {
+      // Suggestion chip in the empty state populates the input.
+      const suggest = e.target.closest && e.target.closest('[data-cmdk-suggest]');
+      if (suggest) {
+        const q = suggest.getAttribute('data-cmdk-suggest') || '';
+        input.value = q;
+        filter(q);
+        input.focus();
+        return;
+      }
       const item = e.target.closest && e.target.closest('.cmdk-item');
       if (!item) return;
       const idx = parseInt(item.getAttribute('data-idx'), 10);

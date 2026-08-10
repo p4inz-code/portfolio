@@ -20,6 +20,17 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.6.6',
+    kind: 'released',
+    summary: 'Command palette polish — recent searches, match highlighting, richer keyboard nav, better empty state.',
+    body: [
+      'Recent searches: every command you open gets saved to localStorage (max 5, keyed by action). Next time you open the palette with an empty query, those recents show up as the first "Recent" group above everything else.',
+      'Match highlighting: matched substrings inside result titles and subs get wrapped in <mark> with a soft purple background — makes it obvious why a result matched, especially useful for multi-token queries.',
+      'Richer keyboard nav: added Home / End (jump to first / last), PageDown / PageUp (jump 5 at a time) on top of the existing ↑↓ and Enter / Escape. Footer legend rewritten to advertise the full set.',
+      'Better empty state: instead of "No matches" the palette now shows "No matches for \'X\'" plus a row of clickable suggestion chips (work · mission · nexus · resume · github) that fill the input on click.',
+    ],
+  },
+  {
     version: 'v5.6.5',
     kind: 'released',
     summary: 'Mission OS demo enrichment — About, Terminal, Files, Settings all got real substance.',
