@@ -20,6 +20,28 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.12.0',
+    kind: 'released',
+    summary: 'External-audit response — every item from the second-Claude review fixed. Repo hygiene, mobile nav, OG image, font waterfall, AP logo light-theme, 14.5MB dead-weight removed.',
+    body: [
+      'A second Claude cloned the repo + crawled the live site and filed a 12-item audit. This ship addresses every actionable item.',
+      'CRITICAL — og.png was 404-ing site-wide. Every social share preview was broken. Created a designed 1200x630 og.svg with the AP mark + name + tagline + product pillar chips. Modern crawlers (Discord, Slack, iMessage, Signal, Telegram) accept SVG og:image; LinkedIn/X prefer PNG so the file can be rasterized externally and dropped at same path. Added explicit twitter:image + og:image:width/height/alt + og:site_name + og:locale.',
+      'CRITICAL — Resume download buttons were 404s. Added real /resume/Atharva_Patil_Resume.md (full content: summary, all 9 products with status/version/role/stack, timeline, education, availability). PDF button replaced with a mailto request-a-PDF button until a PDF export ships (honest > broken).',
+      'CRITICAL — No mobile navigation existed. Below 760px everything but the "Get in touch" CTA was hidden and there was no hamburger, no drawer, nothing. Two of six primary sections were unreachable. Fix: real animated hamburger toggle + full-screen slide-in drawer listing every NAV item + Status + Accessibility + CmdK trigger + theme toggle. Escape closes; clicking a link closes.',
+      'CRITICAL — Footer nav was missing /3d and /services. Added.',
+      'HIGH — Repo tracked .claude/ (15MB internal AI-tooling config, 26+ Claude Code skill packages, dozens of TTF binaries). Directly contradicted the "built by one person" pitch. git rm -r --cached .claude + added to .gitignore. Same for internal CLAUDE.md workflow doc.',
+      'HIGH — README.md described a site that didn\'t exist (single-file monolith, in-memory router, transparency widget with SHA-256 self-integrity — none real). Rewrote README to describe the actual Astro architecture: 14 file-based routes, three-family typography, dual theme, signature interactions, discoverability suite. Points at real files.',
+      'HIGH — 5 stale duplicate files at repo root (index.html [16MB pre-Astro monolith], robots.txt, _headers, security.txt, llms.txt) diverged from portfolio-v5/public versions. Deleted. portfolio-v5/public/ is now the single source of truth.',
+      'HIGH — Obscura was listed as v0.9.0 with "ongoing feature development toward v1.0" — user had already shipped v1.0.0 with 340/340 tests. projects.ts bumped.',
+      'MEDIUM — Font loading was a render-blocking waterfall: @import inside global.css was invisible to the preloader, so fonts fetched serially after the CSS parsed. Moved to <link rel="stylesheet"> in BaseLayout <head>. Browser now discovers + fetches fonts in parallel with page HTML. FCP/LCP win on the hero.',
+      'MEDIUM — Two dead preconnects (fonts.googleapis.com + fonts.gstatic.com) — site loads zero Google Fonts. Removed both. Also removed both origins from _headers CSP (style-src + font-src) for the same reason.',
+      'MEDIUM — package.json version was "5.0.0-alpha" while site footer showed v5.11.0. Bumped to 5.12.0 + updated description to match reality (Neue Machina + Neue Montreal + Supply Mono, not PP Editorial).',
+      'LOW — Email address was in plaintext in contact.astro inline script (Cloudflare mailto-obfuscation doesn\'t touch JS). Split into an array + join("@") at runtime so basic scrapers don\'t harvest.',
+      'BONUS — AP monogram SVG went silver-on-cream in light theme (invisible). Added light-theme override that switches letter gradient to deep-ink → purple.',
+      'BONUS — 14.5MB unreferenced favicon.png (duplicate of the old ap-monogram binary) was still shipping in every deploy. Removed. public/ went from 16MB to 1.3MB.',
+    ],
+  },
+  {
     version: 'v5.11.0',
     kind: 'released',
     summary: '6-type pentester-persona audit — security, a11y, perf, SEO, content, UX. All clean. No fixes needed.',

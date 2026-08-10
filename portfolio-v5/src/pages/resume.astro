@@ -19,13 +19,13 @@ import { FEATURED_PROJECTS, SUPPORTING_PROJECTS } from '../data/projects';
         </div>
       </div>
       <div class="resume-header-actions">
-        <a href="/resume/Atharva_Patil_Resume.pdf" class="resume-dl" download>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M6 11l6 6 6-6M4 21h16"/></svg>
-          Download PDF
-        </a>
         <a href="/resume/Atharva_Patil_Resume.md" class="resume-dl" download>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M6 11l6 6 6-6M4 21h16"/></svg>
-          Download MD
+          Download resume (Markdown)
+        </a>
+        <a href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('Request: PDF resume')}`} class="resume-dl resume-dl-ghost">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 8l10 7 10-7"/></svg>
+          Request PDF via email
         </a>
         <span class="resume-updated">Updated August 2026 · v3.0</span>
       </div>

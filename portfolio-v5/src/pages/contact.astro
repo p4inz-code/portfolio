@@ -205,14 +205,18 @@ import { CONTACT, SITE } from '../data/site';
           '',
           message,
         ];
-        const href = 'mailto:atharva.patil.cg@gmail.com'
+        // v5.12.0 fix — email obfuscated in the inline script so basic
+        // scrapers don't harvest the plaintext (Cloudflare's mailto
+        // rewriter only touches <a href="mailto:"> tags, not JS).
+        const to = ['atharva.patil.cg', 'gmail.com'].join('@');
+        const href = 'mailto:' + to
           + '?subject=' + encodeURIComponent(subject)
           + '&body='    + encodeURIComponent(bodyLines.join('\n'));
         window.location.href = href;
 
         if (status) {
           status.hidden = false;
-          status.textContent = 'opened your mail client — if nothing happened, email me directly at atharva.patil.cg@gmail.com';
+          status.textContent = 'opened your mail client — if nothing happened, email is on the left column.';
         }
       });
     })();

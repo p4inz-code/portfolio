@@ -10,3 +10,20 @@ desktop.ini
 
 # Local backups from the dev workflow (.bak1.html, .bak2.html, ...)
 *.bak*.html
+
+# Internal AI-tooling config — never track. This is dev-machine setup,
+# not portfolio content, and shipping it undercuts the "built by one
+# person" pitch on the homepage. v5.12.0 cleanup.
+.claude/
+CLAUDE.md
+
+# Astro / node build artifacts (also inside portfolio-v5/)
+node_modules/
+dist/
+.astro/
+.output/
+
+# Env files — never commit
+.env
+.env.*
+!.env.example

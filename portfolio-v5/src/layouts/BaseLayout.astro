@@ -14,7 +14,12 @@ interface Props {
 const {
   title,
   description = SITE.description,
-  ogImage = "/og.png",
+  // v5.12.0 fix: og.png was 404-ing (Cloudflare fell back to the homepage
+  // HTML). Now points at /og.svg — a real designed 1200x630 card. Discord,
+  // Slack, iMessage, Signal, Telegram accept SVG og:image. LinkedIn + X
+  // prefer PNG; if you need those, run svgexport over public/og.svg and
+  // drop the PNG at public/og.png — the layout falls back to the SVG.
+  ogImage = "/og.svg",
   themeColor = "#0A0517",
 } = Astro.props;
 
@@ -116,9 +121,18 @@ const jsonLd = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={new URL(ogImage, Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${SITE.title} — ${SITE.tagline}`} />
+    <meta property="og:site_name" content={SITE.title} />
+    <meta property="og:locale" content="en_US" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <!-- v5.12.0 fix: explicit twitter:image, don't rely on X falling
+         back to og:image (unreliable). -->
+    <meta name="twitter:image" content={new URL(ogImage, Astro.site)} />
+    <meta name="twitter:image:alt" content={`${SITE.title} — ${SITE.tagline}`} />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="mask-icon" href="/favicon.svg" color="#7B3FE4" />
@@ -145,9 +159,17 @@ const jsonLd = {
          one linked graph so search + LLM crawlers resolve consistently. -->
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- v5.12.0 fix: dropped the two Google Fonts preconnects — the site
+         no longer loads any Google Fonts (Neue Machina / Neue Montreal /
+         Supply Mono are all Fontshare). Dead connections cost DNS+TLS
+         handshakes for nothing.
+         Also v5.12.0 fix: font stylesheet moved from a CSS @import (which
+         was render-blocking and hidden from the preloader) to a real
+         <link rel=stylesheet> here so the browser can discover + fetch
+         it in parallel with the page HTML. FCP/LCP win on the hero. -->
     <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=neue-machina@400,500,700,800&f[]=neue-montreal@400,500,italic&f[]=supply-mono@400,500&display=swap" />
 
     <script is:inline>
       (function () {
@@ -198,8 +220,87 @@ const jsonLd = {
           </button>
           <ThemeToggle />
         </nav>
+
+        <!-- v5.12.0 fix: mobile drawer. Below 760px the desktop nav-links
+             hide everything except the CTA. Was found by audit — 2 of 6
+             primary sections were unreachable on mobile from the header
+             AND the footer. -->
+        <button
+          type="button"
+          class="nav-mobile-toggle"
+          id="navMobileToggle"
+          aria-label="Open navigation menu"
+          aria-controls="navMobileDrawer"
+          aria-expanded="false"
+        >
+          <span class="nmt-line"></span>
+          <span class="nmt-line"></span>
+          <span class="nmt-line"></span>
+        </button>
+      </div>
+
+      <div class="nav-mobile-drawer" id="navMobileDrawer" hidden>
+        <nav aria-label="Primary (mobile)">
+          <ul role="list">
+            {NAV.map((n) => (
+              <li>
+                <a href={n.href} class:list={[currentPath === n.href && 'active', n.cta && 'is-cta']}>
+                  {n.label}
+                </a>
+              </li>
+            ))}
+            <li><a href="/status/">Status</a></li>
+            <li><a href="/accessibility/">Accessibility</a></li>
+          </ul>
+          <div class="nav-mobile-utility">
+            <button type="button" id="cmdkTriggerMobile" class="nmu-cmdk">
+              <span>Search &amp; jump</span>
+              <span class="nmu-kbd">⌘K</span>
+            </button>
+            <div class="nmu-theme"><ThemeToggle /></div>
+          </div>
+        </nav>
       </div>
     </header>
+
+    <script is:inline>
+      (function () {
+        const toggle = document.getElementById('navMobileToggle');
+        const drawer = document.getElementById('navMobileDrawer');
+        if (!toggle || !drawer) return;
+        function open() {
+          drawer.hidden = false;
+          requestAnimationFrame(() => drawer.classList.add('open'));
+          toggle.setAttribute('aria-expanded', 'true');
+          toggle.classList.add('is-open');
+          document.documentElement.style.overflow = 'hidden';
+        }
+        function close() {
+          drawer.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.classList.remove('is-open');
+          document.documentElement.style.overflow = '';
+          setTimeout(() => { drawer.hidden = true; }, 250);
+        }
+        toggle.addEventListener('click', () => {
+          drawer.hidden ? open() : close();
+        });
+        drawer.addEventListener('click', (e) => {
+          if (e.target && e.target.tagName === 'A') close();
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && !drawer.hidden) close();
+        });
+        const mCmdk = document.getElementById('cmdkTriggerMobile');
+        const desktopCmdk = document.getElementById('cmdkTrigger');
+        if (mCmdk && desktopCmdk) {
+          mCmdk.addEventListener('click', () => {
+            close();
+            setTimeout(() => desktopCmdk.click(), 50);
+          });
+        }
+      })();
+    </script>
 
     <main id="main"><slot /></main>
 
@@ -210,12 +311,14 @@ const jsonLd = {
           <p class="footer-role">{SITE.role} · {SITE.location}</p>
         </div>
         <nav class="footer-nav" aria-label="Footer">
-          <a href="/work">Work</a>
-          <a href="/about">About</a>
-          <a href="/resume">Resume</a>
-          <a href="/contact">Contact</a>
-          <a href="/status">Status</a>
-          <a href="/accessibility">Accessibility</a>
+          <a href="/work/">Work</a>
+          <a href="/3d/">3D / VFX</a>
+          <a href="/services/">Services</a>
+          <a href="/about/">About</a>
+          <a href="/resume/">Resume</a>
+          <a href="/contact/">Contact</a>
+          <a href="/status/">Status</a>
+          <a href="/accessibility/">Accessibility</a>
         </nav>
         <div class="footer-meta">
           <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
@@ -339,9 +442,100 @@ const jsonLd = {
         color: var(--muted); margin-top: var(--sp-2);
       }
 
+      /* v5.12.0 mobile navigation drawer */
+      .nav-mobile-toggle {
+        display: none;
+        width: 40px; height: 40px;
+        padding: 0;
+        background: transparent; border: 1px solid var(--line-strong);
+        border-radius: 4px;
+        color: var(--text);
+        cursor: pointer;
+        flex-direction: column; align-items: center; justify-content: center;
+        gap: 4px;
+      }
+      .nav-mobile-toggle:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
+      .nmt-line {
+        display: block;
+        width: 18px; height: 1.5px;
+        background: currentColor;
+        transition: transform var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
+      }
+      .nav-mobile-toggle.is-open .nmt-line:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+      .nav-mobile-toggle.is-open .nmt-line:nth-child(2) { opacity: 0; }
+      .nav-mobile-toggle.is-open .nmt-line:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+
+      .nav-mobile-drawer {
+        position: fixed;
+        inset: 0;
+        z-index: 150;
+        background: color-mix(in oklab, var(--bg) 96%, transparent);
+        backdrop-filter: blur(20px);
+        padding: 100px var(--sp-6) var(--sp-6);
+        opacity: 0;
+        transition: opacity var(--dur) var(--ease-out);
+      }
+      .nav-mobile-drawer.open { opacity: 1; }
+      .nav-mobile-drawer[hidden] { display: none; }
+      .nav-mobile-drawer nav > ul {
+        list-style: none;
+        display: flex; flex-direction: column;
+        border-top: 1px solid var(--line);
+        padding: 0;
+        margin: 0;
+      }
+      .nav-mobile-drawer li {
+        border-bottom: 1px solid var(--line);
+      }
+      .nav-mobile-drawer a {
+        display: block;
+        padding: var(--sp-4) 0;
+        font-family: var(--font-display);
+        font-size: var(--text-lg);
+        color: var(--text);
+        transition: color var(--dur-fast) var(--ease-out), padding var(--dur-fast) var(--ease-out);
+      }
+      .nav-mobile-drawer a:hover, .nav-mobile-drawer a:focus-visible {
+        color: var(--purple-bright);
+        padding-left: 8px;
+        outline: none;
+      }
+      .nav-mobile-drawer a.active {
+        color: var(--purple-bright);
+      }
+      .nav-mobile-drawer a.is-cta {
+        color: var(--purple-bright);
+        font-style: italic;
+      }
+      .nav-mobile-utility {
+        margin-top: var(--sp-6);
+        padding: var(--sp-5);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        display: flex; align-items: center; justify-content: space-between;
+        gap: var(--sp-4);
+      }
+      .nmu-cmdk {
+        flex: 1;
+        display: inline-flex; align-items: center; justify-content: space-between;
+        padding: 10px 12px;
+        background: color-mix(in oklab, var(--purple) 8%, transparent);
+        border: 1px solid var(--line-strong);
+        border-radius: 4px;
+        color: var(--text);
+        font-family: var(--font-mono); font-size: 13px;
+        cursor: pointer;
+      }
+      .nmu-kbd {
+        color: var(--purple-bright);
+        font-family: var(--font-mono);
+        font-size: 11px;
+      }
+      .nmu-theme { display: flex; align-items: center; }
+
       @media (max-width: 760px) {
-        .nav-links { gap: var(--sp-4); }
-        .nav-links a:not(.nav-cta) { display: none; }
+        .nav-links { display: none !important; }
+        .nav-mobile-toggle { display: inline-flex; }
       }
     </style>
   </body>

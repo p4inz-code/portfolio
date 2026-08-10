@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  OG social share card — 1200×630, the standard.
+  Reason it's SVG (not PNG): this build environment can't rasterize, and
+  a real designed SVG is strictly better than the 404 that was there
+  before. Discord, Slack, iMessage, Signal, Telegram all accept SVG
+  og:image. LinkedIn + X still prefer PNG — for those, run this file
+  through any SVG→PNG converter (e.g. `npx svgexport og.svg og.png
+  1200:630`) and drop the PNG at the same path; it takes precedence
+  because it's queried directly by /og.png.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="og-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#0A0517"/>
+      <stop offset="100%" stop-color="#050210"/>
+    </linearGradient>
+    <radialGradient id="og-glow-tl" cx="15%" cy="20%" r="65%">
+      <stop offset="0%"  stop-color="#7B3FE4" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#7B3FE4" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="og-glow-br" cx="85%" cy="85%" r="55%">
+      <stop offset="0%"  stop-color="#B993FF" stop-opacity="0.20"/>
+      <stop offset="100%" stop-color="#B993FF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="og-letter-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="#F5F0E0"/>
+      <stop offset="50%" stop-color="#D6D0E8"/>
+      <stop offset="100%" stop-color="#B993FF"/>
+    </linearGradient>
+    <linearGradient id="og-ring-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"   stop-color="#7B3FE4" stop-opacity="0.5"/>
+      <stop offset="50%"  stop-color="#B993FF" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#7B3FE4" stop-opacity="0.5"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background layers -->
+  <rect width="1200" height="630" fill="url(#og-bg)"/>
+  <rect width="1200" height="630" fill="url(#og-glow-tl)"/>
+  <rect width="1200" height="630" fill="url(#og-glow-br)"/>
+
+  <!-- Subtle dot grid -->
+  <g fill="#E8E1D0" fill-opacity="0.06">
+    <circle cx="60"   cy="60"  r="1"/><circle cx="120"  cy="60"  r="1"/><circle cx="180"  cy="60"  r="1"/><circle cx="240"  cy="60"  r="1"/><circle cx="300"  cy="60"  r="1"/><circle cx="360"  cy="60"  r="1"/><circle cx="420"  cy="60"  r="1"/><circle cx="480"  cy="60"  r="1"/><circle cx="540"  cy="60"  r="1"/><circle cx="600"  cy="60"  r="1"/><circle cx="660"  cy="60"  r="1"/><circle cx="720"  cy="60"  r="1"/><circle cx="780"  cy="60"  r="1"/><circle cx="840"  cy="60"  r="1"/><circle cx="900"  cy="60"  r="1"/><circle cx="960"  cy="60"  r="1"/><circle cx="1020" cy="60"  r="1"/><circle cx="1080" cy="60"  r="1"/><circle cx="1140" cy="60"  r="1"/>
+    <circle cx="60"   cy="120" r="1"/><circle cx="120"  cy="120" r="1"/><circle cx="180"  cy="120" r="1"/><circle cx="240"  cy="120" r="1"/><circle cx="300"  cy="120" r="1"/><circle cx="360"  cy="120" r="1"/><circle cx="420"  cy="120" r="1"/><circle cx="480"  cy="120" r="1"/><circle cx="540"  cy="120" r="1"/><circle cx="600"  cy="120" r="1"/><circle cx="660"  cy="120" r="1"/><circle cx="720"  cy="120" r="1"/><circle cx="780"  cy="120" r="1"/><circle cx="840"  cy="120" r="1"/><circle cx="900"  cy="120" r="1"/><circle cx="960"  cy="120" r="1"/><circle cx="1020" cy="120" r="1"/><circle cx="1080" cy="120" r="1"/><circle cx="1140" cy="120" r="1"/>
+  </g>
+
+  <!-- AP monogram top-left -->
+  <g transform="translate(80, 80)">
+    <circle cx="45" cy="45" r="42" fill="none" stroke="url(#og-ring-grad)" stroke-width="1.5"/>
+    <g fill="url(#og-letter-grad)">
+      <path d="M 15 78 L 40 15 L 55 35 L 32 35 Z"/>
+      <path d="M 44 78 L 44 22 L 62 22 Q 74 22 74 36 Q 74 50 62 50 L 53 50 L 53 78 Z M 53 30 L 53 42 L 61 42 Q 66 42 66 36 Q 66 30 61 30 Z" fill-rule="evenodd"/>
+    </g>
+  </g>
+
+  <!-- Name + tagline -->
+  <text x="80" y="360"
+    font-family="'Neue Machina', 'Helvetica Neue', Arial, sans-serif"
+    font-size="88" font-weight="700"
+    fill="#E8E1D0" letter-spacing="-2">Atharva Patil</text>
+
+  <text x="80" y="418"
+    font-family="'Neue Machina', 'Helvetica Neue', Arial, sans-serif"
+    font-size="30" font-weight="400" font-style="italic"
+    fill="#B993FF">Software during the day, 3D and VFX on the side.</text>
+
+  <text x="80" y="470"
+    font-family="'Supply Mono', 'SFMono-Regular', monospace"
+    font-size="18" font-weight="400"
+    fill="#9B95B0" letter-spacing="2">SOLO FOUNDER · NORTHBYTE STUDIOS · NAVI MUMBAI</text>
+
+  <!-- Bottom row: URL + handles -->
+  <g transform="translate(80, 540)">
+    <text
+      font-family="'Supply Mono', 'SFMono-Regular', monospace"
+      font-size="20" font-weight="500"
+      fill="#D6BFFF" letter-spacing="1">atharvapatil.tech</text>
+    <text x="0" y="30"
+      font-family="'Supply Mono', 'SFMono-Regular', monospace"
+      font-size="14" font-weight="400"
+      fill="#726D88" letter-spacing="2">P4INZ · GITHUB.COM/P4INZ-CODE · DISCORD P4INZ</text>
+  </g>
+
+  <!-- Right-side pillar chips -->
+  <g transform="translate(720, 460)"
+     font-family="'Supply Mono', 'SFMono-Regular', monospace"
+     font-size="14" font-weight="500"
+     fill="#E8E1D0" letter-spacing="1.5">
+    <rect x="0"   y="0"  width="200" height="34" rx="2" fill="none" stroke="#B993FF" stroke-opacity="0.4"/>
+    <text x="12"  y="22">MISSION OS · LINUX</text>
+    <rect x="0"   y="46" width="200" height="34" rx="2" fill="none" stroke="#B993FF" stroke-opacity="0.4"/>
+    <text x="12"  y="68">NEXUS · WPF · WINDOWS</text>
+    <rect x="210" y="0"  width="200" height="34" rx="2" fill="none" stroke="#B993FF" stroke-opacity="0.4"/>
+    <text x="222" y="22">KANVAZ · ELECTRON · MIT</text>
+    <rect x="210" y="46" width="200" height="34" rx="2" fill="none" stroke="#B993FF" stroke-opacity="0.4"/>
+    <text x="222" y="68">PURSUE OS · APACHE 2.0</text>
+  </g>
+</svg>

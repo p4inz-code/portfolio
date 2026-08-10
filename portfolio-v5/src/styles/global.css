@@ -1,11 +1,11 @@
 /* ============================================================================
  * Global reset + base
  * ========================================================================== */
-/* Fontshare — Neue Machina (display), Neue Montreal (body + italic),
-   Supply Mono (mono). Three families, each doing one job. Replaces
-   PP Editorial New + JetBrains Mono (both flagged AI-typical in the
-   v5.6.3 de-AI-fy audit). */
-@import url('https://api.fontshare.com/v2/css?f[]=neue-machina@400,500,700,800&f[]=neue-montreal@400,500,italic&f[]=supply-mono@400,500&display=swap');
+/* Fontshare stylesheet is now loaded via a real <link rel=stylesheet>
+   in BaseLayout <head> (v5.12.0 fix) — the previous @import here was
+   render-blocking and invisible to the browser preloader. Fonts:
+   Neue Machina (display), Neue Montreal (body + italic), Supply Mono
+   (mono). */
 @import './tokens.css';
 
 *,

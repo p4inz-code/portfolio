@@ -1,9 +1,9 @@
 {
   "name": "atharvapatil-portfolio-v5",
-  "version": "5.0.0-alpha",
+  "version": "5.12.0",
   "private": true,
   "type": "module",
-  "description": "atharvapatil.tech — Astro rebuild. Ultraviolet Cathedral palette, PP Editorial New typography, light/dark toggle, cmd+K palette, four signature moves layered per reference-site inspiration.",
+  "description": "atharvapatil.tech — Astro static site. Neue Machina + Neue Montreal + Supply Mono, dual-theme Ultraviolet Cathedral + Parchment Manuscript, ⌘K palette, Mission OS interactive demo, JSON-LD identity graph.",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

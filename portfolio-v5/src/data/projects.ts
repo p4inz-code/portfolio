@@ -188,8 +188,8 @@ export const PROJECTS: Project[] = [
     name: 'Obscura',
     tagline: 'Luau AST toolkit for Roblox developers.',
     description:
-      'Open-source Luau code protection toolkit for Roblox developers. AST-based transformations, free forever, no telemetry, no vendor lock-in. MIT licensed.',
-    status: { kind: 'released', label: 'Released · v0.9.0' },
+      'Open-source Luau code protection toolkit for Roblox developers. AST-based transformations, free forever, no telemetry, no vendor lock-in. MIT licensed. Shipped v1.0.0 with the full test suite green — 340/340 passing.',
+    status: { kind: 'released', label: 'Released · v1.0.0' },
     tags: ['Luau', 'MIT'],
     metaTags: ['Luau', 'MIT', 'Roblox'],
     featured: false,
@@ -201,8 +201,9 @@ export const PROJECTS: Project[] = [
     stack: ['Luau', 'AST transformations'],
     role: 'Sole engineer',
     started: '2026',
-    currentVersion: 'v0.9.0',
-    nextMilestone: 'Ongoing feature development toward v1.0',
+    currentVersion: 'v1.0.0',
+    nextMilestone: 'Maintenance + ongoing feature work driven by community requests',
+    notes: 'v1.0.0 shipped with 340/340 tests passing.',
   },
   {
     slug: 'glint',
