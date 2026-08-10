@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.2.3',
+    kind: 'released',
+    summary: 'Cleanup after go-live — 14.6MB unwired monogram removed, Node version pinned via .nvmrc.',
+    body: [
+      'v5 Astro workspace went live at atharvapatil.tech earlier today. First deploy verified: Lighthouse mobile Perf 91, A11y 100, BP 100, SEO 100 on both /  and /mission-os/demo. Baseline was Perf 55 on the v3.35.3 monolith — a ~65% lift, exactly what the migration promised.',
+      'Removed public/assets/brand/ap-monogram.png (14.6MB). File was unwired — nothing on the site referenced it — but it was shipping in every deploy as dead weight. Will be re-added at the same path when the resized replacement arrives (target: 200×200 PNG or SVG).',
+      'Added .nvmrc pinning Node to v20 at repo root, so Cloudflare Pages resolves the same Node version every build without relying on the NODE_VERSION env var alone. Belt-and-braces for build reproducibility.',
+    ],
+  },
+  {
     version: 'v5.2.2',
     kind: 'released',
     summary: 'Mission OS demo polish — wallpaper reads as a real OS, chrome speaks system-UI, top bar densified, dock expanded.',
