@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.9.0',
+    kind: 'released',
+    summary: 'Awwwards polish — scroll-progress hairline, motion QA both themes.',
+    body: [
+      'Added a hairline scroll-progress bar at the top of every page (2px, purple-bright, fixed at top). Fills 0 → 100% as you scroll the page via CSS animation-timeline: scroll() — zero JS, zero paint cost. Falls back to invisible (scaleX 0) on browsers without scroll-driven animations, and honors prefers-reduced-motion.',
+      'Hidden on the /mission-os/demo route — the demo has its own ribbon at the top and doesn\'t want the site\'s scroll indicator competing with it.',
+      'Final motion QA: manifest bridge on / (v5.1-alpha), FeaturedShowcase card entrances on / and /work (v5.7.0), scroll progress (this ship). Every scroll-linked animation respects prefers-reduced-motion.',
+    ],
+  },
+  {
     version: 'v5.8.0',
     kind: 'released',
     summary: 'Full 11-route Lighthouse audit + fixes — 99 perf / 100 a11y / 100 BP / 100 SEO across every page. MetaTag redesigned.',

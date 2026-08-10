@@ -162,6 +162,12 @@ const jsonLd = {
     </script>
   </head>
   <body>
+    <!-- Scroll progress bar — hairline at very top of viewport, fills as
+         the page scrolls. Zero-JS: powered by CSS animation-timeline: scroll().
+         Falls back to nothing (element stays at scaleX 0) on browsers without
+         scroll-driven animations. Aria-hidden — decorative. -->
+    <div class="scroll-progress" aria-hidden="true"></div>
+
     <a href="#main" class="skip-nav">Skip to content</a>
 
     <header class="nav">
@@ -225,6 +231,31 @@ const jsonLd = {
     <CommandPalette />
 
     <style>
+      /* Scroll progress bar */
+      .scroll-progress {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        z-index: 200;
+        background: var(--purple-bright);
+        transform-origin: 0 50%;
+        transform: scaleX(0);
+        pointer-events: none;
+      }
+      @supports (animation-timeline: scroll()) {
+        .scroll-progress {
+          animation: sp-fill linear both;
+          animation-timeline: scroll(root block);
+        }
+      }
+      @keyframes sp-fill {
+        from { transform: scaleX(0); }
+        to   { transform: scaleX(1); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .scroll-progress { animation: none; transform: scaleX(0); }
+      }
+
       .nav {
         padding: var(--sp-5) 0;
         position: sticky; top: 0; z-index: 100;
