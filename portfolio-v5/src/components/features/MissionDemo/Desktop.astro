@@ -21,38 +21,18 @@ import AboutApp from './apps/AboutApp.astro';
 <div class="desktop-root" data-desktop-root data-window-active="">
 
   <!-- ================== WALLPAPER ================== -->
+  <!-- Minimalist by design: atmosphere only. Composition tried to assert
+       identity too hard in v5.2.2; per user feedback the desktop should
+       feel like clean background surface with a single tiny author-mark. -->
   <div class="wallpaper" aria-hidden="true">
     <div class="wp-base"></div>
     <div class="wp-glow-1"></div>
     <div class="wp-glow-2"></div>
     <div class="wp-grid"></div>
 
-    <!-- The identity hero — a real OS wallpaper composition, not a blob. -->
-    <div class="wp-hero">
-      <div class="wp-monogram">
-        <svg viewBox="0 0 120 120" fill="none" aria-hidden="true">
-          <!-- Concentric ring backdrop -->
-          <circle cx="60" cy="60" r="54" stroke="currentColor" stroke-opacity="0.18" stroke-width="1" />
-          <circle cx="60" cy="60" r="42" stroke="currentColor" stroke-opacity="0.10" stroke-width="1" />
-          <!-- Mission OS "M" mark -->
-          <path d="M28 88 V 32 L 60 68 L 92 32 V 88" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
-          <!-- Center dot -->
-          <circle cx="60" cy="60" r="3" fill="currentColor" />
-        </svg>
-      </div>
-      <p class="wp-brand">mission&nbsp;os</p>
-      <p class="wp-tag">v0.1 · pre-release · debian stable + kde plasma</p>
-
-      <div class="wp-pillars">
-        <span class="wp-pillar"><span class="wp-pillar-dot"></span>privacy-first</span>
-        <span class="wp-pillar"><span class="wp-pillar-dot"></span>security-conscious</span>
-        <span class="wp-pillar"><span class="wp-pillar-dot"></span>portable-first</span>
-        <span class="wp-pillar"><span class="wp-pillar-dot"></span>offline-first</span>
-      </div>
-    </div>
-
-    <!-- Corner watermark -->
-    <p class="wp-corner">no telemetry · no phone-home · builds signed · gplv3</p>
+    <p class="wp-signature">
+      created by <span class="wp-signature-handle">p4inz@mission-os</span>
+    </p>
   </div>
 
   <!-- ================== TOP BAR ================== -->
@@ -260,76 +240,21 @@ import AboutApp from './apps/AboutApp.astro';
     -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 85%);
   }
 
-  .wp-hero {
+  .wp-signature {
     position: absolute;
     inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: var(--sp-4);
-    text-align: center;
-    padding: 0 var(--sp-6);
-  }
-  .wp-monogram {
-    width: 96px; height: 96px;
-    color: rgba(214, 191, 255, 0.55);
-    filter: drop-shadow(0 0 30px rgba(123, 63, 228, 0.35));
-  }
-  .wp-monogram svg { width: 100%; height: 100%; }
-  .wp-brand {
-    font-family: var(--font-os);
-    font-weight: 500;
-    font-size: clamp(24px, 3.6vw, 42px);
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: rgba(232, 225, 208, 0.82);
-    margin-top: var(--sp-3);
-  }
-  .wp-tag {
+    display: grid;
+    place-items: center;
     font-family: var(--font-mono);
-    font-size: var(--text-xxs);
+    font-size: 11px;
     letter-spacing: var(--tracking-eyebrow);
     text-transform: uppercase;
-    color: rgba(184, 147, 255, 0.65);
+    color: rgba(155, 149, 176, 0.32);
+    pointer-events: none;
   }
-  .wp-pillars {
-    display: inline-flex; flex-wrap: wrap; justify-content: center;
-    gap: var(--sp-2) var(--sp-4);
-    margin-top: var(--sp-6);
-    padding: 10px 18px;
-    border: 1px solid rgba(232, 225, 208, 0.08);
-    border-radius: var(--radius-pill);
-    background: rgba(10, 5, 23, 0.35);
-    backdrop-filter: blur(6px);
-  }
-  .wp-pillar {
-    font-family: var(--font-os);
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    color: rgba(232, 225, 208, 0.72);
-    display: inline-flex; align-items: center; gap: 6px;
-    white-space: nowrap;
-  }
-  .wp-pillar-dot {
-    width: 5px; height: 5px; border-radius: 50%;
-    background: rgba(184, 147, 255, 0.75);
-    box-shadow: 0 0 6px rgba(184, 147, 255, 0.6);
-  }
-  .wp-corner {
-    position: absolute;
-    left: var(--sp-6); bottom: var(--sp-6);
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: var(--tracking-eyebrow);
-    text-transform: uppercase;
-    color: rgba(155, 149, 176, 0.4);
-    max-width: 60vw;
-  }
-
-  @media (max-width: 640px) {
-    .wp-monogram { width: 72px; height: 72px; }
-    .wp-pillars { padding: 8px 12px; gap: 4px 10px; }
-    .wp-pillar { font-size: 10px; }
-    .wp-corner { font-size: 9px; }
+  .wp-signature-handle {
+    color: rgba(184, 147, 255, 0.55);
+    margin-left: 6px;
   }
 
   /* ================== TOP BAR ================== */

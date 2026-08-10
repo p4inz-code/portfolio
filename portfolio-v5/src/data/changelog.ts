@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.3.0',
+    kind: 'released',
+    summary: 'Mission OS demo — wallpaper simplified to a single author-mark, atmospheric background only.',
+    body: [
+      'v5.2.2 pushed the wallpaper hard on identity (bold M monogram + pillars chip + corner note). Post-live review said it competed with the app windows rather than sitting behind them. Reverted to a minimalist wallpaper: base gradient + purple glows + Nothing-style dot grid stay for atmosphere, but the whole hero composition is gone.',
+      'Only text on the wallpaper now: a single centered "created by p4inz@mission-os" line in dim mono. Sits behind everything, does not compete for attention, reads as a quiet author-signature rather than a landing page.',
+      'Follow-ups (v5.3.1, v5.3.2) will make the dock\'s inert apps actually clickable and land any spillover fixes.',
+    ],
+  },
+  {
     version: 'v5.2.3',
     kind: 'released',
     summary: 'Cleanup after go-live — 14.6MB unwired monogram removed, Node version pinned via .nvmrc.',
