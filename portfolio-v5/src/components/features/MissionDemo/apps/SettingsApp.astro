@@ -1,10 +1,9 @@
 ---
 /**
- * Mission Settings — skeleton with real privacy toggles.
- * Every toggle has a plain-text explanation right below the switch,
- * mirroring the case study's "understand what you're enabling" ethos.
- * Toggles are cosmetic (checkbox inputs); no state is persisted since
- * this is a concept demo, not a live OS.
+ * Mission Settings — Privacy panel is a real grouped settings surface
+ * with four sub-sections (Data collection · Network · Browser ·
+ * Filesystem). Each toggle has a plain-text explanation. Toggles are
+ * cosmetic — no state persists (concept demo).
  */
 ---
 <div class="settings-root">
@@ -24,59 +23,145 @@
       <p class="s-panel-desc">The defaults you picked in the installer. Change them here, or lock them so nothing changes them without your knowledge.</p>
     </header>
 
-    <div class="s-row s-row-locked">
-      <label class="s-toggle">
-        <input type="checkbox" checked disabled />
-        <span class="s-switch" aria-hidden="true"><span></span></span>
-        <span class="s-row-body">
-          <span class="s-row-name">Telemetry <span class="s-locked-tag">locked off</span></span>
-          <span class="s-row-help">Mission OS ships without telemetry hooks compiled in. This isn't a toggle you can flip — the code isn't there.</span>
-        </span>
-      </label>
+    <!-- ============ Data collection ============ -->
+    <div class="s-group">
+      <p class="s-group-label">Data collection</p>
+
+      <div class="s-row s-row-locked">
+        <label class="s-toggle">
+          <input type="checkbox" checked disabled />
+          <span class="s-switch" aria-hidden="true"><span></span></span>
+          <span class="s-row-body">
+            <span class="s-row-name">Telemetry <span class="s-locked-tag">locked off</span></span>
+            <span class="s-row-help">Mission OS ships without telemetry hooks compiled in. This isn't a toggle you can flip — the code isn't there.</span>
+          </span>
+        </label>
+      </div>
+
+      <div class="s-row s-row-locked">
+        <label class="s-toggle">
+          <input type="checkbox" checked disabled />
+          <span class="s-switch" aria-hidden="true"><span></span></span>
+          <span class="s-row-body">
+            <span class="s-row-name">Diagnostic reports <span class="s-locked-tag">locked off</span></span>
+            <span class="s-row-help">Crash reports stay on-device. If you want to share one with an issue tracker, export it manually.</span>
+          </span>
+        </label>
+      </div>
+
+      <div class="s-row">
+        <label class="s-toggle">
+          <input type="checkbox" />
+          <span class="s-switch" aria-hidden="true"><span></span></span>
+          <span class="s-row-body">
+            <span class="s-row-name">Location services</span>
+            <span class="s-row-help">Off by default. When enabled, apps that request location must ask each time; nothing is granted silently.</span>
+          </span>
+        </label>
+      </div>
     </div>
 
-    <div class="s-row">
-      <label class="s-toggle">
-        <input type="checkbox" />
-        <span class="s-switch" aria-hidden="true"><span></span></span>
-        <span class="s-row-body">
-          <span class="s-row-name">Location services</span>
-          <span class="s-row-help">Off by default. When enabled, apps that request location must ask each time; nothing is granted silently.</span>
-        </span>
-      </label>
+    <!-- ============ Network ============ -->
+    <div class="s-group">
+      <p class="s-group-label">Network</p>
+
+      <div class="s-row s-row-locked">
+        <label class="s-toggle">
+          <input type="checkbox" checked disabled />
+          <span class="s-switch" aria-hidden="true"><span></span></span>
+          <span class="s-row-body">
+            <span class="s-row-name">DNS over HTTPS <span class="s-locked-tag">locked on</span></span>
+            <span class="s-row-help">Every DNS query travels encrypted. You can pick the resolver; you can't turn the encryption off.</span>
+          </span>
+        </label>
+      </div>
+
+      <div class="s-row">
+        <label class="s-toggle">
+          <input type="checkbox" />
+          <span class="s-switch" aria-hidden="true"><span></span></span>
+          <span class="s-row-body">
+            <span class="s-row-name">Auto-connect Wi-Fi radios on boot</span>
+            <span class="s-row-help">Off by default (offline-first policy). Turn on if you want the machine to associate with known networks automatically.</span>
+          </span>
+        </label>
+      </div>
+
+      <div class="s-row">
+        <label class="s-toggle">
+          <input type="checkbox" />
+          <span class="s-switch" aria-hidden="true"><span></span></span>
+          <span class="s-row-body">
+            <span class="s-row-name">Route all traffic through Tor</span>
+            <span class="s-row-help">System-wide Tor. Slower, and some apps break under it — enable only when you need it.</span>
+          </span>
+        </label>
+      </div>
     </div>
 
-    <div class="s-row">
-      <label class="s-toggle">
-        <input type="checkbox" checked />
-        <span class="s-switch" aria-hidden="true"><span></span></span>
-        <span class="s-row-body">
-          <span class="s-row-name">Firefox as default browser</span>
-          <span class="s-row-help">Preinstalled with strict privacy defaults. Toggle off if you'd rather set Tor Browser as default (also preinstalled).</span>
-        </span>
-      </label>
+    <!-- ============ Browser ============ -->
+    <div class="s-group">
+      <p class="s-group-label">Browser</p>
+
+      <div class="s-row">
+        <label class="s-toggle">
+          <input type="checkbox" checked />
+          <span class="s-switch" aria-hidden="true"><span></span></span>
+          <span class="s-row-body">
+            <span class="s-row-name">Firefox as default browser</span>
+            <span class="s-row-help">Preinstalled with strict privacy defaults (see the Firefox app for the full list).</span>
+          </span>
+        </label>
+      </div>
+
+      <div class="s-row s-row-locked">
+        <label class="s-toggle">
+          <input type="checkbox" checked disabled />
+          <span class="s-switch" aria-hidden="true"><span></span></span>
+          <span class="s-row-body">
+            <span class="s-row-name">Tor Browser preinstalled <span class="s-locked-tag">locked on</span></span>
+            <span class="s-row-help">Ships in the base image so it's available even offline. You can uninstall it later; you cannot uninstall it during first-run.</span>
+          </span>
+        </label>
+      </div>
+
+      <div class="s-row s-row-locked">
+        <label class="s-toggle">
+          <input type="checkbox" checked disabled />
+          <span class="s-switch" aria-hidden="true"><span></span></span>
+          <span class="s-row-body">
+            <span class="s-row-name">Anti-fingerprinting <span class="s-locked-tag">locked on</span></span>
+            <span class="s-row-help">Firefox\'s resist-fingerprinting flag is on by default and lockdown-immutable.</span>
+          </span>
+        </label>
+      </div>
     </div>
 
-    <div class="s-row s-row-locked">
-      <label class="s-toggle">
-        <input type="checkbox" checked disabled />
-        <span class="s-switch" aria-hidden="true"><span></span></span>
-        <span class="s-row-body">
-          <span class="s-row-name">Tor Browser preinstalled <span class="s-locked-tag">locked on</span></span>
-          <span class="s-row-help">Ships in the base image so it's available even offline. You can uninstall it later; you cannot uninstall it during first-run.</span>
-        </span>
-      </label>
-    </div>
+    <!-- ============ Filesystem ============ -->
+    <div class="s-group">
+      <p class="s-group-label">Filesystem</p>
 
-    <div class="s-row">
-      <label class="s-toggle">
-        <input type="checkbox" />
-        <span class="s-switch" aria-hidden="true"><span></span></span>
-        <span class="s-row-body">
-          <span class="s-row-name">Auto-connect Wi-Fi radios on boot</span>
-          <span class="s-row-help">Off by default (offline-first policy). Turn on if you want the machine to associate with known networks automatically.</span>
-        </span>
-      </label>
+      <div class="s-row">
+        <label class="s-toggle">
+          <input type="checkbox" />
+          <span class="s-switch" aria-hidden="true"><span></span></span>
+          <span class="s-row-body">
+            <span class="s-row-name">Index recently opened files</span>
+            <span class="s-row-help">Off by default. "Recent files" on most OSes is a privacy leak — Mission OS defaults to no index.</span>
+          </span>
+        </label>
+      </div>
+
+      <div class="s-row">
+        <label class="s-toggle">
+          <input type="checkbox" />
+          <span class="s-switch" aria-hidden="true"><span></span></span>
+          <span class="s-row-body">
+            <span class="s-row-name">Generate image thumbnails</span>
+            <span class="s-row-help">Off by default. Preview generation writes to disk — enable per folder if you actually need it.</span>
+          </span>
+        </label>
+      </div>
     </div>
 
     <p class="s-foot">Changes made here would persist across reboots on a real install. This is a concept demo — nothing is written to disk.</p>
@@ -103,14 +188,14 @@
     padding: var(--sp-3);
     background: color-mix(in oklab, var(--surface-2) 45%, transparent);
     border: 1px solid var(--line);
-    border-radius: var(--radius);
+    border-radius: 4px;
   }
   .s-nav-title {
     font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: var(--tracking-eyebrow);
     text-transform: uppercase;
-    color: var(--muted-2);
+    color: var(--muted);
     padding: 6px 10px 10px;
   }
   .s-nav-item {
@@ -118,7 +203,7 @@
     gap: var(--sp-2);
     padding: 8px 10px;
     background: transparent;
-    border: none; border-radius: 6px;
+    border: none; border-radius: 4px;
     color: var(--muted);
     text-align: left;
     font-family: var(--font-body);
@@ -129,34 +214,46 @@
   .s-nav-item:hover, .s-nav-item:focus-visible { color: var(--text); background: color-mix(in oklab, var(--purple) 8%, transparent); outline: none; }
   .s-nav-item:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
   .s-nav-item-active { color: var(--text); background: color-mix(in oklab, var(--purple) 15%, transparent); }
-  .s-nav-item[disabled] { cursor: not-allowed; color: var(--muted-2); }
+  .s-nav-item[disabled] { cursor: not-allowed; color: var(--muted); }
   .s-nav-lock {
     font-family: var(--font-mono);
     font-size: 9px;
     letter-spacing: var(--tracking-eyebrow);
     text-transform: uppercase;
-    color: var(--muted-2);
+    color: var(--muted);
     padding: 2px 6px;
     border: 1px solid var(--line);
-    border-radius: var(--radius-pill);
+    border-radius: 2px;
   }
 
   /* ---- Panel ---- */
-  .s-panel { display: flex; flex-direction: column; gap: var(--sp-3); }
-  .s-panel-head { padding-bottom: var(--sp-3); border-bottom: 1px solid var(--line); margin-bottom: var(--sp-3); }
+  .s-panel { display: flex; flex-direction: column; gap: var(--sp-5); }
+  .s-panel-head { padding-bottom: var(--sp-3); border-bottom: 1px solid var(--line); margin-bottom: var(--sp-2); }
   .s-eyebrow {
     font-family: var(--font-mono); font-size: var(--text-xxs);
     letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
-    color: var(--muted-2);
+    color: var(--muted);
   }
-  .s-panel-title { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 400; color: var(--text); margin: 4px 0 6px; }
+  .s-panel-title { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 500; color: var(--text); margin: 4px 0 6px; letter-spacing: -0.01em; }
   .s-panel-desc { color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); }
+
+  /* ---- Groups ---- */
+  .s-group { display: flex; flex-direction: column; gap: var(--sp-3); }
+  .s-group-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--purple-bright);
+    padding-bottom: 4px;
+    border-bottom: 1px solid color-mix(in oklab, var(--purple) 25%, transparent);
+  }
 
   .s-row {
     padding: var(--sp-4);
     background: color-mix(in oklab, var(--surface-2) 45%, transparent);
     border: 1px solid var(--line);
-    border-radius: var(--radius);
+    border-radius: 4px;
   }
   .s-row-locked { opacity: 0.9; }
 
@@ -212,12 +309,12 @@
     color: var(--purple-bright);
     padding: 2px 6px;
     border: 1px solid var(--line-strong);
-    border-radius: var(--radius-pill);
+    border-radius: 2px;
   }
 
   .s-foot {
     margin-top: var(--sp-3);
-    color: var(--muted-2);
+    color: var(--muted);
     font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: var(--tracking-eyebrow);

@@ -1,82 +1,224 @@
 ---
 /**
- * Files — informational panel. The real Mission OS ships a Dolphin-based
- * file manager; the concept demo shows what makes it different rather than
- * simulating a full filesystem browser.
+ * Files — informational panel + a static view of what an unlocked
+ * Mission OS vault looks like. Left = principles, right = a rendered
+ * directory tree with sizes and encrypted-container markers. Not
+ * interactive; nothing here is real filesystem content.
  */
 ---
-<div class="info-root">
-  <p class="info-lead">
-    The real Mission OS ships a <em>Dolphin-based file manager</em>, hardened for private workflows.
-  </p>
+<div class="files-root">
 
-  <dl class="info-list">
-    <div class="info-item">
-      <dt>Encrypted-container browsing</dt>
-      <dd>Mount and browse LUKS2 volumes inline. Unlock happens once per session, not once per file.</dd>
-    </div>
-    <div class="info-item">
-      <dt>Thumbnails disabled by default</dt>
-      <dd>Preview generation writes to disk and leaks structure — off unless you opt in per folder.</dd>
-    </div>
-    <div class="info-item">
-      <dt>Per-folder encryption profiles</dt>
-      <dd>Different vaults, different keys. No single-key-rules-them-all mistake.</dd>
-    </div>
-    <div class="info-item">
-      <dt>Recent files not indexed</dt>
-      <dd>Unless you opt in. Recent lists on most OSes are a privacy leak — Mission OS defaults to off.</dd>
-    </div>
-  </dl>
+  <!-- Left: what makes Mission OS Files different -->
+  <div class="files-lead">
+    <p class="lead-eyebrow">Mission OS Files · at a glance</p>
+    <h3 class="lead-title">Dolphin, hardened for private workflows.</h3>
 
-  <p class="info-foot">
-    Not launchable in the concept demo — this window is informational. Try Installer or Settings for real Mission OS UX.
-  </p>
+    <dl class="lead-list">
+      <div class="lead-item">
+        <dt>Encrypted-container browsing</dt>
+        <dd>Mount and browse LUKS2 volumes inline. Unlock happens once per session.</dd>
+      </div>
+      <div class="lead-item">
+        <dt>Thumbnails off by default</dt>
+        <dd>Preview generation writes to disk and leaks structure — off unless you opt in per folder.</dd>
+      </div>
+      <div class="lead-item">
+        <dt>Per-folder encryption profiles</dt>
+        <dd>Different vaults, different keys. No single-key-rules-them-all mistake.</dd>
+      </div>
+      <div class="lead-item">
+        <dt>Recent files not indexed</dt>
+        <dd>Unless you opt in. Most OSes leak "recently opened" — Mission OS defaults to off.</dd>
+      </div>
+    </dl>
+  </div>
+
+  <!-- Right: rendered directory tree of the demo user's home + vault -->
+  <aside class="files-tree" aria-label="Static view of the demo user's home directory">
+    <header class="tree-head">
+      <span class="tree-crumbs">
+        <span class="crumb-mono">home</span>
+        <span class="crumb-sep">/</span>
+        <span class="crumb-active">p4inz</span>
+      </span>
+      <span class="tree-meta">7 items · 3 mounted vaults · 0 recents indexed</span>
+    </header>
+
+    <ul class="tree-list" role="list">
+      <li class="tree-row tree-vault" data-locked="false">
+        <span class="tree-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 7l2-2h5l2 2h8v11H3zM7 12h10"/></svg>
+        </span>
+        <span class="tree-name">Vault-Personal.mos</span>
+        <span class="tree-badge tree-badge-unlocked">unlocked</span>
+        <span class="tree-size">4.2 GB</span>
+      </li>
+      <li class="tree-row tree-vault" data-locked="true">
+        <span class="tree-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        </span>
+        <span class="tree-name">Vault-Work.mos</span>
+        <span class="tree-badge tree-badge-locked">locked</span>
+        <span class="tree-size">1.1 GB</span>
+      </li>
+      <li class="tree-row tree-vault" data-locked="true">
+        <span class="tree-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        </span>
+        <span class="tree-name">Vault-Investigation.mos</span>
+        <span class="tree-badge tree-badge-locked">locked</span>
+        <span class="tree-size">640 MB</span>
+      </li>
+      <li class="tree-row">
+        <span class="tree-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
+        </span>
+        <span class="tree-name">Documents/</span>
+        <span class="tree-size">128 MB</span>
+      </li>
+      <li class="tree-row">
+        <span class="tree-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
+        </span>
+        <span class="tree-name">Downloads/</span>
+        <span class="tree-size">312 MB</span>
+      </li>
+      <li class="tree-row">
+        <span class="tree-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
+        </span>
+        <span class="tree-name">.mission/</span>
+        <span class="tree-badge tree-badge-hidden">hidden</span>
+        <span class="tree-size">8 MB</span>
+      </li>
+      <li class="tree-row">
+        <span class="tree-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M14 3h7v7M10 14L21 3M21 14v7h-7M14 21L3 10V3h7"/></svg>
+        </span>
+        <span class="tree-name">recovery-key.qr.png</span>
+        <span class="tree-badge tree-badge-warn">move to vault</span>
+        <span class="tree-size">14 KB</span>
+      </li>
+    </ul>
+
+    <p class="tree-foot">Static example. Nothing here is a real file — no live filesystem is exposed to the concept demo.</p>
+  </aside>
+
 </div>
 
 <style>
-  .info-root { display: flex; flex-direction: column; gap: var(--sp-5); }
-  .info-lead {
-    font-family: var(--font-display);
-    font-size: var(--text-md);
-    line-height: 1.6;
-    color: var(--text);
+  .files-root {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: var(--sp-6);
   }
-  .info-lead em { color: var(--purple-bright); font-style: italic; }
-  .info-list {
-    display: flex; flex-direction: column;
-    gap: 1px;
-    background: var(--line);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-  .info-item {
-    background: var(--surface-1);
-    padding: var(--sp-4);
-  }
-  .info-item dt {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: var(--tracking-eyebrow);
-    text-transform: uppercase;
-    color: var(--purple-bright);
-    margin-bottom: 4px;
-  }
-  .info-item dd {
-    color: var(--muted);
-    font-size: var(--text-sm);
-    line-height: var(--leading-body);
-  }
-  .info-foot {
-    padding: var(--sp-3) var(--sp-4);
-    border: 1px dashed var(--line-strong);
-    border-radius: var(--radius);
-    color: var(--muted-2);
+  @media (max-width: 760px) { .files-root { grid-template-columns: 1fr; } }
+
+  /* Left column — brand */
+  .files-lead { display: flex; flex-direction: column; gap: var(--sp-4); }
+  .lead-eyebrow {
     font-family: var(--font-mono);
     font-size: 10.5px;
     letter-spacing: var(--tracking-eyebrow);
     text-transform: uppercase;
-    text-align: center;
+    color: var(--purple-bright);
+  }
+  .lead-title {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .lead-list { display: flex; flex-direction: column; gap: var(--sp-3); margin-top: var(--sp-2); }
+  .lead-item {
+    padding-left: var(--sp-4);
+    border-left: 2px solid color-mix(in oklab, var(--purple) 45%, transparent);
+  }
+  .lead-item dt {
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .lead-item dd {
+    color: var(--muted);
+    font-size: var(--text-xs);
+    line-height: 1.6;
+  }
+
+  /* Right column — tree */
+  .files-tree {
+    background: color-mix(in oklab, var(--surface-2) 45%, transparent);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .tree-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: var(--sp-3);
+    padding: var(--sp-3) var(--sp-4);
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in oklab, var(--surface-1) 90%, transparent);
+    flex-wrap: wrap;
+  }
+  .tree-crumbs {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .crumb-active { color: var(--text); }
+  .crumb-sep { color: var(--muted); opacity: 0.55; }
+  .tree-meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .tree-list { list-style: none; padding: 0; margin: 0; }
+  .tree-row {
+    display: grid;
+    grid-template-columns: 24px 1fr auto auto;
+    gap: var(--sp-3);
+    align-items: center;
+    padding: 8px var(--sp-4);
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text);
+  }
+  .tree-row:last-child { border-bottom: none; }
+  .tree-icon { color: var(--muted); display: inline-flex; align-items: center; justify-content: center; }
+  .tree-icon svg { width: 16px; height: 16px; }
+  .tree-vault .tree-icon { color: var(--purple-bright); }
+  .tree-name { color: var(--text); }
+  .tree-size { color: var(--muted); font-size: 10.5px; letter-spacing: 0.02em; }
+  .tree-badge {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 2px;
+  }
+  .tree-badge-unlocked { color: var(--green); background: color-mix(in oklab, var(--green) 12%, transparent); }
+  .tree-badge-locked   { color: var(--purple-bright); background: color-mix(in oklab, var(--purple) 15%, transparent); }
+  .tree-badge-hidden   { color: var(--muted); background: color-mix(in oklab, var(--surface-3) 40%, transparent); }
+  .tree-badge-warn     { color: var(--warn-text); background: color-mix(in oklab, var(--warn) 15%, transparent); }
+
+  .tree-foot {
+    padding: var(--sp-3) var(--sp-4);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    background: color-mix(in oklab, var(--surface-1) 90%, transparent);
+    border-top: 1px solid var(--line);
   }
 </style>

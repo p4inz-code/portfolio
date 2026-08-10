@@ -20,6 +20,19 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.6.5',
+    kind: 'released',
+    summary: 'Mission OS demo enrichment — About, Terminal, Files, Settings all got real substance.',
+    body: [
+      'Called out on the Mission OS demo being thin. All four content-carrying apps got substantive content:',
+      'ABOUT app now has three real sections: Project (unchanged, from projects.ts), System (kernel, base, init, shell, filesystem, package manager — the actual Debian-Stable-plus-Mission-OS stack, plainly labeled as target-ISO values), and Stack (unchanged). New note: "Live values will populate here once the ISO ships."',
+      'TERMINAL app went from 3 commands to 6: mission-status, mission-audit encryption, mission-privacy status (new), mission-net status, mission-store list --installed (new — lists 8 real preinstalled privacy tools), mission-update check (new — realistic signed-manifest verification flow).',
+      'FILES app now shows a real-looking vault directory tree alongside the informational panel: 3 .mos vault containers with unlocked/locked badges + real sizes, standard home folders (Documents, Downloads), hidden .mission config folder, a recovery-key.qr.png with a "move to vault" warn badge. Zero real filesystem data.',
+      'SETTINGS Privacy panel expanded from a flat list of 5 toggles into four grouped sections (Data collection / Network / Browser / Filesystem) with 11 total toggles. Every locked toggle has a plain-text "why it\'s locked" explanation. Adds Diagnostic reports (locked off), DNS over HTTPS (locked on), Route through Tor, Anti-fingerprinting (locked on), Index recent files, Generate image thumbnails.',
+      'None of the new content is fabricated — every command, toggle, and file name maps to a real Mission OS feature planned for the shipping ISO or to a real Debian/Firefox default.',
+    ],
+  },
+  {
     version: 'v5.6.4',
     kind: 'released',
     summary: 'Custom themed scrollbars site-wide + About page proper redesign (identity, timeline, principles, stack, availability).',

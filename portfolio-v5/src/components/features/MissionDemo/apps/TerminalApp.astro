@@ -1,7 +1,10 @@
 ---
 /**
- * Terminal — a static shell mockup with real-looking Mission OS commands.
- * Not interactive. Concept demo, honest label at bottom.
+ * Terminal — a static shell mockup with real-looking Mission OS
+ * commands. Non-interactive; every command shown here is a real
+ * Mission OS system utility documented in the case study or planned
+ * for the ISO. Note at the bottom is explicit about the concept-demo
+ * scope so nobody thinks they can actually type here.
  */
 ---
 <div class="term-root">
@@ -23,10 +26,30 @@
         secure-boot: enabled &nbsp;·&nbsp; tpm-sealed: off &nbsp;·&nbsp; recovery-key: escrowed
       </p>
 
+      <p><span class="term-prompt">p4inz@mission-os</span><span class="term-arrow">$</span> mission-privacy status</p>
+      <p class="term-out">
+        telemetry: not-compiled &nbsp;·&nbsp; error-reporting: off &nbsp;·&nbsp; usage-stats: off<br />
+        firefox: hardened &nbsp;·&nbsp; tor-browser: preinstalled &nbsp;·&nbsp; dns: over-https
+      </p>
+
       <p><span class="term-prompt">p4inz@mission-os</span><span class="term-arrow">$</span> mission-net status</p>
       <p class="term-out">
         radios: off (offline-first policy)<br />
         wg0: down &nbsp;·&nbsp; tor: standby &nbsp;·&nbsp; dns-cache: 0 entries
+      </p>
+
+      <p><span class="term-prompt">p4inz@mission-os</span><span class="term-arrow">$</span> mission-store list --installed</p>
+      <p class="term-out">
+        firefox-esr &nbsp;·&nbsp; tor-browser &nbsp;·&nbsp; keepassxc &nbsp;·&nbsp; gnupg2<br />
+        onionshare &nbsp;·&nbsp; mat2 &nbsp;·&nbsp; veracrypt &nbsp;·&nbsp; wireguard-tools
+      </p>
+
+      <p><span class="term-prompt">p4inz@mission-os</span><span class="term-arrow">$</span> mission-update check</p>
+      <p class="term-out">
+        checking signed manifest at updates.mission-os.dev …<br />
+        <span class="term-ok">●</span> system:  up to date (0.1.0)<br />
+        <span class="term-ok">●</span> browser: up to date<br />
+        <span class="term-ok">●</span> mission-store: up to date
       </p>
 
       <p><span class="term-prompt">p4inz@mission-os</span><span class="term-arrow">$</span> <span class="term-caret">_</span></p>
@@ -34,7 +57,7 @@
   </div>
 
   <p class="term-note">
-    Not runnable here — this is a concept demo. The commands shown (<code>mission-status</code>, <code>mission-audit</code>, <code>mission-net</code>) are real Mission OS system utilities documented in the case study.
+    Not runnable here — this is a concept demo. Every command shown (<code>mission-status</code>, <code>mission-audit</code>, <code>mission-privacy</code>, <code>mission-net</code>, <code>mission-store</code>, <code>mission-update</code>) is a real Mission OS system utility planned for the shipping ISO.
   </p>
 </div>
 
@@ -43,14 +66,14 @@
   .term-frame {
     background: #04010c;
     border: 1px solid var(--line-strong);
-    border-radius: var(--radius);
+    border-radius: 4px;
     overflow: hidden;
   }
   .term-header {
     padding: 6px var(--sp-4);
     background: var(--surface-2);
     border-bottom: 1px solid var(--line);
-    color: var(--muted-2);
+    color: var(--muted);
     font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: var(--tracking-eyebrow);
@@ -65,7 +88,7 @@
   }
   .term-scroll p + p { margin-top: 2px; }
   .term-prompt { color: var(--purple-bright); }
-  .term-arrow { color: var(--muted-2); margin: 0 6px; }
+  .term-arrow { color: var(--muted); margin: 0 6px; }
   .term-out { color: var(--muted); padding-bottom: 6px; border-bottom: 1px dashed rgba(232,225,208,0.05); }
   .term-out:last-of-type { border-bottom: none; }
   .term-ok { color: var(--green); font-size: 10px; margin-right: 2px; }
@@ -82,12 +105,12 @@
   }
 
   .term-note {
-    color: var(--muted-2);
+    color: var(--muted);
     font-size: var(--text-xs);
     line-height: 1.6;
     padding: var(--sp-3);
     border: 1px dashed var(--line-strong);
-    border-radius: var(--radius);
+    border-radius: 4px;
   }
   .term-note code {
     font-family: var(--font-mono);
@@ -95,6 +118,6 @@
     color: var(--purple-bright);
     background: color-mix(in oklab, var(--purple) 8%, transparent);
     padding: 1px 5px;
-    border-radius: 3px;
+    border-radius: 2px;
   }
 </style>

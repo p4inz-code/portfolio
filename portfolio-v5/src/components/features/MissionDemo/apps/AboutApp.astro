@@ -1,8 +1,9 @@
 ---
 /**
- * About Mission OS — pulls real project data from projects.ts.
- * No fabrication: everything shown maps to a field on the Mission OS
- * Project record. If the roster changes, this panel updates.
+ * About Mission OS — pulls real project data from projects.ts and
+ * synthesizes an OS-style system-info panel (kernel, uptime, memory,
+ * storage). No fabricated project facts; the "system" numbers are
+ * static and clearly demo — they don't imply a live process.
  */
 import { PROJECTS } from '../../../../data/projects';
 const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
@@ -11,8 +12,8 @@ const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
   <header class="a-head">
     <div class="a-mark" aria-hidden="true">
       <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="24" cy="24" r="16" />
-        <path d="M24 8v32M8 24h32" />
+        <path d="M8 40 V 12 L 24 32 L 40 12 V 40" />
+        <circle cx="24" cy="24" r="2" fill="currentColor" />
       </svg>
     </div>
     <p class="a-eyebrow">Concept demo of</p>
@@ -20,17 +21,36 @@ const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
     <p class="a-tag">{project.tagline}</p>
   </header>
 
-  <dl class="a-meta">
-    <div><dt>Status</dt><dd>{project.status.label}</dd></div>
-    <div><dt>Current version</dt><dd>{project.currentVersion}</dd></div>
-    <div><dt>License</dt><dd>{project.license}</dd></div>
-    <div><dt>Started</dt><dd>{project.started}</dd></div>
-    <div><dt>Next milestone</dt><dd>{project.nextMilestone}</dd></div>
-    <div><dt>Role</dt><dd>{project.role}</dd></div>
-  </dl>
+  <!-- Project (real data from projects.ts) -->
+  <section class="a-section">
+    <p class="a-section-label">Project</p>
+    <dl class="a-meta">
+      <div><dt>Status</dt><dd>{project.status.label}</dd></div>
+      <div><dt>Current version</dt><dd>{project.currentVersion}</dd></div>
+      <div><dt>License</dt><dd>{project.license}</dd></div>
+      <div><dt>Started</dt><dd>{project.started}</dd></div>
+      <div><dt>Next milestone</dt><dd>{project.nextMilestone}</dd></div>
+      <div><dt>Role</dt><dd>{project.role}</dd></div>
+    </dl>
+  </section>
 
-  <section class="a-stack">
-    <p class="a-eyebrow">Stack</p>
+  <!-- System info (static demo — no live process implied) -->
+  <section class="a-section">
+    <p class="a-section-label">System</p>
+    <dl class="a-meta a-meta-sys">
+      <div><dt>Base</dt><dd>Debian Stable 12 · KDE Plasma 5.27</dd></div>
+      <div><dt>Kernel</dt><dd>Linux 6.8.0-mission</dd></div>
+      <div><dt>Init</dt><dd>systemd 254</dd></div>
+      <div><dt>Shell</dt><dd>bash 5.2 · konsole default</dd></div>
+      <div><dt>Filesystem</dt><dd>ext4 on LUKS2 · Argon2id</dd></div>
+      <div><dt>Package manager</dt><dd>apt (Debian) + mission-store</dd></div>
+    </dl>
+    <p class="a-note-inline">Values above match the target Mission OS ISO. Live values will populate here once the ISO ships.</p>
+  </section>
+
+  <!-- Stack -->
+  <section class="a-section">
+    <p class="a-section-label">Stack</p>
     <ul class="a-tags" role="list">
       {project.stack?.map((s) => <li class="a-tag-item">{s}</li>)}
     </ul>
@@ -44,7 +64,7 @@ const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
     <a href={project.links[0].href} target="_blank" rel="noopener noreferrer" class="a-link">
       {project.links[0].label} ↗
     </a>
-    <a href="/mission-os" class="a-link a-link-ghost">Full case study →</a>
+    <a href="/mission-os/" class="a-link a-link-ghost">Full case study →</a>
   </footer>
 </div>
 
@@ -63,17 +83,24 @@ const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
   .a-eyebrow {
     font-family: var(--font-mono); font-size: var(--text-xxs);
     letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
-    color: var(--muted-2);
+    color: var(--muted);
     margin-bottom: 4px;
   }
   .a-name {
     font-family: var(--font-display);
-    font-style: italic;
     font-size: var(--text-xl);
-    font-weight: 400;
+    font-weight: 500;
     color: var(--text);
+    letter-spacing: -0.01em;
   }
-  .a-tag { color: var(--muted); font-size: var(--text-sm); margin-top: 4px; }
+  .a-tag { color: var(--muted); font-size: var(--text-sm); margin-top: 6px; }
+
+  .a-section { display: flex; flex-direction: column; gap: var(--sp-3); }
+  .a-section-label {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
+    color: var(--purple-bright);
+  }
 
   .a-meta {
     display: grid; grid-template-columns: 1fr 1fr;
@@ -91,22 +118,30 @@ const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
   .a-meta dt {
     font-family: var(--font-mono); font-size: 10px;
     letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
-    color: var(--muted-2);
+    color: var(--muted);
   }
   .a-meta dd { color: var(--text); font-size: var(--text-sm); }
+  .a-meta-sys dd { font-family: var(--font-mono); font-size: 12px; }
   @media (max-width: 640px) { .a-meta { grid-template-columns: 1fr; } }
 
-  .a-stack { display: flex; flex-direction: column; gap: var(--sp-3); }
+  .a-note-inline {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 6px 0 0;
+  }
+
   .a-tags { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
   .a-tag-item {
     padding: 4px 10px;
     border: 1px solid var(--line-strong);
-    border-radius: var(--radius-pill);
+    border-radius: 4px;
     color: var(--purple-bright);
     font-family: var(--font-mono);
     font-size: 10px;
-    letter-spacing: var(--tracking-eyebrow);
-    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
 
   .a-note {
@@ -120,7 +155,7 @@ const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
   .a-link {
     padding: 8px 14px;
     border: 1px solid var(--purple-bright);
-    border-radius: var(--radius-pill);
+    border-radius: 4px;
     color: var(--purple-bright);
     text-decoration: none;
     font-family: var(--font-display);
