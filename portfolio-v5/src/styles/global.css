@@ -1,8 +1,11 @@
 /* ============================================================================
  * Global reset + base
  * ========================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
-@import url('https://api.fontshare.com/v2/css?f[]=pp-editorial-new@200,300,400,500,700,italic&display=swap');
+/* Fontshare — Neue Machina (display), Neue Montreal (body + italic),
+   Supply Mono (mono). Three families, each doing one job. Replaces
+   PP Editorial New + JetBrains Mono (both flagged AI-typical in the
+   v5.6.3 de-AI-fy audit). */
+@import url('https://api.fontshare.com/v2/css?f[]=neue-machina@400,500,700,800&f[]=neue-montreal@400,500,italic&f[]=supply-mono@400,500&display=swap');
 @import './tokens.css';
 
 *,

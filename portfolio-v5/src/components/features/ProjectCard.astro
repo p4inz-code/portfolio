@@ -75,16 +75,27 @@ const linkProps = project.isExternal
     .variant-featured { grid-template-columns: 1fr; }
   }
 
+  /* v5.6.3 de-AI-fy: dropped the --aurora radial-blob background.
+     Now a flat surface with a hairline top rule — reads editorial
+     placeholder frame rather than "AI hero blob". */
   .card-media {
     min-height: 220px;
     border-radius: var(--radius-lg);
     border: 1px solid var(--line);
-    background: var(--aurora), linear-gradient(180deg, var(--surface-2), var(--surface-1));
+    background: var(--surface-2);
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: var(--sp-2);
+  }
+  .card-media::before {
+    content: '';
+    position: absolute;
+    top: 0; left: var(--sp-6); right: var(--sp-6); height: 1px;
+    background: var(--purple-bright);
+    opacity: 0.55;
   }
   .card-media-title {
     font-family: var(--font-display);

@@ -20,6 +20,20 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.6.3',
+    kind: 'released',
+    summary: 'De-AI-fy pass — new typography (Neue Machina + Neue Montreal + Supply Mono), StatusPill redesigned, top-5 AI-tells removed.',
+    body: [
+      'Called out on the AI-generated feel of the site — specifically the status pills on case study heros. Ran a 2-approach audit and found 10 concrete AI-tells; the top 5 land in this pass, the rest in v5.7.',
+      'Typography swap. Killed PP Editorial New (display + body) and JetBrains Mono (mono) — both are on every AI-generated portfolio template circulating right now. Replaced with a three-family split from Fontshare (already CSP-allowed, no new domain, all free): PP Neue Machina for display (brutalist-geometric, engineered feel — right for a builder-of-systems portfolio), PP Neue Montreal for body (Swiss neo-grotesk with warmth, actually meant for reading), PP Supply Mono for mono (distinct from JetBrains/Fira/DM Mono). Each family does exactly one job — the previous "Sacred Text" single-serif-for-everything stack was itself an AI-common pattern.',
+      'StatusPill redesigned. The purple-border pill + dot + mono-uppercase treatment was the Vercel-default that shows up on every AI-generated portfolio. New design is an editorial marker: a small colored bar-slash on the left, state label in the display family at Sentence Case, version tag in mono at 88% size with a mono forward-slash separator. No rounded pill, no dot, no border ring. Reads as an editorial tag on a magazine spread, not a status badge.',
+      'Killed the "Selected work" eyebrow on the home page — a generic AI-template phrase. The section heading ("Four things I\'m shipping right now.") carries the intent on its own.',
+      'Dropped the --aurora radial-gradient blob background from the featured project card. Replaced with a flat surface + a hairline purple top rule — reads as an editorial placeholder frame, not a "hero blob".',
+      'Deferred to v5.7 (info-page polish): backdrop-blur nav, fluid clamp() everywhere, section eyebrow/heading/intro trio pattern, meta-tag row on case-study heros, italic-purple emphasis phrase sweep.',
+      'Skills used: taste-skill (anti-slop + typography), frontend-design (typography), design (font pairing), redesign-skill (audit-first), receiving-code-review, verification-before-completion.',
+    ],
+  },
+  {
     version: 'v5.6.2',
     kind: 'released',
     summary: 'Light theme parchment grain — cream now reads as real cotton paper, not flat #F3EDDD.',

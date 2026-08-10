@@ -7,9 +7,12 @@ interface Props {
 }
 const { status, size = 'md' } = Astro.props;
 
-// Every status kind maps to a single dot color. Live indicators use a real semantic
-// meaning (active pulses, on-hold stays quiet, coming-soon uses warn amber).
-const dotColor: Record<ProjectStatus['kind'], string> = {
+// v5.6.3 de-AI-fy: the "purple-border pill + dot + mono-uppercase" was
+// the Vercel/Linear default that shows up on every AI-generated portfolio.
+// Redesigned as an editorial marker: a small colored bar-slash on the
+// left, text in the display family at real case (Sentence Case, not
+// SCREAMING CAPS), no rounded pill, hairline underline on hover.
+const markColor: Record<ProjectStatus['kind'], string> = {
   active: 'var(--purple)',
   beta: 'var(--purple)',
   released: 'var(--green)',
@@ -19,43 +22,77 @@ const dotColor: Record<ProjectStatus['kind'], string> = {
   testing: 'var(--muted)',
   comingSoon: 'var(--warn)',
 };
+
+// Split "Public Beta · v10.12.0" -> ["Public Beta", "v10.12.0"] so the
+// label and version get different visual weight — one is the state, one
+// is the number. Falls back gracefully if no version part is present.
+const parts = status.label.split(/\s·\s/);
+const stateLabel = parts[0];
+const versionLabel = parts.length > 1 ? parts.slice(1).join(' · ') : '';
 ---
-<span class:list={['status-pill', `size-${size}`]} data-kind={status.kind}>
-  <span class="dot" style={`background:${dotColor[status.kind]};box-shadow:0 0 8px ${dotColor[status.kind]};`}></span>
-  {status.label}
+<span class:list={['status-marker', `size-${size}`]} data-kind={status.kind}>
+  <span class="mark-bar" style={`background:${markColor[status.kind]};`} aria-hidden="true"></span>
+  <span class="mark-state">{stateLabel}</span>
+  {versionLabel && (
+    <span class="mark-sep" aria-hidden="true">/</span>
+    <span class="mark-version">{versionLabel}</span>
+  )}
 </span>
 
 <style>
-  .status-pill {
+  .status-marker {
     display: inline-flex;
-    align-items: center;
-    gap: var(--sp-2);
-    font-family: var(--font-mono);
-    letter-spacing: var(--tracking-mono);
-    text-transform: uppercase;
+    align-items: baseline;
+    gap: 8px;
+    /* No rounded pill, no border ring, no dot — this is the whole point.
+       Reads as an editorial marker, not a status badge. */
+    padding: 0;
+    background: transparent;
+    border: none;
+    font-family: var(--font-display);
     color: var(--text);
-    border: 1px solid var(--line-strong);
-    background: color-mix(in oklab, var(--purple) 6%, transparent);
-    border-radius: var(--radius-pill);
-    white-space: nowrap;
+    line-height: 1;
   }
   .size-sm {
-    font-size: var(--text-xxs);
-    padding: 4px 10px;
+    font-size: 12px;
+    letter-spacing: 0;
   }
   .size-md {
-    font-size: var(--text-xs);
-    padding: 6px 14px;
+    font-size: 13px;
+    letter-spacing: 0;
   }
-  .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
+  /* The colored bar is the whole identity mark — a hard vertical slice
+     of color that reads like a tag on an editorial spread. */
+  .mark-bar {
+    display: inline-block;
+    width: 3px;
+    height: 0.9em;
     flex-shrink: 0;
+    transform: translateY(0.05em);
+    border-radius: 1px;
   }
-  /* On-hold + coming-soon quiet the dot glow */
-  [data-kind='onHold'] .dot,
-  [data-kind='comingSoon'] .dot {
-    box-shadow: none !important;
+  .mark-state {
+    color: var(--text);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  .mark-sep {
+    color: var(--muted-2);
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    font-weight: 400;
+    margin: 0 2px;
+  }
+  .mark-version {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+  /* On-hold + coming-soon dim the state label to match the quieter mark. */
+  [data-kind='onHold'] .mark-state,
+  [data-kind='comingSoon'] .mark-state {
+    color: var(--muted);
   }
 </style>

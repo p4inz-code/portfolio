@@ -9,10 +9,23 @@
  * ========================================================================== */
 
 :root {
-  /* ---- Type scale ---- */
-  --font-display: 'PP Editorial New', 'Georgia', serif;
-  --font-body: 'PP Editorial New', 'Georgia', serif;
-  --font-mono: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, monospace;
+  /* ---- Type stack ----
+     Three-family split, each font doing exactly one job:
+       --font-display  PP Neue Machina    — hero, H1, H2, big display moments
+       --font-body     PP Neue Montreal   — paragraphs, cards, UI text
+       --font-mono     PP Supply Mono     — eyebrows, code, kbd, badges
+
+     Rationale: the previous PP Editorial + JetBrains Mono stack is on every
+     AI-generated portfolio recommendation from 2024-onward — it reads as
+     "safe designer default" now, not "chosen". These three are all from
+     Fontshare (already CSP-allowed), all free, all distinctive, and none
+     of them appear as AI-suggested defaults in the templates currently
+     circulating. Fallbacks are system fonts (not other web fonts) so the
+     site degrades to native OS type rather than a slower, still-AI-looking
+     alternative. */
+  --font-display: 'Neue Machina', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-body: 'Neue Montreal', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: 'Supply Mono', 'SFMono-Regular', ui-monospace, monospace;
 
   --text-xxs: 10.5px;
   --text-xs: 12px;
