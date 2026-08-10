@@ -3,6 +3,7 @@ import '../styles/global.css';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import CommandPalette from '../components/features/CommandPalette.astro';
 import APMark from '../components/APMark.astro';
+import SideRail from '../components/SideRail.astro';
 import { SITE, NAV, CONTACT } from '../data/site';
 
 interface Props {
@@ -301,6 +302,8 @@ const jsonLd = {
         }
       })();
     </script>
+
+    <SideRail />
 
     <main id="main"><slot /></main>
 

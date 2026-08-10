@@ -1,0 +1,155 @@
+---
+/**
+ * Fixed side rail — right edge of viewport, desktop-only. Vertical
+ * stack of social/contact icons at the top, thin vertical line down
+ * the middle, current route path as rotated mono text at the bottom.
+ *
+ * Present on every page (rendered inside BaseLayout).
+ * Hidden on the Mission OS demo route via body:has(.demo-scope) rule
+ * that already hides other site chrome.
+ * Hidden below 900px viewport — mobile has the hamburger drawer.
+ *
+ * Icons are theme-swappable via currentColor + var(--text) / var(--muted).
+ */
+import { CONTACT } from '../data/site';
+const currentPath = Astro.url.pathname;
+// Normalise for display: strip trailing slash except root, always leading /.
+const displayPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
+---
+<aside class="side-rail" aria-label="Contact + current page">
+  <!-- Top: brand mark tick (small vertical bar) -->
+  <div class="sr-brand" aria-hidden="true">
+    <span class="sr-tick"></span>
+  </div>
+
+  <!-- Middle: social/contact icons -->
+  <nav class="sr-icons" aria-label="Contact links">
+    <a href={`mailto:${CONTACT.email}`} class="sr-icon" title="Email" aria-label="Email">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="5" width="18" height="14" rx="2"/>
+        <path d="M3 7l9 6 9-6"/>
+      </svg>
+    </a>
+    <a href={CONTACT.github} target="_blank" rel="noopener noreferrer" class="sr-icon" title="GitHub" aria-label="GitHub">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 19c-4 1.5-4-2-6-2m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/>
+      </svg>
+    </a>
+    <a href={CONTACT.discordInvite} target="_blank" rel="noopener noreferrer" class="sr-icon" title="Discord (Nexus beta)" aria-label="Discord">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 5.5C16.5 4.8 15 4.5 13.5 4.4l-.4 1a13 13 0 0 0-3.2 0l-.4-1c-1.5.1-3 .4-4.5 1.1C2.7 8 2 12 2.4 15.7c1.6 1.2 3.2 2 4.8 2.5l1-1.6c-.9-.3-1.7-.7-2.5-1.3.2-.1.4-.3.6-.4a11 11 0 0 0 11.4 0c.2.1.4.3.6.4a11 11 0 0 1-2.5 1.3l1 1.6c1.6-.5 3.2-1.3 4.8-2.5.6-4.3-.6-8.2-3.6-10.2z"/>
+        <circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/>
+      </svg>
+    </a>
+    <a href={`https://npmjs.com/~p4inz-code`} target="_blank" rel="noopener noreferrer" class="sr-icon" title="npm packages" aria-label="npm">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+        <rect x="3" y="8" width="18" height="10"/>
+        <path d="M7 12v3M12 12v3M17 12v3M12 12h2"/>
+      </svg>
+    </a>
+  </nav>
+
+  <!-- Bottom: current route as rotated mono text -->
+  <div class="sr-path" aria-hidden="true">
+    <span class="sr-path-text">{displayPath}</span>
+    <span class="sr-path-tick"></span>
+  </div>
+</aside>
+
+<style>
+  .side-rail {
+    position: fixed;
+    top: 0; right: 0;
+    height: 100vh;
+    width: 56px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 90px 0 40px;
+    z-index: 90;
+    border-left: 1px solid var(--line);
+    background: color-mix(in oklab, var(--bg) 82%, transparent);
+    backdrop-filter: blur(10px);
+    pointer-events: none;
+  }
+  .side-rail > * { pointer-events: auto; }
+
+  /* Brand tick at top */
+  .sr-brand {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%;
+  }
+  .sr-tick {
+    display: block;
+    width: 2px; height: 24px;
+    background: var(--purple-bright);
+    border-radius: 1px;
+    box-shadow: 0 0 8px var(--purple-bright);
+  }
+
+  /* Icon column */
+  .sr-icons {
+    display: flex; flex-direction: column;
+    gap: var(--sp-3);
+    align-items: center;
+    flex: 1;
+    justify-content: center;
+  }
+  .sr-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: var(--muted);
+    transition: color var(--dur-fast) var(--ease-out),
+                border-color var(--dur-fast) var(--ease-out),
+                background var(--dur-fast) var(--ease-out),
+                transform var(--dur-fast) var(--ease-out);
+  }
+  .sr-icon svg { width: 16px; height: 16px; }
+  .sr-icon:hover, .sr-icon:focus-visible {
+    color: var(--purple-bright);
+    border-color: var(--line-strong);
+    background: color-mix(in oklab, var(--purple) 10%, transparent);
+    transform: translateX(-2px);
+    outline: none;
+  }
+  .sr-icon:focus-visible {
+    outline: 2px solid var(--purple-bright);
+    outline-offset: 2px;
+  }
+
+  /* Bottom path indicator */
+  .sr-path {
+    display: flex; flex-direction: column; align-items: center;
+    gap: var(--sp-3);
+  }
+  .sr-path-text {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 6px 0;
+    /* long paths truncate cleanly */
+    max-height: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .sr-path-tick {
+    display: block;
+    width: 2px; height: 14px;
+    background: var(--muted);
+    border-radius: 1px;
+  }
+
+  /* Desktop only. Mobile has the hamburger drawer. */
+  @media (min-width: 900px) {
+    .side-rail { display: flex; }
+  }
+  /* Mission OS demo hides all site chrome (already in demo.astro). */
+</style>

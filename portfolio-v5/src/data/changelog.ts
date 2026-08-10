@@ -20,6 +20,18 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.12.1',
+    kind: 'released',
+    summary: 'Fixed side rail — right edge, social icons + current-URL indicator. Theme-swap audit clean.',
+    body: [
+      'Requested: bring back the vertical side rail with git / discord / email icons and a URL indicator that lived on earlier iterations. Built as a new SideRail component wired into BaseLayout.',
+      'Side rail: fixed to the right edge of the viewport (desktop only, >=900px), 56px wide, hairline left border, backdrop-blur on the site background so text below stays legible. Top brand tick (purple pulse). Middle: four theme-swappable icons — Email / GitHub / Discord (Nexus beta) / npm — each in a 34px hit target with hover state (color shift to purple-bright, subtle background tint, 2px translate). Bottom: current route path rendered as rotated mono text (writing-mode: vertical-rl), truncates cleanly on long paths.',
+      'Mobile has no side rail — hamburger drawer serves that role. Mission OS demo hides it via the existing body:has(.demo-scope) rule so it doesn\'t leak into the OS metaphor.',
+      'Theme-swap audit: grepped every .astro file for hardcoded colors. Every remaining hardcoded value is intentional — macOS traffic-light dots (contact terminal + Screenshot chrome), theme-color meta tags (explicit per-theme), APMark gradient (default dark + light-override present), Mission OS demo internal palette (has its own theme system). Zero theme bugs found.',
+      'NOTE: still cannot extract images from the Nexus mockup PDF in this env — the pdf-viewer plugin\'s display_pdf requires an interactive viewer, and read_pdf_bytes only returns raw bytes. Nexus case study will keep its "v11 concept mockups → real screens on ship" honesty flag until you can export individual pages as PNGs (right-click any page in a PDF viewer → Export → PNG, drop in portfolio-v5/public/assets/nexus/).',
+    ],
+  },
+  {
     version: 'v5.12.0',
     kind: 'released',
     summary: 'External-audit response — every item from the second-Claude review fixed. Repo hygiene, mobile nav, OG image, font waterfall, AP logo light-theme, 14.5MB dead-weight removed.',
