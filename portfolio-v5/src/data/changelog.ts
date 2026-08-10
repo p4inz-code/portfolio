@@ -20,6 +20,18 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.2.2',
+    kind: 'released',
+    summary: 'Mission OS demo polish — wallpaper reads as a real OS, chrome speaks system-UI, top bar densified, dock expanded.',
+    body: [
+      'The v5.2 desktop looked like a generic OS mockup. A dual-lens + 7-persona audit landed a consistent verdict — the desktop wasn\'t asserting Mission OS identity and wasn\'t honoring the case study\'s "product-grade design applied to a serious OS" claim. This patch does four things without adding a single external asset or dependency.',
+      'Wallpaper redesigned around a real identity: a bold Mission OS "M" monogram inside a concentric-ring composition, a system-UI wordmark tracked at 0.3em ("MISSION OS"), a mono version tag ("v0.1 · pre-release · debian stable + kde plasma"), and a horizontal chip that lists the four pillars side by side (privacy-first · security-conscious · portable-first · offline-first) with small glowing dots. Bottom-left carries a mono corner-mark: "no telemetry · no phone-home · builds signed · gplv3". Background is a Nothing-style dot grid masked to a soft ellipse — pattern that reads intentional, not decorative.',
+      'Chrome font handoff — PP Editorial New has been swapped out of the desktop chrome for a proper system-UI stack (-apple-system, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, system-ui, sans-serif). Editorial serif was leaking portfolio-brand into what should read as an OS. PP Editorial stays inside app windows where editorial content is legitimate.',
+      'Top bar densified without going busy: left shows brand + activity + workspace pips (1 · 2 · 3), center shows date + time in mono ("Sat · Aug 9 · 23:27"), right shows real signal chips (Privacy · Crypto — both good/green because those are the compile-time and installer defaults from the case study), Offline icon (reflects the offline-first policy), battery, and user identity. Every chip has a title attribute explaining what it means.',
+      'Dock expanded from 3 to 6 icons with a category divider: Files, Terminal, Firefox are inert placeholder apps (visibly dimmer, cursor: not-allowed, tooltip explains "not part of the concept demo"); Installer, Settings, About stay functional. Adds affordance density without adding real complexity or overselling the demo.',
+    ],
+  },
+  {
     version: 'v5.2.1',
     kind: 'released',
     summary: 'Bug-fix batch — command palette rendered broken on v5, two WCAG-AA regressions from v5.0 fixed.',

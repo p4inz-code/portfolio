@@ -143,14 +143,23 @@ import Desktop from '../../components/features/MissionDemo/Desktop.astro';
         if (desktop.getAttribute('data-window-active') === 'installer') setInstallerStep(0);
       });
 
-      // Live clock in the top bar. Format HH:MM in the visitor's local time.
+      // Live clock + date in the top bar. Format HH:MM + short weekday +
+      // month + day in the visitor's local time. Ticks once per 30s (clock
+      // needs at most minute resolution; nothing else needs faster).
       const clockEl = desktop.querySelector('[data-topbar-clock]');
+      const dateEl  = desktop.querySelector('[data-topbar-date]');
+      const DAY = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
       function tickClock() {
-        if (!clockEl) return;
         const d = new Date();
-        const hh = String(d.getHours()).padStart(2, '0');
-        const mm = String(d.getMinutes()).padStart(2, '0');
-        clockEl.textContent = hh + ':' + mm;
+        if (clockEl) {
+          const hh = String(d.getHours()).padStart(2, '0');
+          const mm = String(d.getMinutes()).padStart(2, '0');
+          clockEl.textContent = hh + ':' + mm;
+        }
+        if (dateEl) {
+          dateEl.textContent = DAY[d.getDay()] + ' · ' + MON[d.getMonth()] + ' ' + d.getDate();
+        }
       }
       tickClock();
       setInterval(tickClock, 30000);
