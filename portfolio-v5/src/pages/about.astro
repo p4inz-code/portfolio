@@ -2,120 +2,421 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
 import { SITE, CONTACT } from '../data/site';
+import { PROJECTS } from '../data/projects';
+
+/**
+ * About page — v5.6.5 rewrite. Structured as identity → journey →
+ * principles → stack → studio history → availability → contact.
+ * Every claim on this page is either verifiable in projects.ts /
+ * repo READMEs, or drawn from Atharva's own words in prior sessions.
+ * No invented facts. Anywhere the truth needs a real anecdote to
+ * land, the copy names that gap honestly so it can be filled in.
+ */
+
+const stackReasons = [
+  {
+    slug: 'wpf',
+    label: 'C# / .NET 8 / WPF',
+    verdict: 'For Windows-native products',
+    reason: 'WPF is the least-glamorous choice a modern .NET dev can make — and the right one for Nexus. Native windowing, real ClearType, no Electron bloat, integrates with Windows Hello and the Credential Manager the way users expect. Chose WPF over Avalonia specifically because Nexus ships Windows-only for now and I wanted to lean into the platform, not abstract it.',
+  },
+  {
+    slug: 'avalonia',
+    label: 'C# / .NET 8 / Avalonia',
+    verdict: 'For cross-platform desktop tooling',
+    reason: 'When cross-platform matters (Glint, future Nexus port), Avalonia gets the exact same code running on Windows / macOS / Linux without hitting Electron. WPF muscle memory transfers over cleanly.',
+  },
+  {
+    slug: 'electron',
+    label: 'Electron + vanilla JS',
+    verdict: 'For Kanvaz',
+    reason: 'Kanvaz needed to run everywhere a VFX artist works, and its whole surface is a canvas full of references — HTML5 canvas + drag-and-drop APIs mapped to that better than any native alternative. Vanilla JS on purpose: no framework churn, easy for anyone to fork and extend.',
+  },
+  {
+    slug: 'linux-native',
+    label: 'Debian Stable + KDE Plasma + Qt/QML',
+    verdict: 'For Mission OS',
+    reason: 'Building an OS you want to trust means starting from something already trusted (Debian Stable) and building deliberately on top of the most polished free desktop environment (KDE Plasma). Installer + system apps in QML/Qt because they compile to native, look right at any DPI, and let the four-pillar ethos show up in the UI itself.',
+  },
+  {
+    slug: 'astro',
+    label: 'Astro 5 (this site)',
+    verdict: 'For static content sites',
+    reason: 'This portfolio was a 15.9 MB single HTML monolith through v4.7 and it worked — but past a certain point one file stops scaling. Astro gets me component-scoped CSS, real routes, zero-JS-by-default, and it deploys to Cloudflare Pages without an adapter. The Sacred Text stack came off in v5.6.3 for the same reason — good defaults become bad defaults when everyone else picks them too.',
+  },
+  {
+    slug: 'ts',
+    label: 'TypeScript · Node · SQLite',
+    verdict: 'For engineering-side tooling',
+    reason: 'Veris (3,100+ tests) and repo-map both live here. TS strict-mode, ESM-first, SQLite for anything that needs to be inspectable without a running server. Deterministic engines, not black boxes.',
+  },
+];
+
+const principles = [
+  {
+    title: 'No telemetry, ever',
+    body: 'Nothing I ship phones home. Not "off by default"; not compiled in. If a product wants to know something about you, it asks you directly on-screen and lets you say no.',
+  },
+  {
+    title: 'Explain the trade-off on-screen',
+    body: 'Every advanced option — Secure Boot, TPM-sealed unlock, disk encryption, telemetry — gets its benefit, limitation, and trade-off in the same view as the toggle. Users should understand what they\'re enabling. This shows up in Mission OS\'s installer and in Nexus\'s security panel.',
+  },
+  {
+    title: 'Content-accurate over content-marketed',
+    body: 'Every project status on this site is verified against the real README / release notes before shipping. If something is a concept preview, it says so. No fabricated screenshots. This site has failed shipping updates because a checkbox on the /status page was still stale.',
+  },
+  {
+    title: 'One person, whole product',
+    body: 'Everything here — the products, the case studies, the design system, the /mission-os/demo route, the resume PDF, this sentence — was designed, built, and shipped by one person. The scope is the ceiling; the discipline is the point.',
+  },
+  {
+    title: 'Free-forever when it can be',
+    body: 'Kanvaz, Obscura, Glint, repo-map, 3D Ref Skills, Mission OS, Pursue OS — all free, most open-source. Commercial products (Nexus, Veris) exist because sustaining a solo studio requires it, but even those keep the "no telemetry" line.',
+  },
+];
+
+const timeline = [
+  { year: '2025', event: 'First studio (Obsidian Labs) — early Windows tooling, retired later that year.' },
+  { year: 'Early 2026', event: 'B.Sc. Animation program begins at D. Y. Patil University. Software work continues in parallel.' },
+  { year: 'Jun 2026', event: 'Nexus, Kanvaz, and Veris all start within weeks of each other — one commercial vault, one open-source workspace, one investigation platform.' },
+  { year: 'Mid 2026', event: 'Northbyte Studios founded as the second (and current) studio name. Mission OS work begins.' },
+  { year: 'Aug 2026', event: 'This portfolio migrated to Astro (v5.0). Pursue OS repository foundation goes public. Mission OS ISO enters internal testing.' },
+];
+
+const shippedCount = PROJECTS.length;
+const activeCount = PROJECTS.filter(
+  (p) => !['onHold'].includes(p.status.kind)
+).length;
 ---
 <BaseLayout title="About — Atharva Patil">
-  <Section eyebrow="About" heading="Why I do both, and why I probably won't stop.">
-    <div class="about-lede">
+
+  <!-- HERO -->
+  <Section wide heading="Developer by discipline. 3D artist by training. Builder by default." headingEmphasis="Atharva Patil.">
+    <p class="about-lede">
+      Solo founder of <em>{SITE.studio}</em>, based in {SITE.location}. First-year VFX &amp; 3D
+      animation student, second year as a software builder under my real name (previous handles
+      <em>PainZ</em> and <em>Grim</em> are retired — everything ships as <strong>p4inz</strong> or
+      the real name now). {shippedCount} products shipped or in flight, {activeCount} in active
+      development, none of them with a marketing team behind them.
+    </p>
+    <p class="about-lede-secondary">
+      The same instinct that goes into designing a lock screen goes into lighting a 3D scene —
+      obsessing over how things <em>feel</em> when you interact with them, not just how they look.
+      That instinct is why I stopped choosing between "software" and "3D." Both are just interfaces
+      to attention.
+    </p>
+  </Section>
+
+  <!-- SHORT STORY -->
+  <Section eyebrow="The short version" heading="Why software and 3D, and why probably not stopping.">
+    <div class="story-block">
       <p>
-        Most people choose a lane. I haven't figured out why I should. The same instinct that goes into
-        designing <em>Nexus</em>'s lock screen goes into lighting a 3D scene: obsessing over how things
-        <em>feel</em> when you interact with them, not just how they look.
+        Software came first — the kind of first that starts by breaking things you own until they
+        work. Windows tools, small utilities, then bigger products. By 2025 that had become a
+        studio ({SITE.studio.replace('Northbyte Studios', 'Obsidian Labs')} at the time), which by
+        2026 had become <em>{SITE.studio}</em>: a proper name for a proper commitment.
       </p>
       <p>
-        <em>Kanvaz</em> started as a tool I built for the VFX community I'm part of. <em>Obscura</em> started
-        because Roblox developers deserve professional-grade tooling without a paywall. Every project comes
-        from being inside the problem.
+        3D and VFX came in because the software wasn't the whole story. Enrolling in a B.Sc.
+        Animation program at D. Y. Patil University this year formalised what I was already doing
+        on the side. There is a reason <em>Kanvaz</em> is a reference workspace for VFX artists —
+        it's a tool I built for the community I'm inside, not a tool I built to look interesting to
+        a community I'm not.
+      </p>
+      <p>
+        The through-line is <strong>privacy-first, offline-first, no telemetry</strong>. Every
+        product on this site earns that phrase. Nexus doesn't sync to a cloud. Mission OS doesn't
+        phone home. Pursue OS is being built for investigators who can't afford to leak metadata.
+        Even this portfolio is Cloudflare-static, no third-party analytics beyond Cloudflare's
+        privacy-preserving beacon.
+      </p>
+      <p>
+        The unglamorous side: I do this alone. Everything you see was designed, coded, tested,
+        deployed, and written up by one person. When something ships slower than a team would ship
+        it, that's the trade-off. When something ships more coherently than a team would ship it,
+        that's the trade-off too.
       </p>
     </div>
   </Section>
 
-  <Section eyebrow="Background">
-    <div class="credential-list">
-      <article class="credential-row">
-        <span class="credential-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="6" width="20" height="12" rx="1.5"/><path d="M6 6v12M18 6v12M2 10h4M2 14h4M18 10h4M18 14h4M10 6v12M14 6v12"/>
-          </svg>
-        </span>
-        <div>
-          <h3 class="credential-title">VFX & 3D Animation, First Year Student</h3>
-          <p class="credential-desc">Currently studying 3D modeling, lighting, and animation, alongside a background in media studies.</p>
-        </div>
-      </article>
-      <article class="credential-row">
-        <span class="credential-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 22V4h11l1 3h5v10h-7l-1-3H6v8"/>
-          </svg>
-        </span>
-        <div>
-          <h3 class="credential-title">Founder, {SITE.studio}</h3>
-          <p class="credential-desc">Solo-founded software studio building Windows desktop tools, privacy, productivity, and creator tooling, all free-forever or open source.</p>
-        </div>
-      </article>
-      <article class="credential-row">
-        <span class="credential-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 8l10 7 10-7M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-          </svg>
-        </span>
-        <div>
-          <h3 class="credential-title">Freelance Web & Brand Work</h3>
-          <p class="credential-desc">Independent client work spanning web development, UI/UX, and visual identity, including a full production website build for a performing arts academy.</p>
-        </div>
-      </article>
+  <!-- TIMELINE -->
+  <Section eyebrow="Timeline" heading="The last two years, compressed.">
+    <ol class="tl-list" role="list">
+      {timeline.map((t) => (
+        <li class="tl-row">
+          <span class="tl-year">{t.year}</span>
+          <span class="tl-event">{t.event}</span>
+        </li>
+      ))}
+    </ol>
+  </Section>
+
+  <!-- PRINCIPLES -->
+  <Section eyebrow="What I actually believe" heading="Five lines that show up in every product." intro="Not a manifesto. Just the things that are true if you inspect the code, ship notes, and installer copy for every product on this site.">
+    <div class="pr-grid">
+      {principles.map((p, i) => (
+        <article class="pr-card">
+          <span class="pr-index">{String(i + 1).padStart(2, '0')}</span>
+          <h3 class="pr-title">{p.title}</h3>
+          <p class="pr-body">{p.body}</p>
+        </article>
+      ))}
     </div>
   </Section>
 
-  <Section eyebrow="Contact" heading="Reach me directly." intro="No form to fill out. No routing. Email or Discord.">
+  <!-- STACK -->
+  <Section eyebrow="Current stack" heading="What I reach for, and why." intro="I don't have one favourite language. I have projects that each demanded the right one and I picked deliberately.">
+    <div class="stack-list">
+      {stackReasons.map((s) => (
+        <article class="stack-row">
+          <header class="stack-head">
+            <h3 class="stack-label">{s.label}</h3>
+            <p class="stack-verdict">{s.verdict}</p>
+          </header>
+          <p class="stack-reason">{s.reason}</p>
+        </article>
+      ))}
+    </div>
+  </Section>
+
+  <!-- IDENTITY / HANDLES -->
+  <Section eyebrow="Identity" heading="One person, several names, one canonical source.">
+    <div class="id-grid">
+      <div class="id-row"><span class="id-key">Real name</span><span class="id-val">Atharva Patil</span></div>
+      <div class="id-row"><span class="id-key">Current handle</span><span class="id-val">p4inz — everywhere (GitHub, Discord, this site's byline)</span></div>
+      <div class="id-row"><span class="id-key">Retired handles</span><span class="id-val">PainZ, Grim — do not use, they don't map to me anymore</span></div>
+      <div class="id-row"><span class="id-key">Current studio</span><span class="id-val">{SITE.studio} · founded {SITE.studioFounded}</span></div>
+      <div class="id-row"><span class="id-key">Previous studio</span><span class="id-val">Obsidian Labs — 2025, retired when the current studio was named</span></div>
+      <div class="id-row"><span class="id-key">Location</span><span class="id-val">{SITE.location}</span></div>
+      <div class="id-row"><span class="id-key">Canonical source</span><span class="id-val">This site — <a href="https://atharvapatil.tech">atharvapatil.tech</a></span></div>
+    </div>
+  </Section>
+
+  <!-- AVAILABILITY -->
+  <Section eyebrow="Working with me" heading="Freelance capacity: selective, taking new work.">
+    <div class="avail-block">
+      <p class="avail-lede">
+        I take on independent client work in web development, UI/UX, branding, and 3D/VFX
+        visualization. Scope tends to be one of three shapes:
+      </p>
+      <ul class="avail-list" role="list">
+        <li><strong>Short-loop.</strong> A landing page, a marketing site, a brand touch-up. 1–2 weeks. Fixed price. Direct.</li>
+        <li><strong>Product build.</strong> A dashboard, a real product surface, a tool that needs UI + backend + design. 4–8 weeks. Discovery week first.</li>
+        <li><strong>Studio work.</strong> A 3D render, a lighting study, a promo animation. Scope by shot.</li>
+      </ul>
+      <p class="avail-foot">
+        Everything I ship uses the same discipline you see across my own products: privacy-first,
+        no telemetry, honest about what a first-shipping-version can and can't do. If that fits
+        what you're trying to build, <a href="/contact/">start a conversation</a>.
+      </p>
+    </div>
+  </Section>
+
+  <!-- CONTACT -->
+  <Section eyebrow="Contact" heading="Reach me directly.">
     <div class="contact-links">
       <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
       <a href={CONTACT.github} target="_blank" rel="noopener noreferrer">{CONTACT.githubHandle}</a>
-      <span>Discord: {CONTACT.discord}</span>
+      <span>Discord · {CONTACT.discord}</span>
+      <a href="/contact/">Full contact page →</a>
     </div>
   </Section>
 
   <style>
+    /* ============ Hero lede ============ */
     .about-lede {
+      max-width: 780px;
+      color: var(--text);
+      font-size: var(--text-lg);
+      line-height: var(--leading-body);
+      margin-top: var(--sp-4);
+    }
+    .about-lede em {
+      color: var(--purple-bright);
+      font-style: italic;
+      font-weight: 500;
+    }
+    .about-lede strong { color: var(--text); font-weight: 600; }
+    .about-lede-secondary {
+      max-width: 780px;
+      color: var(--muted);
+      font-size: var(--text-md);
+      line-height: var(--leading-body);
+      margin-top: var(--sp-5);
+    }
+    .about-lede-secondary em {
+      color: var(--purple-bright);
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    /* ============ Story ============ */
+    .story-block {
       max-width: var(--wrap-narrow);
       color: var(--muted);
       font-size: var(--text-md);
       line-height: var(--leading-body);
     }
-    .about-lede p + p { margin-top: var(--sp-5); }
-    .about-lede em {
-      color: var(--purple-bright);
-      font-style: italic;
-      font-weight: 400;
+    .story-block p + p { margin-top: var(--sp-5); }
+    .story-block em { color: var(--purple-bright); font-style: italic; }
+    .story-block strong { color: var(--text); font-weight: 500; }
+
+    /* ============ Timeline ============ */
+    .tl-list {
+      list-style: none;
+      padding: 0;
+      max-width: var(--wrap-narrow);
+      border-top: 1px solid var(--line);
     }
-    .credential-list {
-      display: flex; flex-direction: column;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
-      overflow: hidden;
-      background: var(--surface-1);
-    }
-    .credential-row {
+    .tl-row {
       display: grid;
-      grid-template-columns: 48px 1fr;
-      gap: var(--sp-4);
-      padding: var(--sp-6);
-      align-items: flex-start;
+      grid-template-columns: 140px 1fr;
+      gap: var(--sp-6);
+      padding: var(--sp-5) 0;
+      align-items: baseline;
       border-bottom: 1px solid var(--line);
-      transition: background var(--dur) var(--ease-out);
     }
-    .credential-row:last-child { border-bottom: none; }
-    .credential-row:hover { background: var(--surface-2); }
-    .credential-icon {
-      width: 40px; height: 40px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: var(--radius);
-      border: 1px solid var(--line-strong);
+    .tl-year {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
       color: var(--purple-bright);
-      background: color-mix(in oklab, var(--purple) 6%, transparent);
     }
-    .credential-icon svg { width: 18px; height: 18px; }
-    .credential-title {
-      font-family: var(--font-display);
+    .tl-event {
+      color: var(--text);
       font-size: var(--text-md);
-      font-weight: 500;
-      margin-bottom: var(--sp-2);
+      line-height: 1.55;
     }
-    .credential-desc {
+    @media (max-width: 640px) {
+      .tl-row { grid-template-columns: 1fr; gap: 6px; }
+    }
+
+    /* ============ Principles ============ */
+    .pr-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-4);
+    }
+    @media (max-width: 760px) { .pr-grid { grid-template-columns: 1fr; } }
+    .pr-card {
+      padding: var(--sp-6);
+      border-top: 1px solid var(--purple-bright);
+      background: transparent;
+      position: relative;
+    }
+    .pr-index {
+      font-family: var(--font-mono);
+      font-size: var(--text-xxs);
+      letter-spacing: var(--tracking-eyebrow);
+      color: var(--muted);
+      display: block;
+      margin-bottom: var(--sp-3);
+    }
+    .pr-title {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: var(--sp-3);
+      letter-spacing: -0.01em;
+    }
+    .pr-body {
       color: var(--muted);
       font-size: var(--text-sm);
       line-height: var(--leading-body);
     }
+
+    /* ============ Stack ============ */
+    .stack-list {
+      display: flex; flex-direction: column;
+      border-top: 1px solid var(--line);
+    }
+    .stack-row {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: var(--sp-6);
+      padding: var(--sp-6) 0;
+      border-bottom: 1px solid var(--line);
+      align-items: start;
+    }
+    @media (max-width: 760px) { .stack-row { grid-template-columns: 1fr; gap: var(--sp-3); } }
+    .stack-head { display: flex; flex-direction: column; gap: 4px; }
+    .stack-label {
+      font-family: var(--font-display);
+      font-size: var(--text-md);
+      font-weight: 500;
+      color: var(--text);
+    }
+    .stack-verdict {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--purple-bright);
+    }
+    .stack-reason {
+      color: var(--muted);
+      font-size: var(--text-sm);
+      line-height: var(--leading-body);
+    }
+
+    /* ============ Identity ============ */
+    .id-grid {
+      display: flex; flex-direction: column;
+      border-top: 1px solid var(--line);
+      max-width: var(--wrap-narrow);
+    }
+    .id-row {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: var(--sp-5);
+      padding: var(--sp-4) 0;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+    }
+    @media (max-width: 640px) { .id-row { grid-template-columns: 1fr; gap: 4px; } }
+    .id-key {
+      font-family: var(--font-mono);
+      font-size: var(--text-xxs);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .id-val { color: var(--text); font-size: var(--text-sm); }
+    .id-val a { color: var(--purple-bright); border-bottom: 1px solid currentColor; }
+
+    /* ============ Availability ============ */
+    .avail-block {
+      max-width: var(--wrap-narrow);
+      color: var(--muted);
+      font-size: var(--text-md);
+      line-height: var(--leading-body);
+    }
+    .avail-lede { color: var(--text); }
+    .avail-list {
+      margin: var(--sp-5) 0;
+      padding: 0;
+      list-style: none;
+      display: flex; flex-direction: column;
+      gap: var(--sp-3);
+    }
+    .avail-list li {
+      padding: var(--sp-4);
+      background: color-mix(in oklab, var(--surface-1) 60%, transparent);
+      border-left: 3px solid var(--purple-bright);
+      color: var(--text);
+      font-size: var(--text-sm);
+      line-height: var(--leading-body);
+    }
+    .avail-list strong { color: var(--purple-bright); }
+    .avail-foot {
+      margin-top: var(--sp-5);
+      color: var(--muted);
+    }
+    .avail-foot a { color: var(--purple-bright); border-bottom: 1px solid currentColor; }
+
+    /* ============ Contact anchor ============ */
     .contact-links {
       display: flex; flex-wrap: wrap; gap: var(--sp-4) var(--sp-7);
       font-size: var(--text-md);

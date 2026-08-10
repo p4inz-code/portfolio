@@ -120,6 +120,49 @@ button {
   border-radius: 2px;
 }
 
+/* ============================================================================
+ * Custom scrollbars — themed, minimal, both directions, both themes.
+ *
+ * Chromium/Edge/Safari:  ::-webkit-scrollbar family
+ * Firefox:               scrollbar-width + scrollbar-color
+ *
+ * Track = transparent so it doesn't fight the page background.
+ * Thumb = subtle line that darkens on hover — reads as intentional, not
+ * as a system default that leaked through.
+ * ========================================================================== */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted-2) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--muted-2) 55%, transparent);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--purple);
+  background-clip: content-box;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+/* Narrower thumb inside overflow containers so app-scale scrollbars
+   inside modals/windows/dropdowns don't fight the page-scale one. */
+.cmdk-list::-webkit-scrollbar,
+.dw-body::-webkit-scrollbar,
+.term-select-list::-webkit-scrollbar {
+  width: 6px;
+}
+
 .wrap {
   max-width: var(--wrap);
   margin: 0 auto;

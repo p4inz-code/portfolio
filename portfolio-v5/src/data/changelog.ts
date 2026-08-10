@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.6.4',
+    kind: 'released',
+    summary: 'Custom themed scrollbars site-wide + About page proper redesign (identity, timeline, principles, stack, availability).',
+    body: [
+      'Custom scrollbars applied to every scrolling surface — page, modals, dropdowns, dock windows. Chromium/Edge/Safari via ::-webkit-scrollbar family, Firefox via scrollbar-width/scrollbar-color. Track is transparent so it doesn\'t fight the page bg; thumb is a subtle line that darkens to purple on hover — reads as intentional rather than system default. Overflow surfaces inside modals (CmdK list, DemoWindow body, terminal-select list) get a narrower 6px thumb so app-scale scrollbars don\'t fight the page-scale one.',
+      'About page rewritten end-to-end — the previous 3-paragraph lede + 3 credential rows read as generic AI-portfolio About. New structure: identity hero, "short version" story (4 paragraphs, real journey), Timeline (5 anchored dates), 5 working principles I actually live by (no telemetry / explain the trade-off / content-accurate / one person whole product / free-forever when possible), Current stack section with per-technology "verdict + reason" (WPF, Avalonia, Electron+JS, Debian/Qt, Astro, TS) — explains WHY each choice, not just what, Identity section mapping real name / current handle / retired handles / current studio / previous studio / canonical source, Availability section describing three shapes of freelance scope (short-loop / product build / studio work), Contact anchor.',
+      'Every claim on About is either verifiable in projects.ts / repo READMEs, or drawn from Atharva\'s own words in prior sessions. No invented facts.',
+    ],
+  },
+  {
     version: 'v5.6.3',
     kind: 'released',
     summary: 'De-AI-fy pass — new typography (Neue Machina + Neue Montreal + Supply Mono), StatusPill redesigned, top-5 AI-tells removed.',
