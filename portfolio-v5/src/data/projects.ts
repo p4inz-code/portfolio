@@ -64,9 +64,9 @@ export const PROJECTS: Project[] = [
     stack: ['QML', 'Qt', 'CMake', 'QtTest', 'CTest', 'GitHub Actions'],
     role: 'Founder / Designer / Developer / Systems Engineer',
     started: '2026',
-    currentVersion: 'Pre-release',
-    nextMilestone: 'First ISO for public testing (targeting mid-August)',
-    notes: 'ISO is currently under internal testing per Atharva (2026-08-09).',
+    currentVersion: 'Pre-release · internal testing',
+    nextMilestone: 'First public-testing ISO — release once internal testing signs off',
+    notes: 'ISO in internal testing as of August 2026. Public release when the four-pillar acceptance suite is fully green — no fixed date; shipped when it\'s honest to ship.',
   },
   {
     slug: 'nexus',
@@ -90,8 +90,8 @@ export const PROJECTS: Project[] = [
     role: 'Sole engineer',
     started: 'June 2026',
     currentVersion: 'v10.12.0',
-    nextMilestone: 'v11 · stable public release after audit and hardening pass',
-    notes: 'Flagship commercial product of Northbyte Studios. Source is proprietary; the public repo hosts releases and community discussion only.',
+    nextMilestone: 'v11 · new UI + final release currently in prep',
+    notes: 'Flagship commercial product of Northbyte Studios. Source is proprietary; the public repo hosts releases and community discussion only. v11 (new UI, final-release grade) is in prep — case study will refresh once it ships.',
   },
   {
     slug: 'kanvaz',

@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.7.2',
+    kind: 'released',
+    summary: 'Content audit — Mission OS milestone softened to honest, Nexus v11-in-prep flagged.',
+    body: [
+      'Mission OS nextMilestone was "First ISO for public testing (targeting mid-August)" — August 10 is now. Softened to "First public-testing ISO — release once internal testing signs off" and expanded the notes: "shipped when it\'s honest to ship." No fixed date until the four-pillar acceptance suite is fully green.',
+      'Nexus currentVersion stays at v10.12.0 (v11 not confirmed shipped yet), but nextMilestone updated to "v11 · new UI + final release currently in prep" and notes acknowledge the v11 refresh is in flight. Case study will refresh when v11 ships and screenshots are available.',
+      'Every other project record checked; nothing else was date-anchored or stale.',
+    ],
+  },
+  {
     version: 'v5.7.1',
     kind: 'released',
     summary: 'Info-page polish — /services editorial rewrite + FAQ, /work uses FeaturedShowcase, /3d gains meta + queue.',
