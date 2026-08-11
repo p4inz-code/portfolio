@@ -1,23 +1,25 @@
 ---
 /**
- * Fixed side rail — right edge of viewport, desktop-only. Vertical
- * stack of social/contact icons at the top, thin vertical line down
- * the middle, current route path as rotated mono text at the bottom.
- *
- * Present on every page (rendered inside BaseLayout).
- * Hidden on the Mission OS demo route via body:has(.demo-scope) rule
- * that already hides other site chrome.
- * Hidden below 900px viewport — mobile has the hamburger drawer.
- *
- * Icons are theme-swappable via currentColor + var(--text) / var(--muted).
+ * Fixed side rail — right edge of viewport, desktop-only.
+ * v5.14.0 rebuild:
+ *  - Added Instagram + WhatsApp (both real accounts)
+ *  - Dropped rotated vertical URL text
+ *  - Added copy-URL button that expands horizontally on hover
+ *    ("atharvapatil.tech/current-path"), copies to clipboard on click
+ *    with a brief "copied" state
+ *  - Every icon is theme-swappable via currentColor
+ *  - Hidden on Mission OS demo route (body:has(.demo-scope) rule)
+ *  - Hidden below 900px — mobile has the hamburger drawer
  */
 import { CONTACT } from '../data/site';
+const WHATSAPP_NUMBER = '919321614988'; // wa.me expects digits, no plus
+const WHATSAPP_HREF = `https://wa.me/${WHATSAPP_NUMBER}`;
+const INSTAGRAM_HREF = 'https://instagram.com/atharva.patil.cg';
 const currentPath = Astro.url.pathname;
-// Normalise for display: strip trailing slash except root, always leading /.
-const displayPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
+const displayPath = currentPath === '/' ? '' : currentPath.replace(/\/$/, '');
 ---
-<aside class="side-rail" aria-label="Contact + current page">
-  <!-- Top: brand mark tick (small vertical bar) -->
+<aside class="side-rail" aria-label="Contact + share">
+  <!-- Top: brand mark tick -->
   <div class="sr-brand" aria-hidden="true">
     <span class="sr-tick"></span>
   </div>
@@ -25,20 +27,33 @@ const displayPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
   <!-- Middle: social/contact icons -->
   <nav class="sr-icons" aria-label="Contact links">
     <a href={`mailto:${CONTACT.email}`} class="sr-icon" title="Email" aria-label="Email">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="5" width="18" height="14" rx="2"/>
         <path d="M3 7l9 6 9-6"/>
       </svg>
     </a>
     <a href={CONTACT.github} target="_blank" rel="noopener noreferrer" class="sr-icon" title="GitHub" aria-label="GitHub">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M9 19c-4 1.5-4-2-6-2m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/>
       </svg>
     </a>
     <a href={CONTACT.discordInvite} target="_blank" rel="noopener noreferrer" class="sr-icon" title="Discord (Nexus beta)" aria-label="Discord">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M18 5.5C16.5 4.8 15 4.5 13.5 4.4l-.4 1a13 13 0 0 0-3.2 0l-.4-1c-1.5.1-3 .4-4.5 1.1C2.7 8 2 12 2.4 15.7c1.6 1.2 3.2 2 4.8 2.5l1-1.6c-.9-.3-1.7-.7-2.5-1.3.2-.1.4-.3.6-.4a11 11 0 0 0 11.4 0c.2.1.4.3.6.4a11 11 0 0 1-2.5 1.3l1 1.6c1.6-.5 3.2-1.3 4.8-2.5.6-4.3-.6-8.2-3.6-10.2z"/>
         <circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/>
+      </svg>
+    </a>
+    <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer" class="sr-icon" title="WhatsApp (business)" aria-label="WhatsApp">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.5 3.5A11 11 0 0 0 3.4 17.4L2 22l4.7-1.3a11 11 0 0 0 13.8-17.2Z"/>
+        <path d="M8.5 8c.4-.3 1-.4 1.4-.1.3.2.6.9.9 1.5.3.6.1 1-.2 1.3-.3.3-.4.5-.2.9.5 1 1.4 1.9 2.4 2.4.4.2.6.1.9-.2.3-.3.7-.5 1.3-.2.6.3 1.3.6 1.5.9.3.4.2 1-.1 1.4-.5.7-1.4 1-2.2.9-2.6-.4-6-3.8-6.4-6.4-.1-.8.1-1.7.7-2.4Z"/>
+      </svg>
+    </a>
+    <a href={INSTAGRAM_HREF} target="_blank" rel="noopener noreferrer" class="sr-icon" title="Instagram" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="5"/>
+        <circle cx="12" cy="12" r="4"/>
+        <circle cx="17.5" cy="6.5" r="0.7" fill="currentColor" stroke="none"/>
       </svg>
     </a>
     <button type="button" class="sr-icon sr-icon-btn" id="cmdkTriggerRail" title="Search & jump (Ctrl+K)" aria-label="Open command palette">
@@ -49,33 +64,73 @@ const displayPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
     </button>
   </nav>
 
-  <!-- Bottom: current route as rotated mono text -->
-  <div class="sr-path" aria-hidden="true">
-    <span class="sr-path-text">{displayPath}</span>
-    <span class="sr-path-tick"></span>
+  <!-- Bottom: copy-URL button (horizontal expand on hover, click to copy) -->
+  <div class="sr-share">
+    <button
+      type="button"
+      class="sr-copy"
+      id="srCopy"
+      data-path={displayPath}
+      title="Copy this page's URL to clipboard"
+      aria-label="Copy page URL to clipboard"
+    >
+      <span class="sr-copy-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="12" height="12" rx="2"/>
+          <path d="M5 15V5a2 2 0 0 1 2-2h10"/>
+        </svg>
+      </span>
+      <span class="sr-copy-label">
+        atharvapatil.tech<span class="sr-copy-path">{displayPath}</span>
+      </span>
+    </button>
+    <span class="sr-copy-toast" id="srCopyToast" aria-live="polite">Copied</span>
   </div>
 </aside>
 
 <script is:inline>
   (function () {
-    // v5.13.0 — mirror the nav CmdK trigger for the sidebar magnifier
-    // button so pressing it opens the same command palette.
+    // v5.14.0 sidebar wiring
+    // - Mirror the nav CmdK trigger so the sidebar magnifier opens the palette
+    // - Wire the copy-URL button (writes location.href to clipboard + toast)
     const railBtn = document.getElementById('cmdkTriggerRail');
     const desktopBtn = document.getElementById('cmdkTrigger');
     if (railBtn && desktopBtn) {
       railBtn.addEventListener('click', function () { desktopBtn.click(); });
     }
+
+    const copyBtn = document.getElementById('srCopy');
+    const toast = document.getElementById('srCopyToast');
+    if (copyBtn && toast) {
+      copyBtn.addEventListener('click', function () {
+        const url = window.location.href;
+        function done() {
+          toast.classList.add('show');
+          copyBtn.classList.add('copied');
+          setTimeout(function () {
+            toast.classList.remove('show');
+            copyBtn.classList.remove('copied');
+          }, 1600);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(done, done);
+        } else {
+          // Fallback for older browsers
+          const ta = document.createElement('textarea');
+          ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); } catch (e) {}
+          document.body.removeChild(ta);
+          done();
+        }
+      });
+    }
   })();
 </script>
 
 <style>
-  /* v5.13.0 fixes:
-     - moved off the very edge (right: 14px) so the page scrollbar no longer
-       overlays the icons on Chromium
-     - tighter internal spacing so icons sit higher, not dead-centered in an
-       otherwise empty vertical rail
-     - bigger icon hit area + bolder glyphs
-   */
+  /* v5.14.0 layout — same right-edge dock, taller room for the extra icons */
   .side-rail {
     position: fixed;
     top: 0; right: 14px;
@@ -85,16 +140,16 @@ const displayPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
     flex-direction: column;
     align-items: center;
     z-index: 90;
-    padding: 100px 0 40px;
+    padding: 100px 0 32px;
     pointer-events: none;
   }
   .side-rail > * { pointer-events: auto; }
 
-  /* Brand tick at top */
+  /* Brand tick */
   .sr-brand {
     display: flex; align-items: center; justify-content: center;
     width: 100%;
-    margin-bottom: var(--sp-4);
+    margin-bottom: var(--sp-5);
   }
   .sr-tick {
     display: block;
@@ -103,13 +158,15 @@ const displayPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
     border-radius: 2px;
     box-shadow: 0 0 12px var(--purple-bright);
   }
+  :root[data-theme='light'] .sr-tick {
+    box-shadow: 0 0 8px rgba(110, 68, 214, 0.4);
+  }
 
-  /* Icon column — sits high, not dead-centered */
+  /* Icon column */
   .sr-icons {
     display: flex; flex-direction: column;
     gap: 6px;
     align-items: center;
-    pointer-events: auto;
   }
   .sr-icon {
     display: inline-flex; align-items: center; justify-content: center;
@@ -117,7 +174,7 @@ const displayPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
     border: 1px solid transparent;
     border-radius: 6px;
     color: var(--muted);
-    background: color-mix(in oklab, var(--bg) 60%, transparent);
+    background: color-mix(in oklab, var(--bg) 55%, transparent);
     backdrop-filter: blur(6px);
     transition: color var(--dur-fast) var(--ease-out),
                 border-color var(--dur-fast) var(--ease-out),
@@ -125,11 +182,6 @@ const displayPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
                 transform var(--dur-fast) var(--ease-out);
   }
   .sr-icon svg { width: 20px; height: 20px; }
-  .sr-icon-btn { cursor: pointer; padding: 0; }
-  .sr-icon-btn:focus-visible {
-    outline: 2px solid var(--purple-bright);
-    outline-offset: 2px;
-  }
   .sr-icon:hover, .sr-icon:focus-visible {
     color: var(--purple-bright);
     border-color: var(--line-strong);
@@ -137,42 +189,92 @@ const displayPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
     transform: translateX(-3px);
     outline: none;
   }
-  .sr-icon:focus-visible {
-    outline: 2px solid var(--purple-bright);
-    outline-offset: 2px;
-  }
+  .sr-icon:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
+  .sr-icon-btn { cursor: pointer; padding: 0; font: inherit; }
 
-  /* Bottom path indicator — pinned to bottom via margin-top:auto */
-  .sr-path {
+  /* Bottom copy-URL button — collapsed to a small icon by default,
+     expands leftwards on hover to reveal the horizontal URL. */
+  .sr-share {
     margin-top: auto;
-    display: flex; flex-direction: column; align-items: center;
-    gap: var(--sp-3);
-    pointer-events: auto;
+    display: flex; flex-direction: column; align-items: flex-end;
+    gap: 6px;
+    width: 100%;
+    position: relative;
   }
-  .sr-path-text {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+  .sr-copy {
+    display: inline-flex; align-items: center;
+    gap: 0;
+    height: 34px;
+    padding: 0;
+    background: color-mix(in oklab, var(--bg) 60%, transparent);
+    border: 1px solid var(--line);
+    border-radius: 999px;
     color: var(--muted);
-    padding: 6px 0;
-    max-height: 220px;
+    font: inherit;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
     overflow: hidden;
-    text-overflow: ellipsis;
+    max-width: 40px;
+    transition: max-width 300ms var(--ease-out),
+                color var(--dur-fast) var(--ease-out),
+                border-color var(--dur-fast) var(--ease-out),
+                background var(--dur-fast) var(--ease-out);
     white-space: nowrap;
   }
-  .sr-path-tick {
-    display: block;
-    width: 2px; height: 14px;
-    background: var(--muted);
-    border-radius: 1px;
+  .sr-copy:hover, .sr-copy:focus-visible {
+    max-width: 320px;
+    color: var(--purple-bright);
+    border-color: var(--line-strong);
+    background: color-mix(in oklab, var(--purple) 12%, transparent);
+    outline: none;
   }
+  .sr-copy:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
+  .sr-copy.copied {
+    max-width: 40px;
+    color: var(--green);
+    border-color: color-mix(in oklab, var(--green) 40%, var(--line-strong));
+  }
+  .sr-copy-icon {
+    flex-shrink: 0;
+    width: 40px; height: 32px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .sr-copy-icon svg { width: 18px; height: 18px; }
+  .sr-copy-label {
+    display: inline-flex; align-items: center;
+    padding-right: 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    opacity: 0;
+    transition: opacity 200ms var(--ease-out);
+  }
+  .sr-copy:hover .sr-copy-label,
+  .sr-copy:focus-visible .sr-copy-label { opacity: 1; }
+  .sr-copy-path { color: var(--purple-bright); margin-left: 2px; }
 
-  /* Desktop only + not on demo route. Mobile: hamburger drawer. */
-  @media (min-width: 900px) {
-    .side-rail { display: flex; }
+  .sr-copy-toast {
+    position: absolute;
+    bottom: 42px; right: 6px;
+    padding: 4px 10px;
+    background: color-mix(in oklab, var(--bg) 92%, transparent);
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    color: var(--green);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 180ms var(--ease-out), transform 180ms var(--ease-out);
+    pointer-events: none;
   }
-  /* Mission OS demo hides all site chrome (already in demo.astro). */
+  .sr-copy-toast.show { opacity: 1; transform: translateY(0); }
+
+  @media (min-width: 900px) { .side-rail { display: flex; } }
+  @media (prefers-reduced-motion: reduce) {
+    .sr-copy, .sr-copy-label, .sr-copy-toast, .sr-icon { transition: none; }
+  }
 </style>

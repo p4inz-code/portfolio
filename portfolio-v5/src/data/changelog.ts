@@ -20,6 +20,19 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.14.0',
+    kind: 'released',
+    summary: 'Sidebar upgrade (WhatsApp + Instagram + copy-URL button) · nav search cleaned · resume PDF fully rebuilt after 20-pass audit.',
+    body: [
+      'SIDEBAR — WhatsApp added (business number +91 9321614988) + Instagram (@atharva.patil.cg) + copy-URL button replacing the rotated vertical text. Copy button is a pill that expands leftwards on hover to reveal "atharvapatil.tech/current-path" horizontally, clicks copy the current URL to clipboard with a green "copied" toast. Every icon theme-swappable via currentColor.',
+      'NAV SEARCH — killed the pill + border + "⌘K" label chrome around the search trigger. Now a clean 34×34 icon-only button (single magnifying-glass svg) that hover-tints purple. Reads as an intentional tool, not chrome-on-chrome. Keyboard shortcut still works everywhere via document listener.',
+      'PDF RESUME — 20-pass audit + full template rebuild.',
+      '2-approach findings that got fixed: (1) cream fill on the entire page read as a cardboard cutout — switched to white page with cream only in accent moments (rules, philosophy block, meta italic); (2) vertical rhythm too tight — rebuilt on a 6pt base, sections now breathe (h2 top-margin 14pt → 22pt, project blocks 10pt → 14pt gap); (3) Chrome print-to-PDF was inserting a "8/11/26, 8:07 AM — Atharva Patil — Resume" header — killed with @page{margin:0} + body padding pattern (Chrome can\'t inject a header where there\'s no margin to put it); (4) bullets tight — line-height 1.5 → 1.65 + 5pt bottom gap between items; (5) h3 project name to meta line too close — 3pt gap; (6) meta italic-purple to bullets too close — 6pt gap; (7) page-break-inside: avoid on every project block so nothing gets orphaned mid-project; (8) name h1 bigger (26pt → 30pt) + tracking (2px → 3px) — dominates the page top like a real resume header.',
+      'What was ALREADY working (kept): Karuna-Ketan-style scan pattern, per-project role/date/platform meta rows, strong-noun bullet leads, ink + cream + purple three-color palette, single-page density.',
+      'Resume MD updated to match — WhatsApp added to the top meta line.',
+    ],
+  },
+  {
     version: 'v5.13.0',
     kind: 'released',
     summary: 'Real Nexus v11 mockups shipped · resume PDF + MD generated · sidebar rebuilt (no scrollbar overlap, bigger icons, palette trigger) · Obscura v1.0 propagated · 7-POV audit clean.',

@@ -2,7 +2,7 @@
 
 **Software Engineer · Founder · Product Builder**
 
-Navi Mumbai, India &nbsp;|&nbsp; [atharva.patil.cg@gmail.com](mailto:atharva.patil.cg@gmail.com) &nbsp;|&nbsp; Discord: `p4inz`
+Navi Mumbai, India &nbsp;|&nbsp; [atharva.patil.cg@gmail.com](mailto:atharva.patil.cg@gmail.com) &nbsp;|&nbsp; Discord: `p4inz` &nbsp;|&nbsp; WhatsApp: [+91 9321614988](https://wa.me/919321614988)
 GitHub: [github.com/p4inz-code](https://github.com/p4inz-code) &nbsp;|&nbsp; Instagram: [@atharva.patil.cg](https://instagram.com/atharva.patil.cg)
 **Portfolio —** [atharvapatil.tech](https://atharvapatil.tech)
 

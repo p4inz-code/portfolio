@@ -214,10 +214,10 @@ const jsonLd = {
             aria-label="Open command palette (Ctrl+K)"
             title="Search & jump (Ctrl+K)"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-              <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
             </svg>
-            <span>⌘K</span>
           </button>
           <ThemeToggle />
         </nav>
@@ -388,23 +388,26 @@ const jsonLd = {
         border-radius: var(--radius-pill);
       }
       .nav-cta:hover { border-color: var(--purple); color: var(--purple-bright) !important; }
+      /* v5.14.0 — clean icon-only search button, no pill / no ⌘K label /
+         no border. Reads as an intentional tool, not chrome-on-chrome. */
       .nav-cmdk {
-        display: inline-flex; align-items: center; gap: var(--sp-2);
-        padding: 6px 10px 6px 8px;
-        border-radius: var(--radius-pill);
-        border: 1px solid var(--line-strong);
-        background: color-mix(in oklab, var(--purple) 5%, transparent);
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 34px; height: 34px;
+        padding: 0;
+        background: transparent;
+        border: none;
         color: var(--muted);
-        font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
         cursor: pointer;
-        transition: border-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out), background var(--dur) var(--ease-out);
+        border-radius: 4px;
+        transition: color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
       }
-      .nav-cmdk svg { width: 13px; height: 13px; }
-      .nav-cmdk:hover {
-        border-color: var(--purple-bright);
+      .nav-cmdk svg { width: 18px; height: 18px; }
+      .nav-cmdk:hover, .nav-cmdk:focus-visible {
         color: var(--purple-bright);
         background: color-mix(in oklab, var(--purple) 10%, transparent);
+        outline: none;
       }
+      .nav-cmdk:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
       @media (max-width: 900px) {
         .nav-cmdk { display: none; }
       }
