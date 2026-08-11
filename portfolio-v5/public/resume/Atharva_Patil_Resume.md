@@ -1,102 +1,126 @@
-# Atharva Patil
+# ATHARVA PATIL
 
-**Solo founder, Northbyte Studios.** Software during the day, 3D and VFX on the side.
+**Software Engineer · Founder · Product Builder**
 
-**Location** — Navi Mumbai, India
-**Contact** — atharva.patil.cg@gmail.com
-**GitHub** — github.com/p4inz-code · **Discord** — p4inz
-**Portfolio** — https://atharvapatil.tech
-
----
-
-## Summary
-
-Software engineer with an active discipline in 3D / VFX. Solo founder of **Northbyte Studios** (2026–present) — a studio designed to survive on principles, not headcount. Ships privacy-first Windows software, an open-source privacy-first Linux OS (Mission OS), an investigation-focused Linux OS (Pursue OS), and developer tools. Second-year B.Sc. Animation student.
-
-Guiding lines that show up in every product: **no telemetry, ever · explain the trade-off on-screen · content-accurate over content-marketed · one person, whole product · free-forever when it can be.**
+Navi Mumbai, India &nbsp;|&nbsp; [atharva.patil.cg@gmail.com](mailto:atharva.patil.cg@gmail.com) &nbsp;|&nbsp; Discord: `p4inz`
+GitHub: [github.com/p4inz-code](https://github.com/p4inz-code) &nbsp;|&nbsp; Instagram: [@atharva.patil.cg](https://instagram.com/atharva.patil.cg)
+**Portfolio —** [atharvapatil.tech](https://atharvapatil.tech)
 
 ---
 
-## Featured products
+## PROFESSIONAL SUMMARY
 
-### Mission OS
-Privacy-first Linux OS on Debian Stable + KDE Plasma. Four pillars: privacy-first, security-conscious, portable-first, offline-first. GPLv3.
-**Status** — Pre-release · internal testing. First public ISO on the way.
-**Role** — Founder / Designer / Developer / Systems Engineer.
-**Stack** — QML / Qt / CMake / QtTest / CTest / GitHub Actions.
-`github.com/p4inz-code/mission-os`
-
-### Nexus
-Encrypted personal vault for Windows. AES-256-GCM authenticated encryption with Argon2id key derivation. Windows Hello unlock, in-app SHA-256-verified updater, portable mode. Zero telemetry. Source proprietary.
-**Status** — Public Beta · v10.12.0. **v11 · new UI + final release currently in prep.**
-**Role** — Sole engineer.
-**Stack** — C# / .NET 8 / WPF / AES-256-GCM / Argon2id.
-
-### Kanvaz
-Visual reference workspace for VFX / 3D artists. Plugin system, safer `.kanvaz` zip container with SHA-256 integrity, URL + File reference cards, GitHub Actions CI. MIT.
-**Status** — Final Release · v4.2.2.
-**Role** — Sole engineer + designer.
-**Stack** — Electron / vanilla JS.
-
-### Pursue OS
-Investigation-focused Linux OS for OSINT / DFIR / secure research. Two flagship interfaces: Investigation Terminal + Investigation Browser with integrated Tor. Apache 2.0.
-**Status** — Coming Soon · pre-release.
-
-### Veris
-Offline-first, explainable security investigation platform for Windows. 3,100+ automated tests. Deterministic analysis engine — no black-box AI scoring.
-**Status** — Final Polish · Pre-v1.0.0.
-**Stack** — TypeScript / Node.js / SQLite.
-
-### repo-map
-Engineering Intelligence Platform. CLI + planned TUI. Published on npm as `@p4inz-code/repo-map`. MIT.
-**Status** — v2.2.0 · On Hold.
-
-### Obscura
-Luau AST toolkit for Roblox developers. MIT.
-**Status** — v1.0.0 shipped. 340/340 tests passing.
-
-### Glint
-Windows tray utility for brightness / volume. Avalonia / .NET 8. MIT.
-**Status** — On Hold.
-
-### 3D Ref Skills
-Open-source knowledge graph for 3D / VFX learners. MIT. Live and maintained.
+Software engineer and product builder focused on **desktop applications, developer tools, operating systems, and creative technology**. Founder of **Northbyte Studios**, an independent software studio building privacy-first, practical products with zero telemetry and long-term maintainability. I ship end-to-end — product direction, interface design, engineering, testing, documentation, release. Currently building an encrypted vault, two Linux operating systems, and a general-purpose programming language, all under one studio and one pair of hands.
 
 ---
 
-## Selected technical facts
+## PROJECTS
 
-- **10 products shipped or in flight**, 8 of them open source.
-- **4,100+ automated tests** across products (Veris 3,100 + repo-map 870 + others).
-- **Zero telemetry** across every product. Zero third-party analytics on this portfolio beyond Cloudflare's privacy-preserving beacon.
-- Full design-through-shipping loop performed by one person — no handoffs, no committees.
+### Nexus &nbsp;·&nbsp; Encrypted Personal Vault
+*Founder, Lead Engineer, Designer — [github.com/p4inz-code/nexus-desktop](https://github.com/p4inz-code/nexus-desktop)* &nbsp;·&nbsp; Jun 2026 – Present &nbsp;·&nbsp; Windows Desktop
+
+- **Cryptographic core:** AES-256-GCM authenticated encryption over an NXG1 container format, Argon2id key derivation, Windows Hello secondary unlock, in-app SHA-256-verified updater, portable-mode operation.
+- **Trust posture:** zero telemetry, zero cloud, zero sync. Every byte encrypted at rest, decrypted only in memory while the vault is unlocked.
+- **v11 UI overhaul:** entire visual system rebuilt across lock screen, media browser, credential + note detail, settings, updater. Cryptographic architecture unchanged — v11 is a design ship, not a security ship.
+- **Stack:** C# / .NET 8 / WPF · AES-256-GCM · Argon2id · GitHub Actions CI.
+
+### Mission OS &nbsp;·&nbsp; Privacy-First Linux Distribution
+*Founder, Designer, Systems Engineer — [github.com/p4inz-code/mission-os](https://github.com/p4inz-code/mission-os)* &nbsp;·&nbsp; 2026 – Present &nbsp;·&nbsp; Linux, GPLv3
+
+- **Four pillars applied to the OS itself:** privacy-first, security-conscious, portable-first, offline-first. Built on Debian Stable + KDE Plasma; installer authored in QML / Qt.
+- **Installer discipline:** every advanced option (LUKS2 encryption, Secure Boot, TPM-sealed unlock, recovery keys) explains its **benefits, limitations, compatibility, and trade-offs** in the same view as the toggle.
+- **141/141 pixel checks** passed on installer foundation. 14 CTest tests, 13 runtime suites. Accessibility, keyboard, theme, and reduced-motion all validated pre-ISO.
+- **Interactive concept demo** live at [atharvapatil.tech/mission-os/demo](https://atharvapatil.tech/mission-os/demo/) — boot sequence + desktop with six real informational apps.
+
+### Kanvaz &nbsp;·&nbsp; Visual Reference Workspace
+*Founder, Sole Engineer + Designer — [github.com/p4inz-code/kanvaz](https://github.com/p4inz-code/kanvaz)* &nbsp;·&nbsp; Jun 2026 – Aug 2026 &nbsp;·&nbsp; Electron, MIT
+
+- **Plugin system** (`window.KanvazPluginAPI`) with main-process consent dialog — plugins can register card types, ship alternate themes, add Settings panels. Theme Creator plugin ships as reference implementation.
+- **Container format:** safer `.kanvaz` zip archive with per-asset SHA-256 integrity hashes. Detects tampering on load.
+- **Final release: v4.2.2.** Development wound down cleanly; no v5 planned. Free forever, open source.
+
+### Pursue OS &nbsp;·&nbsp; Investigation-Focused Linux OS
+*Founder, Sole Developer — [github.com/p4inz-code/pursue-os](https://github.com/p4inz-code/pursue-os)* &nbsp;·&nbsp; 2026 – Present &nbsp;·&nbsp; Linux, Apache 2.0
+
+- **Purpose-built for** OSINT, DFIR, secure research, evidence collection, and investigation workflows.
+- **Two flagship surfaces:** Investigation Terminal + Investigation Browser with integrated Tor. AI is assistant-not-authority — never performs detection, only explains.
+
+### Veris &nbsp;·&nbsp; Security Investigation Platform
+*Founder, Sole Engineer — [github.com/p4inz-code/veris](https://github.com/p4inz-code/veris)* &nbsp;·&nbsp; Jun 2026 – Present &nbsp;·&nbsp; Windows, Pre-v1.0.0
+
+- **Deterministic analysis engine — no black-box AI scoring.** AI is intentionally limited to a read-only explanation layer over the deterministic core.
+- **3,100+ automated tests.** Offline-first — no analysis leaves the machine.
+- **Stack:** TypeScript / Node.js / SQLite, modular monorepo.
+
+### MINK &nbsp;·&nbsp; Programming Language
+*Language Designer* &nbsp;·&nbsp; 2026 – In Design
+
+- **A general-purpose programming language** focused on simplicity, safety, reliability, and reducing unnecessary complexity while borrowing what works from existing languages.
+
+### Obscura &nbsp;·&nbsp; Luau AST Toolkit for Roblox
+*Sole Engineer — [github.com/p4inz-code/obscura](https://github.com/p4inz-code/obscura)* &nbsp;·&nbsp; 2026 – Present &nbsp;·&nbsp; Luau, MIT
+
+- **v1.0.0 shipped with 340 / 340 tests passing.** AST-based Luau code protection toolkit for Roblox developers. Free forever, no telemetry, no vendor lock-in.
+
+### repo-map &nbsp;·&nbsp; Engineering Intelligence CLI
+*Sole Engineer — [github.com/p4inz-code/repo-map](https://github.com/p4inz-code/repo-map)* &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; TypeScript, MIT
+
+- Published on npm as `@p4inz-code/repo-map`. TypeScript, ESM-first, zero native dependencies. **870+ tests.** Currently on hold at v2.2.0 while other projects take priority.
 
 ---
 
-## Studio history
+## EXPERIENCE
 
-- **2026–present** — Northbyte Studios (current studio name).
-- **2025** — Obsidian Labs (first studio name, retired when the current name was adopted).
-- **Earlier handles** — PainZ, Grim (retired; everything ships under real name or `p4inz` now).
+### Northbyte Studios &nbsp;— *Founder & Independent Software Studio*
+*2026 – Present · Navi Mumbai, India (remote-friendly)*
 
----
+- Independent software studio developing desktop applications, developer tools, and open-source systems.
+- **Full-cycle ownership:** product direction, architecture, engineering, UI / UX, testing + QA, documentation, branding, release engineering — all performed by one person.
+- Ships every product against a fixed principle stack: **no telemetry, no cloud lock-in, explain the trade-off on-screen, free-forever when it can be, one person whole product.**
 
-## Education
+### Freelance — Web + UX + Brand
+*2025 – Present*
 
-**B.Sc. Animation** — D. Y. Patil University · 2025 – 2028 (expected). Second year in progress.
-
----
-
-## Working availability
-
-Selective — taking new work. Three shapes:
-
-- **Short-loop.** Landing pages, marketing sites, brand touch-ups. 1–2 weeks. Fixed price.
-- **Product build.** Dashboards, real product surfaces, UI + backend + design. 4–8 weeks. Discovery week first.
-- **Studio work.** 3D renders, lighting studies, promo animation. Scoped by shot.
+- Independent client work: web development, UI / UX, visual identity, 3D / VFX visualization. Notable engagements include a full production website build for a performing-arts academy.
+- Scope shapes: **short-loop** (landing pages, marketing sites — 1–2 weeks, fixed price); **product build** (dashboards, real product surfaces — 4–8 weeks, discovery week first); **studio work** (3D renders, lighting studies, promo animation — scoped by shot).
 
 ---
 
-**Everything I ship uses the same discipline you see across my own products:** privacy-first, no telemetry, honest about what a first-shipping-version can and can't do.
+## TECHNICAL SKILLS
 
-*Portfolio, live status, and every project's real source: https://atharvapatil.tech*
+**Languages** — C#, C / C++, TypeScript, JavaScript, HTML, CSS, Lua / Luau, Bash
+**Frameworks & Platforms** — .NET 8, WPF, Avalonia UI, Electron, Node.js, Astro, Qt / QML, Debian Linux, Windows
+**Cryptography & Security** — AES-256-GCM, Argon2id, LUKS2, TPM, Secure Boot, Windows Hello, deterministic analysis engines
+**3D / VFX** — Blender, Substance, DaVinci Resolve, lighting studies, product renders, motion / camera work
+**Tools & Workflow** — Git / GitHub / GitHub Actions, VS Code, Visual Studio, FFmpeg, npm / pnpm, Cloudflare Pages
+**Areas** — Desktop application development, product development, UI / UX, developer tooling, open source, Linux, privacy & security, creative technology, AI-assisted software
+
+---
+
+## EDUCATION
+
+**B.Sc. Animation** &nbsp;·&nbsp; D. Y. Patil University, Nerul, Navi Mumbai &nbsp;·&nbsp; 2025 – 2028
+*Second year in progress (2026 – 2027)*
+
+---
+
+## PHILOSOPHY
+
+Build software that is useful, understandable, reliable, and worth maintaining. Deliberate product decisions. Clean interfaces. Privacy by default. Practical engineering. Long-term maintainability.
+
+**Guiding lines that show up in every product I ship:**
+No telemetry, ever. Explain the trade-off on-screen. Content-accurate over content-marketed. One person, whole product. Free-forever when it can be.
+
+---
+
+## LINKS
+
+- Portfolio — [atharvapatil.tech](https://atharvapatil.tech)
+- GitHub — [github.com/p4inz-code](https://github.com/p4inz-code)
+- Instagram — [@atharva.patil.cg](https://instagram.com/atharva.patil.cg)
+- Discord — `p4inz` &nbsp;·&nbsp; [Nexus beta community](https://discord.gg/XFF5nV53ZJ)
+- Email — [atharva.patil.cg@gmail.com](mailto:atharva.patil.cg@gmail.com)
+
+---
+
+*Résumé maintained as the canonical Markdown source at `/resume/Atharva_Patil_Resume.md`. Every fact here is verifiable against the corresponding GitHub repository or the live [status page](https://atharvapatil.tech/status/).*

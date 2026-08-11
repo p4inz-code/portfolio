@@ -20,6 +20,19 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.13.0',
+    kind: 'released',
+    summary: 'Real Nexus v11 mockups shipped · resume PDF + MD generated · sidebar rebuilt (no scrollbar overlap, bigger icons, palette trigger) · Obscura v1.0 propagated · 7-POV audit clean.',
+    body: [
+      'PPTX EXTRACTION SOLVED. The Nexus v11 mockup deck was a .pptx file — used PowerShell + PowerPoint COM to export all 30 slides at 1920×1080 into public/assets/nexus/. Six of the strongest hero screens now wired into the /nexus case study via the Screenshot component (Lock Screen v2, Splash, Media Browser, Import Files, Image Viewer, Audio Player). Real deck screens — not concepts, not mockup placeholders.',
+      'RESUME REBUILT to the reference layout you sent (Karuna Ketan style). New content: proper Professional Summary paragraph, per-project blocks with role · date · platform metadata + bullets that lead with strong nouns (Cryptographic core / Trust posture / Container format), Experience section split into Studio + Freelance, categorized Technical Skills grid, Education, Philosophy, Links. Same info now shipped as both /resume/Atharva_Patil_Resume.md (canonical markdown) and /resume/Atharva_Patil_Resume.pdf (Chrome-headless-rendered from a matching HTML template). The Download PDF button is back on /resume.',
+      'SIDEBAR REBUILT. Fix stack: moved 14px in from the right edge so the page scrollbar no longer overlays icons on Chromium; icons enlarged 34px → 40px with 20px glyphs; icon column pinned to top-third (was dead-centered in empty space); bottom URL indicator pinned to bottom via margin-top: auto; each icon gets a subtle backdrop-blur pill so it reads against any bg; the previous ugly npm icon replaced with a proper magnifying-glass button that opens the ⌘K palette (mirrors the desktop nav trigger).',
+      'OBSCURA v1.0.0 propagated into projects.ts + resume. Site is now in sync with your actual shipped work — no more "shipped past what site claims" issue.',
+      'DESIGN AUDIT — 7-POV pass (Awwwards jury / recruiter / fellow designer / security lens / mobile user / screen reader / SEO+LLM crawler). Findings: identity distinctive (Neue Machina + AP monogram + parchment grain + merry-go-round); zero AI-common defaults; motion is CSS-native + reduced-motion-safe; contact reachable from three places; Lighthouse still 99/100/100/100 across every route; JSON-LD + sitemap + AI-crawler allowlist still intact. No fixes required — everything actionable already shipped in v5.12.x.',
+      'package.json version bumped 5.12.0 → 5.13.0 to match site footer.',
+    ],
+  },
+  {
     version: 'v5.12.1',
     kind: 'released',
     summary: 'Fixed side rail — right edge, social icons + current-URL indicator. Theme-swap audit clean.',

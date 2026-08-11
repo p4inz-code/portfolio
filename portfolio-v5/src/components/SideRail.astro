@@ -41,12 +41,12 @@ const displayPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
         <circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/>
       </svg>
     </a>
-    <a href={`https://npmjs.com/~p4inz-code`} target="_blank" rel="noopener noreferrer" class="sr-icon" title="npm packages" aria-label="npm">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
-        <rect x="3" y="8" width="18" height="10"/>
-        <path d="M7 12v3M12 12v3M17 12v3M12 12h2"/>
+    <button type="button" class="sr-icon sr-icon-btn" id="cmdkTriggerRail" title="Search & jump (Ctrl+K)" aria-label="Open command palette">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
       </svg>
-    </a>
+    </button>
   </nav>
 
   <!-- Bottom: current route as rotated mono text -->
@@ -56,21 +56,36 @@ const displayPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
   </div>
 </aside>
 
+<script is:inline>
+  (function () {
+    // v5.13.0 — mirror the nav CmdK trigger for the sidebar magnifier
+    // button so pressing it opens the same command palette.
+    const railBtn = document.getElementById('cmdkTriggerRail');
+    const desktopBtn = document.getElementById('cmdkTrigger');
+    if (railBtn && desktopBtn) {
+      railBtn.addEventListener('click', function () { desktopBtn.click(); });
+    }
+  })();
+</script>
+
 <style>
+  /* v5.13.0 fixes:
+     - moved off the very edge (right: 14px) so the page scrollbar no longer
+       overlays the icons on Chromium
+     - tighter internal spacing so icons sit higher, not dead-centered in an
+       otherwise empty vertical rail
+     - bigger icon hit area + bolder glyphs
+   */
   .side-rail {
     position: fixed;
-    top: 0; right: 0;
+    top: 0; right: 14px;
     height: 100vh;
-    width: 56px;
+    width: 52px;
     display: none;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    padding: 90px 0 40px;
     z-index: 90;
-    border-left: 1px solid var(--line);
-    background: color-mix(in oklab, var(--bg) 82%, transparent);
-    backdrop-filter: blur(10px);
+    padding: 100px 0 40px;
     pointer-events: none;
   }
   .side-rail > * { pointer-events: auto; }
@@ -79,40 +94,47 @@ const displayPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
   .sr-brand {
     display: flex; align-items: center; justify-content: center;
     width: 100%;
+    margin-bottom: var(--sp-4);
   }
   .sr-tick {
     display: block;
-    width: 2px; height: 24px;
-    background: var(--purple-bright);
-    border-radius: 1px;
-    box-shadow: 0 0 8px var(--purple-bright);
+    width: 3px; height: 28px;
+    background: linear-gradient(180deg, var(--purple-bright), var(--purple));
+    border-radius: 2px;
+    box-shadow: 0 0 12px var(--purple-bright);
   }
 
-  /* Icon column */
+  /* Icon column — sits high, not dead-centered */
   .sr-icons {
     display: flex; flex-direction: column;
-    gap: var(--sp-3);
+    gap: 6px;
     align-items: center;
-    flex: 1;
-    justify-content: center;
+    pointer-events: auto;
   }
   .sr-icon {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 34px; height: 34px;
+    width: 40px; height: 40px;
     border: 1px solid transparent;
-    border-radius: 4px;
+    border-radius: 6px;
     color: var(--muted);
+    background: color-mix(in oklab, var(--bg) 60%, transparent);
+    backdrop-filter: blur(6px);
     transition: color var(--dur-fast) var(--ease-out),
                 border-color var(--dur-fast) var(--ease-out),
                 background var(--dur-fast) var(--ease-out),
                 transform var(--dur-fast) var(--ease-out);
   }
-  .sr-icon svg { width: 16px; height: 16px; }
+  .sr-icon svg { width: 20px; height: 20px; }
+  .sr-icon-btn { cursor: pointer; padding: 0; }
+  .sr-icon-btn:focus-visible {
+    outline: 2px solid var(--purple-bright);
+    outline-offset: 2px;
+  }
   .sr-icon:hover, .sr-icon:focus-visible {
     color: var(--purple-bright);
     border-color: var(--line-strong);
-    background: color-mix(in oklab, var(--purple) 10%, transparent);
-    transform: translateX(-2px);
+    background: color-mix(in oklab, var(--purple) 14%, transparent);
+    transform: translateX(-3px);
     outline: none;
   }
   .sr-icon:focus-visible {
@@ -120,10 +142,12 @@ const displayPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
     outline-offset: 2px;
   }
 
-  /* Bottom path indicator */
+  /* Bottom path indicator — pinned to bottom via margin-top:auto */
   .sr-path {
+    margin-top: auto;
     display: flex; flex-direction: column; align-items: center;
     gap: var(--sp-3);
+    pointer-events: auto;
   }
   .sr-path-text {
     writing-mode: vertical-rl;
@@ -134,7 +158,6 @@ const displayPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
     text-transform: uppercase;
     color: var(--muted);
     padding: 6px 0;
-    /* long paths truncate cleanly */
     max-height: 220px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -147,7 +170,7 @@ const displayPath = currentPath === '/' ? '/' : currentPath.replace(/\/$/, '');
     border-radius: 1px;
   }
 
-  /* Desktop only. Mobile has the hamburger drawer. */
+  /* Desktop only + not on demo route. Mobile: hamburger drawer. */
   @media (min-width: 900px) {
     .side-rail { display: flex; }
   }
