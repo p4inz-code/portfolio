@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.15.0',
+    kind: 'released',
+    summary: 'Real WhatsApp brand SVG + resume PDF now on warm cream page with hairline project dividers + final audit.',
+    body: [
+      'WhatsApp icon: swapped my hand-drawn approximation for the actual WhatsApp brand SVG path (Simple Icons canonical geometry). Reads unmistakably as WhatsApp now at any size.',
+      'Resume PDF: switched page background from pure white (too clinical) to warm cream #F5EEDC (matches the site\'s Parchment Manuscript light theme, softer on the eye). Added -webkit-print-color-adjust: exact so Chrome ships the background instead of stripping it. Added hairline top-rule between every project block matching the Karuna Ketan reference — each project now visually separated on the page. Skills grid rows also get hairline separators (dusty warm gray #e2d9be). Section-heading rules re-warmed to match.',
+      'Big final audit: grepped every runtime file for stale references, TODOs, and content drift. 26 TODO/FIXME/placeholder hits — all inside CSS comments explaining prior fixes or legitimate copy ("Coming Soon" as Pursue OS\'s real status). Zero live bugs. Only remaining "Sacred Text" mention is a historical note in About\'s stack explanation about why the previous PP Editorial stack came off — that\'s meant to stay. Build clean (14 routes, 5MB dist total, 116KB PDF, one A4 page).',
+    ],
+  },
+  {
     version: 'v5.14.1',
     kind: 'released',
     summary: 'WhatsApp glyph fixed + resume PDF compressed to a proper single A4 page.',
