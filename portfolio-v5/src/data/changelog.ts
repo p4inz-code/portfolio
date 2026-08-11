@@ -20,6 +20,18 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.14.1',
+    kind: 'released',
+    summary: 'WhatsApp glyph fixed + resume PDF compressed to a proper single A4 page.',
+    body: [
+      'WhatsApp icon in the side rail was a stroked scribble that didn\'t read as WhatsApp. Replaced with the classic filled speech-bubble-with-phone-swirl glyph — instantly recognisable.',
+      'Resume PDF was spilling to a second page. Rebuilt the template to fit a single A4 (like the Karuna Ketan reference): body 10.5pt → 9.5pt, line-height 1.65 → 1.5, section top gap 22pt → 12pt, block gap 14pt → 7pt, bullets cut to 2-3 per project (only the essentials), Obscura + MINK + repo-map merged into one row instead of three, Philosophy section removed (redundant with the tone across everything else), Skills switched to a dense 2-column DL grid, Education compressed to one line.',
+      'Horizontal padding balanced at exactly 14mm on both left and right (was 18mm, felt narrow with the wider content). Vertical padding 14mm top / 12mm bottom.',
+      'Chrome print header still killed via @page{margin:0} + body padding pattern.',
+      'Now: single A4 page, breathes, holds every product + full skills + experience + education.',
+    ],
+  },
+  {
     version: 'v5.14.0',
     kind: 'released',
     summary: 'Sidebar upgrade (WhatsApp + Instagram + copy-URL button) · nav search cleaned · resume PDF fully rebuilt after 20-pass audit.',
