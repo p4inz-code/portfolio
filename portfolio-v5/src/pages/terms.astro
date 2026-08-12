@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+import { SITE, CONTACT } from '../data/site';
+---
+<BaseLayout title={`Terms — ${SITE.title}`}>
+  <Section
+    wide
+    heading="Plain terms, no lawyer padding."
+    headingEmphasis="Terms of use."
+    intro="This is a portfolio site. It exists to show what Atharva Patil builds. These terms cover what you can and can't do with the site itself."
+  >
+    <div class="prose">
+      <h2>The site</h2>
+      <p><strong>Content is All Rights Reserved.</strong> The design, code, copy, screenshots, and case-study writing on <a href="https://atharvapatil.tech">atharvapatil.tech</a> are the intellectual property of Atharva Patil / Northbyte Studios. You may read, share, link to, and cite this site freely. You may not copy substantial portions of the content or design and republish them as your own work.</p>
+      <p><strong>Products showcased here have their own licenses.</strong> Kanvaz is MIT. Mission OS is GPLv3. Pursue OS is Apache 2.0. Obscura is MIT. repo-map is MIT. Glint is MIT. Nexus is proprietary. Veris is proprietary. Each product's own repository is the authoritative source for its license terms — respect them there, not here.</p>
+
+      <h2>Downloads on this site</h2>
+      <p>The resume PDF/Markdown at <a href="/resume/">/resume</a> is for personal review, printing, and forwarding in a professional context (hiring, collaboration, evaluation). Not for republication.</p>
+
+      <h2>Warranty</h2>
+      <p>The site is provided <strong>as is</strong>. No warranty of accuracy, fitness for purpose, or uninterrupted availability. Product status and version numbers are updated against real releases in good faith — if you spot drift, tell me and I'll fix it, but I can't guarantee real-time accuracy.</p>
+
+      <h2>Liability</h2>
+      <p>To the maximum extent permitted by law, Atharva Patil / Northbyte Studios is not liable for indirect, consequential, or incidental damages arising from your use of this site or reliance on its content.</p>
+
+      <h2>Contact & disclosure</h2>
+      <p>General contact: <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>. Security disclosure follows <a href="/.well-known/security.txt">RFC 9116</a> (30-day coordinated disclosure preferred).</p>
+
+      <h2>Changes</h2>
+      <p>Meaningful changes to these terms land in the site's <a href="/status/">changelog</a> with a version bump.</p>
+
+      <p class="meta">Last updated: 2026-08-12.</p>
+    </div>
+  </Section>
+
+  <style>
+    .prose { max-width: 720px; color: var(--muted); font-size: var(--text-md); line-height: var(--leading-body); }
+    .prose h2 { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 500; color: var(--text); letter-spacing: -0.01em; margin-top: var(--sp-8); margin-bottom: var(--sp-3); }
+    .prose h2:first-of-type { margin-top: var(--sp-6); }
+    .prose p + p { margin-top: var(--sp-4); }
+    .prose strong { color: var(--text); font-weight: 500; }
+    .prose a { color: var(--purple-bright); border-bottom: 1px solid currentColor; }
+    .meta { margin-top: var(--sp-8); font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--muted); }
+  </style>
+</BaseLayout>

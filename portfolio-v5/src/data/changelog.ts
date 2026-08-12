@@ -20,6 +20,22 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.16.0',
+    kind: 'released',
+    summary: 'SEO audit response (SEOmator 93→target 98) + real portrait wired + Privacy/Terms/Editorial pages + trust strip + mobile 4-layer audit fixes.',
+    body: [
+      'SEOmator audit had 1 fail + 20 warnings across 171 checks. This ship addresses every actionable item on our side. Cloudflare-side ones (HTTP/3 alt-svc, compression) stay dashboard-level.',
+      'FAIL fixed — text-to-HTML ratio 5.8% (min 10%). Home hero intro paragraph expanded with real prose: "Ten products in flight or shipped, four thousand automated tests across them, zero telemetry across any of them. Every case study on this site links to a real repository or a real download — no design mockups pretending to be products, no fabricated screenshots. What you see below is what actually exists." Also dilutes the article-link-density (77.5%) and "os"/"open" keyword-stuffing warnings.',
+      'Title trimmed from 63 to 48 chars: "Atharva Patil — Software · 3D · VFX · Northbyte". Meta description trimmed from 148 to 124 chars.',
+      'E-E-A-T section (74/100, 8 warnings) — all addressed: new /privacy page (honest, "no telemetry, no cookies, no third-party analytics beyond Cloudflare\'s beacon"); new /terms page (All Rights Reserved on site content, per-product licenses noted); new /editorial page (content-accurate rule, no fabricated screenshots, version discipline, no AI-slop); trust strip added to footer with 5 real numbers (10 products / 4,100+ tests / 0 telemetry / 0 third-party analytics / privacy-first); YMYL disclaimer footer note on /nexus and /pursue-os case studies ("not security/investigation advice, verify against source repository"). Footer nav includes all three new pages.',
+      'AI/GEO — added <link rel="alternate" type="text/plain" href="/llms.txt"> in BaseLayout head so AI crawlers discover the llms.txt via HTML link (audit flagged "no llms.txt reference").',
+      'OG image switched from /og.svg to /og.png — the real 1200x630 dark banner you sent. LinkedIn/X/Discord/iMessage/Slack all get proper social cards now.',
+      'Real portrait photo wired into /about hero — 1000x1000, warm indoor scene, sits in a rounded 320px frame alongside the lede text on desktop, stacks above the text on mobile.',
+      'MOBILE 4-LAYER AUDIT (layout / typography / interaction / motion). Two real bugs fixed: (1) FeaturedShowcase 3D merry-go-round was disorienting on phones — replaced with a simpler opacity + translate reveal below 760px; (2) brand-name wordmark next to AP monogram pushed the hamburger toggle off-screen on <380px devices — brand-name now hides at that breakpoint, AP monogram stays.',
+      'Skills applied: writing-plans (audit scope), taste-skill (killed AI-slop copy), verification-before-completion.',
+    ],
+  },
+  {
     version: 'v5.15.0',
     kind: 'released',
     summary: 'Real WhatsApp brand SVG + resume PDF now on warm cream page with hairline project dividers + final audit.',

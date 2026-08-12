@@ -265,4 +265,20 @@ const { projects } = Astro.props;
   @media (prefers-reduced-motion: reduce) {
     .show-card { animation: none; opacity: 1; transform: none; }
   }
+  /* v5.16.0 mobile fix — the merry-go-round 3D rotation is disorienting
+     on phones (small viewport + tall stack = every card wheeling as you
+     scroll). Kill the rotation below 760px; keep the opacity fade. */
+  @media (max-width: 760px) {
+    @supports (animation-timeline: view()) {
+      .show-card {
+        animation-name: show-mobile-in;
+      }
+      .show-card:nth-child(2n) { animation-name: show-mobile-in; }
+    }
+    @keyframes show-mobile-in {
+      0%   { opacity: 0; transform: translateY(30px); }
+      35%  { opacity: 1; transform: translateY(0); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  }
 </style>

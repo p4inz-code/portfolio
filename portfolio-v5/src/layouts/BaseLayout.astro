@@ -20,7 +20,7 @@ const {
   // Slack, iMessage, Signal, Telegram accept SVG og:image. LinkedIn + X
   // prefer PNG; if you need those, run svgexport over public/og.svg and
   // drop the PNG at public/og.png — the layout falls back to the SVG.
-  ogImage = "/og.svg",
+  ogImage = "/og.png",
   themeColor = "#0A0517",
 } = Astro.props;
 
@@ -143,6 +143,9 @@ const jsonLd = {
     <link rel="me" href={CONTACT.github} />
     <link rel="me" href={`mailto:${CONTACT.email}`} />
     <link rel="alternate" type="application/rss+xml" title={`${SITE.title} — changelog`} href="/feed.xml" />
+    <!-- v5.16.0 SEO audit fix: reference llms.txt from head for AI-crawler
+         discovery (audit said "no llms.txt reference"). -->
+    <link rel="alternate" type="text/plain" title="llms.txt — AI-readable content index" href="/llms.txt" />
     <link rel="search" type="application/opensearchdescription+xml" title="Atharva Patil" href="/opensearch.xml" />
     <link rel="author" href="/humans.txt" />
     <link rel="license" href="/LICENSE" />
@@ -308,6 +311,18 @@ const jsonLd = {
     <main id="main"><slot /></main>
 
     <footer class="site-footer">
+      <!-- v5.16.0 trust strip — real numbers, addresses SEO audit
+           E-E-A-T "no trust signals" warning. -->
+      <div class="wrap">
+        <ul class="trust-strip" role="list" aria-label="Trust signals">
+          <li><span class="ts-num">10</span><span class="ts-label">Products in flight / shipped</span></li>
+          <li><span class="ts-num">4,100+</span><span class="ts-label">Automated tests across products</span></li>
+          <li><span class="ts-num">0</span><span class="ts-label">Telemetry on any product</span></li>
+          <li><span class="ts-num">0</span><span class="ts-label">Third-party analytics on this site</span></li>
+          <li><span class="ts-num">100%</span><span class="ts-label">Cloudflare-hosted · privacy-first</span></li>
+        </ul>
+      </div>
+
       <div class="wrap footer-inner">
         <div class="footer-brand">
           <p class="footer-name">Atharva Patil</p>
@@ -322,6 +337,9 @@ const jsonLd = {
           <a href="/contact/">Contact</a>
           <a href="/status/">Status</a>
           <a href="/accessibility/">Accessibility</a>
+          <a href="/privacy/">Privacy</a>
+          <a href="/terms/">Terms</a>
+          <a href="/editorial/">Editorial policy</a>
         </nav>
         <div class="footer-meta">
           <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
@@ -413,9 +431,46 @@ const jsonLd = {
       }
 
       .site-footer {
-        padding: var(--sp-11) 0 var(--sp-8);
+        padding: var(--sp-10) 0 var(--sp-8);
         margin-top: var(--sp-12);
         border-top: 1px solid var(--line);
+      }
+      /* v5.16.0 trust strip — real numbers, addresses SEO E-E-A-T warning */
+      .trust-strip {
+        list-style: none; padding: 0; margin: 0 0 var(--sp-9);
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      @media (max-width: 900px) {
+        .trust-strip { grid-template-columns: 1fr 1fr; }
+      }
+      @media (max-width: 480px) {
+        .trust-strip { grid-template-columns: 1fr; }
+      }
+      .trust-strip li {
+        background: var(--surface-1);
+        padding: var(--sp-5) var(--sp-4);
+        display: flex; flex-direction: column; gap: 4px;
+      }
+      .ts-num {
+        font-family: var(--font-display);
+        font-size: var(--text-xl);
+        font-weight: 500;
+        color: var(--text);
+        letter-spacing: -0.02em;
+        line-height: 1;
+      }
+      .ts-label {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: var(--tracking-eyebrow);
+        text-transform: uppercase;
+        color: var(--muted);
       }
       .footer-inner {
         display: grid;
@@ -542,6 +597,12 @@ const jsonLd = {
       @media (max-width: 760px) {
         .nav-links { display: none !important; }
         .nav-mobile-toggle { display: inline-flex; }
+      }
+      /* v5.16.0 mobile-audit fix — on very narrow phones (<380px) the
+         brand-name text pushed the hamburger toggle off-screen. Hide
+         the wordmark, keep the AP monogram. */
+      @media (max-width: 380px) {
+        .brand-name { display: none; }
       }
     </style>
   </body>

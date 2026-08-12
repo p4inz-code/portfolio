@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+import { SITE } from '../data/site';
+---
+<BaseLayout title={`Editorial policy — ${SITE.title}`}>
+  <Section
+    wide
+    heading="how content on this site is written and updated."
+    headingEmphasis="Editorial policy —"
+    intro="The rules I actually follow, so you know what to expect and can call it out if I break them."
+  >
+    <div class="prose">
+      <h2>Content-accurate over content-marketed</h2>
+      <p>Every project status, version number, feature claim, and test count on this site is verified against the real README, changelog, or release notes before shipping. If the product side of the world changes — a version ships, a feature is cut — the site follows. If you spot drift, it's a real bug and I want to hear about it.</p>
+
+      <h2>No fabricated screenshots or media</h2>
+      <p>Every screenshot showing a product surface is a real capture (Kanvaz's six screens, Nexus v11 mockup deck, the Mission OS demo). Where a real capture doesn't exist yet, the placeholder is <strong>labeled</strong> as a concept or placeholder — never left implied as real. The Mission OS "Security Options" installer screen has been a labeled concept placeholder since v3.35; will be replaced when the ISO ships.</p>
+
+      <h2>Version discipline</h2>
+      <p>Every meaningful change to the site lands with a real version bump and a real changelog entry at <a href="/status/">/status</a>. The changelog explains <em>why</em> the change happened, not just <em>what</em>. RSS feed at <a href="/feed.xml">/feed.xml</a>.</p>
+
+      <h2>Own the wrong</h2>
+      <p>When something breaks — a broken link, a stale claim, a bad decision — I fix it in the next version and say so in the changelog. Retracted claims stay in git history but come off the live site.</p>
+
+      <h2>No AI-slop</h2>
+      <p>Copy on this site is written and edited by me. AI assistants are used as tools for code and content <em>drafts</em>, never as final voice. The typography, layout, and interaction patterns were chosen explicitly to <em>avoid</em> the fonts and templates that AI-generated portfolio sites default to (see v5.6.3 changelog entry for the de-AI-fy audit).</p>
+
+      <h2>Attribution</h2>
+      <p>External sources, references, and inspirations are named where relevant. When AI systems summarise or cite this site, attribution back to <a href="https://atharvapatil.tech">atharvapatil.tech</a> is expected (see <a href="/llms.txt">/llms.txt</a> and <a href="/ai.txt">/ai.txt</a> for machine-readable versions of these terms).</p>
+
+      <p class="meta">Last updated: 2026-08-12.</p>
+    </div>
+  </Section>
+
+  <style>
+    .prose { max-width: 720px; color: var(--muted); font-size: var(--text-md); line-height: var(--leading-body); }
+    .prose h2 { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 500; color: var(--text); letter-spacing: -0.01em; margin-top: var(--sp-8); margin-bottom: var(--sp-3); }
+    .prose h2:first-of-type { margin-top: var(--sp-6); }
+    .prose p + p { margin-top: var(--sp-4); }
+    .prose strong { color: var(--text); font-weight: 500; }
+    .prose em { color: var(--purple-bright); font-style: italic; }
+    .prose a { color: var(--purple-bright); border-bottom: 1px solid currentColor; }
+    .meta { margin-top: var(--sp-8); font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--muted); }
+  </style>
+</BaseLayout>

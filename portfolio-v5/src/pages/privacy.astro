@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/layout/Section.astro';
+import { SITE, CONTACT } from '../data/site';
+---
+<BaseLayout title={`Privacy — ${SITE.title}`}>
+  <Section
+    wide
+    heading="honest, and short."
+    headingEmphasis="Privacy at atharvapatil.tech."
+    intro="No dark patterns. No cookie banner because there are no tracking cookies to consent to."
+  >
+    <div class="prose">
+      <h2>What this site collects about you</h2>
+      <p><strong>Nothing personally identifiable.</strong> No accounts. No login. No form that POSTs to a server (the contact page composes a mailto link locally — nothing leaves your browser until you click send in your own mail client).</p>
+      <p><strong>One thing counted:</strong> Cloudflare Web Analytics, the privacy-preserving beacon Cloudflare ships on their Pages product. It counts page views and rough performance timings <em>without</em> cookies, without cross-site tracking, and without collecting IP addresses or fingerprintable data. <a href="https://www.cloudflare.com/web-analytics/" target="_blank" rel="noopener noreferrer">Cloudflare's documentation</a> is the authoritative source on what that includes.</p>
+
+      <h2>What this site does NOT do</h2>
+      <ul>
+        <li>No Google Analytics, Meta Pixel, TikTok Pixel, Segment, Amplitude, PostHog, Hotjar, LogRocket, or any other third-party analytics.</li>
+        <li>No advertising trackers. No re-targeting pixels.</li>
+        <li>No cookies for tracking, session, or personalisation. The only client-side storage is <code>localStorage</code> keys <code>nb-theme</code> (your dark/light preference) and <code>nb-cmdk-recent</code> (your recent command-palette searches, up to five). Both live only in your browser, never leave your device.</li>
+        <li>No cross-site tracking. No user identifiers of any kind.</li>
+      </ul>
+
+      <h2>What the products this site showcases collect</h2>
+      <p>The products themselves (Nexus, Mission OS, Kanvaz, Pursue OS, Veris, Obscura, repo-map, Glint, 3D Ref Skills) each have their own privacy postures, all built around the same rule: <strong>no telemetry, ever.</strong> Every product's source or documentation states this explicitly. Nexus's cryptographic architecture is public. Mission OS's telemetry hooks are compile-time excluded. Kanvaz is MIT + open source — inspectable line by line.</p>
+
+      <h2>Third-party services this site loads</h2>
+      <ul>
+        <li><strong>Fontshare</strong> (<code>api.fontshare.com</code>, <code>cdn.fontshare.com</code>) — serves the Neue Machina, Neue Montreal, and Supply Mono font files. Fontshare does not use cookies for anonymous font requests.</li>
+        <li><strong>Cloudflare</strong> — hosts the site (Cloudflare Pages) and serves the Web Analytics beacon.</li>
+        <li>Nothing else.</li>
+      </ul>
+
+      <h2>Your rights</h2>
+      <p>Because this site collects no personal data, there is nothing to request, export, correct, or delete on my side. If you interact with me directly (email, Discord, WhatsApp, GitHub issue), that correspondence lives in the respective platform's storage — subject to their privacy policies, not mine.</p>
+
+      <h2>Changes to this policy</h2>
+      <p>If this policy meaningfully changes, the change lands in the site's <a href="/status/">changelog</a> with a real version bump. Nothing quiet.</p>
+
+      <h2>Contact</h2>
+      <p>Questions about privacy on this site: <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>. Security disclosures follow <a href="/.well-known/security.txt">RFC 9116</a>.</p>
+
+      <p class="meta">Last updated: 2026-08-12.</p>
+    </div>
+  </Section>
+
+  <style>
+    .prose {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: var(--text-md);
+      line-height: var(--leading-body);
+    }
+    .prose h2 {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      margin-top: var(--sp-8);
+      margin-bottom: var(--sp-3);
+    }
+    .prose h2:first-of-type { margin-top: var(--sp-6); }
+    .prose p + p, .prose ul + p, .prose p + ul { margin-top: var(--sp-4); }
+    .prose ul {
+      list-style: none;
+      padding: 0;
+      display: flex; flex-direction: column;
+      gap: var(--sp-2);
+    }
+    .prose ul li {
+      padding-left: var(--sp-4);
+      position: relative;
+    }
+    .prose ul li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 12px;
+      width: 8px; height: 1px;
+      background: var(--purple-bright);
+    }
+    .prose strong { color: var(--text); font-weight: 500; }
+    .prose em { color: var(--purple-bright); font-style: italic; }
+    .prose a { color: var(--purple-bright); border-bottom: 1px solid currentColor; }
+    .prose code {
+      font-family: var(--font-mono);
+      background: color-mix(in oklab, var(--purple) 8%, transparent);
+      color: var(--purple-bright);
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 0.88em;
+    }
+    .meta {
+      margin-top: var(--sp-8);
+      font-family: var(--font-mono);
+      font-size: var(--text-xxs);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+  </style>
+</BaseLayout>

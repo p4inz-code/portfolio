@@ -107,6 +107,10 @@ const project = PROJECTS.find((p) => p.slug === 'nexus')!;
     </div>
   </Section>
 
+  <div class="ymyl-note wrap">
+    <p><strong>Not security advice.</strong> This page describes the cryptographic architecture of the Nexus vault product. It is not a substitute for professional security or compliance review before you rely on any encryption tool for critical data. Verify claims against the Nexus documentation and release notes at the linked repository.</p>
+  </div>
+
   <Section eyebrow="v11 · what changes, what doesn't">
     <dl class="v11-list">
       <div class="v11-item">
@@ -165,6 +169,19 @@ const project = PROJECTS.find((p) => p.slug === 'nexus')!;
       font-size: var(--text-sm);
       line-height: var(--leading-body);
     }
+
+    /* v5.16.0 YMYL disclaimer — SEO audit E-E-A-T fix */
+    .ymyl-note {
+      margin: var(--sp-8) auto;
+      max-width: var(--wrap-narrow);
+      padding: var(--sp-4) var(--sp-5);
+      border-left: 3px solid var(--warn);
+      background: color-mix(in oklab, var(--warn) 6%, transparent);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      line-height: var(--leading-body);
+    }
+    .ymyl-note strong { color: var(--warn-text); }
 
     /* v11 preview block */
     .v11-block { max-width: var(--wrap-narrow); }

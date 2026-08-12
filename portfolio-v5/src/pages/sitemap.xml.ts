@@ -27,6 +27,9 @@ const routes: Array<{ path: string; priority: number; changefreq: string }> = [
   { path: '/contact/',          priority: 0.6, changefreq: 'yearly' },
   { path: '/status/',           priority: 0.7, changefreq: 'weekly' },
   { path: '/accessibility/',    priority: 0.4, changefreq: 'yearly' },
+  { path: '/privacy/',          priority: 0.4, changefreq: 'yearly' },
+  { path: '/terms/',            priority: 0.4, changefreq: 'yearly' },
+  { path: '/editorial/',        priority: 0.4, changefreq: 'yearly' },
 ];
 
 export const GET: APIRoute = () => {

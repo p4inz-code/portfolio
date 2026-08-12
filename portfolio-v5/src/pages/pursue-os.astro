@@ -64,6 +64,10 @@ const project = PROJECTS.find((p) => p.slug === 'pursue-os')!;
     </p>
   </Section>
 
+  <div class="ymyl-note wrap">
+    <p><strong>Not investigation advice.</strong> This page describes an in-progress operating system designed to support OSINT / DFIR / evidence-collection workflows. It is not a substitute for training or professional standards in those fields. Verify capabilities and legal fitness for your jurisdiction against the source repository before relying on any component for real casework.</p>
+  </div>
+
   <style>
     .notice-wrap { padding: 0 0 var(--sp-7); }
     .notice {
@@ -109,5 +113,18 @@ const project = PROJECTS.find((p) => p.slug === 'pursue-os')!;
     .status-label { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--muted-2); }
     .status-value { font-family: var(--font-display); font-size: var(--text-md); color: var(--text); }
     .status-value.warn { color: var(--warn-text); }
+
+    /* v5.16.0 YMYL disclaimer */
+    .ymyl-note {
+      margin: var(--sp-8) auto;
+      max-width: var(--wrap-narrow);
+      padding: var(--sp-4) var(--sp-5);
+      border-left: 3px solid var(--warn);
+      background: color-mix(in oklab, var(--warn) 6%, transparent);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      line-height: var(--leading-body);
+    }
+    .ymyl-note strong { color: var(--warn-text); }
   </style>
 </BaseLayout>

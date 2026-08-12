@@ -7,12 +7,13 @@ export const SITE = {
   title: 'Atharva Patil',
   role: 'Software engineer, founder of Northbyte Studios',
   tagline: 'Software during the day, 3D and VFX on the side',
+  // Meta description — 140 chars (was 148, SEO audit flagged >920px pixel width).
   description:
-    'Atharva Patil — software engineer, VFX and 3D student, founder of Northbyte Studios. Building Mission OS, Nexus, Kanvaz, Pursue OS, Veris, and more.',
+    'Atharva Patil — solo founder of Northbyte Studios. Privacy-first software, two Linux OSes, encrypted vault, dev tools, 3D/VFX.',
   location: 'Navi Mumbai, India',
   studio: 'Northbyte Studios',
   studioFounded: '2026',
-  currentVersion: 'v5.15.0',
+  currentVersion: 'v5.16.0',
   domain: 'atharvapatil.tech',
 } as const;
 
