@@ -106,10 +106,10 @@ Software engineer and product builder focused on **desktop applications, develop
 
 ## PHILOSOPHY
 
-Build software that is useful, understandable, reliable, and worth maintaining. Deliberate product decisions. Clean interfaces. Privacy by default. Practical engineering. Long-term maintainability.
+I'd rather ship something smaller that's actually finished than something bigger that's half-right. That means privacy-first by default, interfaces that explain themselves, and code built to still make sense a year from now.
 
-**Guiding lines that show up in every product I ship:**
-No telemetry, ever. Explain the trade-off on-screen. Content-accurate over content-marketed. One person, whole product. Free-forever when it can be.
+**What that looks like in practice:**
+No telemetry, ever. Every advanced option explains its trade-off on-screen, not in a docs page nobody reads. Status labels on this résumé and on the site match the real repos. I build, test, and ship everything myself. Free wherever the studio can afford it to be.
 
 ---
 
@@ -118,7 +118,7 @@ No telemetry, ever. Explain the trade-off on-screen. Content-accurate over conte
 - Portfolio — [atharvapatil.tech](https://atharvapatil.tech)
 - GitHub — [github.com/p4inz-code](https://github.com/p4inz-code)
 - Instagram — [@atharva.patil.cg](https://instagram.com/atharva.patil.cg)
-- Discord — `p4inz` &nbsp;·&nbsp; [Nexus beta community](https://discord.gg/XFF5nV53ZJ)
+- Discord — `p4inz` &nbsp;·&nbsp; [Nexus beta community](https://discord.gg/8UKt8s5FbW)
 - Email — [atharva.patil.cg@gmail.com](mailto:atharva.patil.cg@gmail.com)
 
 ---

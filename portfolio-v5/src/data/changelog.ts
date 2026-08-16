@@ -20,6 +20,23 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.17.3',
+    kind: 'released',
+    summary: 'De-AI-fy pass 2 — rewrote the homepage hero, /about, and the studio tagline in a plainer human voice, removed repeated "01/04" index badges site-wide, fixed a real WCAG failure (11 pages had no <h1>), and closed a hardcoded product-count bug (site said 10, there are 9).',
+    body: [
+      'Killed the "I write software during the day / I study VFX on the side / I build Mission OS on my own" hero triplet and its literal repeat as a scroll-revealed "manifest bridge" further down the page — flagged as reading generated. Homepage hero and intro rewritten in first person, no rule-of-three parallelism.',
+      'Killed the "Developer by discipline. 3D artist by training. Builder by default." tagline everywhere it appeared (about page, llms.txt) — same complaint, same fix: plainer, specific, first-person.',
+      'Full /about rewrite: the "01–05" numbered principle cards, the "Thesis. / Product order. / What I don\'t need." bold-label investor-deck paragraphs, and the repeated setup/antithesis rhetoric ("that\'s the trade-off... that\'s the trade-off too") are gone. Same facts, same numbers, written the way a person actually talks.',
+      'Removed the "01 / 04" and "01 OF 04" numbered index badges from the homepage featured showcase AND the /services offering list (missed the second one on the first pass — found it while checking /services for the non-technical-client persona).',
+      'FIXED — hardcoded product count. The trust strip and homepage hero both said "10 products" when projects.ts has 9. Both now read PROJECTS.length live so this can\'t silently drift again (same class of bug as the Veris version drift in v5.17.2).',
+      'FIXED — trust strip (5-stat panel) rendered on every single page, called out as repetitive. Homepage only now.',
+      'FIXED — real WCAG failure, not a style nitpick. Ran axe-core against all 18 routes: 11 pages (about, services, contact, accessibility, privacy, terms, editorial, 3d, work, status, and — after the fix cascaded — 4 more with heading-order skips) had zero &lt;h1&gt; elements. Section.astro now supports a headingLevel prop; the first Section on every affected page renders a real h1. Fixing that surfaced 4 new heading-order violations (h1 jumping straight to h3) — fixed those too: accessibility.astro subheadings promoted to h2, services/status given real h2 section headings, FeaturedShowcase\'s heading level made context-aware (h3 on the homepage where it\'s under an h2, h2 on /work where it sits directly under the page h1). Also fixed two violations on /mission-os/demo (a role="banner" landmark conflict, a missing sr-only h1 on the immersive full-screen route). Full site: 0 axe violations across all 18 routes, verified with a real chromedriver run, not estimated.',
+      'humans.txt was still describing the pre-v5.6.3 font stack (PP Editorial New / JetBrains Mono) and an imprecise analytics claim — corrected to match reality and reconciled with /privacy\'s existing, more precise wording.',
+      'Resume PDF and markdown regenerated: Veris version fix carried through, the Discord invite updated, the "Philosophy" section rewritten off its AI-sounding fragment-list pattern, and a stale "v3.1" version stamp on the resume page (left over from the old versioning scheme, never matched v5.x) replaced with a plain date.',
+      'Confirmed with the user: the four public repos with no portfolio presence (p4inz, Crossport, docflow, reference-engineering) stay off the site — curated best work only, not a mirror of every repo.',
+    ],
+  },
+  {
     version: 'v5.17.2',
     kind: 'released',
     summary: 'Repo-truth audit — cross-checked every versioned product on the site against its real GitHub release tags for the first time with authenticated gh CLI access; found and fixed one real drift (Veris).',

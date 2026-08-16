@@ -6,6 +6,11 @@ import Desktop from '../../components/features/MissionDemo/Desktop.astro';
 ---
 <BaseLayout title={`Mission OS · Concept Demo — Atharva Patil`}>
   <div class="demo-scope">
+    <!-- v5.17.3 fix — this route is a full-screen simulated OS takeover
+         with no visible page heading by design, but every page still
+         needs a real h1 for assistive tech (axe: page-has-heading-one).
+         Visually hidden, not decorative. -->
+    <h1 class="sr-only">Mission OS — interactive concept demo</h1>
     <DemoRibbon />
     <BootSequence username="p4inz" />
     <Desktop />

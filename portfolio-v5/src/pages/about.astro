@@ -55,23 +55,23 @@ const stackReasons = [
 const principles = [
   {
     title: 'No telemetry, ever',
-    body: 'Nothing I ship phones home. Not "off by default"; not compiled in. If a product wants to know something about you, it asks you directly on-screen and lets you say no.',
+    body: 'Nothing I ship phones home. Not "off by default" — not compiled in at all. If a product wants to know something about you, it asks you on-screen, and you can say no.',
   },
   {
-    title: 'Explain the trade-off on-screen',
-    body: 'Every advanced option — Secure Boot, TPM-sealed unlock, disk encryption, telemetry — gets its benefit, limitation, and trade-off in the same view as the toggle. Users should understand what they\'re enabling. This shows up in Mission OS\'s installer and in Nexus\'s security panel.',
+    title: 'Explain what you\'re turning on',
+    body: 'Secure Boot, TPM-sealed unlock, disk encryption, telemetry — every advanced option gets its benefit and its downside written right next to the toggle, not buried in docs. You should know what you\'re agreeing to before you agree to it.',
   },
   {
-    title: 'Content-accurate over content-marketed',
-    body: 'Every project status on this site is verified against the real README / release notes before shipping. If something is a concept preview, it says so. No fabricated screenshots. This site has failed shipping updates because a checkbox on the /status page was still stale.',
+    title: 'Say what\'s actually true',
+    body: 'Before I ship an update to this site, I check the claim against the real README or release notes. If something\'s only a concept preview, it says so. I\'ve delayed a ship before because a status label on /status was already out of date.',
   },
   {
-    title: 'One person, whole product',
-    body: 'Everything here — the products, the case studies, the design system, the /mission-os/demo route, the resume PDF, this sentence — was designed, built, and shipped by one person. The scope is the ceiling; the discipline is the point.',
+    title: 'I build all of it myself',
+    body: 'The products, the case studies, this site\'s design system, the Mission OS demo, the résumé — one person, start to finish. Not a boast, just how the timeline works out.',
   },
   {
-    title: 'Free-forever when it can be',
-    body: 'Kanvaz, Obscura, Glint, repo-map, 3D Ref Skills, Mission OS, Pursue OS — all free, most open-source. Commercial products (Nexus, Veris) exist because sustaining a solo studio requires it, but even those keep the "no telemetry" line.',
+    title: 'Free when I can make it free',
+    body: 'Kanvaz, Obscura, Glint, repo-map, 3D Ref Skills, Mission OS, and Pursue OS are all free, most of them open-source. Nexus and Veris are paid because running a one-person studio costs money — but they don\'t get a telemetry exception either.',
   },
 ];
 
@@ -83,14 +83,15 @@ const timeline = [
   { year: 'Aug 2026', event: 'Second year of the animation program. Portfolio migrated to Astro (v5.0). Pursue OS repository foundation goes public. Mission OS ISO enters internal testing.' },
 ];
 
-// Investor-ready traction snapshot — real, verifiable numbers only.
+// Real, verifiable numbers only — for anyone deciding whether to work with
+// a one-person studio.
 const traction = [
   { k: 'Products shipped or in flight', v: `${PROJECTS.length}` },
   { k: 'Open source (MIT / GPLv3 / Apache 2.0)', v: `${PROJECTS.filter((p) => p.license && p.license !== 'Proprietary').length}` },
-  { k: 'Test coverage across products', v: '4,100+ automated tests (Veris 3,100 + repo-map 870 + others)' },
-  { k: 'Design-through-shipping loop', v: '1 person — no handoffs, no committees' },
-  { k: 'Third-party analytics on any product', v: '0 — no telemetry, ever' },
-  { k: 'External dependencies (this site)', v: '0 tracking, 0 fetch calls at runtime' },
+  { k: 'Automated tests across products', v: '4,100+ (Veris 3,100 + repo-map 870 + others)' },
+  { k: 'People between design and shipping', v: 'Just me' },
+  { k: 'Third-party analytics on any product', v: '0' },
+  { k: 'External dependencies (this site)', v: '0 — no tracking, no fetch calls at runtime' },
 ];
 
 const shippedCount = PROJECTS.length;
@@ -100,8 +101,11 @@ const activeCount = PROJECTS.filter(
 ---
 <BaseLayout title="About — Atharva Patil">
 
-  <!-- HERO — v5.16.0: portrait photo added, split with lede text -->
-  <Section wide heading="Developer by discipline. 3D artist by training. Builder by default." headingEmphasis="Atharva Patil.">
+  <!-- HERO — v5.16.0: portrait photo added, split with lede text.
+       v5.17.3: rewritten off the "Developer by discipline / 3D artist by
+       training / Builder by default" triplet — flagged as sounding
+       generated. Plainer version below. -->
+  <Section wide headingLevel="h1" heading="Software engineer, and about two years into a 3D animation degree." headingEmphasis="Atharva Patil.">
     <div class="about-hero">
       <div class="about-portrait">
         <img
@@ -113,17 +117,15 @@ const activeCount = PROJECTS.filter(
       </div>
       <div class="about-hero-text">
         <p class="about-lede">
-          Solo founder of <em>{SITE.studio}</em>, based in {SITE.location}. Second-year VFX &amp; 3D
-          animation student, second year as a software builder under my real name (previous handles
-          <em>PainZ</em> and <em>Grim</em> are retired — everything ships as <strong>p4inz</strong> or
-          the real name now). {shippedCount} products shipped or in flight, {activeCount} in active
-          development, none of them with a marketing team behind them.
+          I run <em>{SITE.studio}</em> on my own, based in {SITE.location}. I used to go by
+          <em>PainZ</em> and <em>Grim</em> — both retired, everything ships under <strong>p4inz</strong>
+          or my real name now. {shippedCount} products shipped or in progress, {activeCount} of them
+          actively worked on, and no marketing team behind any of it — just me.
         </p>
         <p class="about-lede-secondary">
-          The same instinct that goes into designing a lock screen goes into lighting a 3D scene —
-          obsessing over how things <em>feel</em> when you interact with them, not just how they look.
-          That instinct is why I stopped choosing between "software" and "3D." Both are just interfaces
-          to attention.
+          For a while I thought I'd eventually have to pick one: software or 3D. I've stopped
+          expecting that to happen. A UI that feels right and a render that feels right come from the
+          same place — paying attention to the small stuff most people don't notice until it's wrong.
         </p>
       </div>
     </div>
@@ -133,30 +135,31 @@ const activeCount = PROJECTS.filter(
   <Section eyebrow="The short version" heading="Why software and 3D, and why probably not stopping.">
     <div class="story-block">
       <p>
-        Software came first — the kind of first that starts by breaking things you own until they
-        work. Windows tools, small utilities, then bigger products. By 2025 that had become a
-        studio ({SITE.studio.replace('Northbyte Studios', 'Obsidian Labs')} at the time), which by
-        2026 had become <em>{SITE.studio}</em>: a proper name for a proper commitment.
+        Software came first, and it started the usual way — taking apart things I owned until I
+        understood them, then trying to fix or replace what annoyed me. Windows tools first, then
+        small utilities, then products with actual users. That grew into a studio in 2025
+        ({SITE.studio.replace('Northbyte Studios', 'Obsidian Labs')}, at the time), and I renamed it
+        <em>{SITE.studio}</em> in 2026 once it felt like something worth naming properly.
       </p>
       <p>
-        3D and VFX came in because the software wasn't the whole story. Enrolling in a B.Sc.
-        Animation program at D. Y. Patil University this year formalised what I was already doing
-        on the side. There is a reason <em>Kanvaz</em> is a reference workspace for VFX artists —
-        it's a tool I built for the community I'm inside, not a tool I built to look interesting to
-        a community I'm not.
+        3D came in because software alone wasn't covering everything I wanted to make. I started a
+        B.Sc. Animation program at D. Y. Patil University this year, which mostly just gave a name to
+        something I was already doing on the side. <em>Kanvaz</em> exists because of that overlap —
+        it's a reference tool I built for VFX artists because I'm one of them, not something I built
+        to look interesting from the outside.
       </p>
       <p>
-        The through-line is <strong>privacy-first, offline-first, no telemetry</strong>. Every
-        product on this site earns that phrase. Nexus doesn't sync to a cloud. Mission OS doesn't
-        phone home. Pursue OS is being built for investigators who can't afford to leak metadata.
-        Even this portfolio is Cloudflare-static, no third-party analytics beyond Cloudflare's
-        privacy-preserving beacon.
+        Almost everything I build ends up privacy-first and offline-first, usually without me
+        planning it that way going in. Nexus doesn't sync to a cloud. Mission OS doesn't phone home.
+        Pursue OS is for investigators who can't afford to leak metadata about who they're
+        researching. Even this site runs on Cloudflare with nothing beyond Cloudflare's own
+        privacy-preserving traffic beacon — no analytics script, no tracking pixel.
       </p>
       <p>
-        The unglamorous side: I do this alone. Everything you see was designed, coded, tested,
-        deployed, and written up by one person. When something ships slower than a team would ship
-        it, that's the trade-off. When something ships more coherently than a team would ship it,
-        that's the trade-off too.
+        The part that's less fun to admit: I do all of this alone, so there's no one to catch what I
+        miss and no one to help me move faster either. Some things take longer because of that.
+        Other things stay more consistent than they would with five people making five different
+        calls on the same product — most days I think that trade is worth it.
       </p>
     </div>
   </Section>
@@ -174,11 +177,10 @@ const activeCount = PROJECTS.filter(
   </Section>
 
   <!-- PRINCIPLES -->
-  <Section eyebrow="What I actually believe" heading="Five lines that show up in every product." intro="Not a manifesto. Just the things that are true if you inspect the code, ship notes, and installer copy for every product on this site.">
+  <Section eyebrow="What I actually believe" heading="Things you can go check, not a values statement." intro="Every line here holds up if you actually read the installer copy, the ship notes, or the source for any product on this site.">
     <div class="pr-grid">
-      {principles.map((p, i) => (
+      {principles.map((p) => (
         <article class="pr-card">
-          <span class="pr-index">{String(i + 1).padStart(2, '0')}</span>
           <h3 class="pr-title">{p.title}</h3>
           <p class="pr-body">{p.body}</p>
         </article>
@@ -187,7 +189,7 @@ const activeCount = PROJECTS.filter(
   </Section>
 
   <!-- INVESTOR / COLLABORATOR READ -->
-  <Section eyebrow="For investors + collaborators" heading="The shape of what I'm building." intro="A studio designed to survive on principles, not headcount. Numbers below are real — verifiable in the repos and the changelog on /status.">
+  <Section eyebrow="For investors + collaborators" heading="What this studio actually looks like from the outside." intro="Every number below is checkable — against the repos, or against the changelog on /status.">
     <dl class="tr-grid">
       {traction.map((t) => (
         <div class="tr-cell">
@@ -197,9 +199,9 @@ const activeCount = PROJECTS.filter(
       ))}
     </dl>
     <div class="tr-thesis">
-      <p><strong>Thesis.</strong> Solo-founder studios with a real principle stack (no telemetry, no cloud lock-in, no dark patterns) are undervalued right now because "growth" playbooks assume ads + telemetry as free primitives. Northbyte Studios bets that a small number of privacy-first products, each finished to the level of craft you'd expect from a design agency, is a defensible position — not a limitation.</p>
-      <p><strong>Product order.</strong> Nexus is the flagship commercial product (encrypted vault, Windows). Mission OS is the operating-system-scale bet (privacy-first Linux distro). Kanvaz and Obscura exist as trust anchors — free, open-source proof that the studio ships. Everything else supports one of those three tiers.</p>
-      <p><strong>What I don't need.</strong> Growth marketing, agency handoffs, a full team, an office. What I do want: introductions to founders / investors / OSS maintainers who share the "principled product > engagement product" thesis.</p>
+      <p>My bet is that a small number of privacy-first products, each finished properly, beats a bigger catalogue of half-finished ones — most "growth" advice assumes ads and telemetry are free to add, and I'd rather not build on that assumption.</p>
+      <p>Nexus is the main commercial product — an encrypted vault for Windows. Mission OS is the bigger, slower bet — a privacy-first Linux distro, built at OS scale. Kanvaz and Obscura are free and open-source on purpose: proof the studio actually ships, not just talks about shipping. Everything else supports one of those three.</p>
+      <p>I'm not looking for growth marketing, an agency handoff, or a full team right now. What's actually useful: introductions to other founders, investors, or open-source maintainers who care more about the product being right than the product growing fast.</p>
     </div>
   </Section>
 
@@ -368,14 +370,6 @@ const activeCount = PROJECTS.filter(
       border-top: 1px solid var(--purple-bright);
       background: transparent;
       position: relative;
-    }
-    .pr-index {
-      font-family: var(--font-mono);
-      font-size: var(--text-xxs);
-      letter-spacing: var(--tracking-eyebrow);
-      color: var(--muted);
-      display: block;
-      margin-bottom: var(--sp-3);
     }
     .pr-title {
       font-family: var(--font-display);

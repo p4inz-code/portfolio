@@ -9,7 +9,7 @@
 
 /* SITE */
 
-  Last major update:               2026-08 (v5.5+)
+  Last major update:               2026-08 (v5.17)
   Language:                        English
   Doctype:                         HTML5
   IDE:                             VS Code
@@ -20,23 +20,25 @@
   Framework:                       Astro 5.18 (static output)
   Styling:                         Design tokens + component-scoped CSS
   Type checking:                   TypeScript (astro/tsconfigs/strict)
-  Fonts:                           PP Editorial New (Fontshare)
-                                   JetBrains Mono (Google Fonts)
+  Fonts:                           Neue Machina, Neue Montreal, Supply Mono
+                                   (all Fontshare)
   Hosting:                         Cloudflare Pages
   Node:                            v20 (pinned via .nvmrc)
-  Analytics:                       Cloudflare Web Analytics only
-                                   (no third-party, no cookies)
+  Analytics:                       Cloudflare Web Analytics only — the
+                                   privacy-preserving beacon bundled with
+                                   Cloudflare Pages hosting. Counts page
+                                   views and rough timing, no cookies, no
+                                   IP logging, no fingerprinting. Full
+                                   detail at /privacy. Nothing else added.
 
 /* NOTES */
 
-  This site is content-accurate — every project status is verified against
-  the real README / release notes before shipping. No fabricated
-  screenshots. No placeholder Lorem ipsum that survived to production.
+  I check every project status here against the real README or release
+  notes before shipping a change — this site has caught its own stale
+  claims before (a version number was wrong for about a week in August
+  2026; fixed the day I actually checked). No fabricated screenshots.
   Full version history at /status. AI-readable summary at /llms.txt.
   Security disclosure at /.well-known/security.txt.
-
-  A portfolio should be as considered as the work it presents. This one
-  tries to be.
 
 /* THANKS */
 

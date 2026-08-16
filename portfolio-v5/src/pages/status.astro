@@ -7,7 +7,7 @@ import { SITE } from '../data/site';
 import { CHANGELOG } from '../data/changelog';
 ---
 <BaseLayout title={`Status — ${SITE.title}`}>
-  <Section eyebrow="Site status" heading="Real status, not a fixed claim." intro="This page tracks what's shipped, what's in flight, and every version-bump reasoning. No fabricated uptime figures.">
+  <Section headingLevel="h1" eyebrow="Site status" heading="Real status, not a fixed claim." intro="This page tracks what's shipped, what's in flight, and every version-bump reasoning. No fabricated uptime figures.">
     <div class="site-status">
       <div class="site-status-row">
         <div class="site-status-name"><span class="dot"></span> atharvapatil.tech · build {SITE.currentVersion}</div>
@@ -17,7 +17,7 @@ import { CHANGELOG } from '../data/changelog';
     </div>
   </Section>
 
-  <Section eyebrow="Products">
+  <Section eyebrow="Products" heading="Every product, current status.">
     <div class="product-status-list">
       {PROJECTS.map((p) => (
         <div class="product-row">

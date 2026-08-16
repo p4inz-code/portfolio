@@ -8,6 +8,7 @@ import { SERVICES, CONTACT } from '../data/site';
 
   <Section
     wide
+    headingLevel="h1"
     heading="Fewer handoffs. One coherent visual language."
     headingEmphasis="One person. Three disciplines."
     intro="Most clients hire a developer, a designer, and a 3D artist separately. I'm one person who covers all three — the same instinct that shapes a lock-screen shapes a landing page, and the same eye that lights a 3D scene picks the type on a hero. The result is fewer handoffs, fewer misalignments, and a coherent visual voice from architecture to render."
@@ -31,15 +32,10 @@ import { SERVICES, CONTACT } from '../data/site';
   <!-- Editorial rows — each service is a substantive row, not a card in a grid.
        Kills the "01 / 02 / 03 / 04 bento" AI pattern in favour of an
        editorial-magazine layout. -->
-  <Section eyebrow="What I take on">
+  <Section eyebrow="What I take on" heading="Four disciplines, one person covering all of them.">
     <div class="s-rows">
       {SERVICES.map((s, i) => (
         <article class="s-row" style={`--i:${i}`}>
-          <div class="s-row-index">
-            <span class="s-row-num">{String(i + 1).padStart(2, '0')}</span>
-            <span class="s-row-total">of {String(SERVICES.length).padStart(2, '0')}</span>
-          </div>
-
           <div class="s-row-body">
             <h3 class="s-row-name">{s.name}</h3>
             <p class="s-row-short">{s.short}</p>
@@ -122,31 +118,8 @@ import { SERVICES, CONTACT } from '../data/site';
     /* ============ Editorial rows ============ */
     .s-rows { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
     .s-row {
-      display: grid;
-      grid-template-columns: 120px 1fr;
-      gap: var(--sp-8);
       padding: var(--sp-8) 0;
       border-bottom: 1px solid var(--line);
-      align-items: start;
-    }
-    @media (max-width: 760px) {
-      .s-row { grid-template-columns: 1fr; gap: var(--sp-3); }
-    }
-    .s-row-index { display: flex; flex-direction: column; gap: 4px; position: sticky; top: 120px; }
-    .s-row-num {
-      font-family: var(--font-display);
-      font-size: 44px;
-      color: var(--text);
-      font-weight: 500;
-      line-height: 1;
-      letter-spacing: -0.02em;
-    }
-    .s-row-total {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: var(--tracking-eyebrow);
-      text-transform: uppercase;
-      color: var(--muted);
     }
     .s-row-body { display: flex; flex-direction: column; gap: var(--sp-4); }
     .s-row-name {

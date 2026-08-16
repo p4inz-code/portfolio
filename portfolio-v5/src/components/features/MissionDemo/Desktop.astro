@@ -100,7 +100,11 @@ import FirefoxApp from './apps/FirefoxApp.astro';
   </div>
 
   <!-- ================== TOP BAR ================== -->
-  <header class="topbar" role="banner">
+  <!-- v5.17.3 fix — role="banner" here conflicted with the real page
+       banner landmark (the site nav, hidden but still present in the DOM
+       on this route) — axe flagged "banner landmark not top-level". This
+       is simulated OS chrome, not the page's actual banner. -->
+  <header class="topbar">
     <div class="tb-left">
       <span class="tb-mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">

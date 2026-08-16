@@ -9,11 +9,12 @@ import { FEATURED_PROJECTS, SUPPORTING_PROJECTS } from '../data/projects';
 
   <Section
     wide
+    headingLevel="h1"
     heading="designed, built, and shipped by one person."
     headingEmphasis="Every project below —"
     intro="Two operating systems in active development. One encrypted vault in public beta. One reference workspace winding down after its final release. One investigation OS coming soon. Every case study links to real code, real screenshots, or a live download — no design mockups pretending to be products."
   >
-    <FeaturedShowcase projects={FEATURED_PROJECTS} />
+    <FeaturedShowcase projects={FEATURED_PROJECTS} headingLevel="h2" />
   </Section>
 
   <Section eyebrow="Also on the shelf" heading="Smaller work, older projects, tools I still maintain." intro="Not every project needs a case study of its own — some are single-purpose CLIs, some are on-hold, some just work quietly. They still ship, they're still mine, and every one has a real repo behind it.">

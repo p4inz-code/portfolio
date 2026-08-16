@@ -6,6 +6,7 @@ import APMark from '../components/APMark.astro';
 import SideRail from '../components/SideRail.astro';
 import LiveStats from '../components/LiveStats.astro';
 import { SITE, NAV, CONTACT } from '../data/site';
+import { PROJECTS } from '../data/projects';
 
 interface Props {
   title: string;
@@ -373,17 +374,23 @@ const jsonLd = {
     <main id="main"><slot /></main>
 
     <footer class="site-footer">
-      <!-- v5.16.0 trust strip — real numbers, addresses SEO audit
-           E-E-A-T "no trust signals" warning. -->
-      <div class="wrap">
-        <ul class="trust-strip" role="list" aria-label="Trust signals">
-          <li><span class="ts-num">10</span><span class="ts-label">Products in flight / shipped</span></li>
-          <li><span class="ts-num">4,100+</span><span class="ts-label">Automated tests across products</span></li>
-          <li><span class="ts-num">0</span><span class="ts-label">Telemetry on any product</span></li>
-          <li><span class="ts-num">0</span><span class="ts-label">Third-party analytics on this site</span></li>
-          <li><span class="ts-num">100%</span><span class="ts-label">Cloudflare-hosted · privacy-first</span></li>
-        </ul>
-      </div>
+      <!-- v5.16.0 trust strip — real numbers, addresses SEO audit E-E-A-T
+           "no trust signals" warning. v5.17.3 fix: this used to render on
+           every single page (repetitive — the same 5 numbers on the
+           Terms page, the 404 page, everywhere), and the product count
+           was hardcoded to 10 when there are 9. Now homepage-only, and
+           the count reads live from projects.ts so it can't drift again. -->
+      {currentPath === '/' && (
+        <div class="wrap">
+          <ul class="trust-strip" role="list" aria-label="Trust signals">
+            <li><span class="ts-num">{PROJECTS.length}</span><span class="ts-label">Products in flight / shipped</span></li>
+            <li><span class="ts-num">4,100+</span><span class="ts-label">Automated tests across products</span></li>
+            <li><span class="ts-num">0</span><span class="ts-label">Telemetry on any product</span></li>
+            <li><span class="ts-num">0</span><span class="ts-label">Third-party analytics on this site</span></li>
+            <li><span class="ts-num">100%</span><span class="ts-label">Cloudflare-hosted · privacy-first</span></li>
+          </ul>
+        </div>
+      )}
 
       <div class="wrap footer-inner">
         <div class="footer-brand">

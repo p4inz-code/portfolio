@@ -7,14 +7,24 @@ interface Props {
   wide?: boolean;
   class?: string;
   id?: string;
+  headingLevel?: 'h1' | 'h2'; // v5.17.3 fix — every page needs exactly one
+                              // real <h1>. Pages with EditorialHero/CaseHero
+                              // already have one there; every Section-only
+                              // page (about, services, contact, resume,
+                              // status, terms, privacy, editorial,
+                              // accessibility, 3d, work) had none at all —
+                              // a real WCAG failure (axe: page-has-heading-one),
+                              // not a style nitpick. Pass headingLevel="h1"
+                              // on that page's first Section only.
 }
-const { eyebrow, heading, headingEmphasis, intro, wide = false, class: cls = '', id } = Astro.props;
+const { eyebrow, heading, headingEmphasis, intro, wide = false, class: cls = '', id, headingLevel = 'h2' } = Astro.props;
+const HeadingTag = headingLevel;
 ---
 <section class:list={['section', cls]} id={id}>
   <div class:list={['wrap', wide && 'wrap-wide']}>
     {eyebrow && <p class="section-eyebrow">{eyebrow}</p>}
     {heading && (
-      <h2 class="section-heading">
+      <HeadingTag class="section-heading">
         {headingEmphasis ? (
           <>
             <em>{headingEmphasis}</em> {heading}
@@ -22,7 +32,7 @@ const { eyebrow, heading, headingEmphasis, intro, wide = false, class: cls = '',
         ) : (
           heading
         )}
-      </h2>
+      </HeadingTag>
     )}
     {intro && <p class="section-intro">{intro}</p>}
     <slot />

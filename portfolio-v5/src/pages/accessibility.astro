@@ -3,9 +3,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
 ---
 <BaseLayout title="Accessibility — Atharva Patil">
-  <Section eyebrow="Accessibility statement" heading="What's actually done, and what honestly isn't yet." intro="Target: WCAG 2.1 AA. What's below is an honest self-assessment, not an unverified compliance badge.">
+  <Section headingLevel="h1" eyebrow="Accessibility statement" heading="What's actually done, and what honestly isn't yet." intro="Target: WCAG 2.1 AA. What's below is an honest self-assessment, not an unverified compliance badge.">
     <div class="a11y-block">
-      <h3 class="a11y-heading">What's implemented</h3>
+      <h2 class="a11y-heading">What's implemented</h2>
       <ul class="a11y-list">
         <li>Semantic landmarks throughout: <code>&lt;header&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;footer&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;article&gt;</code>.</li>
         <li>Skip-to-content link (first tab-stop, becomes visible on focus).</li>
@@ -20,7 +20,7 @@ import Section from '../components/layout/Section.astro';
     </div>
 
     <div class="a11y-block">
-      <h3 class="a11y-heading">Known gaps</h3>
+      <h2 class="a11y-heading">Known gaps</h2>
       <ul class="a11y-list">
         <li>Not independently audited yet — no external accessibility review has been performed. This is an honest self-assessment.</li>
         <li>Some screenshots on case-study pages have descriptive alt text but no long-description transcript for complex visuals (e.g., the Kanvaz board view). Planned addition.</li>

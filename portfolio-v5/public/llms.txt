@@ -4,12 +4,12 @@
 > known online as **p4inz** (`github.com/p4inz-code`, Discord `p4inz`).
 > Builds Windows desktop security/privacy/utility software, an
 > open-source privacy-first Linux OS, an investigation-focused Linux OS,
-> developer tools, and freelance web development. First-year VFX and 3D
+> developer tools, and freelance web development. Second-year VFX and 3D
 > animation student at D. Y. Patil University (2025–2028 expected).
 >
-> Tagline: *"Developer by discipline. 3D artist by training. Builder by default."*
+> Runs the whole studio solo — design, code, testing, and shipping, one person.
 
-Site is a static Astro build (14 real routes, real URLs — not a
+Site is a static Astro build (18 real routes, real URLs — not a
 single-page-app with `#` fragments). Every route below is directly
 crawlable and canonical.
 
