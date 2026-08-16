@@ -20,6 +20,18 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.17.2',
+    kind: 'released',
+    summary: 'Repo-truth audit — cross-checked every versioned product on the site against its real GitHub release tags for the first time with authenticated gh CLI access; found and fixed one real drift (Veris).',
+    body: [
+      'gh CLI turned out to be authenticated in this environment (an earlier handoff doc assumed it wasn\'t — corrected). Used it to pull real release tags for every product repo instead of trusting the last-known state in projects.ts.',
+      'Nexus (v10.12.0), Kanvaz (v4.2.2), repo-map (v2.2.0), and Obscura (v1.0.0) all matched their real latest release tags exactly — no drift.',
+      'FIXED — Veris had actually shipped v1.0.0 on 2026-08-09 (confirmed via a real, published, non-draft GitHub release plus a README describing a complete, installable product — `npx veris-cli scan`), but the site still said "Final Polish · Pre-v1.0.0." Updated status, currentVersion, and nextMilestone across projects.ts, llms.txt, and the resume markdown source. The downloadable resume PDF still needs a regeneration pass to match.',
+      'FLAGGED, not changed — Glint\'s GitHub release is tagged v1.0.0 (stable, with a real Glint.exe asset), but the repo\'s own README heading still reads "Features (v1.0.0-alpha)." That\'s a contradiction inside the source repo itself, not something safe to resolve by guessing — left the site as-is pending clarification.',
+      'Also surfaced, not yet added to the site: four public repos with no portfolio presence at all — p4inz (Discord intelligence platform), Crossport (cross-platform file transfer utility), docflow (offline PDF editor), reference-engineering (reference library). Curation decision, not a mechanical fix — pending direction.',
+    ],
+  },
+  {
     version: 'v5.17.1',
     kind: 'released',
     summary: 'Brutal mobile audit response — real theme-toggle bug fixed, mobile drawer given a proper close button, site-wide spacing detuned for phones, hero type tightened, live-stats widget shrunk to stop overlapping page content, Discord invite updated.',

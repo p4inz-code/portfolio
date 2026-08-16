@@ -55,8 +55,8 @@ crawlable and canonical.
   security investigation platform for Windows. TypeScript / Node.js /
   SQLite, 3,100+ automated tests. Deterministic analysis engine — no
   black-box AI scoring; AI is intentionally limited to a read-only
-  explanation layer, never performs detection. Status: **Final Polish ·
-  Pre-v1.0.0**. External repo (case study on-site is pending real
+  explanation layer, never performs detection. Status: **Released ·
+  v1.0.0**. External repo (case study on-site is pending real
   production screenshots).
 - [repo-map](https://github.com/p4inz-code/repo-map): Engineering
   Intelligence Platform (CLI + planned interactive TUI), published on npm

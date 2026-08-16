@@ -146,7 +146,7 @@ export const PROJECTS: Project[] = [
     tagline: 'Investigate. Correlate. Explain. Trust.',
     description:
       'Offline-first, explainable security investigation platform for Windows. Deterministic analysis engine — no black-box AI scoring; AI is intentionally limited to a read-only explanation layer, never performs detection. 3,100+ automated tests.',
-    status: { kind: 'polish', label: 'Final Polish · Pre-v1.0.0' },
+    status: { kind: 'released', label: 'Released · v1.0.0' },
     tags: ['TypeScript', 'Offline-First'],
     metaTags: ['TypeScript', 'Node.js', 'SQLite', 'Modular Monorepo'],
     featured: false,
@@ -158,8 +158,8 @@ export const PROJECTS: Project[] = [
     stack: ['TypeScript', 'Node.js', 'SQLite'],
     role: 'Sole engineer',
     started: '29 June 2026',
-    currentVersion: 'Pre-v1.0.0',
-    nextMilestone: 'v1.0.0 release + public case study with full architecture breakdown (blocked on final production screenshots)',
+    currentVersion: 'v1.0.0',
+    nextMilestone: 'Public case study with full architecture breakdown (blocked on final production screenshots)',
   },
   {
     slug: 'repo-map',

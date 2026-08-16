@@ -46,7 +46,7 @@ Software engineer and product builder focused on **desktop applications, develop
 - **Two flagship surfaces:** Investigation Terminal + Investigation Browser with integrated Tor. AI is assistant-not-authority — never performs detection, only explains.
 
 ### Veris &nbsp;·&nbsp; Security Investigation Platform
-*Founder, Sole Engineer — [github.com/p4inz-code/veris](https://github.com/p4inz-code/veris)* &nbsp;·&nbsp; Jun 2026 – Present &nbsp;·&nbsp; Windows, Pre-v1.0.0
+*Founder, Sole Engineer — [github.com/p4inz-code/veris](https://github.com/p4inz-code/veris)* &nbsp;·&nbsp; Jun 2026 – Present &nbsp;·&nbsp; Windows, v1.0.0
 
 - **Deterministic analysis engine — no black-box AI scoring.** AI is intentionally limited to a read-only explanation layer over the deterministic core.
 - **3,100+ automated tests.** Offline-first — no analysis leaves the machine.
