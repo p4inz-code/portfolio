@@ -5,8 +5,28 @@ import Section from '../components/layout/Section.astro';
 import { PROJECTS } from '../data/projects';
 
 const project = PROJECTS.find((p) => p.slug === 'pursue-os')!;
+
+const softwareJsonLd = {
+  '@type': 'SoftwareApplication',
+  '@id': 'https://atharvapatil.tech/pursue-os/#software',
+  name: 'Pursue OS',
+  description: 'Investigation-focused Linux operating system for OSINT, DFIR, and evidence-driven research workflows.',
+  applicationCategory: 'OperatingSystem',
+  operatingSystem: 'Linux',
+  license: 'https://www.apache.org/licenses/LICENSE-2.0',
+  url: 'https://atharvapatil.tech/pursue-os/',
+  author: { '@id': 'https://atharvapatil.tech/#person' },
+};
+const breadcrumbJsonLd = {
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://atharvapatil.tech/' },
+    { '@type': 'ListItem', position: 2, name: 'Work', item: 'https://atharvapatil.tech/work/' },
+    { '@type': 'ListItem', position: 3, name: 'Pursue OS', item: 'https://atharvapatil.tech/pursue-os/' },
+  ],
+};
 ---
-<BaseLayout title={`${project.name} — ${project.tagline}`}>
+<BaseLayout title={`${project.name} — ${project.tagline}`} description="Investigation-focused Linux OS for OSINT and DFIR work — Investigation Terminal, Investigation Browser with Tor. Apache 2.0, coming soon." extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
   <section class="notice-wrap">

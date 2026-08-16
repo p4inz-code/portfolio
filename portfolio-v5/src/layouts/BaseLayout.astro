@@ -13,10 +13,15 @@ interface Props {
   description?: string;
   ogImage?: string;
   themeColor?: string;
+  extraJsonLd?: object[]; // v5.17.6 SEO push — lets a page add its own
+                          // structured-data nodes (FAQPage, SoftwareApplication)
+                          // into the same @graph without duplicating the
+                          // Person/Organization/WebSite boilerplate here.
 }
 const {
   title,
   description = SITE.description,
+  extraJsonLd = [],
   // v5.12.0 fix: og.png was 404-ing (Cloudflare fell back to the homepage
   // HTML). Now points at /og.svg — a real designed 1200x630 card. Discord,
   // Slack, iMessage, Signal, Telegram accept SVG og:image. LinkedIn + X
@@ -104,7 +109,7 @@ const website = {
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@graph': [person, studio, website],
+  '@graph': [person, studio, website, ...extraJsonLd],
 };
 ---
 <!doctype html>
@@ -138,8 +143,13 @@ const jsonLd = {
     <meta name="twitter:image:alt" content={`${SITE.title} — ${SITE.tagline}`} />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-192.png" type="image/png" sizes="192x192" />
+    <link rel="icon" href="/favicon-512.png" type="image/png" sizes="512x512" />
     <link rel="mask-icon" href="/favicon.svg" color="#7B3FE4" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <!-- v5.17.6 fix: apple-touch-icon pointed at the SVG, which iOS doesn't
+         support for home-screen icons at all — only PNG/JPG. Real 180x180
+         PNG with an opaque background (iOS renders transparent areas black). -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="sitemap" href="/sitemap.xml" />
     <link rel="me" href={CONTACT.github} />

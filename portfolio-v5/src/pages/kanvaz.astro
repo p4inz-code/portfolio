@@ -6,8 +6,28 @@ import Screenshot from '../components/features/Screenshot.astro';
 import { PROJECTS } from '../data/projects';
 
 const project = PROJECTS.find((p) => p.slug === 'kanvaz')!;
+
+const softwareJsonLd = {
+  '@type': 'SoftwareApplication',
+  '@id': 'https://atharvapatil.tech/kanvaz/#software',
+  name: 'Kanvaz',
+  description: 'Free, open-source visual reference workspace for VFX and 3D artists.',
+  applicationCategory: 'DesignApplication',
+  license: 'https://opensource.org/licenses/MIT',
+  softwareVersion: project.currentVersion,
+  url: 'https://atharvapatil.tech/kanvaz/',
+  author: { '@id': 'https://atharvapatil.tech/#person' },
+};
+const breadcrumbJsonLd = {
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://atharvapatil.tech/' },
+    { '@type': 'ListItem', position: 2, name: 'Work', item: 'https://atharvapatil.tech/work/' },
+    { '@type': 'ListItem', position: 3, name: 'Kanvaz', item: 'https://atharvapatil.tech/kanvaz/' },
+  ],
+};
 ---
-<BaseLayout title={`${project.name} — ${project.tagline}`}>
+<BaseLayout title={`${project.name} — ${project.tagline}`} description="Free, open-source visual reference workspace for VFX and 3D artists. Plugin system, safer container format. MIT licensed, v4.2.2 final release." extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
   <!-- Screenshots first — visual hook before the wall of text. The Board view

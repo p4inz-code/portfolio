@@ -20,6 +20,19 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.17.6',
+    kind: 'released',
+    summary: 'Max-effort SEO push (unique meta descriptions on every page, FAQ + SoftwareApplication + Breadcrumb schema), rasterized favicons, fixed a stale Discord link across 12 files in the Nexus repo, bespoke Obscura card, further about.astro tightening.',
+    body: [
+      'Real gap found and fixed: only the 404 page had a custom meta description — the other 17 pages all shared the exact same site-wide default. Every page now has a unique, accurate description written to its actual content.',
+      'Added FAQPage schema to /services, mirroring the real FAQ content already on the page — a genuine rich-snippet opportunity, not padding. Added SoftwareApplication schema to all four case studies (Nexus, Mission OS, Kanvaz, Pursue OS) and BreadcrumbList to the same four. Checked Kanvaz\'s actual release assets before claiming a multi-platform operatingSystem field — no verifiable macOS/Linux builds exist, so that field was left off rather than guessed.',
+      'Rasterized favicons finally exist: favicon-192.png, favicon-512.png, and a proper apple-touch-icon.png (180x180, opaque background — the old apple-touch-icon link pointed at the SVG, which iOS has never supported for home-screen icons). Wired into both BaseLayout and manifest.webmanifest.',
+      'Checked Nexus and Mission OS\'s real GitHub READMEs before touching either. Nexus: fixed a stale Discord invite link across all 12 files that referenced it (README, docs, SECURITY.md, SUPPORT.md, PRIVACY.md, LICENSE, CHANGELOG, ROADMAP, issue template) and added three real v11 screenshots (same curated shots already on the portfolio case study). Mission OS: found a real conflict — its README says "Open Beta" with a Calamares installer, while the site says pre-release/internal-testing with a custom QML/Qt installer — and left it untouched rather than guess which is current.',
+      'Obscura gets a genuinely bespoke card instead of the shared ProjectCard template — leads with the real 340/340 test ledger and a filled progress bar instead of a tagline, on both the homepage and /work.',
+      'Further about.astro tightening: em-dash count 28 → 23 → 18 across two passes this session. Stopping here — the rest are isolated, non-repetitive uses; continuing would mean optimizing for a number instead of the writing.',
+    ],
+  },
+  {
     version: 'v5.17.5',
     kind: 'released',
     summary: 'Fixed content sitting too close to the screen edge on laptop-width viewports — the site\'s max content width (1200-1400px) is wider than a lot of real windows, so the fixed 24px padding was the only buffer from the true edge.',

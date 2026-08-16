@@ -100,7 +100,7 @@ const activeCount = PROJECTS.filter(
   (p) => !['onHold'].includes(p.status.kind)
 ).length;
 ---
-<BaseLayout title="About — Atharva Patil">
+<BaseLayout title="About — Atharva Patil" description="Atharva Patil — solo founder of Northbyte Studios, Navi Mumbai. Software engineer and second-year VFX/3D animation student.">
 
   <!-- HERO — v5.16.0: portrait photo added, split with lede text.
        v5.17.3: rewritten off the "Developer by discipline / 3D artist by
@@ -119,14 +119,14 @@ const activeCount = PROJECTS.filter(
       <div class="about-hero-text">
         <p class="about-lede">
           I run <em>{SITE.studio}</em> on my own, based in {SITE.location}. I used to go by
-          <em>PainZ</em> and <em>Grim</em> — both retired, everything ships under <strong>p4inz</strong>
-          or my real name now. {shippedCount} products shipped or in progress, {activeCount} of them
-          actively worked on, and no marketing team behind any of it — just me.
+          <em>PainZ</em> and <em>Grim</em>, both retired now. Everything ships under <strong>p4inz</strong>
+          or my real name. {shippedCount} products shipped or in progress, {activeCount} of them
+          actively worked on, and no marketing team behind any of it. Just me.
         </p>
         <p class="about-lede-secondary">
           For a while I thought I'd eventually have to pick one: software or 3D. I've stopped
           expecting that to happen. A UI that feels right and a render that feels right come from the
-          same place — paying attention to the small stuff most people don't notice until it's wrong.
+          same place: paying attention to the small stuff most people don't notice until it's wrong.
         </p>
       </div>
     </div>
@@ -136,7 +136,7 @@ const activeCount = PROJECTS.filter(
   <Section eyebrow="The short version" heading="Why software and 3D, and why probably not stopping.">
     <div class="story-block">
       <p>
-        Software came first, and it started the usual way — taking apart things I owned until I
+        Software came first, and it started the usual way: taking apart things I owned until I
         understood them, then trying to fix or replace what annoyed me. Windows tools first, then
         small utilities, then products with actual users. That grew into a studio in 2025
         ({SITE.studio.replace('Northbyte Studios', 'Obsidian Labs')}, at the time), and I renamed it
@@ -200,7 +200,7 @@ const activeCount = PROJECTS.filter(
       ))}
     </dl>
     <div class="tr-thesis">
-      <p>My bet is that a small number of privacy-first products, each finished properly, beats a bigger catalogue of half-finished ones — most "growth" advice assumes ads and telemetry are free to add, and I'd rather not build on that assumption.</p>
+      <p>My bet is that a small number of privacy-first products, each finished properly, beats a bigger catalogue of half-finished ones. Most "growth" advice assumes ads and telemetry are free to add, and I'd rather not build on that assumption.</p>
       <p>Nexus is the main commercial product, an encrypted vault for Windows. Mission OS is the bigger, slower bet: a privacy-first Linux distro built at OS scale. Kanvaz and Obscura are free and open-source on purpose, proof the studio actually ships rather than just talking about shipping. Everything else supports one of those three.</p>
       <p>I'm not looking for growth marketing, an agency handoff, or a full team right now. What's actually useful: introductions to other founders, investors, or open-source maintainers who care more about the product being right than the product growing fast.</p>
     </div>

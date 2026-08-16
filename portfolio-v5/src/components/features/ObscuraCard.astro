@@ -1,0 +1,123 @@
+---
+/**
+ * Bespoke card for Obscura — the one supporting project with a real,
+ * concrete, verifiable shipping result (340/340 tests, v1.0.0). Every
+ * other supporting project shares ProjectCard.astro; this one doesn't,
+ * on purpose. A "same template, different text" grid of five identical
+ * cards is what a generated component library looks like — this one
+ * leads with the actual test ledger instead of a tagline.
+ */
+import type { Project } from '../../data/projects';
+
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+---
+<a href={project.href} class="obscura-card" target="_blank" rel="noopener noreferrer">
+  <div class="oc-ledger">
+    <span class="oc-ledger-num">340</span>
+    <span class="oc-ledger-total">/ 340 tests</span>
+    <div class="oc-ledger-bar" aria-hidden="true"><span></span></div>
+  </div>
+  <div class="oc-body">
+    <h3 class="oc-title">{project.name}</h3>
+    <p class="oc-tagline">{project.tagline}</p>
+    <p class="oc-meta"><span class="mono">v1.0.0</span> · <span class="mono">MIT</span> · <span class="mono">Luau</span></p>
+  </div>
+  <span class="oc-ext-hint" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 17 17 7M8 7h9v9"/>
+    </svg>
+  </span>
+</a>
+
+<style>
+  .obscura-card {
+    display: flex;
+    flex-direction: column;
+    padding: var(--sp-6);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    background: var(--surface-1);
+    color: var(--text);
+    text-decoration: none;
+    position: relative;
+    transition: border-color var(--dur) var(--ease-out), transform var(--dur) var(--ease-out), background var(--dur) var(--ease-out);
+  }
+  .obscura-card:hover {
+    border-color: color-mix(in oklab, var(--green) 40%, var(--line-strong));
+    transform: translateY(-3px);
+    background: var(--surface-2);
+  }
+
+  .oc-ledger {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: var(--sp-4);
+    font-family: var(--font-mono);
+  }
+  .oc-ledger-num {
+    font-family: var(--font-display);
+    font-size: 34px;
+    font-weight: 500;
+    color: var(--green);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .oc-ledger-total {
+    font-size: var(--text-xs);
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .oc-ledger-bar {
+    flex-basis: 100%;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--line);
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .oc-ledger-bar span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--green);
+    box-shadow: 0 0 8px color-mix(in oklab, var(--green) 60%, transparent);
+  }
+
+  .oc-title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    margin-bottom: var(--sp-1);
+  }
+  .oc-tagline {
+    color: var(--purple-bright);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--text-sm);
+    margin-bottom: var(--sp-3);
+  }
+  .oc-meta {
+    color: var(--muted-2);
+    font-size: 10.5px;
+    letter-spacing: 0.03em;
+  }
+  .oc-meta .mono { font-family: var(--font-mono); }
+
+  .oc-ext-hint {
+    position: absolute;
+    top: var(--sp-6);
+    right: var(--sp-6);
+    color: var(--muted-2);
+    transition: color var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
+  }
+  .oc-ext-hint svg { width: 16px; height: 16px; }
+  .obscura-card:hover .oc-ext-hint {
+    color: var(--green);
+    transform: translate(2px, -2px);
+  }
+</style>

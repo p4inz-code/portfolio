@@ -5,8 +5,28 @@ import Section from '../components/layout/Section.astro';
 import { PROJECTS } from '../data/projects';
 
 const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
+
+const softwareJsonLd = {
+  '@type': 'SoftwareApplication',
+  '@id': 'https://atharvapatil.tech/mission-os/#software',
+  name: 'Mission OS',
+  description: 'Privacy-first, offline-first Linux operating system built on Debian Stable and KDE Plasma.',
+  applicationCategory: 'OperatingSystem',
+  operatingSystem: 'Linux',
+  license: 'https://www.gnu.org/licenses/gpl-3.0.html',
+  url: 'https://atharvapatil.tech/mission-os/',
+  author: { '@id': 'https://atharvapatil.tech/#person' },
+};
+const breadcrumbJsonLd = {
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://atharvapatil.tech/' },
+    { '@type': 'ListItem', position: 2, name: 'Work', item: 'https://atharvapatil.tech/work/' },
+    { '@type': 'ListItem', position: 3, name: 'Mission OS', item: 'https://atharvapatil.tech/mission-os/' },
+  ],
+};
 ---
-<BaseLayout title={`${project.name} — ${project.tagline}`}>
+<BaseLayout title={`${project.name} — ${project.tagline}`} description="Privacy-first Linux distribution on Debian Stable + KDE Plasma. Installer explains every trade-off on-screen. GPLv3, open source, in active development." extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
   <section class="demo-cta-wrap">

@@ -6,8 +6,29 @@ import Screenshot from '../components/features/Screenshot.astro';
 import { PROJECTS } from '../data/projects';
 
 const project = PROJECTS.find((p) => p.slug === 'nexus')!;
+
+// v5.17.6 SEO push — real SoftwareApplication schema for a real, shipping product.
+const softwareJsonLd = {
+  '@type': 'SoftwareApplication',
+  '@id': 'https://atharvapatil.tech/nexus/#software',
+  name: 'Nexus',
+  description: 'Encrypted personal vault for Windows. AES-256-GCM authenticated encryption with Argon2id key derivation, Windows Hello unlock, zero telemetry.',
+  applicationCategory: 'SecurityApplication',
+  operatingSystem: 'Windows',
+  softwareVersion: project.currentVersion,
+  url: 'https://atharvapatil.tech/nexus/',
+  author: { '@id': 'https://atharvapatil.tech/#person' },
+};
+const breadcrumbJsonLd = {
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://atharvapatil.tech/' },
+    { '@type': 'ListItem', position: 2, name: 'Work', item: 'https://atharvapatil.tech/work/' },
+    { '@type': 'ListItem', position: 3, name: 'Nexus', item: 'https://atharvapatil.tech/nexus/' },
+  ],
+};
 ---
-<BaseLayout title={`${project.name} — ${project.tagline}`}>
+<BaseLayout title={`${project.name} — ${project.tagline}`} description="Encrypted personal vault for Windows — AES-256-GCM, Argon2id, Windows Hello unlock. Zero telemetry, zero cloud. Public beta, v10.12.0." extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
   <section class="stat-row-wrap">

@@ -3,9 +3,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
 import FeaturedShowcase from '../components/features/FeaturedShowcase.astro';
 import ProjectCard from '../components/features/ProjectCard.astro';
+import ObscuraCard from '../components/features/ObscuraCard.astro';
 import { FEATURED_PROJECTS, SUPPORTING_PROJECTS } from '../data/projects';
 ---
-<BaseLayout title="Selected Work — Atharva Patil">
+<BaseLayout title="Selected Work — Atharva Patil" description="Selected case studies — two Linux OSes, an encrypted vault, developer tools. Every project links to a real repository or download.">
 
   <Section
     wide
@@ -20,7 +21,7 @@ import { FEATURED_PROJECTS, SUPPORTING_PROJECTS } from '../data/projects';
   <Section eyebrow="Also on the shelf" heading="Smaller work, older projects, tools I still maintain." intro="Not every project needs a case study of its own — some are single-purpose CLIs, some are on-hold, some just work quietly. They still ship, they're still mine, and every one has a real repo behind it.">
     <div class="secondary-grid">
       {SUPPORTING_PROJECTS.map((p) => (
-        <ProjectCard project={p} variant="compact" />
+        p.slug === 'obscura' ? <ObscuraCard project={p} /> : <ProjectCard project={p} variant="compact" />
       ))}
     </div>
   </Section>

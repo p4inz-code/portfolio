@@ -3,8 +3,42 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
 import Button from '../components/ui/Button.astro';
 import { SERVICES, CONTACT } from '../data/site';
+
+// v5.17.6 SEO push — real FAQ content already exists below; mirroring it
+// as FAQPage schema is a genuine rich-snippet opportunity, not padding.
+const faqJsonLd = {
+  '@type': 'FAQPage',
+  '@id': 'https://atharvapatil.tech/services/#faq',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Do you sign NDAs?',
+      acceptedAnswer: { '@type': 'Answer', text: "Yes, for real client work. Not for portfolio reviews or evaluation calls — those aren't confidential." },
+    },
+    {
+      '@type': 'Question',
+      name: 'Do you subcontract?',
+      acceptedAnswer: { '@type': 'Answer', text: "No. Everything I ship is me. If a project needs specialists I can't cover (native mobile, specific 3D shots), I recommend, not resell." },
+    },
+    {
+      '@type': 'Question',
+      name: 'Who owns the code?',
+      acceptedAnswer: { '@type': 'Answer', text: 'You do, on delivery. I keep the right to reference the work in this portfolio unless you specifically ask me not to.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'What if something breaks after launch?',
+      acceptedAnswer: { '@type': 'Answer', text: '30 days of free bug-fixes on any build I ship. Beyond that, small retainer or per-fix.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'Are you available right now?',
+      acceptedAnswer: { '@type': 'Answer', text: "Selective — taking one or two new projects at a time. If timing is tight, ask; I'll be honest about whether I can hit it." },
+    },
+  ],
+};
 ---
-<BaseLayout title="Services — Atharva Patil">
+<BaseLayout title="Services — Atharva Patil" description="Product development, UI/UX design, branding, and 3D/VFX visualization — one person covering all three disciplines." extraJsonLd={[faqJsonLd]}>
 
   <Section
     wide
