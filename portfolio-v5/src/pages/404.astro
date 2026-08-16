@@ -1,0 +1,123 @@
+---
+/**
+ * 404 — kept in the same restrained, diagnostic register as the rest of
+ * the site (see LiveStats.astro) instead of a generic "oops" page or a
+ * cutesy illustration. A route that isn't found is itself a small,
+ * honest diagnostic — so it reads like one.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="404 — Page not found — Atharva Patil" description="This route doesn't exist. Diagnosed, logged, and here's how to get back on track.">
+  <section class="nf-section">
+    <div class="wrap">
+      <p class="nf-eyebrow">404 · route not found</p>
+      <h1 class="nf-heading"><em>This page</em> doesn't exist.</h1>
+      <p class="nf-intro">No content is served at this address. Nothing broke silently — here's exactly what was checked.</p>
+
+      <div class="nf-diag" role="group" aria-label="Route diagnostic">
+        <div class="nf-diag-row"><span>route requested</span><strong id="nfPath">—</strong></div>
+        <div class="nf-diag-row"><span>status</span><strong class="nf-diag-bad">404 not found</strong></div>
+        <div class="nf-diag-row"><span>checked against</span><strong>/sitemap.xml · 17 known routes</strong></div>
+        <div class="nf-diag-row"><span>likely cause</span><strong>typo, stale link, or removed page</strong></div>
+      </div>
+
+      <div class="nf-actions">
+        <a href="/" class="nf-btn nf-btn-primary">← Back to home</a>
+        <button type="button" class="nf-btn nf-btn-ghost" id="nf404Cmdk">Search &amp; jump <span class="nf-kbd">⌘K</span></button>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      var btn = document.getElementById('nf404Cmdk');
+      var trigger = document.getElementById('cmdkTrigger');
+      if (btn && trigger) btn.addEventListener('click', function () { trigger.click(); });
+
+      // v5.17.0 fix — this page is a static file served by the host for
+      // ANY unmatched route, so Astro.url at build time is always /404/,
+      // never the real bad URL. Read the actual requested path client-side
+      // instead, same honesty standard as the live-stats widget.
+      var pathEl = document.getElementById('nfPath');
+      if (pathEl) pathEl.textContent = window.location.pathname + window.location.search;
+
+      window.__nbDiag && window.__nbDiag.log('router', '404 — no route matched ' + window.location.pathname, { recovered: true });
+    })();
+  </script>
+
+  <style>
+    .nf-section {
+      padding: clamp(80px, 18vh, 160px) 0 var(--sp-11);
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+    }
+    .nf-eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--text-xxs);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: var(--sp-4);
+    }
+    .nf-heading {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: var(--sp-5);
+      max-width: 700px;
+    }
+    .nf-heading em { font-style: italic; color: var(--purple-bright); font-weight: 400; }
+    .nf-intro {
+      max-width: var(--wrap-narrow);
+      color: var(--muted);
+      font-size: var(--text-md);
+      line-height: var(--leading-body);
+      margin-bottom: var(--sp-7);
+    }
+
+    .nf-diag {
+      max-width: 480px;
+      padding: var(--sp-5) var(--sp-6);
+      background: var(--surface-1);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--sp-8);
+    }
+    .nf-diag-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--sp-4);
+      padding: var(--sp-2) 0;
+      border-bottom: 1px dashed var(--line);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+    }
+    .nf-diag-row:last-child { border-bottom: none; }
+    .nf-diag-row span { color: var(--muted-2); text-transform: uppercase; letter-spacing: 0.04em; }
+    .nf-diag-row strong { color: var(--text); font-weight: 500; text-align: right; }
+    .nf-diag-bad { color: var(--warn-text) !important; }
+
+    .nf-actions { display: flex; gap: var(--sp-4); flex-wrap: wrap; }
+    .nf-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 22px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-display);
+      font-size: var(--text-sm);
+      cursor: pointer;
+      transition: border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+    }
+    .nf-btn-primary { background: var(--purple-bright); color: var(--bg); border: 1px solid var(--purple-bright); }
+    .nf-btn-primary:hover { background: var(--purple); }
+    .nf-btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--line-strong); }
+    .nf-btn-ghost:hover { border-color: var(--purple-bright); color: var(--purple-bright); }
+    .nf-btn:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
+    .nf-kbd { font-family: var(--font-mono); font-size: 11px; color: var(--purple-bright); }
+    .nf-btn-primary .nf-kbd { color: var(--bg); opacity: 0.7; }
+  </style>
+</BaseLayout>

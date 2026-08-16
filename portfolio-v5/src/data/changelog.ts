@@ -20,6 +20,20 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.17.0',
+    kind: 'released',
+    summary: 'Live transparency + diagnostics widget revived from the old v4 site, site-wide error-recovery ecosystem, contact form auto-fallback, Mission OS per-window error boundary, branded 404, restrained scroll reveal.',
+    body: [
+      'Live Stats widget is back — bottom-left corner, same position as the old v4.7 monolith site. Computed live in the visitor\'s own browser via the Performance / Web Crypto / Layout Instability APIs, not hardcoded: external requests, known trackers, cookies set, load time, cumulative layout shift, a live accessibility spot-check, an estimated carbon-per-load figure, and a page-integrity SHA-256 hash computed fresh from the live DOM. Nothing is sent anywhere — the point is a skeptical visitor can check it against their own DevTools → Network tab and get the same numbers.',
+      'New shared diagnostics core (window.__nbDiag) — every interactive island that used to swallow an error silently (theme toggle, command palette recent-searches, side-rail clipboard copy) now logs into one in-memory session log instead. A global window.onerror / unhandledrejection safety net catches anything left unguarded. The Live Stats widget surfaces this log directly — "errors caught this session," each tagged recovered or unhandled. Nothing persisted, nothing sent off-device.',
+      'Contact form: real email validation with inline per-field errors (was empty-check only). Added a genuine auto-recovery path — many machines have no mail client configured, so mailto: silently does nothing. If the tab is still focused ~1.4s after send, the form now shows the composed message as copyable text with one-click copy buttons instead of a dead end.',
+      'Mission OS demo: every dock-app and installer handler now runs through a safeHandler() wrapper. If one throws, that specific window shows an in-universe "this panel didn\'t respond" state with a reopen button instead of dying silently — the metaphor is a diagnosed fault, not a blank screen.',
+      'New branded 404 page — kept in the same restrained diagnostic register as the rest of the site: what route was requested, what it was checked against, why it likely failed, plus a way back home or into the command palette.',
+      'Scroll polish — a restrained reveal (opacity + 18px translate) added to every content section site-wide, using the same animation-timeline: view() mechanism already powering the scroll-progress hairline and featured showcase. Settles in the first 35% of a section entering view — reads as polish, not a slideshow effect. Zero JS, respects prefers-reduced-motion.',
+      'Font family swap intentionally held — pending user research, revisit next session.',
+    ],
+  },
+  {
     version: 'v5.16.0',
     kind: 'released',
     summary: 'SEO audit response (SEOmator 93→target 98) + real portrait wired + Privacy/Terms/Editorial pages + trust strip + mobile 4-layer audit fixes.',

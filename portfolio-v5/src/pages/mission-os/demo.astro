@@ -102,12 +102,44 @@ import Desktop from '../../components/features/MissionDemo/Desktop.astro';
         if (active) active.textContent = name ? (name.charAt(0).toUpperCase() + name.slice(1)) : 'Desktop';
       }
 
-      desktop.querySelectorAll('[data-dock-app]').forEach(function (btn) {
+      // v5.17.0 — per-window error boundary. Any handler wrapped in
+      // safeHandler(appSlug, fn) that throws shows that window's inline
+      // "didn't respond" state instead of dying silently, and logs to the
+      // shared diagnostics core the live-stats widget reads from.
+      function showWindowError(appSlug) {
+        const win = desktop.querySelector('[data-window="' + appSlug + '"]');
+        const err = win && win.querySelector('[data-window-error]');
+        if (err) err.hidden = false;
+      }
+      function clearWindowError(appSlug) {
+        const win = desktop.querySelector('[data-window="' + appSlug + '"]');
+        const err = win && win.querySelector('[data-window-error]');
+        if (err) err.hidden = true;
+      }
+      function safeHandler(appSlug, fn) {
+        return function (event) {
+          try { fn(event); }
+          catch (err) {
+            window.__nbDiag && window.__nbDiag.log('mission-os:' + appSlug, (err && err.message) || 'Unhandled error', { recovered: true });
+            showWindowError(appSlug);
+          }
+        };
+      }
+      desktop.querySelectorAll('[data-window-retry]').forEach(function (btn) {
         btn.addEventListener('click', function () {
-          const app = btn.getAttribute('data-dock-app');
+          const app = btn.getAttribute('data-window-retry');
+          clearWindowError(app);
+          setWindow('');
+          setTimeout(function () { setWindow(app); }, 60);
+        });
+      });
+
+      desktop.querySelectorAll('[data-dock-app]').forEach(function (btn) {
+        const app = btn.getAttribute('data-dock-app');
+        btn.addEventListener('click', safeHandler(app, function () {
           const current = desktop.getAttribute('data-window-active');
           setWindow(current === app ? '' : app);
-        });
+        }));
       });
 
       desktop.querySelectorAll('[data-window-close]').forEach(function (btn) {
@@ -131,10 +163,10 @@ import Desktop from '../../components/features/MissionDemo/Desktop.astro';
         setInstallerStep(current + delta);
       }
       if (installer) {
-        installer.querySelector('[data-installer-next]').addEventListener('click', function () { installerStep(+1); });
-        installer.querySelector('[data-installer-back]').addEventListener('click', function () { installerStep(-1); });
+        installer.querySelector('[data-installer-next]').addEventListener('click', safeHandler('installer', function () { installerStep(+1); }));
+        installer.querySelector('[data-installer-back]').addEventListener('click', safeHandler('installer', function () { installerStep(-1); }));
         installer.querySelectorAll('[data-goto]').forEach(function (dot) {
-          dot.addEventListener('click', function () { setInstallerStep(parseInt(dot.getAttribute('data-goto'), 10)); });
+          dot.addEventListener('click', safeHandler('installer', function () { setInstallerStep(parseInt(dot.getAttribute('data-goto'), 10)); }));
         });
       }
       // When Installer window opens, reset to step 0 for a predictable entry.
@@ -177,6 +209,7 @@ import Desktop from '../../components/features/MissionDemo/Desktop.astro';
     body:has(.demo-scope) .site-footer,
     body:has(.demo-scope) .scroll-progress,
     body:has(.demo-scope) .side-rail,
+    body:has(.demo-scope) .live-stats,
     body:has(.demo-scope) .skip-nav { display: none !important; }
     body:has(.demo-scope) main { padding: 0 !important; margin: 0 !important; max-width: none !important; }
     /* v5.10.0 — demo now respects theme. Dark = ultraviolet OS look, light

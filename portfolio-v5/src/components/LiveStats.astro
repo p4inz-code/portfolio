@@ -1,0 +1,451 @@
+---
+/**
+ * Live transparency + diagnostics widget — bottom-left corner.
+ *
+ * v5.17.0: revived from the old v4 monolith's "live-stats" widget (same
+ * position, same idea — see git history at df9396d) and extended with a
+ * diagnostics log. Everything below is computed live in the visitor's own
+ * browser via the real Performance / Web Crypto / Layout Instability APIs.
+ * Nothing here is a hardcoded claim, and nothing is sent anywhere — the
+ * whole point is that a skeptical visitor can check it against their own
+ * DevTools → Network tab and get the same numbers.
+ *
+ * The diagnostics section reads from window.__nbDiag (defined early in
+ * BaseLayout's head script) — every interactive island on the site that
+ * catches an error logs into that same array instead of failing silently.
+ * This widget is just the window onto it.
+ *
+ * Hidden on the Mission OS demo route via demo.astro's existing
+ * body:has(.demo-scope) rule, and on print.
+ */
+---
+<div class="live-stats" id="liveStats">
+  <button type="button" class="live-stats-toggle" id="liveStatsToggle" aria-expanded="false" aria-controls="liveStatsDetail">
+    <span class="live-stats-dot" aria-hidden="true"></span>
+    <span id="liveStatsSummary">counting live requests…</span>
+  </button>
+  <div class="live-stats-detail" id="liveStatsDetail" hidden>
+    <div class="live-stats-row"><span>External requests</span><strong id="lsExternal">0</strong></div>
+    <div class="live-stats-row"><span>Known trackers</span><strong id="lsTrackers">0</strong></div>
+    <div class="live-stats-row"><span>Cookies set</span><strong id="lsCookies">0</strong></div>
+    <div class="live-stats-row"><span>Load time</span><strong id="lsLoadTime">-</strong></div>
+    <div class="live-stats-row"><span>Layout shift (CLS)</span><strong id="lsCLS">0.000</strong></div>
+    <div class="live-stats-row"><span>Accessibility check</span><strong id="lsA11y">-</strong></div>
+    <div class="live-stats-row"><span>Est. carbon / load</span><strong id="lsCarbon">-</strong></div>
+    <div class="live-stats-row"><span>Page integrity (SHA-256)</span><strong id="lsHash" class="mono-hash">computing…</strong></div>
+    <div class="live-stats-hosts" id="lsHosts"></div>
+
+    <div class="live-stats-diag">
+      <div class="live-stats-row">
+        <span>Errors caught this session</span>
+        <strong id="lsErrors">0</strong>
+      </div>
+      <ul class="live-stats-diag-list" id="lsDiagList" hidden></ul>
+    </div>
+
+    <button type="button" class="ls-audit-btn" id="runAuditBtn">↻ Run audit now</button>
+    <p class="live-stats-note">Computed live in your browser via the Performance API. Nothing here is sent anywhere — check DevTools → Network yourself.</p>
+    <a href="#" id="viewSourceLink" class="live-stats-note live-stats-link">View this page's source →</a>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    var toggle = document.getElementById('liveStatsToggle');
+    var detail = document.getElementById('liveStatsDetail');
+    var summaryEl = document.getElementById('liveStatsSummary');
+    var externalEl = document.getElementById('lsExternal');
+    var trackersEl = document.getElementById('lsTrackers');
+    var cookiesEl = document.getElementById('lsCookies');
+    var hostsEl = document.getElementById('lsHosts');
+    var loadTimeEl = document.getElementById('lsLoadTime');
+    var clsEl = document.getElementById('lsCLS');
+    var a11yEl = document.getElementById('lsA11y');
+    var carbonEl = document.getElementById('lsCarbon');
+    var hashEl = document.getElementById('lsHash');
+    var errorsEl = document.getElementById('lsErrors');
+    var diagListEl = document.getElementById('lsDiagList');
+    var auditBtn = document.getElementById('runAuditBtn');
+    var sourceLink = document.getElementById('viewSourceLink');
+    if (!toggle || !detail || !summaryEl || !externalEl || !trackersEl || !cookiesEl || !hostsEl) return;
+
+    var trackerFragments = [
+      'google-analytics.com', 'googletagmanager.com', 'doubleclick.net',
+      'facebook.net', 'facebook.com', 'hotjar.com', 'mixpanel.com',
+      'segment.io', 'segment.com', 'sentry.io', 'fullstory.com', 'clarity.ms',
+      'amplitude.com', 'intercom.io', 'hs-analytics.net',
+    ];
+    function isTrackerHost(hostname) {
+      for (var i = 0; i < trackerFragments.length; i++) {
+        if (hostname.indexOf(trackerFragments[i]) !== -1) return true;
+      }
+      return false;
+    }
+
+    // ---- live CLS ----
+    var clsScore = 0;
+    if (clsEl && window.PerformanceObserver) {
+      try {
+        var clsObserver = new PerformanceObserver(function (list) {
+          var shiftEntries = list.getEntries();
+          for (var i = 0; i < shiftEntries.length; i++) {
+            if (!shiftEntries[i].hadRecentInput) clsScore += shiftEntries[i].value;
+          }
+          clsEl.textContent = clsScore.toFixed(3);
+        });
+        clsObserver.observe({ type: 'layout-shift', buffered: true });
+      } catch (e5) { /* layout-shift entry type unsupported in this browser — stays at 0.000 */ }
+    }
+
+    // ---- live load time ----
+    function refreshLoadTime() {
+      if (!loadTimeEl) return;
+      try {
+        var navEntries = performance.getEntriesByType('navigation');
+        var ms;
+        if (navEntries && navEntries.length && navEntries[0].loadEventEnd > 0) {
+          ms = navEntries[0].loadEventEnd;
+        } else if (performance.timing && performance.timing.loadEventEnd > 0) {
+          ms = performance.timing.loadEventEnd - performance.timing.navigationStart;
+        } else {
+          ms = null;
+        }
+        loadTimeEl.textContent = ms !== null ? Math.round(ms) + 'ms' : 'pending…';
+      } catch (e6) { loadTimeEl.textContent = 'n/a'; }
+    }
+
+    // ---- live self-integrity hash — SHA-256 of the live DOM, computed
+    // fresh via Web Crypto, not baked in at build time (which would go
+    // stale the instant the DOM changes). ----
+    function refreshHash() {
+      if (!hashEl) return;
+      if (!(window.crypto && window.crypto.subtle)) { hashEl.textContent = 'unsupported'; return; }
+      try {
+        var source = document.documentElement.outerHTML;
+        var bytes = new TextEncoder().encode(source);
+        window.crypto.subtle.digest('SHA-256', bytes).then(function (buf) {
+          var arr = Array.from(new Uint8Array(buf));
+          var hex = arr.map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+          hashEl.textContent = hex.slice(0, 16) + '…';
+          hashEl.title = hex;
+        }).catch(function () { hashEl.textContent = 'n/a'; });
+      } catch (e9) { hashEl.textContent = 'n/a'; }
+    }
+
+    // ---- estimated carbon per load — rough, openly-approximate, from the
+    // Sustainable Web Design model's ~0.5g CO2/MB global-grid-average
+    // coefficient. Labeled an estimate because the underlying methodology
+    // is itself an industry approximation. ----
+    function refreshCarbon() {
+      if (!carbonEl) return;
+      try {
+        var entries = performance.getEntriesByType('resource');
+        var totalBytes = 0;
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].transferSize) totalBytes += entries[i].transferSize;
+        }
+        var navEntries = performance.getEntriesByType('navigation');
+        if (navEntries && navEntries.length && navEntries[0].transferSize) totalBytes += navEntries[0].transferSize;
+        var mb = totalBytes / (1024 * 1024);
+        var grams = mb * 0.5;
+        carbonEl.textContent = grams < 0.01 ? '<0.01g (est.)' : grams.toFixed(2) + 'g (est.)';
+      } catch (e10) { carbonEl.textContent = 'n/a'; }
+    }
+
+    // ---- live accessibility spot-check — a few fast, genuinely-checkable
+    // rules (not a replacement for the full statement on /accessibility):
+    // images without alt text, controls with no accessible name. ----
+    function refreshA11y() {
+      if (!a11yEl) return;
+      try {
+        var issues = 0;
+        var imgs = document.querySelectorAll('img');
+        for (var i = 0; i < imgs.length; i++) {
+          if (!imgs[i].hasAttribute('alt')) issues++;
+        }
+        var controls = document.querySelectorAll('button, a[href]');
+        for (i = 0; i < controls.length; i++) {
+          var el = controls[i];
+          var hasText = el.textContent && el.textContent.replace(/\s+/g, '').length > 0;
+          var hasLabel = el.hasAttribute('aria-label') || el.hasAttribute('aria-labelledby');
+          if (!hasText && !hasLabel) issues++;
+        }
+        a11yEl.textContent = issues === 0 ? '0 issues found' : issues + ' issue' + (issues === 1 ? '' : 's') + ' found';
+      } catch (e11) { a11yEl.textContent = 'n/a'; }
+    }
+
+    // ---- diagnostics log — reads window.__nbDiag, defined in BaseLayout's
+    // head script before any other component runs. ----
+    function refreshDiag() {
+      var diag = window.__nbDiag;
+      var list = (diag && diag.entries) || [];
+      if (errorsEl) errorsEl.textContent = String(list.length);
+      if (!diagListEl) return;
+      if (!list.length) { diagListEl.hidden = true; diagListEl.textContent = ''; return; }
+      diagListEl.hidden = false;
+      diagListEl.textContent = '';
+      list.slice(0, 8).forEach(function (entry) {
+        var li = document.createElement('li');
+        var badge = entry.recovered ? 'recovered' : 'unhandled';
+        li.className = 'ls-diag-entry ls-diag-' + badge;
+        li.textContent = '[' + entry.component + '] ' + entry.message;
+        var span = document.createElement('span');
+        span.className = 'ls-diag-badge';
+        span.textContent = badge;
+        li.appendChild(span);
+        diagListEl.appendChild(li);
+      });
+    }
+    document.addEventListener('nb-diag', refreshDiag);
+
+    function refreshStats() {
+      var entries;
+      try { entries = performance.getEntriesByType('resource'); }
+      catch (err) { summaryEl.textContent = 'live stats unavailable'; return; }
+
+      var origin = (window.location && window.location.origin) ? window.location.origin : '';
+      var originIsUsable = origin && origin !== 'null';
+      var externalHosts = {};
+      var externalCount = 0;
+      var trackerCount = 0;
+
+      for (var i = 0; i < entries.length; i++) {
+        var entry = entries[i];
+        var url = entry.name;
+        if (!url || url.indexOf('data:') === 0) continue;
+        var isExternal = originIsUsable ? url.indexOf(origin) !== 0 : true;
+        if (!isExternal) continue;
+        externalCount++;
+        var host = null;
+        try { host = new URL(url).hostname; } catch (e2) { host = null; }
+        if (host) {
+          externalHosts[host] = true;
+          if (isTrackerHost(host)) trackerCount++;
+        }
+      }
+
+      var cookieCount = 0;
+      try {
+        if (document.cookie) {
+          var parts = document.cookie.split(';');
+          for (i = 0; i < parts.length; i++) {
+            if (parts[i].replace(/^\s+|\s+$/g, '').length > 0) cookieCount++;
+          }
+        }
+      } catch (e3) { cookieCount = 0; }
+
+      externalEl.textContent = externalCount;
+      trackersEl.textContent = trackerCount;
+      cookiesEl.textContent = cookieCount;
+      var errCount = (window.__nbDiag && window.__nbDiag.entries.length) || 0;
+      summaryEl.textContent = externalCount + ' external · ' + trackerCount + ' trackers · ' + cookieCount + ' cookies' + (errCount ? ' · ' + errCount + ' logged' : '');
+
+      var hostNames = [];
+      for (var h in externalHosts) { if (externalHosts.hasOwnProperty(h)) hostNames.push(h); }
+      hostsEl.textContent = hostNames.length ? hostNames.join(', ') : 'no external hosts loaded';
+    }
+
+    function runFullAudit() {
+      refreshStats();
+      refreshLoadTime();
+      refreshA11y();
+      refreshCarbon();
+      refreshHash();
+      refreshDiag();
+    }
+
+    function closeDetail() { detail.hidden = true; toggle.setAttribute('aria-expanded', 'false'); }
+    function openDetail() { detail.hidden = false; toggle.setAttribute('aria-expanded', 'true'); runFullAudit(); }
+
+    toggle.addEventListener('click', function () { detail.hidden ? openDetail() : closeDetail(); });
+    document.addEventListener('click', function (e) {
+      var root = document.getElementById('liveStats');
+      if (root && !root.contains(e.target)) closeDetail();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !detail.hidden) closeDetail();
+    });
+    if (auditBtn) auditBtn.addEventListener('click', runFullAudit);
+    if (sourceLink) {
+      sourceLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        try { window.open('view-source:' + window.location.href, '_blank'); }
+        catch (e12) { window.__nbDiag.log('live-stats', 'view-source: scheme blocked by browser', { recovered: true }); }
+      });
+    }
+
+    // Passive summary count runs immediately (cheap); full audit (hash,
+    // carbon, a11y) only runs when the panel is actually opened, so it's
+    // not spending Web Crypto cycles on visitors who never look.
+    refreshStats();
+    refreshDiag();
+    window.addEventListener('load', function () {
+      setTimeout(refreshStats, 300);
+      setTimeout(refreshLoadTime, 300);
+    });
+  })();
+</script>
+
+<style>
+  .live-stats {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    z-index: 60;
+    font-family: var(--font-mono);
+  }
+  .live-stats-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px 7px 10px;
+    background: color-mix(in oklab, var(--bg) 78%, transparent);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .live-stats-toggle:hover,
+  .live-stats-toggle[aria-expanded='true'] {
+    border-color: var(--line-strong);
+    color: var(--text);
+  }
+  .live-stats-toggle:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
+  .live-stats-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    flex-shrink: 0;
+    animation: liveStatsPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes liveStatsPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+
+  .live-stats-detail {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 0;
+    width: 300px;
+    max-width: calc(100vw - 40px);
+    max-height: min(520px, 70vh);
+    overflow-y: auto;
+    padding: var(--sp-5);
+    background: color-mix(in oklab, var(--surface-1) 96%, transparent);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 50px color-mix(in oklab, #000 45%, transparent);
+  }
+  .live-stats-detail[hidden] { display: none; }
+  .live-stats-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: var(--sp-3);
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 11.5px;
+  }
+  .live-stats-row strong { color: var(--text); font-size: 13px; }
+  .mono-hash { font-size: 10px !important; }
+  .live-stats-hosts {
+    font-size: 10px;
+    color: var(--muted-2);
+    line-height: 1.6;
+    margin: 10px 0;
+    word-break: break-all;
+  }
+
+  .live-stats-diag {
+    margin-top: 4px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+  }
+  .live-stats-diag-list {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .live-stats-diag-list[hidden] { display: none; }
+  .ls-diag-entry {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    background: color-mix(in oklab, var(--surface-2) 60%, transparent);
+    font-size: 10px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .ls-diag-badge {
+    flex-shrink: 0;
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 1px 6px;
+    border-radius: var(--radius-pill);
+  }
+  .ls-diag-recovered .ls-diag-badge { color: var(--green); background: color-mix(in oklab, var(--green) 16%, transparent); }
+  .ls-diag-unhandled .ls-diag-badge { color: var(--warn-text); background: color-mix(in oklab, var(--warn) 16%, transparent); }
+
+  .ls-audit-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 8px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    cursor: pointer;
+    transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+  }
+  .ls-audit-btn:hover, .ls-audit-btn:focus-visible {
+    color: var(--purple-bright);
+    border-color: var(--purple-bright);
+    outline: none;
+  }
+
+  .live-stats-note {
+    font-family: var(--font-body);
+    font-size: 10.5px;
+    color: var(--muted-2);
+    line-height: 1.55;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+  }
+  .live-stats-link {
+    display: block;
+    color: var(--purple-bright) !important;
+    text-decoration: none;
+    margin-top: 6px;
+    border-top: none;
+    padding-top: 0;
+  }
+  .live-stats-link:hover { text-decoration: underline; }
+
+  @media (max-width: 640px) {
+    .live-stats { left: 14px; bottom: 14px; }
+    .live-stats-toggle { font-size: 10px; padding: 6px 12px 6px 9px; }
+    .live-stats-detail { width: calc(100vw - 48px); max-width: 300px; }
+  }
+  @media print {
+    .live-stats { display: none !important; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .live-stats-dot { animation: none; }
+  }
+</style>

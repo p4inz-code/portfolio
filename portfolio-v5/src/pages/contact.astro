@@ -53,14 +53,20 @@ import { CONTACT, SITE } from '../data/site';
         </header>
 
         <form class="term-form" id="contactForm" novalidate>
-          <div class="term-line">
+          <div class="term-line term-line-field">
             <label for="c-name" class="term-prompt"><span class="term-caret">›</span> name</label>
-            <input type="text" id="c-name" class="term-input" placeholder="your name" required autocomplete="name" />
+            <div class="term-field">
+              <input type="text" id="c-name" class="term-input" placeholder="your name" required autocomplete="name" />
+              <span class="term-field-error" id="c-name-error" role="alert"></span>
+            </div>
           </div>
 
-          <div class="term-line">
+          <div class="term-line term-line-field">
             <label for="c-email" class="term-prompt"><span class="term-caret">›</span> email</label>
-            <input type="email" id="c-email" class="term-input" placeholder="you@example.com" required autocomplete="email" />
+            <div class="term-field">
+              <input type="email" id="c-email" class="term-input" placeholder="you@example.com" required autocomplete="email" />
+              <span class="term-field-error" id="c-email-error" role="alert"></span>
+            </div>
           </div>
 
           <div class="term-line">
@@ -100,7 +106,10 @@ import { CONTACT, SITE } from '../data/site';
 
           <div class="term-line term-line-block">
             <label for="c-message" class="term-prompt"><span class="term-caret">›</span> message</label>
-            <textarea id="c-message" class="term-textarea" placeholder="What are you trying to build, and what's the timeline?" required></textarea>
+            <div class="term-field">
+              <textarea id="c-message" class="term-textarea" placeholder="What are you trying to build, and what's the timeline?" required></textarea>
+              <span class="term-field-error" id="c-message-error" role="alert"></span>
+            </div>
           </div>
 
           <div class="term-actions">
@@ -114,6 +123,20 @@ import { CONTACT, SITE } from '../data/site';
           </div>
 
           <p class="term-status" id="c-status" role="status" aria-live="polite" hidden></p>
+
+          <!-- v5.17.0 — auto-recovery fallback: some devices/browsers have
+               no mail client configured, so mailto: silently does nothing.
+               If the tab is still focused ~1.4s after triggering it, we
+               assume that happened and offer a copyable alternative
+               instead of leaving the visitor staring at a dead button. -->
+          <div class="term-fallback" id="c-fallback" role="status" aria-live="polite" hidden>
+            <p class="term-fallback-title">No mail client responded — here's your message to copy instead.</p>
+            <textarea class="term-fallback-body" id="c-fallback-body" readonly></textarea>
+            <div class="term-fallback-actions">
+              <button type="button" class="term-fallback-btn" id="c-copy-message">Copy message</button>
+              <button type="button" class="term-fallback-btn" id="c-copy-email">Copy email address</button>
+            </div>
+          </div>
         </form>
       </div>
 
@@ -174,22 +197,61 @@ import { CONTACT, SITE } from '../data/site';
         });
       });
 
-      // -------- Submit -> mailto composer --------
+      // -------- Submit -> mailto composer, with real validation + auto-recovery --------
       const form = document.getElementById('contactForm');
       const status = document.getElementById('c-status');
       if (!form) return;
 
+      const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      function setFieldError(id, message) {
+        const input = document.getElementById(id);
+        const errEl = document.getElementById(id + '-error');
+        if (errEl) errEl.textContent = message || '';
+        if (input) input.classList.toggle('term-input-invalid', !!message);
+      }
+
+      function copyText(text, onDone) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(onDone, onDone);
+          return;
+        }
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {
+          window.__nbDiag && window.__nbDiag.log('contact-form', 'Clipboard copy fallback failed', { recovered: false });
+        }
+        document.body.removeChild(ta);
+        onDone();
+      }
+
       form.addEventListener('submit', function (e) {
         e.preventDefault();
-        const name = /** @type {HTMLInputElement} */ (document.getElementById('c-name')).value.trim();
-        const email = /** @type {HTMLInputElement} */ (document.getElementById('c-email')).value.trim();
-        const message = /** @type {HTMLTextAreaElement} */ (document.getElementById('c-message')).value.trim();
+        const nameInput = /** @type {HTMLInputElement} */ (document.getElementById('c-name'));
+        const emailInput = /** @type {HTMLInputElement} */ (document.getElementById('c-email'));
+        const messageInput = /** @type {HTMLTextAreaElement} */ (document.getElementById('c-message'));
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim();
+        const message = messageInput.value.trim();
         const selects = form.querySelectorAll('[data-term-select]');
         const service = selects[0] ? selects[0].getAttribute('data-selected') : '';
         const budget  = selects[1] ? selects[1].getAttribute('data-selected') : '';
 
-        if (!name || !email || !message) {
-          if (status) { status.hidden = false; status.textContent = 'name, email, and message are required.'; }
+        setFieldError('c-name', '');
+        setFieldError('c-email', '');
+        setFieldError('c-message', '');
+
+        let firstInvalid = null;
+        if (!name) { setFieldError('c-name', 'name is required.'); firstInvalid = firstInvalid || nameInput; }
+        if (!email) { setFieldError('c-email', 'email is required.'); firstInvalid = firstInvalid || emailInput; }
+        else if (!EMAIL_RE.test(email)) { setFieldError('c-email', 'that doesn\'t look like a valid email.'); firstInvalid = firstInvalid || emailInput; }
+        if (!message) { setFieldError('c-message', 'message is required.'); firstInvalid = firstInvalid || messageInput; }
+
+        if (firstInvalid) {
+          if (status) { status.hidden = false; status.textContent = 'fix the highlighted field' + (document.querySelectorAll('.term-field-error:not(:empty)').length > 1 ? 's' : '') + ' above.'; }
+          firstInvalid.focus();
           return;
         }
 
@@ -205,20 +267,61 @@ import { CONTACT, SITE } from '../data/site';
           '',
           message,
         ];
+        const plainBody = bodyLines.join('\n');
         // v5.12.0 fix — email obfuscated in the inline script so basic
         // scrapers don't harvest the plaintext (Cloudflare's mailto
         // rewriter only touches <a href="mailto:"> tags, not JS).
         const to = ['atharva.patil.cg', 'gmail.com'].join('@');
         const href = 'mailto:' + to
           + '?subject=' + encodeURIComponent(subject)
-          + '&body='    + encodeURIComponent(bodyLines.join('\n'));
+          + '&body='    + encodeURIComponent(plainBody);
+
+        const fallback = document.getElementById('c-fallback');
+        const fallbackBody = /** @type {HTMLTextAreaElement} */ (document.getElementById('c-fallback-body'));
+        const wasHiddenBefore = document.visibilityState;
         window.location.href = href;
 
         if (status) {
           status.hidden = false;
-          status.textContent = 'opened your mail client — if nothing happened, email is on the left column.';
+          status.textContent = 'opened your mail client — if nothing happened, check below.';
         }
+
+        // v5.17.0 auto-recovery — if the tab is still visible/focused
+        // ~1.4s later, no mail client intercepted the mailto: link (a
+        // real, common failure mode on machines with none configured).
+        // Surface the message as copyable text instead of a dead end.
+        setTimeout(function () {
+          if (document.visibilityState === wasHiddenBefore && document.hasFocus()) {
+            if (fallback && fallbackBody) {
+              fallbackBody.value = 'To: ' + to + '\nSubject: ' + subject + '\n\n' + plainBody;
+              fallback.hidden = false;
+              fallback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+            window.__nbDiag && window.__nbDiag.log('contact-form', 'No mail client responded to mailto: — showed copyable fallback', { recovered: true });
+          }
+        }, 1400);
       });
+
+      const copyMsgBtn = document.getElementById('c-copy-message');
+      const copyEmailBtn = document.getElementById('c-copy-email');
+      if (copyMsgBtn) {
+        copyMsgBtn.addEventListener('click', function () {
+          const body = /** @type {HTMLTextAreaElement} */ (document.getElementById('c-fallback-body'));
+          if (!body) return;
+          copyText(body.value, function () {
+            copyMsgBtn.textContent = 'Copied ✓';
+            setTimeout(function () { copyMsgBtn.textContent = 'Copy message'; }, 1600);
+          });
+        });
+      }
+      if (copyEmailBtn) {
+        copyEmailBtn.addEventListener('click', function () {
+          copyText(['atharva.patil.cg', 'gmail.com'].join('@'), function () {
+            copyEmailBtn.textContent = 'Copied ✓';
+            setTimeout(function () { copyEmailBtn.textContent = 'Copy email address'; }, 1600);
+          });
+        });
+      }
     })();
   </script>
 
@@ -370,6 +473,65 @@ import { CONTACT, SITE } from '../data/site';
     .term-input::placeholder, .term-textarea::placeholder { color: var(--muted-2); font-style: italic; }
     .term-input:focus, .term-textarea:focus { border-bottom-color: var(--purple-bright); }
     .term-textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+    /* v5.17.0 — per-field inline error state */
+    .term-line-field { align-items: start; }
+    .term-field { display: flex; flex-direction: column; }
+    .term-input-invalid { border-bottom-color: var(--warn) !important; }
+    .term-field-error {
+      display: block;
+      min-height: 0;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--warn-text);
+      margin-top: 4px;
+    }
+    .term-field-error:empty { display: none; }
+
+    /* v5.17.0 — mailto auto-recovery fallback */
+    .term-fallback {
+      margin-top: var(--sp-4);
+      padding: var(--sp-4);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: color-mix(in oklab, var(--warn) 6%, transparent);
+    }
+    .term-fallback-title {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--warn-text);
+      margin-bottom: var(--sp-3);
+    }
+    .term-fallback-body {
+      width: 100%;
+      min-height: 120px;
+      padding: var(--sp-3);
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.6;
+      resize: vertical;
+    }
+    .term-fallback-actions { display: flex; gap: var(--sp-3); margin-top: var(--sp-3); flex-wrap: wrap; }
+    .term-fallback-btn {
+      padding: 8px 14px;
+      background: transparent;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-pill);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      cursor: pointer;
+      transition: border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+    }
+    .term-fallback-btn:hover, .term-fallback-btn:focus-visible {
+      border-color: var(--purple-bright);
+      color: var(--purple-bright);
+      outline: none;
+    }
 
     /* Custom select */
     .term-select { position: relative; }

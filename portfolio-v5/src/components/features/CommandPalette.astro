@@ -237,7 +237,10 @@ const commands = [
         if (!raw) return [];
         const arr = JSON.parse(raw);
         return Array.isArray(arr) ? arr.slice(0, RECENT_MAX) : [];
-      } catch (e) { return []; }
+      } catch (e) {
+        window.__nbDiag && window.__nbDiag.log('cmdk', 'Recent-searches list unreadable — starting empty', { recovered: true });
+        return [];
+      }
     }
     function saveRecent(cmd) {
       try {
@@ -245,7 +248,9 @@ const commands = [
         const existing = loadRecent().filter((r) => r.act !== key);
         existing.unshift({ g: 'Recent', t: cmd.t, s: cmd.s, k: cmd.k || [], act: cmd.act });
         localStorage.setItem(RECENT_KEY, JSON.stringify(existing.slice(0, RECENT_MAX)));
-      } catch (e) { /* no-op */ }
+      } catch (e) {
+        window.__nbDiag && window.__nbDiag.log('cmdk', 'Recent-searches list could not be saved (private browsing)', { recovered: true });
+      }
     }
     let currentQuery = '';
 

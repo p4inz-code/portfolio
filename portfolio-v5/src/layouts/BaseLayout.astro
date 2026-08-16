@@ -4,6 +4,7 @@ import ThemeToggle from '../components/ThemeToggle.astro';
 import CommandPalette from '../components/features/CommandPalette.astro';
 import APMark from '../components/APMark.astro';
 import SideRail from '../components/SideRail.astro';
+import LiveStats from '../components/LiveStats.astro';
 import { SITE, NAV, CONTACT } from '../data/site';
 
 interface Props {
@@ -176,6 +177,53 @@ const jsonLd = {
     <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=neue-machina@400,500,700,800&f[]=neue-montreal@400,500,italic&f[]=supply-mono@400,500&display=swap" />
 
     <script is:inline>
+      // ---- Shared diagnostics core (v5.17.0) ----
+      // One in-memory log every interactive island reports into instead of
+      // swallowing errors silently. Nothing here is persisted or sent
+      // anywhere — it exists only so the live-stats widget can show real
+      // caught-and-recovered errors instead of a hardcoded "0 issues"
+      // claim. Defined first, before any other inline script, so it's
+      // always available by the time a component needs it.
+      window.__nbDiag = (function () {
+        var entries = [];
+        var MAX = 40;
+        function log(component, message, opts) {
+          opts = opts || {};
+          var entry = {
+            t: Date.now(),
+            component: component,
+            message: message,
+            recovered: opts.recovered !== false,
+          };
+          entries.unshift(entry);
+          if (entries.length > MAX) entries.length = MAX;
+          try {
+            document.dispatchEvent(new CustomEvent('nb-diag', { detail: entry }));
+          } catch (e) { /* CustomEvent unsupported — widget will just miss the live update */ }
+          return entry;
+        }
+        return { entries: entries, log: log };
+      })();
+
+      // Safety net for anything that throws without a local try/catch.
+      // Deduped by message so a loop-firing error doesn't flood the log.
+      (function () {
+        var seen = {};
+        function safeLog(message, component) {
+          if (seen[message]) return;
+          seen[message] = true;
+          window.__nbDiag.log(component, message, { recovered: false });
+        }
+        window.addEventListener('error', function (e) {
+          safeLog((e && e.message) || 'Unknown script error', 'window');
+        });
+        window.addEventListener('unhandledrejection', function (e) {
+          var reason = e && e.reason;
+          var msg = (reason && (reason.message || String(reason))) || 'Unhandled promise rejection';
+          safeLog(msg, 'window');
+        });
+      })();
+
       (function () {
         try {
           const stored = localStorage.getItem('nb-theme');
@@ -184,6 +232,7 @@ const jsonLd = {
           document.documentElement.setAttribute('data-theme', theme);
         } catch (e) {
           document.documentElement.setAttribute('data-theme', 'dark');
+          window.__nbDiag.log('theme', 'Stored theme preference unreadable (private browsing) — defaulted to dark', { recovered: true });
         }
       })();
     </script>
@@ -242,8 +291,14 @@ const jsonLd = {
           <span class="nmt-line"></span>
         </button>
       </div>
+    </header>
 
-      <div class="nav-mobile-drawer" id="navMobileDrawer" hidden>
+    <!-- v5.17.0 fix: moved out of <header> — the header's backdrop-filter
+         creates a new containing block for position:fixed descendants, so
+         this drawer's inset:0 was resolving against the ~60px-tall header
+         box instead of the viewport. Rendered squashed into a sliver near
+         the top instead of covering the screen. Sibling of header now. -->
+    <div class="nav-mobile-drawer" id="navMobileDrawer" hidden>
         <nav aria-label="Primary (mobile)">
           <ul role="list">
             {NAV.map((n) => (
@@ -265,7 +320,6 @@ const jsonLd = {
           </div>
         </nav>
       </div>
-    </header>
 
     <script is:inline>
       (function () {
@@ -307,6 +361,7 @@ const jsonLd = {
     </script>
 
     <SideRail />
+    <LiveStats />
 
     <main id="main"><slot /></main>
 

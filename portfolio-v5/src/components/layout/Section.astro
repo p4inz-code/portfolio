@@ -33,6 +33,25 @@ const { eyebrow, heading, headingEmphasis, intro, wide = false, class: cls = '',
   .section {
     padding: var(--sp-11) 0;
   }
+  /* v5.17.0 — restrained scroll reveal, zero JS, same mechanism already
+     used by the scroll-progress hairline and featured showcase
+     (animation-timeline). Settles quickly (35% of entry) so it reads as
+     polish, not a slideshow effect — and if a section is already in the
+     viewport on load, the timeline resolves at full opacity immediately. */
+  @supports (animation-timeline: view()) {
+    .section {
+      animation: section-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+  @keyframes section-reveal {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .section { animation: none; }
+  }
   .wrap-wide {
     max-width: 1400px;
   }

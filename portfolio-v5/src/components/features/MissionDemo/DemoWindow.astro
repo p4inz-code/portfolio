@@ -33,10 +33,20 @@ const { title, subtitle, appSlug, wide = false } = Astro.props;
     <slot />
   </div>
   <slot name="footer" />
+
+  <!-- v5.17.0 — per-window error boundary. If a click handler inside this
+       app throws, demo.astro's safeHandler() sets [data-window-error] on
+       this root instead of letting the panel die silently — an in-universe
+       "app not responding" state, not a blank screen. -->
+  <div class="dw-error" data-window-error hidden>
+    <p class="dw-error-msg">This panel didn't respond. Diagnosed and logged — try reopening it.</p>
+    <button type="button" class="dw-error-retry" data-window-retry={appSlug}>↻ Reopen {title}</button>
+  </div>
 </section>
 
 <style>
   .demo-window {
+    position: relative;
     width: min(720px, 92vw);
     max-height: min(560px, 78vh);
     background: color-mix(in oklab, var(--surface-1) 92%, transparent);
@@ -50,6 +60,42 @@ const { title, subtitle, appSlug, wide = false } = Astro.props;
     overflow: hidden;
     animation: dw-in 260ms var(--ease-out);
   }
+
+  /* v5.17.0 error boundary overlay */
+  .dw-error {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-4);
+    padding: var(--sp-6);
+    text-align: center;
+    background: color-mix(in oklab, var(--surface-1) 97%, transparent);
+    backdrop-filter: blur(6px);
+  }
+  .dw-error[hidden] { display: none; }
+  .dw-error-msg {
+    max-width: 320px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .dw-error-retry {
+    padding: 8px 18px;
+    background: var(--purple-bright);
+    color: var(--bg);
+    border: none;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .dw-error-retry:hover { background: var(--purple); }
+  .dw-error-retry:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
   .demo-window-wide { width: min(920px, 96vw); }
   @keyframes dw-in {
     from { opacity: 0; transform: translateY(12px) scale(0.98); }

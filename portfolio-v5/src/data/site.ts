@@ -13,7 +13,7 @@ export const SITE = {
   location: 'Navi Mumbai, India',
   studio: 'Northbyte Studios',
   studioFounded: '2026',
-  currentVersion: 'v5.16.0',
+  currentVersion: 'v5.17.0',
   domain: 'atharvapatil.tech',
 } as const;
 
@@ -22,7 +22,7 @@ export const CONTACT = {
   github: 'https://github.com/p4inz-code',
   githubHandle: 'github.com/p4inz-code',
   discord: 'p4inz',
-  discordInvite: 'https://discord.gg/XFF5nV53ZJ',
+  discordInvite: 'https://discord.gg/8UKt8s5FbW',
 } as const;
 
 export interface Service {

@@ -83,7 +83,7 @@ export const PROJECTS: Project[] = [
     isExternal: false,
     links: [
       { label: 'Releases on GitHub', href: 'https://github.com/p4inz-code/nexus-desktop', external: true },
-      { label: 'Join Beta on Discord', href: 'https://discord.gg/XFF5nV53ZJ', external: true },
+      { label: 'Join Beta on Discord', href: 'https://discord.gg/8UKt8s5FbW', external: true },
     ],
     license: 'Proprietary',
     stack: ['C#', '.NET 8', 'WPF', 'AES-256-GCM', 'Argon2id'],
