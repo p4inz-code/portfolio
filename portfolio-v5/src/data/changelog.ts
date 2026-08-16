@@ -20,6 +20,17 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.17.9',
+    kind: 'released',
+    summary: 'Bing Webmaster Tools site verification file added. Google Search Console confirmed set up. Cloudflare AI Crawl Control confirmed as the exact cause of the earlier robots.txt conflict — visible and fixable directly in the dashboard.',
+    body: [
+      'Added BingSiteAuth.xml to the site root for Bing Webmaster Tools domain verification.',
+      'Google Search Console: done — sitemap submitted.',
+      'Cloudflare\'s AI Crawl Control dashboard confirmed the v5.17.7 finding exactly — ClaudeBot, GPTBot, CCBot, and Bytespider are all toggled to "Block" despite this site\'s own robots.txt explicitly welcoming them. Googlebot, PerplexityBot, ChatGPT-User, and OAI-SearchBot are correctly left unblocked. Fix is a dashboard toggle, not code — flagged which specific crawlers to flip.',
+      'Studio-name decision (Northbyte → possible "p4inz Interactives") — parked, planned for later, not part of this round.',
+    ],
+  },
+  {
     version: 'v5.17.8',
     kind: 'released',
     summary: 'Popularity/SEO round 2 — sitelinks searchbox schema backed by real ?q= command-palette support (not a claim without function), broader sameAs identity list, real internal cross-linking between all 4 case studies.',
