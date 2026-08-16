@@ -188,7 +188,13 @@ html {
 .wrap {
   max-width: var(--wrap);
   margin: 0 auto;
-  padding: 0 var(--sp-6);
+  /* v5.17.5 fix — --wrap (1200px) is wider than a lot of real laptop/
+     half-split-window viewports (1024-1200px), so on those the fixed
+     24px padding was the ONLY buffer from the actual screen edge —
+     read as "text too close to the border." Scales up smoothly on
+     wider viewports; unchanged at mobile widths (4vw stays under the
+     24px floor below ~600px). */
+  padding: 0 clamp(24px, 4vw, 64px);
 }
 
 /* Skip-nav for keyboard users */

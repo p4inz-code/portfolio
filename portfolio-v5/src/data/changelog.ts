@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.17.5',
+    kind: 'released',
+    summary: 'Fixed content sitting too close to the screen edge on laptop-width viewports — the site\'s max content width (1200-1400px) is wider than a lot of real windows, so the fixed 24px padding was the only buffer from the true edge.',
+    body: [
+      'Reported as "text too close to the border." Root cause: .wrap has max-width: 1200px (wrap-wide sections: 1400px), but on any viewport narrower than that — a genuinely common range: unmaximized windows, half-split screens, smaller laptops around 1024-1200px — the wrap element just fills the viewport and its own 24px padding becomes the entire gap from the real screen edge. Fine on mobile (padding is the whole story there) and fine on very wide desktop monitors (wrap is centered with room to spare) — it was specifically the in-between range that felt cramped.',
+      'Fixed with one change in global.css: .wrap padding is now clamp(24px, 4vw, 64px) instead of a flat 24px. Scales up smoothly as the viewport widens — verified 24px unchanged at 375px (mobile), 44px at 1091px (the width that was reported), capped at 64px on very wide screens. Single fix, applies everywhere .wrap is used.',
+      'Separately investigated a reported "one letter per line" hero rendering break. Could not reproduce at any width tested, including 150px (well below any real device) on both local and live production — text wrapped normally at every size. Likely a cropped/partial screenshot rather than an actual site bug; asked for an uncropped repro if it recurs.',
+    ],
+  },
+  {
     version: 'v5.17.4',
     kind: 'released',
     summary: 'Resume redesign (curated to 4 primary + 3 compact projects, warm-white/near-black/violet palette) + de-AI-ify brief v2 (comments, mobile touch targets, Nexus start date corrected).',
