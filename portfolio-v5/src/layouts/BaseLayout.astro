@@ -72,10 +72,14 @@ const person = {
   sameAs: [
     CONTACT.github,
     CONTACT.discordInvite,
+    'https://instagram.com/atharva.patil.cg',
+    'https://www.npmjs.com/~p4inz-code',
     'https://github.com/p4inz-code/mission-os',
     'https://github.com/p4inz-code/nexus-desktop',
     'https://github.com/p4inz-code/kanvaz',
     'https://github.com/p4inz-code/pursue-os',
+    'https://github.com/p4inz-code/obscura',
+    'https://github.com/p4inz-code/repo-map',
   ],
 };
 
@@ -105,6 +109,17 @@ const website = {
   inLanguage: 'en',
   author: { '@id': 'https://atharvapatil.tech/#person' },
   publisher: { '@id': 'https://atharvapatil.tech/#studio' },
+  // v5.17.8 — sitelinks searchbox. The command palette IS a real
+  // client-side search; this just tells Google it exists. q={q} maps to
+  // the palette's query param the same way any query-string search would.
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://atharvapatil.tech/?q={search_term_string}',
+    },
+    'query-input': 'required name=search_term_string',
+  },
 };
 
 const jsonLd = {

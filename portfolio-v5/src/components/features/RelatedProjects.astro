@@ -1,0 +1,81 @@
+---
+/**
+ * "Related" cross-links between case studies — real internal linking,
+ * not decorative. Helps crawl depth and spreads page authority between
+ * the 4 case-study pages instead of leaving them as isolated leaves off
+ * /work.
+ */
+import { PROJECTS } from '../../data/projects';
+
+interface Props {
+  currentSlug: string;
+  slugs: string[]; // explicit, not auto-picked — keep the pairing deliberate
+}
+const { currentSlug, slugs } = Astro.props;
+const related = slugs
+  .map((s) => PROJECTS.find((p) => p.slug === s))
+  .filter((p) => p && p.slug !== currentSlug);
+---
+{related.length > 0 && (
+  <section class="related-projects" aria-label="Related projects">
+    <div class="wrap">
+      <p class="rp-label">Related</p>
+      <div class="rp-list">
+        {related.map((p) => (
+          <a href={p!.href} class="rp-item">
+            <span class="rp-name">{p!.name}</span>
+            <span class="rp-tagline">{p!.tagline}</span>
+            <span class="rp-arrow" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .related-projects {
+    padding: var(--sp-9) 0 var(--sp-10);
+    border-top: 1px solid var(--line);
+  }
+  .rp-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: var(--sp-5);
+  }
+  .rp-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .rp-item {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-4);
+    padding: var(--sp-4) 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--text);
+    text-decoration: none;
+    transition: gap var(--dur) var(--ease-out), color var(--dur) var(--ease-out);
+  }
+  .rp-item:first-child { border-top: 1px solid var(--line); }
+  .rp-item:hover { gap: var(--sp-5); color: var(--purple-bright); }
+  .rp-name {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 500;
+  }
+  .rp-tagline {
+    color: var(--muted);
+    font-size: var(--text-sm);
+    flex: 1;
+  }
+  .rp-item:hover .rp-tagline { color: var(--purple-bright); }
+  .rp-arrow { color: var(--muted-2); }
+  @media (max-width: 640px) {
+    .rp-item { flex-direction: column; gap: 4px; align-items: flex-start; }
+    .rp-item:hover { gap: 4px; }
+  }
+</style>

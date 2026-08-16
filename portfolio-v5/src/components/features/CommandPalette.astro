@@ -396,5 +396,22 @@ const commands = [
 
     const trigger = document.getElementById('cmdkTrigger');
     if (trigger) trigger.addEventListener('click', () => { if (backdrop.hidden) open(); else close(); });
+
+    // v5.17.8 — real backing for the SearchAction schema in BaseLayout's
+    // JSON-LD (?q=). Without this the structured data would be claiming a
+    // search feature that doesn't actually work — Google validates that
+    // the target URL performs a real search, and so should this codebase.
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get('q');
+      if (q) {
+        open();
+        input.value = q;
+        filter(q);
+        history.replaceState(null, '', window.location.pathname);
+      }
+    } catch (e) {
+      window.__nbDiag && window.__nbDiag.log('cmdk', 'Could not read ?q= search param on load', { recovered: true });
+    }
   })();
 </script>

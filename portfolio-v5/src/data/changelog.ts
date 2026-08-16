@@ -20,6 +20,17 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.17.8',
+    kind: 'released',
+    summary: 'Popularity/SEO round 2 — sitelinks searchbox schema backed by real ?q= command-palette support (not a claim without function), broader sameAs identity list, real internal cross-linking between all 4 case studies.',
+    body: [
+      'Added SearchAction schema so Google can show a search box under this site in results. Wired it to something real first — the command palette now reads a ?q= URL parameter on load, opens itself, and pre-fills + filters on that query. Verified in-browser before shipping: shipping a SearchAction schema whose target URL doesn\'t actually search anything would be exactly the kind of unfunctional claim this whole project has been trying to eliminate.',
+      'sameAs identity list grew from 6 entries to 10 — added Instagram and the npm profile (verified real via the registry API, not assumed, since npmjs.com blocks direct profile-page requests from automation) plus the two product repos that were missing (Obscura, repo-map).',
+      'Added a "Related" section to the bottom of all four case studies (Nexus, Mission OS, Kanvaz, Pursue OS), cross-linking to the other three. Real internal linking — more crawl depth and authority distribution between pages that were otherwise isolated leaves off /work.',
+      'Homepage meta description now includes "p4inz" once, naturally — the actual handle people search for, which the title/description never mentioned before this pass.',
+    ],
+  },
+  {
     version: 'v5.17.7',
     kind: 'released',
     summary: 'Homepage meta description now names the real search handle ("p4inz") once. Investigated a Google-favicon question and found something bigger: Cloudflare is auto-injecting a robots.txt block that contradicts this site\'s own AI-crawler policy.',

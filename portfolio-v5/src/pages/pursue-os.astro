@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CaseHero from '../components/layout/CaseHero.astro';
 import Section from '../components/layout/Section.astro';
+import RelatedProjects from '../components/features/RelatedProjects.astro';
 import { PROJECTS } from '../data/projects';
 
 const project = PROJECTS.find((p) => p.slug === 'pursue-os')!;
@@ -87,6 +88,8 @@ const breadcrumbJsonLd = {
   <div class="ymyl-note wrap">
     <p><strong>Not investigation advice.</strong> This page describes an in-progress operating system designed to support OSINT / DFIR / evidence-collection workflows. It is not a substitute for training or professional standards in those fields. Verify capabilities and legal fitness for your jurisdiction against the source repository before relying on any component for real casework.</p>
   </div>
+
+  <RelatedProjects currentSlug="pursue-os" slugs={['mission-os', 'nexus', 'kanvaz']} />
 
   <style>
     .notice-wrap { padding: 0 0 var(--sp-7); }

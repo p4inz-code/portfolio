@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import CaseHero from '../components/layout/CaseHero.astro';
 import Section from '../components/layout/Section.astro';
 import Screenshot from '../components/features/Screenshot.astro';
+import RelatedProjects from '../components/features/RelatedProjects.astro';
 import { PROJECTS } from '../data/projects';
 
 const project = PROJECTS.find((p) => p.slug === 'kanvaz')!;
@@ -118,6 +119,8 @@ const breadcrumbJsonLd = {
       <p>No subscription, no feature paywall, no telemetry, no internet connection required. Your files never leave your machine, and it stays free forever.</p>
     </div>
   </Section>
+
+  <RelatedProjects currentSlug="kanvaz" slugs={['nexus', 'mission-os', 'pursue-os']} />
 
   <style>
     /* 12-col grid so <Screenshot span="..."> lands where expected */

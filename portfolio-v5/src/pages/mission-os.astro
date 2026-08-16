@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CaseHero from '../components/layout/CaseHero.astro';
 import Section from '../components/layout/Section.astro';
+import RelatedProjects from '../components/features/RelatedProjects.astro';
 import { PROJECTS } from '../data/projects';
 
 const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
@@ -124,6 +125,8 @@ const breadcrumbJsonLd = {
       <p>Installer foundation validated end-to-end. Core system components (Mission Settings, Store, Update, Recovery, Driver Manager, Diagnostics) are in architecture and early implementation. <em>ISO under internal testing (August 2026)</em> — public release notice will land here first.</p>
     </div>
   </Section>
+
+  <RelatedProjects currentSlug="mission-os" slugs={['nexus', 'pursue-os', 'kanvaz']} />
 
   <style>
     .demo-cta-wrap { padding: var(--sp-6) 0 var(--sp-4); }

@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import CaseHero from '../components/layout/CaseHero.astro';
 import Section from '../components/layout/Section.astro';
 import Screenshot from '../components/features/Screenshot.astro';
+import RelatedProjects from '../components/features/RelatedProjects.astro';
 import { PROJECTS } from '../data/projects';
 
 const project = PROJECTS.find((p) => p.slug === 'nexus')!;
@@ -148,6 +149,8 @@ const breadcrumbJsonLd = {
       </div>
     </dl>
   </Section>
+
+  <RelatedProjects currentSlug="nexus" slugs={['mission-os', 'kanvaz', 'pursue-os']} />
 
   <style>
     .stat-row-wrap { padding: 0 0 var(--sp-8); }
