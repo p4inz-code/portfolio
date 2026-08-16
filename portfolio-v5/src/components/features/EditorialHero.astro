@@ -68,6 +68,14 @@ const { eyebrow, lines, intro } = Astro.props;
   @media (prefers-reduced-motion: reduce) {
     .act { animation: none; opacity: 1; transform: none; }
   }
+  /* v5.17.1 fix — --text-h1's clamp() floors at a flat 44px for every
+     viewport under ~680px, so a 320px phone and a 420px phone render
+     identical type size against very different column widths. On the
+     narrow end that reads heavy/stuffed against the edge. Scale it down
+     further specifically for small phones. */
+  @media (max-width: 480px) {
+    .hero-title { font-size: clamp(32px, 9vw, 44px); }
+  }
   .hero-sub {
     margin-top: var(--sp-7);
     max-width: var(--wrap-narrow);

@@ -438,9 +438,22 @@
   .live-stats-link:hover { text-decoration: underline; }
 
   @media (max-width: 640px) {
-    .live-stats { left: 14px; bottom: 14px; }
-    .live-stats-toggle { font-size: 10px; padding: 6px 12px 6px 9px; }
-    .live-stats-detail { width: calc(100vw - 48px); max-width: 300px; }
+    .live-stats { left: 12px; bottom: 12px; }
+    /* v5.17.1 fix — the full-text pill ("1 external · 0 trackers...")
+       is wide enough to sit directly on top of page content at whatever
+       scroll position happens to land there (reported: covering the
+       hero's CTA button, likely blocking its clicks too). Collapse to a
+       small icon-only badge on mobile; tapping still opens the full
+       panel with everything visible. */
+    .live-stats-toggle {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    .live-stats-toggle #liveStatsSummary { display: none; }
+    .live-stats-detail { width: calc(100vw - 40px); max-width: 300px; }
   }
   @media print {
     .live-stats { display: none !important; }

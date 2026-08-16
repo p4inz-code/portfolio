@@ -299,6 +299,11 @@ const jsonLd = {
          box instead of the viewport. Rendered squashed into a sliver near
          the top instead of covering the screen. Sibling of header now. -->
     <div class="nav-mobile-drawer" id="navMobileDrawer" hidden>
+        <button type="button" class="nmd-close" id="navMobileClose" aria-label="Close navigation menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18"/>
+          </svg>
+        </button>
         <nav aria-label="Primary (mobile)">
           <ul role="list">
             {NAV.map((n) => (
@@ -343,6 +348,8 @@ const jsonLd = {
         toggle.addEventListener('click', () => {
           drawer.hidden ? open() : close();
         });
+        const closeBtn = document.getElementById('navMobileClose');
+        if (closeBtn) closeBtn.addEventListener('click', close);
         drawer.addEventListener('click', (e) => {
           if (e.target && e.target.tagName === 'A') close();
         });
@@ -587,12 +594,35 @@ const jsonLd = {
         z-index: 150;
         background: color-mix(in oklab, var(--bg) 96%, transparent);
         backdrop-filter: blur(20px);
-        padding: 100px var(--sp-6) var(--sp-6);
+        padding: 76px var(--sp-6) var(--sp-6);
         opacity: 0;
         transition: opacity var(--dur) var(--ease-out);
       }
       .nav-mobile-drawer.open { opacity: 1; }
       .nav-mobile-drawer[hidden] { display: none; }
+      /* v5.17.1 fix — the drawer is a full-screen overlay that paints over
+         the header underneath, including the hamburger button that used to
+         morph into an X. That X was the only close affordance, and it's now
+         invisible beneath the drawer's own opaque background — reported as
+         "no way to close this." Explicit close button inside the drawer. */
+      .nmd-close {
+        position: absolute;
+        top: 20px;
+        right: var(--sp-6);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        background: transparent;
+        border: 1px solid var(--line-strong);
+        border-radius: 4px;
+        color: var(--text);
+        cursor: pointer;
+      }
+      .nmd-close svg { width: 18px; height: 18px; }
+      .nmd-close:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
       .nav-mobile-drawer nav > ul {
         list-style: none;
         display: flex; flex-direction: column;
@@ -653,11 +683,21 @@ const jsonLd = {
         .nav-links { display: none !important; }
         .nav-mobile-toggle { display: inline-flex; }
       }
-      /* v5.16.0 mobile-audit fix — on very narrow phones (<380px) the
-         brand-name text pushed the hamburger toggle off-screen. Hide
-         the wordmark, keep the AP monogram. */
-      @media (max-width: 380px) {
-        .brand-name { display: none; }
+      /* v5.16.0 hid the brand-name below 380px to fix an overflow bug —
+         but that threshold caught most real phones (375px is a common
+         viewport width, not an edge case), hiding the name for the
+         majority of mobile visitors. Flexbox space-between already keeps
+         .brand and .nav-mobile-toggle from overlapping at any width; the
+         actual overflow risk is only on genuinely tiny/legacy screens.
+         v5.17.1 fix: truncate with ellipsis instead of a hard binary
+         hide, and only at a width nothing shipping today actually is. */
+      @media (max-width: 340px) {
+        .brand-name {
+          max-width: 90px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
       }
     </style>
   </body>

@@ -20,6 +20,21 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.17.1',
+    kind: 'released',
+    summary: 'Brutal mobile audit response — real theme-toggle bug fixed, mobile drawer given a proper close button, site-wide spacing detuned for phones, hero type tightened, live-stats widget shrunk to stop overlapping page content, Discord invite updated.',
+    body: [
+      'FIXED — theme toggle silently did nothing when tapped from the mobile drawer. ThemeToggle.astro renders twice per page (desktop nav + mobile drawer) but keyed off a single id="themeToggle" via getElementById, which only ever finds the first matching element (duplicate IDs are invalid HTML) — the drawer\'s copy had no click listener at all. Now every .theme-toggle button on the page binds independently to a shared toggle function.',
+      'FIXED — no visible way to close the mobile nav drawer. The v5.17.0 fix that moved the drawer out of <header> (so its position:fixed stopped resolving against the header\'s backdrop-filter containing block) had a side effect: the drawer now correctly paints over the entire header, including the hamburger-to-X toggle button that used to be the only close affordance — leaving it invisible underneath the drawer\'s own opaque background. Added an explicit close (X) button inside the drawer itself.',
+      'FIXED — brand name missing on mobile. A v5.16.0 fix hid "Atharva Patil" below 380px viewport width to solve an overflow bug, but 375px is one of the single most common phone viewport widths — most mobile visitors were seeing icon-only. Flexbox space-between already prevents the actual overlap at any realistic width; replaced the hard hide with a much narrower 340px threshold plus graceful ellipsis truncation instead of a binary vanish.',
+      'FIXED — excessive empty space between sections on mobile, reported as "feels stuffed" despite the gaps (dense text hard against the screen edge, then huge vertical voids between blocks). Root cause: the --sp-9 through --sp-12 spacing tokens driving section/hero padding site-wide had zero mobile scaling — every phone got full desktop-scale gaps (up to 128px). Added a single mobile media query in tokens.css scaling the top of the ramp down ~40%, fixing every component that reads those tokens at once.',
+      'FIXED — hero heading rendered a flat 44px on every phone width from 320px to 680px (the clamp() floor), reading heavy against a narrow column. Tightened further below 480px.',
+      'FIXED — the live-stats widget\'s full-text pill was wide enough to sit directly on top of page content at whatever scroll position landed in the bottom-left corner (confirmed: covering, and likely blocking clicks on, the homepage hero CTA). Collapsed to a small icon-only badge on mobile; tapping still opens the complete panel.',
+      'Discord invite link updated to the current server across site.ts and projects.ts.',
+      'Skills note: this session\'s actual skill list doesn\'t include the taste-skill / ui-ux-pro-max / redesign-skill combo referenced in project memory — verified before relying on it rather than assuming stale memory was current. Worked from direct code inspection, live in-browser verification at mobile viewport, and forced-failure testing (duplicate-ID repro, thrown-error repro) instead.',
+    ],
+  },
+  {
     version: 'v5.17.0',
     kind: 'released',
     summary: 'Live transparency + diagnostics widget revived from the old v4 site, site-wide error-recovery ecosystem, contact form auto-fallback, Mission OS per-window error boundary, branded 404, restrained scroll reveal.',

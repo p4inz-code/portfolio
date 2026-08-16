@@ -188,6 +188,26 @@
 }
 
 /* ============================================================================
+ * Mobile spacing scale — v5.17.1 fix
+ *
+ * The --sp-9..12 tokens (56/72/96/128px) drive section, hero, and
+ * inter-block padding site-wide via `padding: var(--sp-11) 0` etc. None of
+ * them scaled down for mobile, so every phone visitor got the same
+ * desktop-scale gaps — reported as "unnecessary gaps... feels stuffed"
+ * (dense horizontal text right next to huge vertical whitespace). Scaling
+ * the large end of the ramp down ~40% on narrow viewports fixes this
+ * everywhere at once, since every component reads from the same tokens.
+ * ========================================================================== */
+@media (max-width: 640px) {
+  :root {
+    --sp-9: 36px;
+    --sp-10: 48px;
+    --sp-11: 56px;
+    --sp-12: 76px;
+  }
+}
+
+/* ============================================================================
  * Reduced-motion + reduced-transparency + high-contrast overrides
  * ========================================================================== */
 @media (prefers-reduced-motion: reduce) {

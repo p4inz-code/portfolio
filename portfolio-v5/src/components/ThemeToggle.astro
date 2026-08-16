@@ -10,7 +10,6 @@
 <button
   type="button"
   class="theme-toggle"
-  id="themeToggle"
   aria-label="Toggle color theme"
   title="Toggle theme (T)"
 >
@@ -55,21 +54,29 @@
 
 <script>
   // Guard against multiple hydrations if the component appears twice on a page.
+  // v5.17.1 fix — this component renders more than once per page (desktop
+  // nav + mobile drawer). It used to key off a single id="themeToggle" via
+  // getElementById, which only ever finds the FIRST matching element in the
+  // DOM (duplicate IDs are invalid HTML) — so the mobile drawer's copy had
+  // no click listener at all and silently did nothing when tapped. Now
+  // every .theme-toggle button on the page gets bound, and toggling is a
+  // shared function instead of a simulated click on one specific button.
   if (!(window as any).__themeToggleBound) {
     (window as any).__themeToggleBound = true;
 
-    const btn = document.getElementById('themeToggle');
-    if (btn) {
-      btn.addEventListener('click', () => {
-        const root = document.documentElement;
-        const current = root.getAttribute('data-theme') || 'dark';
-        const next = current === 'dark' ? 'light' : 'dark';
-        root.setAttribute('data-theme', next);
-        try { localStorage.setItem('nb-theme', next); } catch (e) {
-          window.__nbDiag && window.__nbDiag.log('theme', 'Theme preference could not be saved (private browsing) — applies for this page view only', { recovered: true });
-        }
-      });
+    function toggleTheme() {
+      const root = document.documentElement;
+      const current = root.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('nb-theme', next); } catch (e) {
+        window.__nbDiag && window.__nbDiag.log('theme', 'Theme preference could not be saved (private browsing) — applies for this page view only', { recovered: true });
+      }
     }
+
+    document.querySelectorAll('.theme-toggle').forEach((btn) => {
+      btn.addEventListener('click', toggleTheme);
+    });
 
     // Keyboard shortcut: "T" toggles theme (skipped while typing).
     document.addEventListener('keydown', (e) => {
@@ -78,7 +85,7 @@
       if (typing) return;
       if (e.key === 't' || e.key === 'T') {
         e.preventDefault();
-        btn?.click();
+        toggleTheme();
       }
     });
   }
