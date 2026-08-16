@@ -20,6 +20,17 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.17.10',
+    kind: 'released',
+    summary: 'repo-map was more out of date than it looked — the site said "On Hold, v2.2.0" while npm had shipped v3.0.0 a month earlier with the exact interactive TUI this site called unbuilt. Corrected, plus a stray npm homepage link fixed at the source.',
+    body: [
+      'Went to do a small, low-risk fix — repo-map\'s package.json on npm pointed "homepage" at its own GitHub README instead of this site, which is redundant since npm already links the repo separately. Checked the real published data before touching anything, per the standing rule to verify against the actual repo rather than trust what\'s already on the site.',
+      'That check turned up something bigger: the npm registry\'s real latest version is v3.0.0, not the v2.2.0 this site had listed. The CHANGELOG in the repo shows v3.0.0 (shipped 2026-07-07) was a full runtime rewrite that shipped the command palette, incremental search, smooth scrolling, and accessibility manager — the interactive TUI this site was still describing as paused and planned.',
+      'There\'s a RELEASE_FREEZE.md in the repo dated 2026-07-04, three days before v3.0.0 shipped anyway — so the "On Hold" status was real at some point, just stale by the time this site was checked. Most recent commit is three weeks old, so this is "Released," not "Active" (nothing shipping right now) and not "On Hold" (a recent major release isn\'t a deliberate pause).',
+      'Fixed both: the npm package.json homepage field (committed and pushed to the repo-map repo directly — publishing the updated field to npm itself is on Atharva, not something fixable from here), and this site\'s project card + llms.txt, now correctly showing "Released · v3.0.0" with the real feature set.',
+    ],
+  },
+  {
     version: 'v5.17.9',
     kind: 'released',
     summary: 'Bing Webmaster Tools site verification file added. Google Search Console confirmed set up. Cloudflare AI Crawl Control confirmed as the exact cause of the earlier robots.txt conflict — visible and fixable directly in the dashboard.',

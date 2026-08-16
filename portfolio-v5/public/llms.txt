@@ -59,10 +59,10 @@ crawlable and canonical.
   v1.0.0**. External repo (case study on-site is pending real
   production screenshots).
 - [repo-map](https://github.com/p4inz-code/repo-map): Engineering
-  Intelligence Platform (CLI + planned interactive TUI), published on npm
-  as `@p4inz-code/repo-map`. TypeScript, ESM-first, zero native deps.
-  **MIT** licensed. 870+ tests. Status: **v2.2.0 — On Hold** (interactive
-  TUI work paused).
+  Intelligence Platform with a full interactive terminal UI (command
+  palette, incremental search, smooth scrolling), published on npm as
+  `@p4inz-code/repo-map`. TypeScript, ESM-first, zero native deps.
+  **MIT** licensed. 870+ tests. Status: **Released — v3.0.0**.
 - [Obscura](https://github.com/p4inz-code/obscura): Luau AST toolkit for
   Roblox developers. **MIT** licensed, open source. Status: Released,
   v0.9.0 (active side project).

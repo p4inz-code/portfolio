@@ -166,8 +166,8 @@ export const PROJECTS: Project[] = [
     name: 'repo-map',
     tagline: 'Understand any codebase in one command.',
     description:
-      'Engineering Intelligence Platform. CLI + planned interactive TUI, published on npm as @p4inz-code/repo-map. TypeScript, ESM-first, zero native deps. 870+ tests. MIT.',
-    status: { kind: 'onHold', label: 'On Hold · v2.2.0' },
+      'Engineering Intelligence Platform with a full interactive terminal UI — command palette, incremental search, smooth scrolling, accessibility manager. Published on npm as @p4inz-code/repo-map. TypeScript, ESM-first, zero native deps. 870+ tests. MIT.',
+    status: { kind: 'released', label: 'Released · v3.0.0' },
     tags: ['TypeScript', 'CLI', 'npm'],
     metaTags: ['TypeScript', 'CLI', 'MIT'],
     featured: false,
@@ -179,9 +179,9 @@ export const PROJECTS: Project[] = [
     stack: ['TypeScript', 'Node.js standard lib only', 'ESM-first', 'strict mode'],
     role: 'Sole engineer',
     started: '2026',
-    currentVersion: 'v2.2.0',
-    nextMilestone: 'Resuming interactive TUI work once bandwidth returns',
-    notes: 'Live at v2.2.0 on npm. Interactive TUI work is paused for now — no active updates.',
+    currentVersion: 'v3.0.0',
+    nextMilestone: 'Roadmap items tracked in the repo (plugin system, remote repository scanning, output diffing) — no committed timeline.',
+    notes: 'v3.0.0 shipped a complete runtime rewrite with the interactive TUI (command palette, incremental search, smooth scrolling) that was previously planned. 870+ automated tests.',
   },
   {
     slug: 'obscura',
