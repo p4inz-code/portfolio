@@ -42,7 +42,7 @@ const stackReasons = [
     slug: 'astro',
     label: 'Astro 5 (this site)',
     verdict: 'For static content sites',
-    reason: 'This portfolio was a 15.9 MB single HTML monolith through v4.7 and it worked — but past a certain point one file stops scaling. Astro gets me component-scoped CSS, real routes, zero-JS-by-default, and it deploys to Cloudflare Pages without an adapter. The Sacred Text stack came off in v5.6.3 for the same reason — good defaults become bad defaults when everyone else picks them too.',
+    reason: 'This portfolio was a single 15.9MB HTML file through v4.7. It worked, but every edit meant scrolling through one enormous document. Astro gives me component-scoped CSS, real routes, and zero JS by default, and it deploys to Cloudflare Pages without any extra config.',
   },
   {
     slug: 'ts',
@@ -55,11 +55,11 @@ const stackReasons = [
 const principles = [
   {
     title: 'No telemetry, ever',
-    body: 'Nothing I ship phones home. Not "off by default" — not compiled in at all. If a product wants to know something about you, it asks you on-screen, and you can say no.',
+    body: 'Nothing I ship phones home. Not "off by default," not compiled in at all. If a product wants to know something about you, it asks on-screen, and you can say no.',
   },
   {
     title: 'Explain what you\'re turning on',
-    body: 'Secure Boot, TPM-sealed unlock, disk encryption, telemetry — every advanced option gets its benefit and its downside written right next to the toggle, not buried in docs. You should know what you\'re agreeing to before you agree to it.',
+    body: 'Secure Boot, TPM-sealed unlock, disk encryption, telemetry: every advanced option gets its benefit and its downside written right next to the toggle, not buried in docs. You should know what you\'re agreeing to before you agree to it.',
   },
   {
     title: 'Say what\'s actually true',
@@ -67,18 +67,19 @@ const principles = [
   },
   {
     title: 'I build all of it myself',
-    body: 'The products, the case studies, this site\'s design system, the Mission OS demo, the résumé — one person, start to finish. Not a boast, just how the timeline works out.',
+    body: 'The products, the case studies, this site\'s design system, the Mission OS demo, the résumé. One person, start to finish. Not a boast, just how the timeline works out.',
   },
   {
     title: 'Free when I can make it free',
-    body: 'Kanvaz, Obscura, Glint, repo-map, 3D Ref Skills, Mission OS, and Pursue OS are all free, most of them open-source. Nexus and Veris are paid because running a one-person studio costs money — but they don\'t get a telemetry exception either.',
+    body: 'Kanvaz, Obscura, Glint, repo-map, 3D Ref Skills, Mission OS, and Pursue OS are all free, most of them open-source. Nexus and Veris are paid because running a one-person studio costs money, but they don\'t get a telemetry exception either.',
   },
 ];
 
 const timeline = [
   { year: '2025', event: 'First studio (Obsidian Labs). Early Windows tooling. B.Sc. Animation program begins at D. Y. Patil University.' },
   { year: 'Early 2026', event: 'Kanvaz released open source (MIT) as a reference workspace for the VFX community I\'m part of.' },
-  { year: 'Jun 2026', event: 'Nexus, Kanvaz, and Veris all in active development within weeks of each other — one commercial vault, one open-source workspace, one investigation platform.' },
+  { year: 'Mar 2026', event: 'Started building Nexus. It went public around a month later, once there was enough to actually show.' },
+  { year: 'Jun 2026', event: 'Kanvaz and Veris both in active development alongside Nexus — one open-source workspace, one investigation platform.' },
   { year: 'Mid 2026', event: 'Northbyte Studios founded as the second (and current) studio name. Mission OS work begins.' },
   { year: 'Aug 2026', event: 'Second year of the animation program. Portfolio migrated to Astro (v5.0). Pursue OS repository foundation goes public. Mission OS ISO enters internal testing.' },
 ];
@@ -200,7 +201,7 @@ const activeCount = PROJECTS.filter(
     </dl>
     <div class="tr-thesis">
       <p>My bet is that a small number of privacy-first products, each finished properly, beats a bigger catalogue of half-finished ones — most "growth" advice assumes ads and telemetry are free to add, and I'd rather not build on that assumption.</p>
-      <p>Nexus is the main commercial product — an encrypted vault for Windows. Mission OS is the bigger, slower bet — a privacy-first Linux distro, built at OS scale. Kanvaz and Obscura are free and open-source on purpose: proof the studio actually ships, not just talks about shipping. Everything else supports one of those three.</p>
+      <p>Nexus is the main commercial product, an encrypted vault for Windows. Mission OS is the bigger, slower bet: a privacy-first Linux distro built at OS scale. Kanvaz and Obscura are free and open-source on purpose, proof the studio actually ships rather than just talking about shipping. Everything else supports one of those three.</p>
       <p>I'm not looking for growth marketing, an agency handoff, or a full team right now. What's actually useful: introductions to other founders, investors, or open-source maintainers who care more about the product being right than the product growing fast.</p>
     </div>
   </Section>

@@ -88,7 +88,7 @@ export const PROJECTS: Project[] = [
     license: 'Proprietary',
     stack: ['C#', '.NET 8', 'WPF', 'AES-256-GCM', 'Argon2id'],
     role: 'Sole engineer',
-    started: 'June 2026',
+    started: 'March 2026',
     currentVersion: 'v10.12.0',
     nextMilestone: 'v11 · new UI + final release currently in prep',
     notes: 'Flagship commercial product of Northbyte Studios. Source is proprietary; the public repo hosts releases and community discussion only. v11 (new UI, final-release grade) is in prep — case study will refresh once it ships.',

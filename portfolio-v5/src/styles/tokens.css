@@ -68,6 +68,11 @@
   /* ---- Motion ---- */
   --ease-out: cubic-bezier(0.16, 0.8, 0.24, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Used once, deliberately: the command palette's own open animation.
+     Everything else on the site shares --ease-out — this one interaction
+     gets a slight overshoot so it doesn't move exactly like everything
+     else it's opening on top of. */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --dur-fast: 150ms;
   --dur: 300ms;
   --dur-slow: 500ms;

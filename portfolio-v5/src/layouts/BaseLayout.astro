@@ -575,7 +575,7 @@ const jsonLd = {
       /* v5.12.0 mobile navigation drawer */
       .nav-mobile-toggle {
         display: none;
-        width: 40px; height: 40px;
+        width: 44px; height: 44px; /* WCAG 2.5.5 touch target minimum */
         padding: 0;
         background: transparent; border: 1px solid var(--line-strong);
         border-radius: 4px;
@@ -619,8 +619,8 @@ const jsonLd = {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 40px;
-        height: 40px;
+        width: 44px; /* WCAG 2.5.5 touch target minimum */
+        height: 44px;
         padding: 0;
         background: transparent;
         border: 1px solid var(--line-strong);
@@ -672,6 +672,7 @@ const jsonLd = {
         flex: 1;
         display: inline-flex; align-items: center; justify-content: space-between;
         padding: 10px 12px;
+        min-height: 44px; /* WCAG 2.5.5 touch target minimum */
         background: color-mix(in oklab, var(--purple) 8%, transparent);
         border: 1px solid var(--line-strong);
         border-radius: 4px;

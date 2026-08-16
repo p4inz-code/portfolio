@@ -16,8 +16,10 @@ const externalProps = external ? { target: '_blank', rel: 'noopener noreferrer' 
   .btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: var(--sp-2);
     padding: var(--sp-3) var(--sp-6);
+    min-height: 44px; /* WCAG 2.5.5 / Apple HIG touch target minimum */
     border-radius: var(--radius-pill);
     font-family: var(--font-display);
     font-size: var(--text-sm);

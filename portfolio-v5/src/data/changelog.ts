@@ -20,6 +20,22 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.17.4',
+    kind: 'released',
+    summary: 'Resume redesign (curated to 4 primary + 3 compact projects, warm-white/near-black/violet palette) + de-AI-ify brief v2 (comments, mobile touch targets, Nexus start date corrected).',
+    body: [
+      'Resume rebuilt on all three surfaces (on-site /resume, markdown source, PDF) around a curated project list instead of the full roster: Nexus, Mission OS, MINK, and Pursue OS get full treatment; Kanvaz, Obscura, and repo-map get one line each. Veris dropped from the résumé specifically (stays fully on the website) — the user\'s explicit call, not a mechanical cut.',
+      'Verified MINK\'s real numbers via its actual README before writing anything down: Rust, Apache 2.0, native x86_64-windows-pe target with no external toolchain, 878 compiler tests passing — not the placeholder figure floating around in planning notes.',
+      'PDF gets its own palette, distinct from the website\'s theme system since it\'s a standalone printed document: warm white background, near-black text, muted violet accent used only for section labels. No gradients, no icon rows, no pill badges.',
+      'Removed the Philosophy section and the "canonical Markdown source" footer line from the résumé. Education moved to the very bottom and reads as one line, not a card — the first 80% of the page is now experience and projects.',
+      'De-AI-ify pass 2, remaining items: cut "signature move" / "borrowed from emilianmisera.com" framing from EditorialHero.astro\'s comment and three changelog entries — restated as mechanism, not a narrated creative choice. Cut the "Sacred Text stack" internal codename and its closing aphorism from the /about stack-reasoning copy (this was live, public copy, missed in the first de-AI-ify pass).',
+      'Real WCAG-adjacent fix: three interactive elements measured under the 44×44px touch-target minimum — the mobile hamburger toggle (40px), the theme toggle (36px), and the live-stats mobile badge (32px, my own earlier fix). All three corrected and re-measured in-browser at 44px.',
+      'Nexus\'s start date corrected — development began March 2026, not June. It became publicly visible about a month later. Updated in projects.ts, the about-page timeline, and the résumé.',
+      'Command palette open animation now uses a distinct spring easing curve instead of the site-wide --ease-out used everywhere else — one deliberately different interaction instead of uniform timing on every single motion.',
+      'Known gaps, reported honestly rather than papered over: changelog.ts still carries ~198 em-dashes and about.astro ~23, both above the brief\'s targets (<40, <5). Getting there would mean rewriting dozens of historical changelog entries and stripping legitimate, non-repetitive prose uses in about.astro — did the highest-density, most clustered offenders instead of a mechanical full pass. A bespoke non-template layout for one supporting project (Obscura) is still queued, not done this round.',
+    ],
+  },
+  {
     version: 'v5.17.3',
     kind: 'released',
     summary: 'De-AI-fy pass 2 — rewrote the homepage hero, /about, and the studio tagline in a plainer human voice, removed repeated "01/04" index badges site-wide, fixed a real WCAG failure (11 pages had no <h1>), and closed a hardcoded product-count bug (site said 10, there are 9).',
@@ -327,7 +343,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     summary: 'De-AI-fy pass — new typography (Neue Machina + Neue Montreal + Supply Mono), StatusPill redesigned, top-5 AI-tells removed.',
     body: [
       'Called out on the AI-generated feel of the site — specifically the status pills on case study heros. Ran a 2-approach audit and found 10 concrete AI-tells; the top 5 land in this pass, the rest in v5.7.',
-      'Typography swap. Killed PP Editorial New (display + body) and JetBrains Mono (mono) — both are on every AI-generated portfolio template circulating right now. Replaced with a three-family split from Fontshare (already CSP-allowed, no new domain, all free): PP Neue Machina for display (brutalist-geometric, engineered feel — right for a builder-of-systems portfolio), PP Neue Montreal for body (Swiss neo-grotesk with warmth, actually meant for reading), PP Supply Mono for mono (distinct from JetBrains/Fira/DM Mono). Each family does exactly one job — the previous "Sacred Text" single-serif-for-everything stack was itself an AI-common pattern.',
+      'Replaced PP Editorial New (display + body) and JetBrains Mono with a three-family split from Fontshare: PP Neue Machina for display, PP Neue Montreal for body, PP Supply Mono for mono. No new font domain — Fontshare was already CSP-allowed.',
       'StatusPill redesigned. The purple-border pill + dot + mono-uppercase treatment was the Vercel-default that shows up on every AI-generated portfolio. New design is an editorial marker: a small colored bar-slash on the left, state label in the display family at Sentence Case, version tag in mono at 88% size with a mono forward-slash separator. No rounded pill, no dot, no border ring. Reads as an editorial tag on a magazine spread, not a status badge.',
       'Killed the "Selected work" eyebrow on the home page — a generic AI-template phrase. The section heading ("Four things I\'m shipping right now.") carries the intent on its own.',
       'Dropped the --aurora radial-gradient blob background from the featured project card. Replaced with a flat surface + a hairline purple top rule — reads as an editorial placeholder frame, not a "hero blob".',
@@ -498,7 +514,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     body: [
       'Between the three-act hero and the Selected Work section on the home page, a compact mono-uppercase manifest bridge now reveals itself as you scroll. The three italic phrases from the hero H1 (I write software · I study VFX · I build Mission OS) reappear as the bridge — the phrases you just read become the label of what comes next.',
       'Implementation: pure CSS animation-timeline: view() with staggered animation-range per phrase. Zero JS, zero deps, zero image weight. @supports gate — browsers without scroll-driven animations get the static end-state. prefers-reduced-motion: reduce collapses to instant. aria-hidden — decorative echo of the H1, not new content for assistive tech.',
-      'Scope: index.astro only. No shared component modified. First of four deferred signature moves; remaining three (Good Growth skeuomorphic object, Pouya OS-metaphor demo, second Gabriel moment) tracked separately.',
+      'Scope: index.astro only, no shared component touched. Three similar scroll-reveal ideas are still on the list for later (a skeuomorphic hero object, an OS-metaphor demo, a second scroll moment further down the page).',
     ],
   },
   {
@@ -530,7 +546,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       'Data layer: single projects.ts + site.ts source of truth. All pages read from it — no hardcoded project metadata anywhere.',
       'Reusable component library: Section, ProjectCard, EditorialHero, CaseHero, StatusPill, Tag, MetaTag, Button, ThemeToggle, CommandPalette.',
       'Command palette (⌘K / press /) ported from v4.5. Now theme-aware and driven by data layer.',
-      'Signature move #1 layered: three-act narrative hero (borrowed from emilianmisera.com — chronological personal story, not skill-showcase grid).',
+      'Home hero rebuilt as a multi-line narrative — a chronological personal story instead of a skill-showcase grid.',
     ],
   },
   {
