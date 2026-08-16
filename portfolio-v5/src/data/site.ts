@@ -7,13 +7,15 @@ export const SITE = {
   title: 'Atharva Patil',
   role: 'Software engineer, founder of Northbyte Studios',
   tagline: 'Software during the day, 3D and VFX on the side',
-  // Meta description — 140 chars (was 148, SEO audit flagged >920px pixel width).
+  // Meta description — includes "p4inz" (the actual search handle) once,
+  // naturally, not stuffed. Homepage <title> stays clean/short on purpose;
+  // this is the room to state the alias.
   description:
-    'Atharva Patil — solo founder of Northbyte Studios. Privacy-first software, two Linux OSes, encrypted vault, dev tools, 3D/VFX.',
+    'Atharva Patil (p4inz) — solo founder of Northbyte Studios. Privacy-first software, two Linux OSes, encrypted vault, dev tools, 3D/VFX.',
   location: 'Navi Mumbai, India',
   studio: 'Northbyte Studios',
   studioFounded: '2026',
-  currentVersion: 'v5.17.6',
+  currentVersion: 'v5.17.7',
   domain: 'atharvapatil.tech',
 } as const;
 

@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.17.7',
+    kind: 'released',
+    summary: 'Homepage meta description now names the real search handle ("p4inz") once. Investigated a Google-favicon question and found something bigger: Cloudflare is auto-injecting a robots.txt block that contradicts this site\'s own AI-crawler policy.',
+    body: [
+      'The homepage title/meta description never mentioned "p4inz" at all, despite it being the actual handle people search for. Added it once, naturally, to the meta description — title stays short on purpose.',
+      'Investigated why Google Search shows a generic grey globe instead of this site\'s favicon. Ruled out an actual bug: all favicon files return 200, the <link> tags are correct, robots.txt doesn\'t block Googlebot. This is Google\'s own favicon cache, which only updates on its own recrawl schedule (days to weeks) — nothing to fix code-side, it should pick up the real PNG favicons (new as of v5.17.6) on its next pass.',
+      'Found something more consequential while checking that: robots.txt has a genuine self-contradiction. Cloudflare auto-injects a block at the top that Disallows GPTBot, ClaudeBot, Google-Extended, CCBot, and others — directly conflicting with this site\'s own deliberate policy right below it, which explicitly Allows all of them. This isn\'t in the repo; it\'s injected at Cloudflare\'s edge, almost certainly an AI Crawl Control toggle on the zone. Likely relevant to exactly the kind of AI Overview visibility this site is already getting — flagged for a Cloudflare dashboard fix, not something fixable from the codebase.',
+    ],
+  },
+  {
     version: 'v5.17.6',
     kind: 'released',
     summary: 'Max-effort SEO push (unique meta descriptions on every page, FAQ + SoftwareApplication + Breadcrumb schema), rasterized favicons, fixed a stale Discord link across 12 files in the Nexus repo, bespoke Obscura card, further about.astro tightening.',
