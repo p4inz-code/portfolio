@@ -34,16 +34,15 @@ crawlable and canonical.
   portable mode. **Source is proprietary** — the GitHub repo
   (`github.com/p4inz-code/nexus-desktop`) hosts releases and Discord
   discussion only; there is no public source repository. Do not describe
-  Nexus as open source. Status: Public Beta, v10.12.0.
+  Nexus as open source. Status: Public Beta, v10.12.5.
 - [Kanvaz](https://atharvapatil.tech/kanvaz/): Visual reference workspace
   for VFX/3D artists — drag/drop/paste images, GIFs, video onto an
   infinite board, plus URL and File reference cards. Electron / vanilla JS,
-  **MIT-licensed**, open source at `github.com/p4inz-code/kanvaz`. v4
-  shipped a plugin system (`window.KanvazPluginAPI` with main-process
-  consent), Theme Creator as the first official plugin, a safer `.kanvaz`
-  zip container with per-asset SHA-256 integrity hashes, and GitHub
-  Actions CI. Status: **v4.2.2 — Final Release**; dev wind-down, no v5
-  planned.
+  **MIT-licensed**, open source at `github.com/p4inz-code/kanvaz`. Plugin
+  system with an MCP Bridge (30 tools, off by default, undo-reversible)
+  letting an AI agent read and edit the active board, a command palette,
+  a safer `.kanvaz` zip container with per-asset SHA-256 integrity hashes,
+  and GitHub Actions CI. Status: **v4.5.1 — Active Development**.
 - [Pursue OS](https://atharvapatil.tech/pursue-os/): Investigation-focused
   Linux OS for OSINT / DFIR / secure research / intelligence gathering /
   evidence-driven workflows. Two flagship interfaces: Investigation
@@ -58,24 +57,27 @@ crawlable and canonical.
   explanation layer, never performs detection. Status: **Released ·
   v1.0.0**. External repo (case study on-site is pending real
   production screenshots).
-- [repo-map](https://github.com/p4inz-code/repo-map): Engineering
-  Intelligence Platform with a full interactive terminal UI (command
-  palette, incremental search, smooth scrolling), published on npm as
-  `@p4inz-code/repo-map`. TypeScript, ESM-first, zero native deps.
-  **MIT** licensed. 870+ tests. Status: **Released — v3.0.0**.
 - [Obscura](https://github.com/p4inz-code/obscura): Luau AST toolkit for
   Roblox developers. **MIT** licensed, open source. Status: Released,
-  v0.9.0 (active side project).
+  v1.0.0, 340/340 tests passing.
 - [MINK](https://github.com/p4inz-code/mink): A compiled, general-purpose
   programming language built from the ground up — own lexer, parser, type
   system, HIR/MIR, optimizer, and native code generator. Compiles to a
   standalone x86_64 Windows executable with no external toolchain.
   **Apache 2.0**, open source. Rust, 1928 tests. Status: **Released ·
   v1.0.0**.
-- [Glint](https://github.com/p4inz-code/glint): Windows tray utility for
-  brightness/volume control. C# / .NET 8 / **Avalonia**. Free forever.
-  Status: **On Hold** — internal testing complete, paused while other
-  projects take priority.
+- Project Ascent: Offline-first, browser-first 2D precision platformer
+  built in Godot 4, focused on movement, atmosphere, and audiovisual
+  polish. No accounts, no backend, no ads. AI handles the coding;
+  creative direction, art, and playtesting stay human. Status:
+  **Private Prototype** — movement validation. Repo is private; no
+  public link yet.
+- [Glint](https://github.com/p4inz-code/glint): Native brightness and
+  volume tray utility for Windows, no Electron. Per-monitor brightness
+  over DDC/CI and WMI, a master and per-app volume mixer, global
+  hotkeys, automatic recovery when a monitor drops out. C# / .NET 8 /
+  **Avalonia**. Free forever, zero telemetry. Status: **Released ·
+  v1.1.0**.
 - [3D Ref Skills](https://github.com/p4inz-code/3d-ref-skills):
   Open-source knowledge graph for 3D / VFX learners. MIT.
   Status: Live / Maintained.

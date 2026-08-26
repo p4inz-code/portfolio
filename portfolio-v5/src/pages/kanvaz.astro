@@ -28,7 +28,7 @@ const breadcrumbJsonLd = {
   ],
 };
 ---
-<BaseLayout title={`${project.name} — ${project.tagline}`} description="Free, open-source visual reference workspace for VFX and 3D artists. Plugin system, safer container format. MIT licensed, v4.2.2 final release." extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
+<BaseLayout title={`${project.name} — ${project.tagline}`} description="Free, open-source visual reference workspace for VFX and 3D artists. Plugin system with an MCP Bridge for AI-agent control, safer container format. MIT licensed, v4.5.1." extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
   <!-- Screenshots first — visual hook before the wall of text. The Board view
@@ -70,8 +70,8 @@ const breadcrumbJsonLd = {
       />
       <Screenshot
         src="/assets/kanvaz/kanvaz-05-about.png"
-        alt="Kanvaz About dialog — v4.2.1 build shown here; v4.2.2 is the current shipping version. Reads 'Your canvas. Your references. Made by Atharva Patil, Northbyte Studios. Built for VFX artists, 3D artists, and the people who teach them.'"
-        caption="About · v4.2.1 build shown (v4.2.2 is current)"
+        alt="Kanvaz About dialog — v4.2.1 build shown here; v4.5.1 is the current shipping version. Reads 'Your canvas. Your references. Made by Atharva Patil, Northbyte Studios. Built for VFX artists, 3D artists, and the people who teach them.'"
+        caption="About · v4.2.1 build shown (v4.5.1 is current)"
         aspect="4 / 3"
         span="third"
       />
@@ -110,12 +110,16 @@ const breadcrumbJsonLd = {
         <h3 class="feature-name">URL + File cards (v4.1)</h3>
         <p class="feature-desc">Two new reference card types on top of the original six. File cards block executable/script types on open for safety. No new dependencies, no telemetry.</p>
       </article>
+      <article class="feature-card">
+        <h3 class="feature-name">MCP Bridge (v4.4–4.5)</h3>
+        <p class="feature-desc">A local-only MCP server exposes the active board to an AI agent through 30 tools: board management, undo/redo, view control, card editing, and settings. Off by default; every AI-driven change lands in undo history exactly like a manual edit.</p>
+      </article>
     </div>
   </Section>
 
-  <Section heading="Kanvaz is at v4.2.2. Its final release.">
+  <Section heading="Kanvaz is at v4.5.1, and still shipping.">
     <div class="body-copy">
-      <p>Board View, the Connection System, and Map View are all stable. Dev is winding down: no v5 planned. <em>v4.3.0 stabilization</em> is the last major work before the project enters maintenance-only mode.</p>
+      <p>Board View, the Connection System, and Map View are all stable. The most recent work built the MCP Bridge: an AI agent can read and edit the active board through 30 tools, off by default and undo-reversible.</p>
       <p>No subscription, no feature paywall, no telemetry, no internet connection required. Your files never leave your machine, and it stays free forever.</p>
     </div>
   </Section>

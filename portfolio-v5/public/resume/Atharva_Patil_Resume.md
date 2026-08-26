@@ -9,7 +9,7 @@ GitHub: [github.com/p4inz-code](https://github.com/p4inz-code) &nbsp;|&nbsp; Por
 
 ## SUMMARY
 
-Software engineer and product builder focused on desktop applications, developer tools, and systems programming. Founder of Northbyte Studios, where I independently design, build, test, and ship privacy-first software — currently an encrypted vault, two Linux distributions, and a compiled programming language.
+Software engineer and product builder focused on desktop applications, developer tools, and systems programming. Founder of Northbyte Studios, where I independently design, build, test, and ship privacy-first software: currently an encrypted vault, two Linux distributions, and a compiled programming language.
 
 ---
 
@@ -19,7 +19,7 @@ Software engineer and product builder focused on desktop applications, developer
 *2026 – Present · Navi Mumbai, India (remote-friendly)*
 
 - Own the full product cycle myself on every product below: direction, architecture, engineering, UI/UX, testing, and release.
-- Every product ships on the same principles — no telemetry, trade-offs explained on-screen instead of buried in docs, free wherever the studio can afford it to be.
+- Every product ships on the same principles: no telemetry, trade-offs explained on-screen instead of buried in docs, free wherever the studio can afford it to be.
 
 ### Freelance — Web, UX & Brand
 *2025 – Present*
@@ -33,20 +33,20 @@ Software engineer and product builder focused on desktop applications, developer
 ### Nexus &nbsp;·&nbsp; Encrypted Personal Vault
 *[github.com/p4inz-code/nexus-desktop](https://github.com/p4inz-code/nexus-desktop)* &nbsp;·&nbsp; Mar 2026 – Present &nbsp;·&nbsp; Windows Desktop
 
-- Built a Windows encrypted vault using AES-256-GCM authenticated encryption and Argon2id key derivation, with Windows Hello as a secondary unlock.
-- Zero telemetry, zero cloud — content stays encrypted at rest and exists decrypted only in memory while the vault is unlocked.
+- Engineered a Windows encrypted vault using AES-256-GCM authenticated encryption and Argon2id key derivation, with Windows Hello as a secondary unlock.
+- Zero telemetry, zero cloud: content stays encrypted at rest and exists decrypted only in memory while the vault is unlocked.
 - Rebuilt the entire v11 interface (lock screen, media browser, credentials, notes, settings, updater) without touching the cryptographic core underneath it.
 
 ### Mission OS &nbsp;·&nbsp; Privacy-First Linux Distribution
 *[github.com/p4inz-code/mission-os](https://github.com/p4inz-code/mission-os)* &nbsp;·&nbsp; 2026 – Present &nbsp;·&nbsp; Linux, GPLv3
 
 - Building a privacy-first Linux distribution on Debian Stable and KDE Plasma, with an installer that explains the trade-off of every advanced option next to the toggle instead of burying it in docs.
-- 141/141 pixel checks passed on the installer foundation, backed by 14 CTest and 13 runtime suites.
+- Built a QA foundation of 14 CTest and 13 runtime suites for the installer; 141/141 pixel checks passing.
 
 ### MINK &nbsp;·&nbsp; Programming Language
 *[github.com/p4inz-code/mink](https://github.com/p4inz-code/mink)* &nbsp;·&nbsp; 2026 – Released v1.0.0 &nbsp;·&nbsp; Rust, Apache 2.0
 
-- Built a compiled, general-purpose language from scratch — its own lexer, parser, type system, optimizer, and native code generator, producing a working executable with no external toolchain.
+- Designed and built a compiler from scratch: lexer, parser, type system, optimizer, and native code generator, producing standalone executables with no external toolchain.
 - 1928 compiler tests passing.
 
 ### Pursue OS &nbsp;·&nbsp; Investigation-Focused Linux OS
@@ -56,9 +56,9 @@ Software engineer and product builder focused on desktop applications, developer
 
 ### Additional Projects
 
-- **Kanvaz** — Electron visual reference workspace for VFX artists · MIT · v4.2.2, final release
+- **Kanvaz** — Electron visual reference workspace for VFX artists · MIT · v4.5.1, active development
 - **Obscura** — Luau AST toolkit for Roblox developers · MIT · v1.0.0, 340/340 tests passing
-- **repo-map** — TypeScript engineering-intelligence CLI, published on npm · MIT · 870+ tests
+- **Project Ascent** — 2D precision platformer in Godot 4, AI-orchestrated development · private repo, prototype stage
 
 ---
 

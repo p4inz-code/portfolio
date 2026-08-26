@@ -20,6 +20,20 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.17.13',
+    kind: 'released',
+    summary: 'Full repo-verification pass across every product: Nexus, Kanvaz, and Glint were all stale, two of them badly. repo-map dropped from the roster, Project Ascent added in its place. Resume contrast fixed, bullets rewritten to lead with capability. One large finding flagged, not fixed: Mission OS.',
+    body: [
+      'Checked every product against its real GitHub repo (releases, commits, README) instead of trusting what the site already said. Nexus was one patch behind: v10.12.0 to v10.12.5. Two were much worse.',
+      'Kanvaz said "Final Release, dev winding down, no v5 planned." The real repo shipped four versions past that (v4.3.0 through v4.5.1) in the two weeks before this check, headlined by an MCP Bridge that lets an AI agent read and edit a board through 30 tools, off by default and undo-reversible. Rewrote the status, description, and case-study section that called it finished, and added an MCP Bridge feature card.',
+      'Glint said "On Hold, internal testing complete." The real repo shipped two full public releases (v1.0.0, then v1.1.0 "Reliability Foundation") with a real feature set: per-monitor brightness over DDC/CI and WMI, a volume mixer, global hotkeys, automatic recovery when a monitor drops out. "Internal testing" was never true once it had a public release. Corrected to Released · v1.1.0.',
+      'llms.txt had drifted from projects.ts in two places nobody had cross-checked: it still listed Obscura at v0.9.0 (already fixed to v1.0.0 in projects.ts a while back) and Nexus at v10.12.0. Both synced.',
+      'repo-map removed from the site at the user\'s request, replaced with Project Ascent: an offline-first, browser-first 2D precision platformer in Godot 4, private repo, prototype stage, development started today. Since it has nothing public to link to yet, ProjectCard now renders a plain, non-interactive card instead of a dead or misleading link when a project has no href, and the command palette\'s search index skips projects with no route instead of indexing an empty one (a real bug this surfaced: Ascent was showing up in ⌘K with a blank destination before this fix).',
+      'Resume: strengthened the purple label color from a washed-out #6D5FD3 to the site\'s own contrast-vetted #5A32C4 (already used site-wide for exactly this reason) and bumped label weight to bold, after it read as too thin in practice. Contact header trimmed to email, Discord, and GitHub. Rewrote several bullets to lead with the capability being demonstrated rather than just logging what got built, and installed the `humanizer` skill (github.com/blader/humanizer, MIT) to run its AI-writing pattern check against every new sentence in this pass, not just the resume: found and cut several more connector em dashes across resume.astro, Resume.md, and the PDF template.',
+      'Flagged, not fixed: Mission OS. The real repo\'s README badge, and a commit literally titled "release: Mission OS open beta," say it shipped an Open Beta using Calamares, with Mission OS branding and custom Python modules. The site, case study, and interactive demo ribbon all still describe Active Development, pre-release, with a custom QML/Qt installer. This could mean a real status update, or it could mean Calamares is a pragmatic interim step before a custom installer still on the roadmap. Flagship product, uncertain enough that it needs a direct call rather than a guess while unattended.',
+    ],
+  },
+  {
     version: 'v5.17.12',
     kind: 'released',
     summary: 'Resume PDF rebuilt from scratch (no surviving template existed) to fix its stale MINK line and trim the contact header to email/Discord/GitHub only. Same visual design, corrected info, prose pass run against a real de-AI-writing ruleset.',

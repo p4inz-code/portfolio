@@ -1,7 +1,7 @@
 ---
 import type { Project } from '../../data/projects';
 import StatusPill from '../ui/StatusPill.astro';
-import Tag from '../ui/Tag.astro';
+import TagPill from '../ui/Tag.astro';
 
 interface Props {
   project: Project;
@@ -12,11 +12,16 @@ const { project, variant = 'default' } = Astro.props;
 const linkProps = project.isExternal
   ? { target: '_blank', rel: 'noopener noreferrer' }
   : {};
+
+// Private-repo projects (e.g. an unannounced prototype) have nothing public
+// to link to yet. Render a plain, non-interactive card instead of an <a>
+// with a dead or misleading href.
+const CardTag = project.href ? 'a' : 'div';
 ---
-<a
-  href={project.href}
-  class:list={['project-card', `variant-${variant}`]}
-  {...linkProps}
+<CardTag
+  href={project.href || undefined}
+  class:list={['project-card', `variant-${variant}`, !project.href && 'is-static']}
+  {...(project.href ? linkProps : {})}
 >
   {variant === 'featured' && (
     <div class="card-media" aria-hidden="true">
@@ -31,7 +36,7 @@ const linkProps = project.isExternal
     {variant !== 'compact' && <p class="card-desc">{project.description}</p>}
     {project.tags.length > 0 && (
       <div class="card-tags">
-        {project.tags.map((t) => <Tag label={t} />)}
+        {project.tags.map((t) => <TagPill label={t} />)}
       </div>
     )}
     {project.isExternal && (
@@ -42,7 +47,7 @@ const linkProps = project.isExternal
       </span>
     )}
   </div>
-</a>
+</CardTag>
 
 <style>
   .project-card {
@@ -63,6 +68,12 @@ const linkProps = project.isExternal
     border-color: var(--line-strong);
     transform: translateY(-3px);
     background: var(--surface-2);
+  }
+  .project-card.is-static { cursor: default; }
+  .project-card.is-static:hover {
+    border-color: var(--line);
+    transform: none;
+    background: var(--surface-1);
   }
   .variant-featured {
     display: grid;
