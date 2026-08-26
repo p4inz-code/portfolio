@@ -5,10 +5,8 @@
  * v5.17.0: revived from the old v4 monolith's "live-stats" widget (same
  * position, same idea — see git history at df9396d) and extended with a
  * diagnostics log. Everything below is computed live in the visitor's own
- * browser via the real Performance / Web Crypto / Layout Instability APIs.
- * Nothing here is a hardcoded claim, and nothing is sent anywhere — the
- * whole point is that a skeptical visitor can check it against their own
- * DevTools → Network tab and get the same numbers.
+ * browser via the real Performance / Layout Instability APIs. Nothing is
+ * sent anywhere — check it against DevTools → Network.
  *
  * The diagnostics section reads from window.__nbDiag (defined early in
  * BaseLayout's head script) — every interactive island on the site that
@@ -32,7 +30,6 @@
     <div class="live-stats-row"><span>Layout shift (CLS)</span><strong id="lsCLS">0.000</strong></div>
     <div class="live-stats-row"><span>Accessibility check</span><strong id="lsA11y">-</strong></div>
     <div class="live-stats-row"><span>Est. carbon / load</span><strong id="lsCarbon">-</strong></div>
-    <div class="live-stats-row"><span>Page integrity (SHA-256)</span><strong id="lsHash" class="mono-hash">computing…</strong></div>
     <div class="live-stats-hosts" id="lsHosts"></div>
 
     <div class="live-stats-diag">
@@ -62,7 +59,6 @@
     var clsEl = document.getElementById('lsCLS');
     var a11yEl = document.getElementById('lsA11y');
     var carbonEl = document.getElementById('lsCarbon');
-    var hashEl = document.getElementById('lsHash');
     var errorsEl = document.getElementById('lsErrors');
     var diagListEl = document.getElementById('lsDiagList');
     var auditBtn = document.getElementById('runAuditBtn');
@@ -112,24 +108,6 @@
         }
         loadTimeEl.textContent = ms !== null ? Math.round(ms) + 'ms' : 'pending…';
       } catch (e6) { loadTimeEl.textContent = 'n/a'; }
-    }
-
-    // ---- live self-integrity hash — SHA-256 of the live DOM, computed
-    // fresh via Web Crypto, not baked in at build time (which would go
-    // stale the instant the DOM changes). ----
-    function refreshHash() {
-      if (!hashEl) return;
-      if (!(window.crypto && window.crypto.subtle)) { hashEl.textContent = 'unsupported'; return; }
-      try {
-        var source = document.documentElement.outerHTML;
-        var bytes = new TextEncoder().encode(source);
-        window.crypto.subtle.digest('SHA-256', bytes).then(function (buf) {
-          var arr = Array.from(new Uint8Array(buf));
-          var hex = arr.map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
-          hashEl.textContent = hex.slice(0, 16) + '…';
-          hashEl.title = hex;
-        }).catch(function () { hashEl.textContent = 'n/a'; });
-      } catch (e9) { hashEl.textContent = 'n/a'; }
     }
 
     // ---- estimated carbon per load — rough, openly-approximate, from the
@@ -250,7 +228,6 @@
       refreshLoadTime();
       refreshA11y();
       refreshCarbon();
-      refreshHash();
       refreshDiag();
     }
 
@@ -352,7 +329,6 @@
     font-size: 11.5px;
   }
   .live-stats-row strong { color: var(--text); font-size: 13px; }
-  .mono-hash { font-size: 10px !important; }
   .live-stats-hosts {
     font-size: 10px;
     color: var(--muted-2);

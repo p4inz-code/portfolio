@@ -66,6 +66,12 @@ crawlable and canonical.
 - [Obscura](https://github.com/p4inz-code/obscura): Luau AST toolkit for
   Roblox developers. **MIT** licensed, open source. Status: Released,
   v0.9.0 (active side project).
+- [MINK](https://github.com/p4inz-code/mink): A compiled, general-purpose
+  programming language built from the ground up — own lexer, parser, type
+  system, HIR/MIR, optimizer, and native code generator. Compiles to a
+  standalone x86_64 Windows executable with no external toolchain.
+  **Apache 2.0**, open source. Rust, 1928 tests. Status: **Released ·
+  v1.0.0**.
 - [Glint](https://github.com/p4inz-code/glint): Windows tray utility for
   brightness/volume control. C# / .NET 8 / **Avalonia**. Free forever.
   Status: **On Hold** — internal testing complete, paused while other

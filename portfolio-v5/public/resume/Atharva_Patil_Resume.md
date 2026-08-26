@@ -44,10 +44,10 @@ Software engineer and product builder focused on desktop applications, developer
 - 141/141 pixel checks passed on the installer foundation, backed by 14 CTest and 13 runtime suites.
 
 ### MINK &nbsp;·&nbsp; Programming Language
-*[github.com/p4inz-code/mink](https://github.com/p4inz-code/mink)* &nbsp;·&nbsp; 2026 – In Development &nbsp;·&nbsp; Rust, Apache 2.0
+*[github.com/p4inz-code/mink](https://github.com/p4inz-code/mink)* &nbsp;·&nbsp; 2026 – Released v1.0.0 &nbsp;·&nbsp; Rust, Apache 2.0
 
-- Designing and building a compiled, general-purpose language from scratch — its own lexer, parser, type system, optimizer, and native code generator, producing a working executable with no external toolchain.
-- 878 compiler tests passing.
+- Built a compiled, general-purpose language from scratch — its own lexer, parser, type system, optimizer, and native code generator, producing a working executable with no external toolchain.
+- 1928 compiler tests passing.
 
 ### Pursue OS &nbsp;·&nbsp; Investigation-Focused Linux OS
 *[github.com/p4inz-code/pursue-os](https://github.com/p4inz-code/pursue-os)* &nbsp;·&nbsp; 2026 – Present &nbsp;·&nbsp; Linux, Apache 2.0
