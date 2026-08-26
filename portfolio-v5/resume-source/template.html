@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Atharva Patil — Resume</title>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=neue-machina@400,500,700,800&f[]=neue-montreal@400,500,italic&f[]=supply-mono@400,500&display=swap" />
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: #F5EEDC;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 10mm 14mm 6mm 14mm;
+    font-family: 'Neue Montreal', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 9pt;
+    line-height: 1.4;
+    color: #161616;
+  }
+  h1, h2, h3 { margin: 0; font-weight: 700; }
+
+  .name {
+    font-family: 'Neue Machina', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 30pt;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: #161616;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16pt;
+  }
+  .header-left { flex: 1; }
+  .role {
+    margin-top: 4pt;
+    font-size: 10.5pt;
+    color: #5B5B5B;
+  }
+  .header-right {
+    text-align: right;
+    font-size: 9pt;
+    color: #5B5B5B;
+    white-space: nowrap;
+    padding-top: 6pt;
+  }
+  .rule {
+    border: none;
+    border-top: 2px solid #161616;
+    margin: 6pt 0 8pt;
+  }
+
+  .section { margin-top: 6pt; page-break-inside: avoid; }
+  .section-label {
+    font-family: 'Supply Mono', 'SFMono-Regular', ui-monospace, monospace;
+    font-size: 8.5pt;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #6D5FD3;
+    margin-bottom: 5pt;
+  }
+  .section p { margin: 0 0 6pt; }
+  .section p:last-child { margin-bottom: 0; }
+
+  .block { margin-bottom: 6pt; page-break-inside: avoid; }
+  .block:last-child { margin-bottom: 0; }
+  .block-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10pt;
+  }
+  .block-title { font-size: 10pt; font-weight: 700; color: #161616; }
+  .block-title .tagline { font-weight: 400; color: #161616; }
+  .block-period {
+    font-size: 8.5pt;
+    color: #5B5B5B;
+    white-space: nowrap;
+  }
+  .bullets { margin: 2pt 0 0; padding-left: 12pt; }
+  .bullets li { margin-bottom: 2pt; }
+  .bullets li:last-child { margin-bottom: 0; }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #e2d9be;
+    margin: 6pt 0;
+  }
+  .additional-label {
+    font-family: 'Supply Mono', 'SFMono-Regular', ui-monospace, monospace;
+    font-size: 7.5pt;
+    font-weight: 400;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #5B5B5B;
+    margin-bottom: 5pt;
+  }
+  .additional-row { margin: 0 0 3pt; font-size: 9.5pt; }
+  .additional-row:last-child { margin-bottom: 0; }
+  .additional-row strong { font-weight: 700; }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 90pt 1fr;
+    row-gap: 4pt;
+    column-gap: 10pt;
+  }
+  .skill-label {
+    font-family: 'Supply Mono', 'SFMono-Regular', ui-monospace, monospace;
+    font-size: 8pt;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #6D5FD3;
+    padding-top: 1pt;
+  }
+  .skill-value { font-size: 9.5pt; color: #161616; }
+
+  .education-line { font-size: 9.5pt; }
+  .education-title { font-weight: 700; }
+
+  .footer {
+    margin-top: 4pt;
+    font-family: 'Supply Mono', 'SFMono-Regular', ui-monospace, monospace;
+    font-size: 7.5pt;
+    color: #5B5B5B;
+  }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-left">
+      <div class="name">ATHARVA PATIL</div>
+      <div class="role">Software Engineer · Founder · Product Builder</div>
+    </div>
+    <div class="header-right">
+      atharva.patil.cg@gmail.com &nbsp;·&nbsp; Discord: p4inz<br />
+      github.com/p4inz-code
+    </div>
+  </div>
+  <hr class="rule" />
+
+  <div class="section">
+    <div class="section-label">Summary</div>
+    <p>Software engineer and product builder focused on desktop applications, developer tools, and systems programming. Founder of Northbyte Studios, where I independently design, build, test, and ship privacy-first software: currently an encrypted vault, two Linux distributions, and a compiled programming language.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Experience</div>
+    <div class="block">
+      <div class="block-head">
+        <span class="block-title">Northbyte Studios — Founder &amp; Independent Software Studio</span>
+        <span class="block-period">2026 – Present · Navi Mumbai (remote-friendly)</span>
+      </div>
+      <ul class="bullets">
+        <li>Own the full product cycle myself on every project below: direction, architecture, engineering, UI/UX, testing, and release.</li>
+        <li>Every product ships on the same principles: no telemetry, trade-offs explained on-screen, free wherever the studio can afford it to be.</li>
+      </ul>
+    </div>
+    <div class="block">
+      <div class="block-head">
+        <span class="block-title">Freelance — Web, UX &amp; Brand</span>
+        <span class="block-period">2025 – Present</span>
+      </div>
+      <ul class="bullets">
+        <li>Independent client work in web development, UI/UX, and 3D/VFX visualization, including a full production website build for a performing-arts academy.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Selected Projects</div>
+
+    <div class="block">
+      <div class="block-head">
+        <span class="block-title">Nexus — <span class="tagline">Encrypted Personal Vault</span></span>
+        <span class="block-period">Mar 2026 – Present · Windows Desktop</span>
+      </div>
+      <ul class="bullets">
+        <li>Built a Windows encrypted vault using AES-256-GCM authenticated encryption and Argon2id key derivation, with Windows Hello as a secondary unlock.</li>
+        <li>Zero telemetry, zero cloud: content stays encrypted at rest and exists decrypted only in memory while the vault is unlocked.</li>
+        <li>Rebuilt the entire v11 interface (lock screen, media browser, credentials, notes, settings, updater) without touching the cryptographic core underneath it.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <div class="block-head">
+        <span class="block-title">Mission OS — <span class="tagline">Privacy-First Linux Distribution</span></span>
+        <span class="block-period">2026 – Present · Linux, GPLv3</span>
+      </div>
+      <ul class="bullets">
+        <li>Building a privacy-first Linux distribution on Debian Stable and KDE Plasma, with an installer that explains the trade-off of every advanced option next to the toggle instead of burying it in docs.</li>
+        <li>141/141 pixel checks passed on the installer foundation, backed by 14 CTest and 13 runtime suites.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <div class="block-head">
+        <span class="block-title">MINK — <span class="tagline">Programming Language</span></span>
+        <span class="block-period">2026 – Released v1.0.0 · Rust, Apache 2.0</span>
+      </div>
+      <ul class="bullets">
+        <li>Built a compiled, general-purpose language from scratch: its own lexer, parser, type system, optimizer, and native code generator, producing a working executable with no external toolchain.</li>
+        <li>1928 compiler tests passing.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <div class="block-head">
+        <span class="block-title">Pursue OS — <span class="tagline">Investigation-Focused Linux OS</span></span>
+        <span class="block-period">2026 – Present · Linux, Apache 2.0</span>
+      </div>
+      <ul class="bullets">
+        <li>Building a Linux OS for OSINT, DFIR, and evidence-driven investigation work, centered on two flagship surfaces: an Investigation Terminal and an Investigation Browser with integrated Tor.</li>
+      </ul>
+    </div>
+
+    <hr class="divider" />
+    <div class="additional-label">Additional Projects</div>
+    <p class="additional-row"><strong>Kanvaz</strong> — Electron visual reference workspace for VFX artists · MIT · v4.2.2, final release</p>
+    <p class="additional-row"><strong>Obscura</strong> — Luau AST toolkit for Roblox developers · MIT · v1.0.0, 340/340 tests passing</p>
+    <p class="additional-row"><strong>repo-map</strong> — TypeScript engineering-intelligence CLI, published on npm · MIT · 870+ tests</p>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Technical Skills</div>
+    <div class="skills-grid">
+      <div class="skill-label">Languages</div>
+      <div class="skill-value">C#, Rust, TypeScript, C / C++, JavaScript, Lua / Luau</div>
+      <div class="skill-label">Frameworks</div>
+      <div class="skill-value">.NET 8, WPF, Node.js, Astro, Qt / QML, Debian Linux</div>
+      <div class="skill-label">Security</div>
+      <div class="skill-value">AES-256-GCM, Argon2id, LUKS2, TPM, Secure Boot, Windows Hello</div>
+      <div class="skill-label">Tools</div>
+      <div class="skill-value">Git / GitHub Actions, VS Code, FFmpeg, Cloudflare Pages</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Education</div>
+    <div class="education-line"><span class="education-title">B.Sc. Animation</span> — D. Y. Patil University, Nerul, Navi Mumbai &nbsp;·&nbsp; 2025 – 2028, second year in progress</div>
+  </div>
+
+  <div class="footer">atharvapatil.tech/resume — updated 26 August 2026.</div>
+
+</body>
+</html>

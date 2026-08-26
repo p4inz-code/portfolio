@@ -20,6 +20,17 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.17.12',
+    kind: 'released',
+    summary: 'Resume PDF rebuilt from scratch (no surviving template existed) to fix its stale MINK line and trim the contact header to email/Discord/GitHub only. Same visual design, corrected info, prose pass run against a real de-AI-writing ruleset.',
+    body: [
+      'The bundled PDF was flagged last version as the one surface still showing MINK as "In Development" with 878 tests, since the HTML template that built it was never saved and the on-site page had already been fixed. Rebuilt the template from scratch this time, saved to resume-source/template.html so this can\'t happen again, matched to the original\'s exact fonts (Fontshare Neue Machina/Neue Montreal/Supply Mono), palette (#F5EEDC cream, #161616 ink, #5B5B5B muted, #6D5FD3 accent), and layout.',
+      'Contact header trimmed to email, Discord, and GitHub only — dropped the location line and the repeated domain link.',
+      'Installed the `humanizer` skill (github.com/blader/humanizer, MIT) to ~/.claude/skills and ran its pattern set against the resume prose before finalizing: found and fixed 4 em dashes used as sentence connectors ("Zero telemetry, zero cloud — content stays..." style), left the "Name — Tagline" header labels alone since those are a structural formatting convention used sitewide, not prose. Everything else in the copy was already clean against the pattern list.',
+      'Rendered via headless Chrome print-to-PDF, same technique as the original. Confirmed single A4 page and pixel-checked against a full-page screenshot before shipping — the extracted PDF text layer has a few harmless spacing artifacts from the Fontshare fonts (e.g. "Window s Desktop"), matching a quirk already present in the previous PDF ("Softw are Engineer," "Nav i Mumbai") — cosmetic to text-selection only, invisible in the rendered page.',
+    ],
+  },
+  {
     version: 'v5.17.11',
     kind: 'released',
     summary: 'Two more audit passes, both actioned in full: deleted a self-defeating "No AI-slop" disclaimer page, stripped self-narrating "not X" framing from 4 spots, fixed a site-wide broken /LICENSE link, removed a decorative fake-verification hash from the live-stats widget, scrubbed a named third-party reference out of the changelog, and gave MINK (real, released, 1928 tests) an actual presence on the site instead of resume-only.',
