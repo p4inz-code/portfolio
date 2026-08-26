@@ -20,6 +20,17 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.17.16',
+    kind: 'released',
+    summary: 'Full sitewide sweep for the self-narrating "not X" pattern and one more repo cross-check pass. Two real finds: an about.astro pillar card repeating the Mission OS installer claim already corrected elsewhere, and terms.astro still listing a license for repo-map, which is no longer on the site.',
+    body: [
+      'Grepped every page and component for the contrastive-negation tell ("X — not Y", "isn\'t just", "no gimmick," etc.) left unchecked after the last two audit rounds. Most of what turned up was normal editorial em dashes and legitimate factual comparisons, not the defensive pattern the audits were built to catch. Two real, worth-fixing instances survived the pass.',
+      'about.astro\'s "Explain what you\'re turning on" pillar card said Mission OS installer options get "benefit and downside written right next to the toggle": the same specific claim corrected on the case study and resume last version. Retitled to "Hardened by default" with copy matching what actually ships, automatic hardening rather than an interactive explain-as-you-go screen.',
+      'terms.astro\'s per-product license list still named repo-map, removed from the site two versions ago, and never picked up MINK, added the same version repo-map left. Swapped one for the other.',
+      'Cross-checked Veris and 3D Ref Skills against their real repos as a final pass: both still match what the site says, no drift found.',
+    ],
+  },
+  {
     version: 'v5.17.15',
     kind: 'released',
     summary: 'Mission OS corrected, the flagship finding flagged last version. Real repo shows a shipped Open Beta on a standard Calamares installer, not the "active development, 13-screen trade-off installer" story the site told. Fixed everywhere: case study, resume (all 3 surfaces), llms.txt, the demo ribbon.',
