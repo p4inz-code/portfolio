@@ -20,6 +20,18 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.17.15',
+    kind: 'released',
+    summary: 'Mission OS corrected, the flagship finding flagged last version. Real repo shows a shipped Open Beta on a standard Calamares installer, not the "active development, 13-screen trade-off installer" story the site told. Fixed everywhere: case study, resume (all 3 surfaces), llms.txt, the demo ribbon.',
+    body: [
+      'Checked the exact claim from last version\'s flag: the repo\'s README badge and a commit titled "release: Mission OS open beta" confirmed a real Open Beta. Pulled the installer\'s actual settings.conf to get the real screen sequence instead of guessing: Welcome, Locale, Keyboard, Partition, Users, Summary, Finished. Seven screens, standard Calamares, not the 13-screen "Privacy Setup / Security Options, each explaining trade-offs" flow the case study described.',
+      'The real security story is still good, just different: sysctl hardening and Mission OS\'s Rust system services get applied automatically by a post-install module, no interactive trade-off screen and no manual script needed after first boot. Rewrote the case study\'s "Installer experience," "Product-grade design," "Security-conscious" pillar, and "Current status" sections around that, and swapped the stale "141/141 pixel checks" stat for a real, currently-verifiable one (40 QML component tests) since I found Mission OS\'s Nightly Build CI has failed for the last 5 consecutive days and couldn\'t confirm that number still holds.',
+      'Also found a real Mission Hub app (settings, updates, recovery, driver management, diagnostics) in early development, evidenced by a working QML test suite, matching what the old "Current status" section already said was in progress. Kept that claim; it checked out.',
+      'The interactive demo shows an earlier installer design, not the Calamares installer that ships. Updated its ribbon and CTA copy to say so plainly instead of calling it "the real Installer walkthrough."',
+      'Propagated to every surface: projects.ts (status, stack, description), mission-os.astro (5 sections), llms.txt (2 sections), the resume\'s Mission OS bullets on all 3 surfaces, and DemoRibbon.astro.',
+    ],
+  },
+  {
     version: 'v5.17.14',
     kind: 'released',
     summary: 'Freelance bullet on the resume finally names the actual client site.',

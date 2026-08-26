@@ -27,7 +27,7 @@ const breadcrumbJsonLd = {
   ],
 };
 ---
-<BaseLayout title={`${project.name} — ${project.tagline}`} description="Privacy-first Linux distribution on Debian Stable + KDE Plasma. Installer explains every trade-off on-screen. GPLv3, open source, in active development." extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
+<BaseLayout title={`${project.name} — ${project.tagline}`} description="Privacy-first Linux distribution on Debian Stable + KDE Plasma. Hardened automatically at install, no manual script needed. GPLv3, open source, Open Beta." extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
   <section class="demo-cta-wrap">
@@ -35,7 +35,7 @@ const breadcrumbJsonLd = {
       <a href="/mission-os/demo" class="demo-cta">
         <span class="demo-cta-eyebrow">Concept demo · playable</span>
         <span class="demo-cta-title">Try Mission OS in your browser <span aria-hidden="true">→</span></span>
-        <span class="demo-cta-help">Boots into a desktop with the real Installer walkthrough. Not a live OS.</span>
+        <span class="demo-cta-help">Boots into a desktop with a concept installer walkthrough. Not a live OS, and the shipped installer works differently (see below).</span>
       </a>
     </div>
   </section>
@@ -44,8 +44,8 @@ const breadcrumbJsonLd = {
     <div class="wrap">
       <dl class="stat-row">
         <div class="stat-cell"><dt>Product pillars</dt><dd>4</dd></div>
-        <div class="stat-cell"><dt>Pixel checks passed</dt><dd>141/141</dd></div>
-        <div class="stat-cell"><dt>Installer screens</dt><dd>13</dd></div>
+        <div class="stat-cell"><dt>UI component tests</dt><dd>40</dd></div>
+        <div class="stat-cell"><dt>Installer screens</dt><dd>7</dd></div>
         <div class="stat-cell"><dt>Telemetry calls</dt><dd>0</dd></div>
       </dl>
     </div>
@@ -61,7 +61,7 @@ const breadcrumbJsonLd = {
   <Section heading="Product-grade design applied to a serious operating system.">
     <div class="body-copy">
       <p>Mission OS is designed around the principles of any modern product — clarity, consistency, careful defaults, honest explanations. The visual direction takes cues from Apple, Proton, Arc Browser, Linear, Vercel, and Nothing.</p>
-      <p>Every advanced security feature in the installer explains its benefits, limitations, compatibility, and trade-offs. <strong>Users should understand what they're enabling.</strong></p>
+      <p>Security hardening happens automatically: sysctl hardening and Mission OS's Rust system services are enabled during install, with no manual post-install script required. <strong>A separate Mission Hub app, for reviewing and adjusting security, privacy, and storage settings after install, is in early development.</strong></p>
     </div>
   </Section>
 
@@ -96,7 +96,7 @@ const breadcrumbJsonLd = {
       </article>
       <article class="feature-card">
         <h3 class="feature-name">Security-conscious</h3>
-        <p class="feature-desc">Full disk encryption, Secure Boot, TPM, recovery keys — each explained in the installer, not hidden behind unlabelled toggles.</p>
+        <p class="feature-desc">Full disk encryption, Secure Boot, TPM, recovery keys: hardened automatically after install, no manual setup script needed.</p>
       </article>
       <article class="feature-card">
         <h3 class="feature-name">Portable-first</h3>
@@ -109,20 +109,20 @@ const breadcrumbJsonLd = {
     </div>
   </Section>
 
-  <Section eyebrow="Installer experience" heading="13 screens, each explaining trade-offs instead of hiding them.">
+  <Section eyebrow="Installer experience" heading="Calamares, customized, with hardening applied automatically.">
     <div class="body-copy">
-      <p>Welcome → Language → Keyboard → Network → Privacy Setup → Disk Selection → Partition Manager → User Account → Encryption → <strong>Security Options</strong> → Summary → Installation → Completion.</p>
-      <p>Structure stays consistent on every screen: Header → Stepper → Main Content → Contextual Help Panel → Action Bar.</p>
+      <p>Welcome → Locale → Keyboard → Partition → Users → Summary → Finished. Seven screens, built on Calamares (the same installer framework used by several major Linux distributions) rather than a fully bespoke installer application.</p>
+      <p>Mission OS-specific work happens after the visible flow: a post-install step applies sysctl hardening and enables Mission OS's Rust system services automatically, so there's no manual hardening script to run after first boot.</p>
     </div>
     <div class="screenshot-placeholder">
-      <div class="ph-title">Installer — Security Options screen</div>
+      <div class="ph-title">Installer — Partition screen</div>
       <div class="ph-sub">Concept · Installer prototype · Real capture lands next week</div>
     </div>
   </Section>
 
-  <Section eyebrow="Current status" heading="Active development. Not shipping yet.">
+  <Section eyebrow="Current status" heading="Open Beta.">
     <div class="body-copy">
-      <p>Installer foundation validated end-to-end. Core system components (Mission Settings, Store, Update, Recovery, Driver Manager, Diagnostics) are in architecture and early implementation. <em>ISO under internal testing (August 2026)</em> — public release notice will land here first.</p>
+      <p>Mission OS shipped its Open Beta in August 2026, installable today via the Calamares-based installer above. A separate Mission Hub app for post-install management (settings, updates, recovery, driver management, diagnostics) is in architecture and early implementation.</p>
     </div>
   </Section>
 

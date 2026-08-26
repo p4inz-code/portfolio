@@ -40,8 +40,8 @@ Software engineer and product builder focused on desktop applications, developer
 ### Mission OS &nbsp;·&nbsp; Privacy-First Linux Distribution
 *[github.com/p4inz-code/mission-os](https://github.com/p4inz-code/mission-os)* &nbsp;·&nbsp; 2026 – Present &nbsp;·&nbsp; Linux, GPLv3
 
-- Building a privacy-first Linux distribution on Debian Stable and KDE Plasma, with an installer that explains the trade-off of every advanced option next to the toggle instead of burying it in docs.
-- Built a QA foundation of 14 CTest and 13 runtime suites for the installer; 141/141 pixel checks passing.
+- Building a privacy-first Linux distribution on Debian Stable and KDE Plasma, hardened automatically at install with no manual post-install script needed.
+- Shipped an Open Beta using a customized Calamares installer with Rust-based system services applied automatically after install.
 
 ### MINK &nbsp;·&nbsp; Programming Language
 *[github.com/p4inz-code/mink](https://github.com/p4inz-code/mink)* &nbsp;·&nbsp; 2026 – Released v1.0.0 &nbsp;·&nbsp; Rust, Apache 2.0
