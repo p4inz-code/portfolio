@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
 ---
-<BaseLayout title="Accessibility — Atharva Patil" description="Accessibility statement for atharvapatil.tech — an honest account of what's implemented and what gaps still exist, targeting WCAG 2.1 AA.">
+<BaseLayout title="Accessibility — Atharva Patil" description="Accessibility statement for atharvapatil.tech: an honest account of what's implemented and what gaps still exist, targeting WCAG 2.1 AA.">
   <Section headingLevel="h1" eyebrow="Accessibility statement" heading="What's actually done, and what honestly isn't yet." intro="Target: WCAG 2.1 AA. What's below is an honest self-assessment, not an unverified compliance badge.">
     <div class="a11y-block">
       <h2 class="a11y-heading">What's implemented</h2>
@@ -11,7 +11,7 @@ import Section from '../components/layout/Section.astro';
         <li>Skip-to-content link (first tab-stop, becomes visible on focus).</li>
         <li>Visible <code>:focus-visible</code> ring site-wide (2px purple-bright outline).</li>
         <li>All interactive elements keyboard-reachable. Command palette (⌘K) fully keyboard-driven.</li>
-        <li>Every image has real alt text — no decorative placeholders on meaningful images.</li>
+        <li>Every image has real alt text: no decorative placeholders on meaningful images.</li>
         <li><code>prefers-reduced-motion</code> honored: all animations collapse to instant on request.</li>
         <li><code>prefers-color-scheme</code> respected on first visit; user toggle persists via localStorage.</li>
         <li>Contrast ratios: WCAG AA at every text/background pairing in both light and dark themes.</li>
@@ -22,13 +22,13 @@ import Section from '../components/layout/Section.astro';
     <div class="a11y-block">
       <h2 class="a11y-heading">Known gaps</h2>
       <ul class="a11y-list">
-        <li>Not independently audited yet — no external accessibility review has been performed. This is an honest self-assessment.</li>
+        <li>Not independently audited yet: no external accessibility review has been performed. This is an honest self-assessment.</li>
         <li>Some screenshots on case-study pages have descriptive alt text but no long-description transcript for complex visuals (e.g., the Kanvaz board view). Planned addition.</li>
         <li>The theme-boot inline script runs before first paint and can't be gated by <code>prefers-reduced-motion</code>; the theme switch itself is instant regardless of user preference (no animation applied).</li>
       </ul>
     </div>
 
-    <p class="a11y-note">Last reviewed: v5.0-alpha migration (2026-08-09). If you find something broken — email <a href="mailto:atharva.patil.cg@gmail.com">atharva.patil.cg@gmail.com</a>.</p>
+    <p class="a11y-note">Last reviewed: v5.0-alpha migration (2026-08-09). If you find something broken, email <a href="mailto:atharva.patil.cg@gmail.com">atharva.patil.cg@gmail.com</a>.</p>
   </Section>
 
   <style>

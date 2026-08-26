@@ -3,14 +3,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
 import { CONTACT, SITE } from '../data/site';
 ---
-<BaseLayout title="Get in Touch — Atharva Patil" description="Get in touch with Atharva Patil — freelance web development, UI/UX, branding, and 3D/VFX work. Real inbox, no contact-form middleman.">
+<BaseLayout title="Get in Touch — Atharva Patil" description="Get in touch with Atharva Patil: freelance web development, UI/UX, branding, and 3D/VFX work. Real inbox, no contact-form middleman.">
   <Section
     wide
     headingLevel="h1"
     eyebrow="Get in touch"
     heading="Send it as a real message, not a form to no one."
     headingEmphasis="Write to me directly."
-    intro="I read every message myself and reply within 1–2 days. Freelance, collaboration, hiring, security disclosure — whatever it is, it lands in my inbox."
+    intro="I read every message myself and reply within 1–2 days. Freelance, collaboration, hiring, security disclosure: whatever it is, it lands in my inbox."
   >
     <div class="contact-grid">
 
@@ -131,7 +131,7 @@ import { CONTACT, SITE } from '../data/site';
                assume that happened and offer a copyable alternative
                instead of leaving the visitor staring at a dead button. -->
           <div class="term-fallback" id="c-fallback" role="status" aria-live="polite" hidden>
-            <p class="term-fallback-title">No mail client responded — here's your message to copy instead.</p>
+            <p class="term-fallback-title">No mail client responded: here's your message to copy instead.</p>
             <textarea class="term-fallback-body" id="c-fallback-body" readonly></textarea>
             <div class="term-fallback-actions">
               <button type="button" class="term-fallback-btn" id="c-copy-message">Copy message</button>
@@ -284,7 +284,7 @@ import { CONTACT, SITE } from '../data/site';
 
         if (status) {
           status.hidden = false;
-          status.textContent = 'opened your mail client — if nothing happened, check below.';
+          status.textContent = 'opened your mail client. If nothing happened, check below.';
         }
 
         // v5.17.0 auto-recovery — if the tab is still visible/focused
@@ -298,7 +298,7 @@ import { CONTACT, SITE } from '../data/site';
               fallback.hidden = false;
               fallback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
-            window.__nbDiag && window.__nbDiag.log('contact-form', 'No mail client responded to mailto: — showed copyable fallback', { recovered: true });
+            window.__nbDiag && window.__nbDiag.log('contact-form', 'No mail client responded to mailto:, showed copyable fallback', { recovered: true });
           }
         }, 1400);
       });

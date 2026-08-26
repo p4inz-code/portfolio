@@ -18,7 +18,7 @@ const stackReasons = [
     slug: 'wpf',
     label: 'C# / .NET 8 / WPF',
     verdict: 'For Windows-native products',
-    reason: 'WPF is the least-glamorous choice a modern .NET dev can make — and the right one for Nexus. Native windowing, real ClearType, no Electron bloat, integrates with Windows Hello and the Credential Manager the way users expect. Chose WPF over Avalonia specifically because Nexus ships Windows-only for now and I wanted to lean into the platform, not abstract it.',
+    reason: 'WPF is the least-glamorous choice a modern .NET dev can make, and the right one for Nexus. Native windowing, real ClearType, no Electron bloat, integrates with Windows Hello and the Credential Manager the way users expect. Chose WPF over Avalonia specifically because Nexus ships Windows-only for now and I wanted to lean into the platform, not abstract it.',
   },
   {
     slug: 'avalonia',
@@ -30,7 +30,7 @@ const stackReasons = [
     slug: 'electron',
     label: 'Electron + vanilla JS',
     verdict: 'For Kanvaz',
-    reason: 'Kanvaz needed to run everywhere a VFX artist works, and its whole surface is a canvas full of references — HTML5 canvas + drag-and-drop APIs mapped to that better than any native alternative. Vanilla JS on purpose: no framework churn, easy for anyone to fork and extend.',
+    reason: 'Kanvaz needed to run everywhere a VFX artist works, and its whole surface is a canvas full of references: HTML5 canvas + drag-and-drop APIs mapped to that better than any native alternative. Vanilla JS on purpose: no framework churn, easy for anyone to fork and extend.',
   },
   {
     slug: 'linux-native',
@@ -79,7 +79,7 @@ const timeline = [
   { year: '2025', event: 'First studio (Obsidian Labs). Early Windows tooling. B.Sc. Animation program begins at D. Y. Patil University.' },
   { year: 'Early 2026', event: 'Kanvaz released open source (MIT) as a reference workspace for the VFX community I\'m part of.' },
   { year: 'Mar 2026', event: 'Started building Nexus. It went public around a month later, once there was enough to actually show.' },
-  { year: 'Jun 2026', event: 'Kanvaz and Veris both in active development alongside Nexus — one open-source workspace, one investigation platform.' },
+  { year: 'Jun 2026', event: 'Kanvaz and Veris both in active development alongside Nexus: one open-source workspace, one investigation platform.' },
   { year: 'Mid 2026', event: 'Northbyte Studios founded as the second (and current) studio name. Mission OS work begins.' },
   { year: 'Aug 2026', event: 'Second year of the animation program. Portfolio migrated to Astro (v5.0). Pursue OS repository foundation goes public. Mission OS ISO enters internal testing.' },
 ];
@@ -92,7 +92,7 @@ const traction = [
   { k: 'Automated tests across products', v: '4,100+ (Veris 3,100 + repo-map 870 + others)' },
   { k: 'People between design and shipping', v: 'Just me' },
   { k: 'Third-party analytics on any product', v: '0' },
-  { k: 'External dependencies (this site)', v: '0 — no tracking, no fetch calls at runtime' },
+  { k: 'External dependencies (this site)', v: '0 (no tracking, no fetch calls at runtime)' },
 ];
 
 const shippedCount = PROJECTS.length;
@@ -145,7 +145,7 @@ const activeCount = PROJECTS.filter(
       <p>
         3D came in because software alone wasn't covering everything I wanted to make. I started a
         B.Sc. Animation program at D. Y. Patil University this year, which mostly just gave a name to
-        something I was already doing on the side. <em>Kanvaz</em> exists because of that overlap —
+        something I was already doing on the side. <em>Kanvaz</em> exists because of that overlap:
         it's a reference tool I built for VFX artists because I'm one of them, not something I built
         to look interesting from the outside.
       </p>
@@ -154,13 +154,13 @@ const activeCount = PROJECTS.filter(
         planning it that way going in. Nexus doesn't sync to a cloud. Mission OS doesn't phone home.
         Pursue OS is for investigators who can't afford to leak metadata about who they're
         researching. Even this site runs on Cloudflare with nothing beyond Cloudflare's own
-        privacy-preserving traffic beacon — no analytics script, no tracking pixel.
+        privacy-preserving traffic beacon: no analytics script, no tracking pixel.
       </p>
       <p>
         The part that's less fun to admit: I do all of this alone, so there's no one to catch what I
         miss and no one to help me move faster either. Some things take longer because of that.
         Other things stay more consistent than they would with five people making five different
-        calls on the same product — most days I think that trade is worth it.
+        calls on the same product. Most days I think that trade is worth it.
       </p>
     </div>
   </Section>
@@ -190,7 +190,7 @@ const activeCount = PROJECTS.filter(
   </Section>
 
   <!-- INVESTOR / COLLABORATOR READ -->
-  <Section eyebrow="For investors + collaborators" heading="What this studio actually looks like from the outside." intro="Every number below is checkable — against the repos, or against the changelog on /status.">
+  <Section eyebrow="For investors + collaborators" heading="What this studio actually looks like from the outside." intro="Every number below is checkable, against the repos, or against the changelog on /status.">
     <dl class="tr-grid">
       {traction.map((t) => (
         <div class="tr-cell">
@@ -225,12 +225,12 @@ const activeCount = PROJECTS.filter(
   <Section eyebrow="Identity" heading="One person, several names, one canonical source.">
     <div class="id-grid">
       <div class="id-row"><span class="id-key">Real name</span><span class="id-val">Atharva Patil</span></div>
-      <div class="id-row"><span class="id-key">Current handle</span><span class="id-val">p4inz — everywhere (GitHub, Discord, this site's byline)</span></div>
-      <div class="id-row"><span class="id-key">Retired handles</span><span class="id-val">PainZ, Grim — do not use, they don't map to me anymore</span></div>
+      <div class="id-row"><span class="id-key">Current handle</span><span class="id-val">p4inz, everywhere (GitHub, Discord, this site's byline)</span></div>
+      <div class="id-row"><span class="id-key">Retired handles</span><span class="id-val">PainZ, Grim: do not use, they don't map to me anymore</span></div>
       <div class="id-row"><span class="id-key">Current studio</span><span class="id-val">{SITE.studio} · founded {SITE.studioFounded}</span></div>
-      <div class="id-row"><span class="id-key">Previous studio</span><span class="id-val">Obsidian Labs — 2025, retired when the current studio was named</span></div>
+      <div class="id-row"><span class="id-key">Previous studio</span><span class="id-val">Obsidian Labs, 2025, retired when the current studio was named</span></div>
       <div class="id-row"><span class="id-key">Location</span><span class="id-val">{SITE.location}</span></div>
-      <div class="id-row"><span class="id-key">Canonical source</span><span class="id-val">This site — <a href="https://atharvapatil.tech">atharvapatil.tech</a></span></div>
+      <div class="id-row"><span class="id-key">Canonical source</span><span class="id-val">This site: <a href="https://atharvapatil.tech">atharvapatil.tech</a></span></div>
     </div>
   </Section>
 

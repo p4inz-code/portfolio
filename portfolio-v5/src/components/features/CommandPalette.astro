@@ -238,7 +238,7 @@ const commands = [
         const arr = JSON.parse(raw);
         return Array.isArray(arr) ? arr.slice(0, RECENT_MAX) : [];
       } catch (e) {
-        window.__nbDiag && window.__nbDiag.log('cmdk', 'Recent-searches list unreadable — starting empty', { recovered: true });
+        window.__nbDiag && window.__nbDiag.log('cmdk', 'Recent-searches list unreadable, starting empty', { recovered: true });
         return [];
       }
     }

@@ -1,15 +1,16 @@
 ---
 /**
- * Mission Installer — 5-screen subset of the real 13-screen installer.
- *
- * Real 13 screens (from the case study):
- *   Welcome -> Language -> Keyboard -> Network -> Privacy Setup ->
- *   Disk Selection -> Partition Manager -> User Account -> Encryption ->
- *   Security Options -> Summary -> Installation -> Completion
+ * Mission Installer — concept walkthrough of an earlier 13-screen installer
+ * design. The installer that actually shipped with the Open Beta is
+ * Calamares (7 screens: Welcome, Locale, Keyboard, Partition, Users,
+ * Summary, Finished); this demo predates that and was never updated to
+ * match. Kept as-is and clearly labeled a concept (see DemoRibbon and the
+ * /mission-os CTA copy) rather than rebuilt, since it shows real historical
+ * design work, just not what ships today.
  *
  * The demo shows: Welcome, Privacy Setup, Security Options, Summary,
  * Completion. Elided steps are shown as honest "…" gaps in the step-dot
- * strip so we don't imply we're walking through all 13.
+ * strip so we don't imply we're walking through all 13 of the original design.
  *
  * State is per-app: [data-installer-step] on the .installer-root.
  * Next / Back buttons + Left / Right arrow keys advance the carousel.
@@ -36,11 +37,11 @@
     </header>
     <div class="i-main">
       <p>You're about to install a privacy-first, offline-first Linux operating system built on Debian Stable + KDE Plasma. Nothing here calls home, ever.</p>
-      <p>Before we start: the installer will explain every advanced choice you make — Secure Boot, TPM, disk encryption, recovery keys — with the benefits, limitations, and trade-offs on the same screen as the toggle.</p>
+      <p>Before we start: the installer will explain every advanced choice you make (Secure Boot, TPM, disk encryption, recovery keys) with the benefits, limitations, and trade-offs on the same screen as the toggle.</p>
     </div>
     <aside class="i-help">
       <p class="i-help-title">Contextual help</p>
-      <p>You can quit any time before the "Install" step — no changes are written to disk until then.</p>
+      <p>You can quit any time before the "Install" step: no changes are written to disk until then.</p>
     </aside>
   </section>
 
@@ -57,7 +58,7 @@
           <input type="radio" name="telemetry" checked disabled />
           <span class="i-choice-body">
             <span class="i-choice-name">Disabled (only choice)</span>
-            <span class="i-choice-help">Mission OS ships without telemetry hooks compiled in. There is no "enable" toggle — the code isn't there.</span>
+            <span class="i-choice-help">Mission OS ships without telemetry hooks compiled in. There is no "enable" toggle: the code isn't there.</span>
           </span>
         </label>
       </fieldset>
@@ -103,14 +104,14 @@
         <input type="checkbox" checked />
         <span class="i-choice-body">
           <span class="i-choice-name">Secure Boot</span>
-          <span class="i-choice-help"><strong>Benefit:</strong> Blocks unsigned bootloaders. <strong>Compatibility:</strong> Works on most 2016+ hardware. <strong>Trade-off:</strong> Prevents booting unsigned custom kernels — you can turn it off later.</span>
+          <span class="i-choice-help"><strong>Benefit:</strong> Blocks unsigned bootloaders. <strong>Compatibility:</strong> Works on most 2016+ hardware. <strong>Trade-off:</strong> Prevents booting unsigned custom kernels. You can turn it off later.</span>
         </span>
       </label>
       <label class="i-choice">
         <input type="checkbox" />
         <span class="i-choice-body">
           <span class="i-choice-name">TPM-sealed unlock (optional)</span>
-          <span class="i-choice-help"><strong>Benefit:</strong> Disk unlocks silently on the bound hardware. <strong>Limitation:</strong> Data becomes hardware-locked — motherboard failure requires recovery key. <strong>Recommendation:</strong> only if you have secure recovery-key storage.</span>
+          <span class="i-choice-help"><strong>Benefit:</strong> Disk unlocks silently on the bound hardware. <strong>Limitation:</strong> Data becomes hardware-locked. Motherboard failure requires recovery key. <strong>Recommendation:</strong> only if you have secure recovery-key storage.</span>
         </span>
       </label>
     </div>

@@ -70,7 +70,7 @@
       const next = current === 'dark' ? 'light' : 'dark';
       root.setAttribute('data-theme', next);
       try { localStorage.setItem('nb-theme', next); } catch (e) {
-        window.__nbDiag && window.__nbDiag.log('theme', 'Theme preference could not be saved (private browsing) — applies for this page view only', { recovered: true });
+        window.__nbDiag && window.__nbDiag.log('theme', 'Theme preference could not be saved (private browsing), applies for this page view only', { recovered: true });
       }
     }
 

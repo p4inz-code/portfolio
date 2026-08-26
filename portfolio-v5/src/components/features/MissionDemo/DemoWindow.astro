@@ -39,7 +39,7 @@ const { title, subtitle, appSlug, wide = false } = Astro.props;
        this root instead of letting the panel die silently — an in-universe
        "app not responding" state, not a blank screen. -->
   <div class="dw-error" data-window-error hidden>
-    <p class="dw-error-msg">This panel didn't respond. Diagnosed and logged — try reopening it.</p>
+    <p class="dw-error-msg">This panel didn't respond. Diagnosed and logged: try reopening it.</p>
     <button type="button" class="dw-error-retry" data-window-retry={appSlug}>↻ Reopen {title}</button>
   </div>
 </section>

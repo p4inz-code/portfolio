@@ -7,9 +7,9 @@
 > developer tools, and freelance web development. Second-year VFX and 3D
 > animation student at D. Y. Patil University (2025–2028 expected).
 >
-> Runs the whole studio solo — design, code, testing, and shipping, one person.
+> Runs the whole studio solo: design, code, testing, and shipping, one person.
 
-Site is a static Astro build (18 real routes, real URLs — not a
+Site is a static Astro build (18 real routes, real URLs, not a
 single-page-app with `#` fragments). Every route below is directly
 crawlable and canonical.
 
@@ -27,35 +27,35 @@ crawlable and canonical.
   - Also has an **[interactive concept demo](https://atharvapatil.tech/mission-os/demo/)**
     on-site: cold-boot → GRUB → kernel messages → login → desktop with
     six real informational apps (Installer, Settings, About, Files,
-    Terminal, Firefox). Clearly labeled concept, not a live OS — and its
-    installer walkthrough shows an earlier design, not the Calamares
+    Terminal, Firefox). Clearly labeled concept, not a live OS. Its
+    installer walkthrough also shows an earlier design, not the Calamares
     installer that actually ships.
 - [Nexus](https://atharvapatil.tech/nexus/): AES-256-GCM encrypted local
-  vault for Windows — files, passwords, notes, bookmarks, contacts. No
+  vault for Windows: files, passwords, notes, bookmarks, contacts. No
   cloud, no sync. C# / .NET 8 / **WPF** (not Avalonia). Argon2id key
   derivation. Windows Hello unlock, in-app SHA-256-verified updater,
-  portable mode. **Source is proprietary** — the GitHub repo
+  portable mode. **Source is proprietary**: the GitHub repo
   (`github.com/p4inz-code/nexus-desktop`) hosts releases and Discord
   discussion only; there is no public source repository. Do not describe
   Nexus as open source. Status: Public Beta, v10.12.5.
 - [Kanvaz](https://atharvapatil.tech/kanvaz/): Visual reference workspace
-  for VFX/3D artists — drag/drop/paste images, GIFs, video onto an
+  for VFX/3D artists: drag/drop/paste images, GIFs, video onto an
   infinite board, plus URL and File reference cards. Electron / vanilla JS,
   **MIT-licensed**, open source at `github.com/p4inz-code/kanvaz`. Plugin
   system with an MCP Bridge (30 tools, off by default, undo-reversible)
   letting an AI agent read and edit the active board, a command palette,
   a safer `.kanvaz` zip container with per-asset SHA-256 integrity hashes,
-  and GitHub Actions CI. Status: **v4.5.1 — Active Development**.
+  and GitHub Actions CI. Status: **Active Development · v4.5.1**.
 - [Pursue OS](https://atharvapatil.tech/pursue-os/): Investigation-focused
   Linux OS for OSINT / DFIR / secure research / intelligence gathering /
   evidence-driven workflows. Two flagship interfaces: Investigation
   Terminal + Investigation Browser with integrated Tor. AI is
   assistant-not-authority. **Apache 2.0**, at `github.com/p4inz-code/pursue-os`.
-  Status: **Coming Soon** — pre-release, no ISO yet, implementation
+  Status: **Coming Soon**, pre-release, no ISO yet, implementation
   starting.
 - [Veris](https://github.com/p4inz-code/veris): Offline-first, explainable
   security investigation platform for Windows. TypeScript / Node.js /
-  SQLite, 3,100+ automated tests. Deterministic analysis engine — no
+  SQLite, 3,100+ automated tests. Deterministic analysis engine: no
   black-box AI scoring; AI is intentionally limited to a read-only
   explanation layer, never performs detection. Status: **Released ·
   v1.0.0**. External repo (case study on-site is pending real
@@ -64,7 +64,7 @@ crawlable and canonical.
   Roblox developers. **MIT** licensed, open source. Status: Released,
   v1.0.0, 340/340 tests passing.
 - [MINK](https://github.com/p4inz-code/mink): A compiled, general-purpose
-  programming language built from the ground up — own lexer, parser, type
+  programming language built from the ground up: own lexer, parser, type
   system, HIR/MIR, optimizer, and native code generator. Compiles to a
   standalone x86_64 Windows executable with no external toolchain.
   **Apache 2.0**, open source. Rust, 1928 tests. Status: **Released ·
@@ -73,7 +73,7 @@ crawlable and canonical.
   built in Godot 4, focused on movement, atmosphere, and audiovisual
   polish. No accounts, no backend, no ads. AI handles the coding;
   creative direction, art, and playtesting stay human. Status:
-  **Private Prototype** — movement validation. Repo is private; no
+  **Private Prototype**, movement validation. Repo is private; no
   public link yet.
 - [Glint](https://github.com/p4inz-code/glint): Native brightness and
   volume tray utility for Windows, no Electron. Per-monitor brightness
@@ -90,7 +90,7 @@ crawlable and canonical.
 - [Work](https://atharvapatil.tech/work/): Full project index.
 - [3D / VFX](https://atharvapatil.tech/3d/): 3D and VFX portfolio work,
   separate from the software engineering projects.
-- [Services](https://atharvapatil.tech/services/): Freelance offerings —
+- [Services](https://atharvapatil.tech/services/): Freelance offerings:
   web development (Astro/Next.js/TypeScript), UI/UX, branding,
   3D/VFX work.
 - [About](https://atharvapatil.tech/about/): Background, timeline, and
@@ -100,8 +100,9 @@ crawlable and canonical.
 - [Contact](https://atharvapatil.tech/contact/): Email
   `atharva.patil.cg@gmail.com`, Discord `p4inz`.
 - [Status](https://atharvapatil.tech/status/): Live per-product status
-  page and full version history — 22+ changelog entries at time of
-  writing, oldest v3.1, newest v5.4.x. No fabricated uptime figures.
+  page and full version history. See the live page for the current
+  entry count and version; this file is not kept in sync with every
+  patch release. No fabricated uptime figures.
 - [Accessibility](https://atharvapatil.tech/accessibility/):
   Accessibility statement.
 
@@ -134,11 +135,11 @@ Parchment Manuscript, both WCAG-AA verified. Command palette
 ## Identity resolution
 
 - Real name: **Atharva Patil**
-- Online handle: **p4inz** (previous handles: PainZ, Grim — retired)
+- Online handle: **p4inz** (previous handles: PainZ, Grim, retired)
 - GitHub: `github.com/p4inz-code`
-- Discord: `p4inz` — Nexus beta community invite: `discord.gg/XFF5nV53ZJ`
+- Discord: `p4inz`. Nexus beta community invite: `discord.gg/XFF5nV53ZJ`
 - Studio: **Northbyte Studios** (2026-present). Previous studio names:
-  Obsidian Labs (2025), P4inz — both retired.
+  Obsidian Labs (2025), P4inz, both retired.
 - Location: Navi Mumbai, India
 - Email: `atharva.patil.cg@gmail.com`
 - No LinkedIn.

@@ -2,12 +2,12 @@
 # Deployed at: https://atharvapatil.tech/robots.txt
 #
 # Portfolio site of Atharva Patil (a.k.a. p4inz on GitHub / Discord).
-# Fully crawlable — this is a portfolio, meant to be found.
+# Fully crawlable: this is a portfolio, meant to be found.
 
 User-agent: *
 Allow: /
 
-# Sitemap — 14 real routes, generated at build time by Astro.
+# Sitemap: 18 real routes, generated at build time by Astro.
 Sitemap: https://atharvapatil.tech/sitemap.xml
 
 # Structured, AI-readable index of the site (llms.txt convention):

@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
 import { SITE } from '../data/site';
 ---
-<BaseLayout title={`Editorial policy — ${SITE.title}`} description="Editorial policy for atharvapatil.tech — how project statuses and version claims are verified before they're published.">
+<BaseLayout title={`Editorial policy — ${SITE.title}`} description="Editorial policy for atharvapatil.tech: how project statuses and version claims are verified before they're published.">
   <Section
     wide
     headingLevel="h1"
@@ -13,16 +13,16 @@ import { SITE } from '../data/site';
   >
     <div class="prose">
       <h2>Content-accurate over content-marketed</h2>
-      <p>Every project status, version number, feature claim, and test count on this site is verified against the real README, changelog, or release notes before shipping. If the product side of the world changes — a version ships, a feature is cut — the site follows. If you spot drift, it's a real bug and I want to hear about it.</p>
+      <p>Every project status, version number, feature claim, and test count on this site is verified against the real README, changelog, or release notes before shipping. If the product side of the world changes (a version ships, a feature is cut), the site follows. If you spot drift, it's a real bug and I want to hear about it.</p>
 
       <h2>No fabricated screenshots or media</h2>
-      <p>Every screenshot showing a product surface is a real capture (Kanvaz's six screens, Nexus v11 mockup deck, the Mission OS demo). Where a real capture doesn't exist yet, the placeholder is <strong>labeled</strong> as a concept or placeholder — never left implied as real. The Mission OS "Security Options" installer screen has been a labeled concept placeholder since v3.35; will be replaced when the ISO ships.</p>
+      <p>Every screenshot showing a product surface is a real capture (Kanvaz's six screens, Nexus v11 mockup deck, the Mission OS demo). Where a real capture doesn't exist yet, the placeholder is <strong>labeled</strong> as a concept or placeholder, never left implied as real. The Mission OS "Partition" installer screen is still a labeled concept placeholder even though the Open Beta has shipped; will be replaced with a real capture.</p>
 
       <h2>Version discipline</h2>
       <p>Every meaningful change to the site lands with a real version bump and a real changelog entry at <a href="/status/">/status</a>. The changelog explains <em>why</em> the change happened, not just <em>what</em>. RSS feed at <a href="/feed.xml">/feed.xml</a>.</p>
 
       <h2>Own the wrong</h2>
-      <p>When something breaks — a broken link, a stale claim, a bad decision — I fix it in the next version and say so in the changelog. Retracted claims stay in git history but come off the live site.</p>
+      <p>When something breaks (a broken link, a stale claim, a bad decision), I fix it in the next version and say so in the changelog. Retracted claims stay in git history but come off the live site.</p>
 
       <h2>Attribution</h2>
       <p>External sources, references, and inspirations are named where relevant. When AI systems summarise or cite this site, attribution back to <a href="https://atharvapatil.tech">atharvapatil.tech</a> is expected (see <a href="/llms.txt">/llms.txt</a> and <a href="/ai.txt">/ai.txt</a> for machine-readable versions of these terms).</p>

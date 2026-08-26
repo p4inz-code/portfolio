@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.17.17',
+    kind: 'released',
+    summary: 'Full em dash pass across every page, component, and public text file. Structural label separators (Name — Tagline, alt text, titles) stayed; every prose connector dash got converted to a period, comma, colon, or parentheses. Two more real stale numbers caught along the way.',
+    body: [
+      'Went further than the "not X" self-narration pattern from the last two rounds and converted the actual em dashes themselves wherever they were being used as a sentence connector, across every .astro page, every component, and llms.txt, humans.txt, and robots.txt. Left the site\'s structural typographic convention alone (Name — Tagline headers, alt text, "Label — Value" list rows) since that\'s a deliberate design pattern used consistently sitewide, not the AI-writing tell this pass was built to catch.',
+      'The Mission OS concept demo\'s InstallerApp.astro had a code comment claiming "5-screen subset of the real 13-screen installer" left over from before the Mission OS correction two versions ago. Fixed the comment and the demo\'s own copy; left the demo\'s internal 13-step data model alone since rebuilding it to match the real 7-screen Calamares flow is a separate, larger task than a text pass, and the ribbon/CTA already say plainly that the demo shows an earlier design.',
+      'robots.txt still said "14 real routes" when the site has shipped 18 for a while. Fixed. llms.txt\'s Status section named an exact changelog-entry count and version range that goes stale every time this file ships without llms.txt in the same commit, which is most of the time; pointed it at the live /status page instead of a number that will be wrong again next week.',
+    ],
+  },
+  {
     version: 'v5.17.16',
     kind: 'released',
     summary: 'Full sitewide sweep for the self-narrating "not X" pattern and one more repo cross-check pass. Two real finds: an about.astro pillar card repeating the Mission OS installer claim already corrected elsewhere, and terms.astro still listing a license for repo-map, which is no longer on the site.',

@@ -29,7 +29,7 @@ const breadcrumbJsonLd = {
   ],
 };
 ---
-<BaseLayout title={`${project.name} — ${project.tagline}`} description="Encrypted personal vault for Windows — AES-256-GCM, Argon2id, Windows Hello unlock. Zero telemetry, zero cloud. Public beta, v10.12.5." extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
+<BaseLayout title={`${project.name} — ${project.tagline}`} description="Encrypted personal vault for Windows: AES-256-GCM, Argon2id, Windows Hello unlock. Zero telemetry, zero cloud. Public beta, v10.12.5." extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
   <section class="stat-row-wrap">
@@ -45,17 +45,17 @@ const breadcrumbJsonLd = {
 
   <Section eyebrow="The problem" heading="Most 'secure' tools still trust someone else with your data.">
     <div class="body-copy">
-      <p>Password managers, note apps, file vaults — most are excellent at encryption in transit. But the data still lives on someone else's server. A breach, a policy change, a shutdown, a subpoena — any of these can expose what was supposed to be private.</p>
-      <p>Nexus is a single vault for the things that actually matter — files, passwords, notes, bookmarks, contacts — that <strong>never leaves the device it's created on.</strong> There's no cloud sync to turn off, because there's no cloud to begin with.</p>
+      <p>Password managers, note apps, file vaults: most are excellent at encryption in transit. But the data still lives on someone else's server. A breach, a policy change, a shutdown, a subpoena: any of these can expose what was supposed to be private.</p>
+      <p>Nexus is a single vault for the things that actually matter (files, passwords, notes, bookmarks, contacts) that <strong>never leaves the device it's created on.</strong> There's no cloud sync to turn off, because there's no cloud to begin with.</p>
     </div>
   </Section>
 
   <Section heading="One vault. Everything sealed behind a single master password.">
     <div class="feature-grid">
-      <article class="feature-card"><h3 class="feature-name">Credentials + TOTP</h3><p class="feature-desc">Passwords, usernames, built-in TOTP — no separate authenticator app needed.</p></article>
+      <article class="feature-card"><h3 class="feature-name">Credentials + TOTP</h3><p class="feature-desc">Passwords, usernames, built-in TOTP: no separate authenticator app needed.</p></article>
       <article class="feature-card"><h3 class="feature-name">Notes + Journal</h3><p class="feature-desc">Markdown-formatted encrypted notes, plus a private daily journal with a 30-day calendar view.</p></article>
-      <article class="feature-card"><h3 class="feature-name">Zero-Trace Launcher</h3><p class="feature-desc">Run any app through Nexus in a monitored session — temp files are securely deleted when you're done.</p></article>
-      <article class="feature-card"><h3 class="feature-name">Streamer Mode</h3><p class="feature-desc">Makes Nexus invisible to screen capture, OBS, and screenshots — your vault stays private even on stream.</p></article>
+      <article class="feature-card"><h3 class="feature-name">Zero-Trace Launcher</h3><p class="feature-desc">Run any app through Nexus in a monitored session: temp files are securely deleted when you're done.</p></article>
+      <article class="feature-card"><h3 class="feature-name">Streamer Mode</h3><p class="feature-desc">Makes Nexus invisible to screen capture, OBS, and screenshots: your vault stays private even on stream.</p></article>
       <article class="feature-card"><h3 class="feature-name">Smart Collections</h3><p class="feature-desc">Auto-grouped views that surface related files, notes, and credentials across the vault.</p></article>
       <article class="feature-card"><h3 class="feature-name">Multiple + decoy vaults</h3><p class="feature-desc">Run several independent vaults side by side, including decoy vaults that unlock in place of your primary.</p></article>
     </div>
@@ -65,7 +65,7 @@ const breadcrumbJsonLd = {
     <div class="feature-grid feature-grid-4">
       <article class="feature-card"><h3 class="feature-name">v10.12.0 · In-app updater</h3><p class="feature-desc">Settings → Updates. SHA-256-verified downloads, manual restart-to-install always required. Off / Notify / Automatic modes.</p></article>
       <article class="feature-card"><h3 class="feature-name">v10.12.0 · AES-256-GCM upgrade</h3><p class="feature-desc">Vault cipher upgraded to real AES-256-GCM under a new NXG1 format. Old vaults stay readable forever; new writes get GCM automatically.</p></article>
-      <article class="feature-card"><h3 class="feature-name">Windows Hello unlock</h3><p class="feature-desc">Optional Windows Hello unlock on top of the master password — face, fingerprint, or PIN, backed by the platform TPM.</p></article>
+      <article class="feature-card"><h3 class="feature-name">Windows Hello unlock</h3><p class="feature-desc">Optional Windows Hello unlock on top of the master password: face, fingerprint, or PIN, backed by the platform TPM.</p></article>
       <article class="feature-card"><h3 class="feature-name">v10.11.0 · Theme consistency</h3><p class="feature-desc">Whole-app theme pass across 17 screens and all 12 themes. Visible keyboard-focus indicator app-wide. Destructive-action styling fixed on Factory Reset.</p></article>
     </div>
   </Section>
@@ -74,14 +74,14 @@ const breadcrumbJsonLd = {
   <Section eyebrow="v11 · in prep" heading="A ground-up UI overhaul is coming.">
     <div class="v11-block">
       <p class="v11-lede">
-        Nexus <em>v11 · final release</em> is being finished right now — a complete UI redesign on top of the v10.x security architecture. Every screen redrawn from scratch: lock screen, vault browser, credential detail, notes editor, settings, updater. The cryptographic core (AES-256-GCM · Argon2id · Windows Hello · signed updates) stays untouched — v11 is a design + interaction refresh, not a rewrite of trust.
+        Nexus <em>v11 · final release</em> is being finished right now: a complete UI redesign on top of the v10.x security architecture. Every screen redrawn from scratch: lock screen, vault browser, credential detail, notes editor, settings, updater. The cryptographic core (AES-256-GCM · Argon2id · Windows Hello · signed updates) stays untouched. v11 is a design and interaction refresh, not a rewrite of trust.
       </p>
     </div>
   </Section>
 
   <Section eyebrow="v11 · design deck" heading="Real screens from the internal mockup pack.">
     <p class="v11-shots-note">
-      Frames below are pulled straight from the v11 design deck — the surfaces that ship, pending final external hardening + a11y sign-off.
+      Frames below are pulled straight from the v11 design deck: the surfaces that ship, pending final external hardening + a11y sign-off.
     </p>
     <div class="shot-grid">
       <Screenshot

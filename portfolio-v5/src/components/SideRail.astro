@@ -121,7 +121,7 @@ const displayPath = currentPath === '/' ? '' : currentPath.replace(/\/$/, '');
           document.body.appendChild(ta);
           ta.select();
           try { document.execCommand('copy'); } catch (e) {
-            window.__nbDiag && window.__nbDiag.log('side-rail', 'Clipboard write blocked — copy fallback also failed', { recovered: false });
+            window.__nbDiag && window.__nbDiag.log('side-rail', 'Clipboard write blocked, copy fallback also failed', { recovered: false });
           }
           document.body.removeChild(ta);
           done();
