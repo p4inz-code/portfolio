@@ -20,6 +20,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.17.14',
+    kind: 'released',
+    summary: 'Freelance bullet on the resume finally names the actual client site.',
+    body: [
+      'The Freelance experience bullet mentioned "a full production website build for a performing-arts academy" without ever naming it. Added the real site, kalasadhana-navimumbai.in, across all three resume surfaces: the on-site page, the markdown source, and the PDF.',
+    ],
+  },
+  {
     version: 'v5.17.13',
     kind: 'released',
     summary: 'Full repo-verification pass across every product: Nexus, Kanvaz, and Glint were all stale, two of them badly. repo-map dropped from the roster, Project Ascent added in its place. Resume contrast fixed, bullets rewritten to lead with capability. One large finding flagged, not fixed: Mission OS.',

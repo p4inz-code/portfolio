@@ -24,7 +24,7 @@ Software engineer and product builder focused on desktop applications, developer
 ### Freelance — Web, UX & Brand
 *2025 – Present*
 
-- Independent client work in web development, UI/UX, and 3D/VFX visualization, including a full production website build for a performing-arts academy.
+- Independent client work in web development, UI/UX, and 3D/VFX visualization, including a full production website build for a performing-arts academy ([kalasadhana-navimumbai.in](https://kalasadhana-navimumbai.in)).
 
 ---
 
