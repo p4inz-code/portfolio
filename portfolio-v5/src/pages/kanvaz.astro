@@ -28,7 +28,7 @@ const breadcrumbJsonLd = {
   ],
 };
 ---
-<BaseLayout title={`${project.name} — ${project.tagline}`} description="Free, open-source visual reference workspace for VFX and 3D artists. Plugin system with an MCP Bridge for AI-agent control, safer container format. MIT licensed, v4.5.1." extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
+<BaseLayout title={`${project.name} — ${project.tagline}`} description="Free, open-source visual reference workspace for VFX and 3D artists. Plugin system with an MCP Bridge for AI-agent control, safer container format. MIT licensed, v5.3.0, final release." extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
   <!-- Screenshots first — visual hook before the wall of text. The Board view
@@ -70,8 +70,8 @@ const breadcrumbJsonLd = {
       />
       <Screenshot
         src="/assets/kanvaz/kanvaz-05-about.png"
-        alt="Kanvaz About dialog — v4.2.1 build shown here; v4.5.1 is the current shipping version. Reads 'Your canvas. Your references. Made by Atharva Patil, Northbyte Studios. Built for VFX artists, 3D artists, and the people who teach them.'"
-        caption="About · v4.2.1 build shown (v4.5.1 is current)"
+        alt="Kanvaz About dialog — v4.2.1 build shown here; v5.3.0 is the current shipping version. Reads 'Your canvas. Your references. Made by Atharva Patil, Northbyte Studios. Built for VFX artists, 3D artists, and the people who teach them.'"
+        caption="About · v4.2.1 build shown (v5.3.0 is current)"
         aspect="4 / 3"
         span="third"
       />
@@ -114,12 +114,17 @@ const breadcrumbJsonLd = {
         <h3 class="feature-name">MCP Bridge (v4.4–4.5)</h3>
         <p class="feature-desc">A local-only MCP server exposes the active board to an AI agent through 30 tools: board management, undo/redo, view control, card editing, and settings. Off by default; every AI-driven change lands in undo history exactly like a manual edit.</p>
       </article>
+      <article class="feature-card">
+        <h3 class="feature-name">Template gallery + text cards (v5.0–5.2)</h3>
+        <p class="feature-desc">Start a board from a template instead of a blank canvas. Text cards join the reference-card lineup, and .pur (PureRef) import handles a wider range of real PureRef files after a fix to a legacy migration bug that was silently corrupting annotation data with Map View open.</p>
+      </article>
     </div>
   </Section>
 
-  <Section heading="Kanvaz is at v4.5.1, and still shipping.">
+  <Section heading="Kanvaz is at v5.3.0. Development is done.">
     <div class="body-copy">
-      <p>Board View, the Connection System, and Map View are all stable. The most recent work built the MCP Bridge: an AI agent can read and edit the active board through 30 tools, off by default and undo-reversible.</p>
+      <p>v5.3.0 closed out the development arc that began after v4.6.1: four feature releases (template gallery, text cards, broader .pur import, Map View and annotation fixes), then a dedicated bug-bounty pass across the whole v4.7.0–v5.2.0 diff before shipping the final version.</p>
+      <p>That's the last actively-developed version for the foreseeable future. Real bugs still get fixed if someone reports one; new features aren't on a continued release cadence.</p>
       <p>No subscription, no feature paywall, no telemetry, no internet connection required. Your files never leave your machine, and it stays free forever.</p>
     </div>
   </Section>

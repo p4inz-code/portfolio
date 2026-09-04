@@ -21,9 +21,10 @@ crawlable and canonical.
   Rust system services) applied automatically after install, no manual
   script needed. Four pillars: privacy-first, security-conscious,
   portable-first, offline-first. **GPLv3, open source** at
-  `github.com/p4inz-code/mission-os`. Status: **Open Beta**, shipped
-  August 2026. A separate Mission Hub app for post-install management
-  is in early development.
+  `github.com/p4inz-code/mission-os`. Shipped an Open Beta in August
+  2026, then paused. Status: **On Hold · Open Beta**. A separate
+  Mission Hub app for post-install management stayed in early
+  development when work stopped.
   - Also has an **[interactive concept demo](https://atharvapatil.tech/mission-os/demo/)**
     on-site: cold-boot → GRUB → kernel messages → login → desktop with
     six real informational apps (Installer, Settings, About, Files,
@@ -45,30 +46,36 @@ crawlable and canonical.
   system with an MCP Bridge (30 tools, off by default, undo-reversible)
   letting an AI agent read and edit the active board, a command palette,
   a safer `.kanvaz` zip container with per-asset SHA-256 integrity hashes,
-  and GitHub Actions CI. Status: **Active Development · v4.5.1**.
+  a template gallery, text cards, and broader .pur (PureRef) import,
+  and GitHub Actions CI. v5.3.0 closed out the development arc with a
+  dedicated bug-bounty pass; real bugs still get fixed, new features
+  are not on a continued release cadence. Status: **Final Release ·
+  v5.3.0**.
 - [Pursue OS](https://atharvapatil.tech/pursue-os/): Investigation-focused
   Linux OS for OSINT / DFIR / secure research / intelligence gathering /
   evidence-driven workflows. Two flagship interfaces: Investigation
   Terminal + Investigation Browser with integrated Tor. AI is
   assistant-not-authority. **Apache 2.0**, at `github.com/p4inz-code/pursue-os`.
-  Status: **Coming Soon**, pre-release, no ISO yet, implementation
-  starting.
+  On hold mid-implementation while other products take priority; no
+  ISO yet. Status: **On Hold · Pre-release**.
 - [Veris](https://github.com/p4inz-code/veris): Offline-first, explainable
   security investigation platform for Windows. TypeScript / Node.js /
   SQLite, 3,100+ automated tests. Deterministic analysis engine: no
   black-box AI scoring; AI is intentionally limited to a read-only
-  explanation layer, never performs detection. Status: **Released ·
-  v1.0.0**. External repo (case study on-site is pending real
-  production screenshots).
+  explanation layer, never performs detection. Stable v1.0.0 shipped,
+  then paused. Status: **On Hold · Released v1.0.0**. External repo
+  (case study on-site is pending real production screenshots).
 - [Obscura](https://github.com/p4inz-code/obscura): Luau AST toolkit for
   Roblox developers. **MIT** licensed, open source. Status: Released,
   v1.0.0, 340/340 tests passing.
 - [MINK](https://github.com/p4inz-code/mink): A compiled, general-purpose
   programming language built from the ground up: own lexer, parser, type
   system, HIR/MIR, optimizer, and native code generator. Compiles to a
-  standalone x86_64 Windows executable with no external toolchain.
-  **Apache 2.0**, open source. Rust, 1928 tests. Status: **Released ·
-  v1.0.0**.
+  standalone x86_64 Windows executable with no external toolchain,
+  statically linked. **Apache 2.0**, open source. Rust, 1928 compiler
+  tests. v1.0.1 added a `mink run` command and completed the
+  environment, process, and filesystem standard-library coverage.
+  Status: **Released · v1.0.1**.
 - [Project Ascent](https://atharvapatil.tech/ascent/): 25-level, 5-act 2D
   precision platformer built in Godot 4. Full moveset from the start
   (run, jump, wall-jump, dash, slide, ground pound, wall run, ledge
@@ -77,7 +84,9 @@ crawlable and canonical.
   no accounts, no backend, no ads. Windows, macOS, Linux, and browser
   from one codebase. Play at `p4inz-code.itch.io/project-ascent`, source
   at `github.com/p4inz-code/project-ascent` (proprietary license).
-  Status: **Active Development · v0.14.1**.
+  Core development is done; a real character/monster enemy is planned,
+  alongside visual polish expected to continue for at least the next
+  two months. Status: **Visual Polish Phase · v0.14.1**.
 - [Glint](https://github.com/p4inz-code/glint): Native brightness and
   volume tray utility for Windows, no Electron. Per-monitor brightness
   over DDC/CI and WMI, a master and per-app volume mixer, global

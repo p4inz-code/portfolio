@@ -20,6 +20,19 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.19.0',
+    kind: 'released',
+    summary: 'Monthly repo-verification pass: 6 project statuses updated from real GitHub activity. Kanvaz went from "v4.5.1, active" to "v5.3.0, final release" (8 versions shipped and closed out since the site last checked). Both OSes and Veris moved to On Hold. Plus a humanizer sweep and a quick bug bounty.',
+    body: [
+      'Kanvaz was the biggest gap: the site still said v4.5.1, "Active Development," headlined by the MCP Bridge. The real repo had shipped v4.6.0 through v5.3.0 (template gallery, text cards, broader .pur import, an annotation-corruption fix) and closed the arc with v5.3.0, "Finish line: bug bounty, fixes, and what\'s next," its own 8-pass audit before declaring itself done. Rewrote the case study, projects.ts, resume, and llms.txt to match: status is now "Final Release · v5.3.0."',
+      'Mission OS, Pursue OS, and Veris all moved to On Hold, confirmed by both the owner directly and by checking each repo\'s own commit history (no activity on Mission OS or Pursue OS since early August; Veris hasn\'t moved past its v1.0.0 release). Each keeps its real shipped state in the label instead of losing it: "On Hold · Open Beta," "On Hold · Pre-release," "On Hold · Released v1.0.0."',
+      'MINK bumped v1.0.0 to v1.0.1: static CRT linking (no more VC++ Redistributable dependency), a working `mink run` command, and the environment/process/filesystem standard-library work that was still on the roadmap the last time this site checked.',
+      'Project Ascent\'s core development is done. Status changed to "Visual Polish Phase," reflecting what\'s actually left: a planned character/monster addition and visual polish work expected to continue for at least two more months, not new gameplay systems.',
+      'Ran the humanizer skill\'s full pattern set (not just the em-dash rule from the last few passes) against the site: overused AI words, sales language, curly quotes, decorative emoji, forced triads. Found nothing new. Prior passes already caught what there was to catch.',
+      'Quick bug bounty: crawled every built page for broken internal links and asset references (0 found across 64 checked), checked every external repo and itch.io link for a real 200 (all clean), scanned for duplicate element IDs across all 19 pages (none), and live-tested the command palette, mobile nav drawer, theme toggle, and live-stats widget. Everything worked as built. No real bugs surfaced this round.',
+    ],
+  },
+  {
     version: 'v5.18.1',
     kind: 'released',
     summary: 'Ascent screenshots replaced. The first set, pulled from itch.io\'s thumbnail cache, was capped at 347px wide and read as blurry once actually on the page. Downloaded the real web build from the GitHub release and captured 4 native-resolution screenshots directly from live gameplay instead.',

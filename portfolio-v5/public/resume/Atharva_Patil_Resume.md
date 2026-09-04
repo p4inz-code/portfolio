@@ -44,7 +44,7 @@ Software engineer and product builder focused on desktop applications, developer
 - Shipped an Open Beta using a customized Calamares installer with Rust-based system services applied automatically after install.
 
 ### MINK &nbsp;·&nbsp; Programming Language
-*[github.com/p4inz-code/mink](https://github.com/p4inz-code/mink)* &nbsp;·&nbsp; 2026 – Released v1.0.0 &nbsp;·&nbsp; Rust, Apache 2.0
+*[github.com/p4inz-code/mink](https://github.com/p4inz-code/mink)* &nbsp;·&nbsp; 2026 – Released v1.0.1 &nbsp;·&nbsp; Rust, Apache 2.0
 
 - Designed and built a compiler from scratch: lexer, parser, type system, optimizer, and native code generator, producing standalone executables with no external toolchain.
 - 1928 compiler tests passing.
@@ -63,7 +63,7 @@ Software engineer and product builder focused on desktop applications, developer
 
 ### Additional Projects
 
-- **Kanvaz** — Electron visual reference workspace for VFX artists · MIT · v4.5.1, active development
+- **Kanvaz** — Electron visual reference workspace for VFX artists · MIT · v5.3.0, final release
 - **Obscura** — Luau AST toolkit for Roblox developers · MIT · v1.0.0, 340/340 tests passing
 
 ---
