@@ -1,0 +1,293 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CaseHero from '../components/layout/CaseHero.astro';
+import Section from '../components/layout/Section.astro';
+import Screenshot from '../components/features/Screenshot.astro';
+import RelatedProjects from '../components/features/RelatedProjects.astro';
+import { PROJECTS } from '../data/projects';
+
+const project = PROJECTS.find((p) => p.slug === 'ascent')!;
+
+const softwareJsonLd = {
+  '@type': 'SoftwareApplication',
+  '@id': 'https://atharvapatil.tech/ascent/#software',
+  name: 'Project Ascent',
+  description: '25-level, 5-act 2D precision platformer built in Godot 4. Offline-first, cross-platform.',
+  applicationCategory: 'GameApplication',
+  operatingSystem: 'Windows, macOS, Linux, Web',
+  softwareVersion: project.currentVersion,
+  url: 'https://atharvapatil.tech/ascent/',
+  author: { '@id': 'https://atharvapatil.tech/#person' },
+};
+const breadcrumbJsonLd = {
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://atharvapatil.tech/' },
+    { '@type': 'ListItem', position: 2, name: 'Work', item: 'https://atharvapatil.tech/work/' },
+    { '@type': 'ListItem', position: 3, name: 'Project Ascent', item: 'https://atharvapatil.tech/ascent/' },
+  ],
+};
+
+const moveset = [
+  { name: 'Run', desc: 'Acceleration, deceleration, and real air control, not an instant top speed.' },
+  { name: 'Jump', desc: 'Coyote time, jump buffering, and variable height baked in from the start.' },
+  { name: 'Wall slide + wall jump', desc: 'Run into a wall with speed to catch it.' },
+  { name: 'Dash', desc: 'Air dash with landing refresh and momentum handling.' },
+  { name: 'Spin', desc: 'Double-tap jump in mid-air for brief hazard invulnerability on a cooldown.' },
+  { name: 'Slide, ground pound, wall run, ledge grab, grapple', desc: 'Six more verbs, only three of which claim their own key: the rest derive from inputs the player already knows.' },
+];
+
+const acts = [
+  { act: 'Act I — Learn', levels: 'L1–L5', desc: 'Introduction to movement. Jump, dash, precision. Ends with the first boss chase.' },
+  { act: 'Act II — Master', levels: 'L6–L10', desc: 'Longer levels, tighter precision, movement combinations. Second boss encounter.' },
+  { act: 'Act III — Survive', levels: 'L11–L15', desc: 'Environmental pressure, demanding routes. Shadow Chase boss.' },
+  { act: 'Act IV — Endure', levels: 'L16–L20', desc: 'High difficulty, complex combinations. Tempest 2-phase boss.' },
+  { act: 'Act V — Ascend', levels: 'L21–L25', desc: 'Maximum challenge, endurance, final escalation. Dawn 3-phase final boss.' },
+];
+
+const bosses = [
+  { level: 'L5', boss: 'First Chase', minions: 4, speed: '170 px/s' },
+  { level: 'L10', boss: 'Master Escape', minions: 5, speed: '220 px/s' },
+  { level: 'L15', boss: 'Shadow Chase', minions: 5, speed: '200 px/s' },
+  { level: 'L20', boss: 'Tempest', minions: 6, speed: '250 px/s' },
+  { level: 'L25', boss: 'Dawn (Final)', minions: 6, speed: '300 px/s' },
+];
+---
+<BaseLayout title={`${project.name} — ${project.tagline}`} description="25-level, 5-act 2D precision platformer built in Godot 4. Full moveset from the start, 5 boss chases, offline-first. Windows, macOS, Linux, and browser. Play on itch.io." extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
+  <CaseHero project={project} />
+
+  <section class="stat-row-wrap">
+    <div class="wrap">
+      <dl class="stat-row">
+        <div class="stat-cell"><dt>Levels</dt><dd>25</dd></div>
+        <div class="stat-cell"><dt>Acts</dt><dd>5</dd></div>
+        <div class="stat-cell"><dt>Boss chases</dt><dd>5</dd></div>
+        <div class="stat-cell"><dt>Test suites</dt><dd>18</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <Section eyebrow="What it is" heading="One idea: the only thing between you and the top is your own timing.">
+    <div class="body-copy">
+      <p>Project Ascent gives you the full moveset from the start. Nothing is locked behind progress. The levels get harder because they ask more of the same tools, not because they hand you a new one every ten minutes.</p>
+      <p>Offline-first: no accounts, no backend, no ads, and no network runtime. The only thing that ever touches the network is an optional update check over HTTPS with a required checksum.</p>
+    </div>
+  </Section>
+
+  <Section eyebrow="Screenshots" heading="Live captures from the shipping build.">
+    <div class="shot-grid">
+      <Screenshot
+        src="/assets/ascent/ascent-01-level25-dawn.png"
+        alt="Project Ascent — Level 25, Dawn act. Player silhouette on a dark platform beneath a huge rising sun, HUD showing timer and orb count top-right, controls panel open bottom-left."
+        caption="Level 25 · Act V — Ascend"
+        aspect="16 / 9"
+        span="third"
+      />
+      <Screenshot
+        src="/assets/ascent/ascent-02-level1-intro.png"
+        alt="Project Ascent — Level 1, Act I introduction. Player on a starting platform under a night sky with a pale moon, controls panel listing jump, dash, and spin."
+        caption="Level 1 · Act I — Learn"
+        aspect="16 / 9"
+        span="third"
+      />
+      <Screenshot
+        src="/assets/ascent/ascent-03-level20-crucible.png"
+        alt="Project Ascent — Level 20, Act IV. Player on a platform beneath a bright moon with a staircase of floating platforms ascending into the distance."
+        caption="Level 20 · Act IV — Endure"
+        aspect="16 / 9"
+        span="third"
+      />
+      <Screenshot
+        src="/assets/ascent/ascent-04-pause-menu.png"
+        alt="Project Ascent — pause menu with neon cyberpunk panel styling, options for Resume, Restart Level, Settings, Progress, Levels, Reset Progress, and Quit to Desktop."
+        caption="Pause menu"
+        aspect="16 / 9"
+        span="third"
+      />
+      <Screenshot
+        src="/assets/ascent/ascent-05-settings.png"
+        alt="Project Ascent — settings panel with audio and visual toggles, and a personalization row showing six player color swatches."
+        caption="Settings + personalisation"
+        aspect="16 / 9"
+        span="third"
+      />
+    </div>
+  </Section>
+
+  <Section eyebrow="Moveset" heading="Full kit from level one.">
+    <div class="feature-grid">
+      {moveset.map((m) => (
+        <article class="feature-card">
+          <h3 class="feature-name">{m.name}</h3>
+          <p class="feature-desc">{m.desc}</p>
+        </article>
+      ))}
+    </div>
+  </Section>
+
+  <Section eyebrow="Campaign" heading="Five acts, twenty-five handcrafted levels.">
+    <div class="act-list">
+      {acts.map((a) => (
+        <div class="act-row">
+          <span class="act-name">{a.act}</span>
+          <span class="act-levels">{a.levels}</span>
+          <span class="act-desc">{a.desc}</span>
+        </div>
+      ))}
+    </div>
+  </Section>
+
+  <Section eyebrow="Boss encounters" heading="Every chase runs on a visible countdown.">
+    <div class="body-copy">
+      <p>Letting the timer expire speeds the chase up. It never kills you outright.</p>
+    </div>
+    <table class="boss-table">
+      <thead>
+        <tr><th>Level</th><th>Boss</th><th>Minions</th><th>Speed</th></tr>
+      </thead>
+      <tbody>
+        {bosses.map((b) => (
+          <tr><td>{b.level}</td><td>{b.boss}</td><td>{b.minions}</td><td>{b.speed}</td></tr>
+        ))}
+      </tbody>
+    </table>
+  </Section>
+
+  <Section eyebrow="Testing" heading="18 automated suites, including a full 25-level reachability sweep.">
+    <div class="body-copy">
+      <p>Two of these suites exist because an earlier gate proved the wrong thing. <code>test_level_rhythm.gd</code> checks that no jump demands more rise than the player can actually deliver, using an envelope measured from the real controller rather than assumed from a config value: the reachability suite once passed two levels despite both shipping impossible final jumps, because a bot could reach the ledge by wall-jumping off that ledge's own face. That proves a bot can get there, not that the jump is fair.</p>
+      <p><code>test_chaser_ledges.gd</code> asserts a chaser stops at a cliff instead of walking into it. Three previous fixes for "enemies falling" addressed collision layers and a recovery teleport; none of them checked whether there was ground ahead, which was the actual cause.</p>
+      <p>The runner also fails a suite on any GDScript parse or compile error, not just a non-zero exit code, since a script that fails to compile otherwise reports zero failures while having asserted nothing at all.</p>
+    </div>
+  </Section>
+
+  <Section eyebrow="Platforms" heading="Windows, macOS, Linux, and browser from one codebase.">
+    <div class="body-copy">
+      <p>Windows ships with a standalone launcher that checks for updates over a signed HTTPS request. macOS and Linux are real, boot-tested export targets, unzip and run. The web build is playable directly on <a href="https://p4inz-code.itch.io/project-ascent" target="_blank" rel="noopener noreferrer">itch.io</a>. Controller support covers Xbox and PlayStation pads, with on-screen prompts that match whichever is connected. Touch controls for mobile are planned next.</p>
+    </div>
+  </Section>
+
+  <RelatedProjects currentSlug="ascent" slugs={['kanvaz', 'nexus', 'mission-os', 'pursue-os']} />
+
+  <style>
+    .stat-row-wrap { padding: 0 0 var(--sp-8); }
+    .stat-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+    @media (max-width: 760px) { .stat-row { grid-template-columns: 1fr 1fr; } }
+    .stat-cell {
+      background: var(--surface-1);
+      padding: var(--sp-6);
+      display: flex; flex-direction: column-reverse; gap: var(--sp-2);
+    }
+    .stat-cell dt {
+      font-family: var(--font-mono);
+      font-size: var(--text-xxs);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--muted-2);
+    }
+    .stat-cell dd {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .body-copy {
+      max-width: var(--wrap-narrow);
+      color: var(--muted);
+      font-size: var(--text-md);
+      line-height: var(--leading-body);
+    }
+    .body-copy p + p { margin-top: var(--sp-4); }
+    .body-copy code {
+      font-family: var(--font-mono);
+      background: color-mix(in oklab, var(--purple) 12%, transparent);
+      color: var(--purple-bright);
+      padding: 1px 5px;
+      border-radius: 2px;
+      font-size: 0.9em;
+    }
+    .body-copy a { color: var(--purple-bright); border-bottom: 1px solid currentColor; }
+
+    .shot-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-4);
+    }
+    @media (max-width: 760px) { .shot-grid { grid-template-columns: 1fr; } }
+
+    .feature-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-4);
+    }
+    @media (max-width: 760px) { .feature-grid { grid-template-columns: 1fr; } }
+    .feature-card {
+      padding: var(--sp-6);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface-1);
+    }
+    .feature-name {
+      font-family: var(--font-display);
+      font-size: var(--text-md);
+      font-weight: 500;
+      margin-bottom: var(--sp-3);
+    }
+    .feature-desc { color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); }
+
+    .act-list { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+    .act-row {
+      display: grid;
+      grid-template-columns: 180px 90px 1fr;
+      gap: var(--sp-5);
+      padding: var(--sp-5) 0;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+    }
+    @media (max-width: 760px) {
+      .act-row { grid-template-columns: 1fr; gap: var(--sp-2); }
+    }
+    .act-name {
+      font-family: var(--font-display);
+      font-size: var(--text-md);
+      color: var(--text);
+    }
+    .act-levels {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--purple-bright);
+      letter-spacing: 0.02em;
+    }
+    .act-desc { color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); }
+
+    .boss-table {
+      width: 100%;
+      max-width: var(--wrap-narrow);
+      margin-top: var(--sp-6);
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+    }
+    .boss-table th, .boss-table td {
+      text-align: left;
+      padding: var(--sp-3) var(--sp-4);
+      border-bottom: 1px solid var(--line);
+    }
+    .boss-table th {
+      font-family: var(--font-mono);
+      font-size: var(--text-xxs);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--muted-2);
+    }
+    .boss-table td { color: var(--muted); }
+    .boss-table td:first-child { color: var(--text); font-family: var(--font-mono); }
+  </style>
+</BaseLayout>

@@ -69,12 +69,15 @@ crawlable and canonical.
   standalone x86_64 Windows executable with no external toolchain.
   **Apache 2.0**, open source. Rust, 1928 tests. Status: **Released ·
   v1.0.0**.
-- Project Ascent: Offline-first, browser-first 2D precision platformer
-  built in Godot 4, focused on movement, atmosphere, and audiovisual
-  polish. No accounts, no backend, no ads. AI handles the coding;
-  creative direction, art, and playtesting stay human. Status:
-  **Private Prototype**, movement validation. Repo is private; no
-  public link yet.
+- [Project Ascent](https://atharvapatil.tech/ascent/): 25-level, 5-act 2D
+  precision platformer built in Godot 4. Full moveset from the start
+  (run, jump, wall-jump, dash, slide, ground pound, wall run, ledge
+  grab, grapple), 5 boss chases on a visible countdown, 18 automated
+  test suites including a full 25-level reachability sweep. Offline-first:
+  no accounts, no backend, no ads. Windows, macOS, Linux, and browser
+  from one codebase. Play at `p4inz-code.itch.io/project-ascent`, source
+  at `github.com/p4inz-code/project-ascent` (proprietary license).
+  Status: **Active Development · v0.14.1**.
 - [Glint](https://github.com/p4inz-code/glint): Native brightness and
   volume tray utility for Windows, no Electron. Per-monitor brightness
   over DDC/CI and WMI, a master and per-app volume mixer, global

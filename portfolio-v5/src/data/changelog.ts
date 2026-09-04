@@ -20,6 +20,18 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.18.0',
+    kind: 'released',
+    summary: 'Project Ascent gets a real case study. The repo went public and the game shipped to itch.io since it was added as a private, unlinked prototype nine days ago: 25 levels, 5 acts, 5 boss fights, cross-platform exports, 18 automated test suites, all pulled from the real repo and real releases.',
+    body: [
+      'Project Ascent\'s repo (`p4inz-code/project-ascent`) went public and shipped a full campaign since it was added to this site as a private prototype: v0.1.0 (first playable) to v0.14.1 in about a week, now live on itch.io for Windows, macOS, Linux, and browser, with Xbox and PlayStation controller support.',
+      'Built a full case study at /ascent, matching the treatment Nexus, Mission OS, Kanvaz, and Pursue OS already get: real screenshots pulled from the live itch.io page (gameplay, pause menu, settings/personalisation), the full moveset, the 5-act campaign breakdown, the boss-encounter table, and a section on the test suite\'s own history: two suites exist because an earlier gate proved the wrong thing, not because someone thought to add them upfront.',
+      'projects.ts rewritten top to bottom: status moved from "Private Prototype" to "Active Development · v0.14.1", added to the featured lineup (it was excluded from ProjectCard\'s link entirely before, since a private repo has nothing to link to), real GitHub + itch.io links, correct license (proprietary, per the repo\'s own LICENSE).',
+      'Promoted from a one-line "Additional Projects" mention to a full entry on the resume, on all three surfaces (on-site, markdown, PDF), crediting the direction/design/QA role and the AI-driven implementation via Claude Code the same way the project\'s own release notes do.',
+      'Propagated everywhere else this kind of change needs to land: llms.txt, the JSON-LD sameAs list, the RelatedProjects cross-links on all 4 other case studies (now 4 related projects each instead of 3), and the /work page intro copy.',
+    ],
+  },
+  {
     version: 'v5.17.17',
     kind: 'released',
     summary: 'Full em dash pass across every page, component, and public text file. Structural label separators (Name — Tagline, alt text, titles) stayed; every prose connector dash got converted to a period, comma, colon, or parentheses. Two more real stale numbers caught along the way.',

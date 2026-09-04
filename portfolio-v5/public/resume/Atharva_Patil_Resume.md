@@ -54,11 +54,17 @@ Software engineer and product builder focused on desktop applications, developer
 
 - Building a Linux OS for OSINT, DFIR, and evidence-driven investigation work, centered on two flagship surfaces: an Investigation Terminal and an Investigation Browser with integrated Tor.
 
+### Project Ascent &nbsp;·&nbsp; 2D Precision Platformer
+*[github.com/p4inz-code/project-ascent](https://github.com/p4inz-code/project-ascent)* &nbsp;·&nbsp; Aug 2026 – Present &nbsp;·&nbsp; Godot 4
+
+- Directed a 25-level, 5-act platformer from first playable to a full campaign with cross-platform exports (Windows, macOS, Linux, Web) in about a week.
+- Built an 18-suite automated test process, including a reachability sweep that measures the player's actual jump envelope instead of trusting the configured jump height.
+- Shipped to itch.io with Xbox and PlayStation controller support.
+
 ### Additional Projects
 
 - **Kanvaz** — Electron visual reference workspace for VFX artists · MIT · v4.5.1, active development
 - **Obscura** — Luau AST toolkit for Roblox developers · MIT · v1.0.0, 340/340 tests passing
-- **Project Ascent** — 2D precision platformer in Godot 4, AI-orchestrated development · private repo, prototype stage
 
 ---
 
