@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.18.1',
+    kind: 'released',
+    summary: 'Ascent screenshots replaced. The first set, pulled from itch.io\'s thumbnail cache, was capped at 347px wide and read as blurry once actually on the page. Downloaded the real web build from the GitHub release and captured 4 native-resolution screenshots directly from live gameplay instead.',
+    body: [
+      'itch.io only ever served these particular images at 347x500: every larger size variant 404\'d. Fine as a small thumbnail on their own page, visibly soft once stretched into this site\'s screenshot frames.',
+      'Downloaded the actual v0.14.1 web export from the GitHub release (same build itch.io hosts, so nothing about the game itself changed), served it locally with the COOP/COEP headers Godot\'s web export needs, and played it directly to capture 4 screenshots straight off the canvas at its native 2447x1529 render resolution: Level 1, a mid-air jump between platforms, the expanded controls panel (a better illustration of the full moveset than any static pose), and the real pause menu. Resized down to 1400px wide for the page, still far sharper than the itch.io thumbnails and well within normal page-weight budget.',
+      'One thing the earlier placeholder alt text got wrong, caught by capturing the real thing instead of guessing: it described a "Quit to Desktop" option in the pause menu. The real web build hides that button entirely (v0.14.1 fixed exactly this, since quit-to-desktop is meaningless in a browser tab) - the new screenshot and its alt text both show what actually ships.',
+    ],
+  },
+  {
     version: 'v5.18.0',
     kind: 'released',
     summary: 'Project Ascent gets a real case study. The repo went public and the game shipped to itch.io since it was added as a private, unlinked prototype nine days ago: 25 levels, 5 acts, 5 boss fights, cross-platform exports, 18 automated test suites, all pulled from the real repo and real releases.',
