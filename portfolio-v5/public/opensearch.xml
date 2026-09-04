@@ -3,7 +3,7 @@
   <ShortName>Atharva Patil</ShortName>
   <Description>Search Atharva Patil's portfolio — projects, case studies, resume.</Description>
   <InputEncoding>UTF-8</InputEncoding>
-  <Image width="32" height="32" type="image/svg+xml">https://atharvapatil.tech/favicon.svg</Image>
+  <Image width="192" height="192" type="image/png">https://atharvapatil.tech/favicon-192.png</Image>
   <Url type="text/html" method="get" template="https://atharvapatil.tech/?q={searchTerms}"/>
   <Url type="application/opensearchdescription+xml" rel="self" template="https://atharvapatil.tech/opensearch.xml"/>
   <SearchForm>https://atharvapatil.tech/</SearchForm>

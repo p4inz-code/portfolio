@@ -159,13 +159,13 @@ const jsonLd = {
     <meta name="twitter:image" content={new URL(ogImage, Astro.site)} />
     <meta name="twitter:image:alt" content={`${SITE.title} — ${SITE.tagline}`} />
 
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- v5.20.0: favicon.svg was an older, simpler line-art mark, replaced
+         sitewide by the real AP badge artwork. No vector source for the new
+         design exists yet, so favicons are PNG-only until one does. -->
     <link rel="icon" href="/favicon-192.png" type="image/png" sizes="192x192" />
     <link rel="icon" href="/favicon-512.png" type="image/png" sizes="512x512" />
-    <link rel="mask-icon" href="/favicon.svg" color="#7B3FE4" />
-    <!-- v5.17.6 fix: apple-touch-icon pointed at the SVG, which iOS doesn't
-         support for home-screen icons at all — only PNG/JPG. Real 180x180
-         PNG with an opaque background (iOS renders transparent areas black). -->
+    <!-- Real 180x180 PNG with an opaque background (iOS renders transparent
+         areas black on home-screen icons). -->
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="sitemap" href="/sitemap.xml" />

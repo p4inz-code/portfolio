@@ -20,6 +20,17 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.20.0',
+    kind: 'released',
+    summary: 'The AP mark is real artwork now, not a hand-drawn SVG approximation. Swapped in everywhere the mark shows: nav header, favicons, apple-touch-icon, OpenSearch. The OG social-share banner is a separate, fully composed design and wasn\'t touched this pass.',
+    body: [
+      'APMark.astro was always honest about what it was: a hand-recreated SVG guess at a reference image, since there was no way to trace the real artwork into clean vectors. The user sent the finished piece directly this time. Its background was solid black with no alpha channel, keyed it to transparent using the image\'s own luminance (max of R/G/B per pixel) rather than a naive color-match, which handles the soft glow falloff correctly instead of leaving a dark ring.',
+      'Composited the result against both theme backgrounds before shipping anything: the metallic gradient on the letterforms carries enough of its own contrast to read clearly on cream as well as on near-black, so this needed no per-theme color swap the way the old hand-drawn version did.',
+      'Replaced everywhere the mark appears: the nav header (APMark.astro now renders the real image instead of inline SVG paths), favicon-192.png, favicon-512.png, apple-touch-icon.png, and the OpenSearch descriptor icon. Removed favicon.svg and its manifest/mask-icon references entirely rather than leave it pointing at an outdated, different-looking mark alongside the new one.',
+      'Left the Open Graph social-share image (og.png/og.svg/og-light.png) alone. It\'s a fully composed banner with its own layout, not just the mark, and redoing it properly is a separate design pass, not a logo swap.',
+    ],
+  },
+  {
     version: 'v5.19.0',
     kind: 'released',
     summary: 'Monthly repo-verification pass: 6 project statuses updated from real GitHub activity. Kanvaz went from "v4.5.1, active" to "v5.3.0, final release" (8 versions shipped and closed out since the site last checked). Both OSes and Veris moved to On Hold. Plus a humanizer sweep and a quick bug bounty.',
