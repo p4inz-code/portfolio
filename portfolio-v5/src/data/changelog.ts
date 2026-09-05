@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.22.0',
+    kind: 'released',
+    summary: 'Multi-engine push: found and fixed a real bug where Project Ascent was missing from sitemap.xml entirely (the hand-maintained route list was never updated when the case study shipped), and added IndexNow so Bing, Yandex, Seznam.cz, and Naver get pushed updates instantly instead of waiting to crawl.',
+    body: [
+      'sitemap.xml is a hand-maintained route list, not auto-derived from src/pages/*.astro. When ascent.astro shipped in v5.18.0, that list never got a new entry for it, so /ascent/ was a real, crawlable, linked-from-everywhere page that was silently absent from the sitemap the whole time. Fixed by adding it (priority 0.9, matching the other flagship case studies).',
+      'Added an IndexNow key file at the site root and pushed all 18 sitemap URLs through the IndexNow API, which fans out to Bing, Yandex, Seznam.cz, and Naver in one call, no account or verification dashboard needed. Google and DuckDuckGo don\'t support IndexNow: Google already indexes this site fine per direct confirmation, and DuckDuckGo draws heavily on Bing\'s index for results outside its own crawler, so a faster Bing pickup helps there too.',
+      'Added an explicit robots meta tag (index, follow, max-image-preview:large, max-snippet:-1) so search results can show full snippets and large image previews instead of a truncated default.',
+    ],
+  },
+  {
     version: 'v5.21.0',
     kind: 'released',
     summary: 'Search-discoverability pass: made sure "p4inz", "P4INZ", and the retired misspelling "painz" all resolve back to this site, and that project + handle combos (e.g. "project ascent p4inz") land on the right page instead of nowhere.',

@@ -148,6 +148,9 @@ const jsonLd = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="keywords" content={keywords} />
+    <!-- v5.22.0: explicit crawl signal — full indexing, and ask for large
+         image previews in results (Google/Bing image-rich snippets). -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
     <link rel="canonical" href={canonicalURL} />
 
     <meta name="theme-color" content={themeColor} media="(prefers-color-scheme: dark)" />

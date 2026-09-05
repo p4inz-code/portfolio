@@ -10,6 +10,10 @@ Allow: /
 # Sitemap: 18 real routes, generated at build time by Astro.
 Sitemap: https://atharvapatil.tech/sitemap.xml
 
+# IndexNow key (Bing, Yandex, Seznam.cz, Naver) — proves this host controls
+# the key, lets those engines be pushed updates instead of waiting to crawl:
+# https://atharvapatil.tech/72196d888ef1bbce10fe31e08a0e8d5e.txt
+
 # Structured, AI-readable index of the site (llms.txt convention):
 #   https://atharvapatil.tech/llms.txt
 

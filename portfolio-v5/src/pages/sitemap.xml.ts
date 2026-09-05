@@ -19,6 +19,7 @@ const routes: Array<{ path: string; priority: number; changefreq: string }> = [
   { path: '/mission-os/demo/',  priority: 0.8, changefreq: 'monthly' },
   { path: '/nexus/',            priority: 0.9, changefreq: 'weekly' },
   { path: '/kanvaz/',           priority: 0.8, changefreq: 'monthly' },
+  { path: '/ascent/',           priority: 0.9, changefreq: 'monthly' },
   { path: '/pursue-os/',        priority: 0.8, changefreq: 'weekly' },
   { path: '/3d/',               priority: 0.7, changefreq: 'monthly' },
   { path: '/services/',         priority: 0.7, changefreq: 'monthly' },
