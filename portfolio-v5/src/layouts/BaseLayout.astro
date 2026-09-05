@@ -11,6 +11,9 @@ import { PROJECTS } from '../data/projects';
 interface Props {
   title: string;
   description?: string;
+  keywords?: string; // v5.21.0 — per-page override of SITE.keywords, for
+                      // project pages that want their own name + handle
+                      // combos (e.g. "Project Ascent, project ascent p4inz").
   ogImage?: string;
   themeColor?: string;
   extraJsonLd?: object[]; // v5.17.6 SEO push — lets a page add its own
@@ -21,6 +24,7 @@ interface Props {
 const {
   title,
   description = SITE.description,
+  keywords = SITE.keywords,
   extraJsonLd = [],
   // v5.12.0 fix: og.png was 404-ing (Cloudflare fell back to the homepage
   // HTML). Now points at /og.svg — a real designed 1200x630 card. Discord,
@@ -44,7 +48,10 @@ const person = {
   '@type': 'Person',
   '@id': 'https://atharvapatil.tech/#person',
   name: 'Atharva Patil',
-  alternateName: ['p4inz', 'p4inz-code'],
+  // 'painz' (no "4") is a retired spelling of the handle — see about.astro —
+  // but people still search it, so it stays here for entity resolution
+  // even though it's not used as an active brand name anywhere on-site.
+  alternateName: ['p4inz', 'P4INZ', 'painz', 'p4inz-code'],
   url: 'https://atharvapatil.tech/',
   image: 'https://atharvapatil.tech/og.png',
   jobTitle: SITE.role,
@@ -62,6 +69,10 @@ const person = {
   },
   knowsAbout: [
     'Software engineering',
+    'Web development',
+    'App development',
+    'CLI tool development',
+    'Game development',
     'Windows desktop development',
     'Linux systems',
     '3D animation',
@@ -136,6 +147,7 @@ const jsonLd = {
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
     <link rel="canonical" href={canonicalURL} />
 
     <meta name="theme-color" content={themeColor} media="(prefers-color-scheme: dark)" />

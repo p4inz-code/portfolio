@@ -15,8 +15,15 @@ export const SITE = {
   location: 'Navi Mumbai, India',
   studio: 'Northbyte Studios',
   studioFounded: '2026',
-  currentVersion: 'v5.20.0',
+  currentVersion: 'v5.21.0',
   domain: 'atharvapatil.tech',
+  // Sitewide meta-keywords fallback — covers name/handle variants people
+  // actually type (including the retired "painz" spelling) so search
+  // engines have a baseline signal on every page even without a
+  // per-page override. Individual pages pass a more specific list via
+  // BaseLayout's `keywords` prop.
+  keywords:
+    'Atharva Patil, p4inz, P4INZ, painz, Northbyte Studios, software engineer, web developer, app developer, CLI developer, game developer, 3D artist, VFX artist',
 } as const;
 
 export const CONTACT = {

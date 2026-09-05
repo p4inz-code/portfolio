@@ -20,6 +20,17 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.21.0',
+    kind: 'released',
+    summary: 'Search-discoverability pass: made sure "p4inz", "P4INZ", and the retired misspelling "painz" all resolve back to this site, and that project + handle combos (e.g. "project ascent p4inz") land on the right page instead of nowhere.',
+    body: [
+      'Added a keywords prop to BaseLayout, backed by a sitewide default in site.ts and overridden per page for the projects and sections that actually have distinct name + handle combos people search: Project Ascent, Kanvaz, Nexus, Mission OS, Pursue OS, Work, About, Services, and the homepage.',
+      'Expanded the Person JSON-LD node\'s alternateName to include "P4INZ" and "painz" alongside the existing "p4inz" and "p4inz-code", so entity resolution covers the retired spelling too, and added web/app/CLI/game development to knowsAbout to match how the handle actually gets searched alongside a discipline.',
+      'Project Ascent\'s SoftwareApplication structured data now carries its own keywords and sameAs links to the itch.io build and GitHub source, instead of just an author reference back to the Person node.',
+      'llms.txt gets a new "Search queries this site should answer" section spelling out the p4inz/painz + product-name combos explicitly, for AI answer engines that read it directly rather than crawling rendered pages.',
+    ],
+  },
+  {
     version: 'v5.20.0',
     kind: 'released',
     summary: 'The AP mark is real artwork now, not a hand-drawn SVG approximation. Swapped in everywhere the mark shows: nav header, favicons, apple-touch-icon, OpenSearch. The OG social-share banner is a separate, fully composed design and wasn\'t touched this pass.',
