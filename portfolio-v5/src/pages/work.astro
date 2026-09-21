@@ -1,9 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
-import FeaturedShowcase from '../components/features/FeaturedShowcase.astro';
-import ProjectCard from '../components/features/ProjectCard.astro';
-import ObscuraCard from '../components/features/ObscuraCard.astro';
+import WorkDeck from '../components/features/WorkDeck.astro';
+import WorkIndex from '../components/features/WorkIndex.astro';
 import { FEATURED_PROJECTS, SUPPORTING_PROJECTS } from '../data/projects';
 ---
 <BaseLayout title="Selected Work — Atharva Patil" description="Selected case studies: two Linux OSes, an encrypted vault, developer tools. Every project links to a real repository or download." keywords="p4inz projects, painz projects, p4inz portfolio, software portfolio p4inz, p4inz web dev, p4inz app dev, p4inz game dev, p4inz cli dev">
@@ -15,23 +14,10 @@ import { FEATURED_PROJECTS, SUPPORTING_PROJECTS } from '../data/projects';
     headingEmphasis="Every project below —"
     intro="Two operating systems on hold after real releases. One encrypted vault in public beta. One reference workspace, still shipping most weeks. One precision platformer, live and playable, polish ongoing. Every case study links to real code, real screenshots, or a live download: no design mockups pretending to be products."
   >
-    <FeaturedShowcase projects={FEATURED_PROJECTS} headingLevel="h2" />
+    <WorkDeck projects={FEATURED_PROJECTS} />
   </Section>
 
-  <Section eyebrow="Also on the shelf" heading="Smaller work, older projects, tools I still maintain." intro="Not every project needs a case study of its own: some are single-purpose CLIs, some are on-hold, some just work quietly. They still ship, they're still mine, and every one has a real repo behind it.">
-    <div class="secondary-grid">
-      {SUPPORTING_PROJECTS.map((p) => (
-        p.slug === 'obscura' ? <ObscuraCard project={p} /> : <ProjectCard project={p} variant="compact" />
-      ))}
-    </div>
+  <Section eyebrow="The whole roster" heading="Everything, in one list." intro="The cards above are the big ones. This is all of it, smaller tools and older projects included. Each row opens the real case study or the real repository.">
+    <WorkIndex projects={[...FEATURED_PROJECTS, ...SUPPORTING_PROJECTS]} />
   </Section>
-
-  <style>
-    .secondary-grid {
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4);
-    }
-    @media (max-width: 760px) {
-      .secondary-grid { grid-template-columns: 1fr; }
-    }
-  </style>
 </BaseLayout>

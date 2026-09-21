@@ -1,0 +1,355 @@
+---
+import type { Project } from '../../data/projects';
+import StatusPill from '../ui/StatusPill.astro';
+
+/**
+ * /work: the featured projects as a deck of cards.
+ *
+ * The home page tells the same projects as pinned chapters (one stage, words
+ * then picture). Here they are a different object: each project is a card
+ * that sticks near the top of the screen and the next card slides over it, so
+ * the previous one shrinks and dims into a stack. Inside a card, the oversized
+ * index numeral fills as the card settles, the picture drifts against the
+ * card, and a ticker of the project's own tags slides sideways with the scroll.
+ *
+ * Wrapper height = 100vh, so a card's "being covered" phase is the last part
+ * of its wrapper's cover range (50% to 96%). Native scroll timelines on
+ * desktop; the JS progress engine (--p) everywhere else. Reversible, and
+ * static under reduced motion.
+ */
+interface Props {
+  projects: Project[];
+}
+const { projects } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<section class="deck" aria-label="Featured projects">
+  {projects.map((p, i) => {
+    const m = p.media;
+    const last = i === projects.length - 1;
+    const ticker = [p.name, ...p.metaTags].join('  ·  ');
+    return (
+      <div class:list={['dwrap', last && 'is-last']} style={`--i:${i};--n:${projects.length}`} data-progress>
+        <article class="dcard" data-scene={p.scene} data-slug={p.slug}>
+          <div class="dcard-bg" aria-hidden="true"></div>
+          <span class="dnum" aria-hidden="true" data-text={pad(i + 1)}>{pad(i + 1)}</span>
+
+          <div class="dbody">
+            <StatusPill status={p.status} size="sm" />
+            <h2 class="dname"><a href={p.href} data-text={p.name}>{p.name}</a></h2>
+            <p class="dtag"><em>{p.tagline}</em></p>
+            <p class="ddesc">{p.description}</p>
+            <a class="dcta" href={p.href} aria-label={`Open ${p.name} case study`}>
+              Open case study <span aria-hidden="true">→</span>
+            </a>
+          </div>
+
+          {m ? (
+            <figure class="dmedia" data-kind={m.kind}>
+              <div class="dframe" style={`aspect-ratio:${m.ratio};`}>
+                {m.video ? (
+                  <video class="dimg" muted loop playsinline preload="none" poster={m.src} role="img" aria-label={m.alt} data-showcase-video>
+                    <source src={m.video.webm} type="video/webm" />
+                    <source src={m.video.mp4} type="video/mp4" />
+                  </video>
+                ) : (
+                  <img class="dimg" src={m.src} alt={m.alt} width="1600" height="900" loading="lazy" decoding="async" />
+                )}
+              </div>
+              {m.label && <figcaption class="dcap">{m.label}</figcaption>}
+            </figure>
+          ) : (
+            <div class="dmedia dmedia-empty" aria-hidden="true">
+              <span class="dempty-slug">{p.slug}</span>
+              <span class="dempty-name">{p.name}</span>
+            </div>
+          )}
+
+          <div class="dticker" aria-hidden="true">
+            <span>{ticker}  ·  {ticker}  ·  {ticker}  ·  {ticker}</span>
+          </div>
+        </article>
+      </div>
+    );
+  })}
+</section>
+
+<script>
+  // Same rule as the home showcase: play a loop only while it is on screen.
+  const vids = document.querySelectorAll<HTMLVideoElement>('.deck video[data-showcase-video]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (vids.length && !reduce && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => {
+        const v = e.target as HTMLVideoElement;
+        if (e.isIntersecting) v.play().catch(() => {}); else v.pause();
+      }),
+      { threshold: 0.35 },
+    );
+    vids.forEach((v) => io.observe(v));
+  }
+</script>
+
+<style>
+  .deck { display: block; padding-top: var(--sp-4); }
+
+  /* One wrapper per card. 100vh tall, so the card is "covered" during the
+     last stretch of its own cover range. */
+  .dwrap {
+    --top: calc(84px + var(--i) * 14px);
+    --card-h: min(calc(100vh - 84px - var(--n) * 14px - 28px), 680px);
+    min-height: 100vh;
+    min-height: 100svh;
+    position: relative;
+  }
+  .dwrap.is-last { min-height: calc(var(--card-h) + 60px); }
+
+  .dcard {
+    position: sticky;
+    top: var(--top);
+    height: var(--card-h);
+    min-height: 460px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    grid-template-rows: 1fr auto;
+    gap: 0 var(--sp-7);
+    padding: var(--sp-7) var(--sp-8) 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 22px;
+    background: var(--surface-1);
+    overflow: hidden;
+    isolation: isolate;
+    transform-origin: 50% 0%;
+    box-shadow: 0 -24px 60px -30px rgba(0, 0, 0, 0.55);
+  }
+
+  /* Big index numeral: outlined, fills upward as the card settles. */
+  .dnum {
+    position: absolute;
+    right: var(--sp-7); top: -0.12em;
+    z-index: -1;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(120px, 22vw, 300px);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: transparent;
+    -webkit-text-stroke: 1.5px color-mix(in oklab, var(--purple-bright) 45%, transparent);
+    pointer-events: none;
+    user-select: none;
+  }
+  .dnum::after {
+    content: attr(data-text);
+    position: absolute; left: 0; top: 0;
+    color: color-mix(in oklab, var(--purple-bright) 16%, transparent);
+    -webkit-text-stroke: 0;
+    clip-path: inset(calc((1 - var(--nf, 1)) * 100%) 0 0 0);
+  }
+
+  .dbody {
+    align-self: center;
+    display: flex; flex-direction: column; gap: var(--sp-4);
+    min-width: 0;
+    padding-bottom: var(--sp-6);
+  }
+  .dname {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(34px, 4.4vw, 60px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    margin: 0;
+  }
+  .dname a { color: var(--text); text-decoration: none; }
+  .dtag { color: var(--purple-bright); font-family: var(--font-display); font-size: var(--text-lg); font-weight: 400; margin: 0; }
+  .dtag em { font-style: italic; }
+  .ddesc {
+    color: var(--muted);
+    font-size: var(--text-sm);
+    line-height: var(--leading-body);
+    max-width: 480px;
+    display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden;
+    margin: 0;
+  }
+  .dcta {
+    align-self: flex-start;
+    display: inline-flex; gap: 8px;
+    padding: 10px 18px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    text-decoration: none;
+    transition: background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), gap var(--dur-fast) var(--ease-out);
+  }
+  .dcta:hover, .dcta:focus-visible {
+    background: color-mix(in oklab, var(--purple) 14%, transparent);
+    border-color: var(--purple-bright);
+    gap: 14px;
+    outline: none;
+  }
+
+  .dmedia { margin: 0; align-self: center; min-width: 0; padding-bottom: var(--sp-6); }
+  .dframe {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+    background: var(--surface-2);
+    width: 100%;
+    max-height: calc(var(--card-h) - 150px);
+    margin-inline: auto;
+  }
+  .dimg { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .dcap {
+    margin-top: var(--sp-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .dmedia-empty {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+    background: linear-gradient(135deg, color-mix(in oklab, var(--purple-deep) 40%, transparent), color-mix(in oklab, var(--surface-2) 90%, transparent));
+    min-height: 220px;
+    margin-bottom: var(--sp-6);
+  }
+  .dempty-slug { font-family: var(--font-mono); font-size: 10px; letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--muted); }
+  .dempty-name { font-family: var(--font-display); font-size: clamp(28px, 3vw, 42px); color: var(--text); letter-spacing: -0.02em; }
+
+  /* Ticker along the foot of the card. */
+  .dticker {
+    grid-column: 1 / -1;
+    margin: 0 calc(-1 * var(--sp-8));
+    border-top: 1px solid var(--line);
+    background: color-mix(in oklab, var(--surface-2) 70%, transparent);
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 9px 0;
+  }
+  .dticker span {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    translate: calc(var(--tk, 0) * -22%) 0;
+  }
+
+  /* ------------------------------------------------------------ scenes */
+  .dcard-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+  .dcard[data-scene='nexus'] .dcard-bg {
+    background-image:
+      linear-gradient(color-mix(in oklab, var(--purple-bright) 8%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in oklab, var(--purple-bright) 8%, transparent) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 90% at 85% 40%, #000, transparent 75%);
+            mask-image: radial-gradient(ellipse 80% 90% at 85% 40%, #000, transparent 75%);
+  }
+  .dcard[data-scene='kanvaz'] .dcard-bg {
+    background-image: radial-gradient(color-mix(in oklab, var(--text) 20%, transparent) 1.1px, transparent 1.4px);
+    background-size: 22px 22px;
+  }
+  .dcard[data-scene='ascent'] .dcard-bg {
+    background:
+      radial-gradient(circle 9vmin at 82% 22%, color-mix(in oklab, var(--text) 14%, transparent), transparent 70%),
+      linear-gradient(to bottom, transparent 30%, color-mix(in oklab, var(--purple-deep) 45%, transparent));
+  }
+  .dcard[data-scene='nexus'] .dname  { font-family: var(--font-scene-nexus); font-weight: 500; letter-spacing: -0.01em; }
+  .dcard[data-scene='kanvaz'] .dname { font-family: var(--font-scene-kanvaz); font-weight: 700; letter-spacing: 0; font-size: clamp(38px, 4.8vw, 66px); }
+  .dcard[data-scene='ascent'] .dname { font-family: var(--font-scene-ascent); font-weight: 400; letter-spacing: 0.01em; line-height: 1; font-size: clamp(44px, 5.6vw, 78px); }
+  .dcard[data-scene='kanvaz'] .dframe { border-radius: 8px; box-shadow: 0 18px 36px -22px rgba(0, 0, 0, 0.6); rotate: -1deg; }
+  .dcard[data-scene='ascent'] .dframe { border-radius: 3px; }
+  :global(:root[data-theme='light']) .dcard[data-scene='ascent'] .dcard-bg {
+    background: radial-gradient(circle 9vmin at 82% 22%, color-mix(in oklab, var(--purple-bright) 16%, transparent), transparent 70%), linear-gradient(to bottom, transparent 30%, color-mix(in oklab, var(--purple) 16%, transparent));
+  }
+
+  /* ------------------------------------------------- tablets and phones */
+  @media (max-width: 900px) {
+    .dwrap { --top: calc(72px + var(--i) * 10px); min-height: 0; padding-bottom: 22vh; }
+    .dwrap.is-last { padding-bottom: 0; min-height: 0; }
+    .dcard {
+      height: auto; min-height: 0;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      padding: var(--sp-5) var(--sp-5) 0;
+      gap: var(--sp-4);
+    }
+    .dmedia { order: -1; padding-bottom: 0; }
+    .dframe { max-height: none; }
+    .dbody { padding-bottom: var(--sp-4); }
+    .ddesc { -webkit-line-clamp: 3; }
+    .dnum { font-size: clamp(90px, 30vw, 160px); right: var(--sp-4); }
+    .dticker { margin: 0 calc(-1 * var(--sp-5)); }
+    .dmedia-empty { min-height: 120px; margin-bottom: 0; }
+  }
+
+  /* ----------------------------------------- native scroll timelines (desktop) */
+  @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .dwrap { view-timeline: --dw block; }
+      /* covered by the next card: shrink and dim (not the last one) */
+      .dwrap:not(.is-last) .dcard {
+        animation: dcard-back var(--ease-io, ease-in-out) both;
+        animation-timeline: --dw;
+        animation-range: cover 50% cover 96%;
+      }
+      .dnum::after {
+        animation: dnum-fill linear both;
+        animation-timeline: --dw;
+        animation-range: cover 6% cover 40%;
+      }
+      .dimg {
+        animation: dimg-drift linear both;
+        animation-timeline: --dw;
+        animation-range: cover 0% cover 100%;
+      }
+      .dticker span {
+        animation: dticker-slide linear both;
+        animation-timeline: --dw;
+        animation-range: cover 0% cover 100%;
+      }
+      .dbody > * {
+        animation: dbody-in var(--ease-out) both;
+        animation-timeline: --dw;
+        animation-range: cover calc(8% + var(--k, 0) * 2%) cover calc(28% + var(--k, 0) * 2%);
+      }
+      .dbody > *:nth-child(2) { --k: 1; }
+      .dbody > *:nth-child(3) { --k: 2; }
+      .dbody > *:nth-child(4) { --k: 3; }
+      .dbody > *:nth-child(5) { --k: 4; }
+    }
+  }
+  @keyframes dcard-back { to { transform: scale(0.93); filter: brightness(0.6); } }
+  @keyframes dnum-fill  { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+  @keyframes dimg-drift { from { transform: scale(1.12) translateY(5%); } to { transform: scale(1.12) translateY(-5%); } }
+  @keyframes dticker-slide { from { translate: 0 0; } to { translate: -22% 0; } }
+  @keyframes dbody-in { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+
+  /* --------------------- JS progress mode: phones, Firefox, older iOS Safari */
+  :global(html[data-jsp]) .dwrap {
+    --p: 0.5;
+    --s: clamp(0, calc((var(--p) - 0.5) / 0.46), 1);      /* being covered */
+    --nf: clamp(0, calc((var(--p) - 0.06) / 0.34), 1);    /* numeral fill */
+    --tk: var(--p);                                       /* ticker slide */
+  }
+  :global(html[data-jsp]) .dwrap:not(.is-last) .dcard {
+    transform: scale(calc(1 - var(--s) * 0.06));
+    filter: brightness(calc(1 - var(--s) * 0.4));
+  }
+  :global(html[data-jsp]) .dbody > * {
+    --bt: clamp(0, calc((var(--p) - 0.08 - var(--k, 0) * 0.02) / 0.2), 1);
+    opacity: var(--bt);
+    transform: translateY(calc((1 - var(--bt)) * 24px));
+  }
+  :global(html[data-jsp]) .dbody > *:nth-child(2) { --k: 1; }
+  :global(html[data-jsp]) .dbody > *:nth-child(3) { --k: 2; }
+  :global(html[data-jsp]) .dbody > *:nth-child(4) { --k: 3; }
+  :global(html[data-jsp]) .dbody > *:nth-child(5) { --k: 4; }
+  :global(html[data-jsp]) .dimg { transform: scale(1.1) translateY(calc((0.5 - var(--p)) * 8%)); }
+</style>

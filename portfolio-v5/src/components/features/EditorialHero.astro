@@ -1,28 +1,74 @@
 ---
 /**
- * Multi-line narrative hero. Each line rises in sequence on load.
- * Reduced-motion collapses to instant.
+ * Multi-line narrative hero.
+ *
+ * Default: each line rises in sequence on load.
+ *
+ * `scrub`: the headline is read by scrolling. Words start dim and light up one
+ * by one as you scroll, the intro comes up behind them, and a row of ghost
+ * "team members" collapses into the single solid one, which is the whole
+ * point of the sentence. Desktop pins the hero while this plays (CSS view
+ * timeline); phones and browsers without scroll timelines get the same beats
+ * from the JS progress engine (--p), un-pinned. Reduced motion shows the
+ * finished state.
  */
 interface Props {
   eyebrow?: string;
   lines: Array<{ text: string; emphasis?: string }>;
   intro?: string;
+  scrub?: boolean;
 }
-const { eyebrow, lines, intro } = Astro.props;
+const { eyebrow, lines, intro, scrub = false } = Astro.props;
+
+// word list for the scrubbed version: [{ t, em, w }] with w in 0..1
+const words: Array<{ t: string; em: boolean; line: number; w: number }> = [];
+if (scrub) {
+  lines.forEach((line, li) => {
+    (line.emphasis ? line.emphasis.split(' ').map((t) => ({ t, em: true })) : [])
+      .concat(line.text.split(' ').map((t) => ({ t, em: false })))
+      .forEach((x) => words.push({ ...x, line: li, w: 0 }));
+  });
+  words.forEach((x, i) => { x.w = words.length > 1 ? i / (words.length - 1) : 0; });
+}
+const CREW = 7;
 ---
-<section class="hero wrap" aria-labelledby="hero-title">
-  {eyebrow && <p class="hero-eyebrow">{eyebrow}</p>}
-  <h1 id="hero-title" class="hero-title">
-    {lines.map((line, i) => (
-      <span class="act" style={`--i:${i}`}>
-        {line.emphasis && (<><em>{line.emphasis}</em> </>)}
-        {line.text}
-      </span>
-    ))}
-  </h1>
-  {intro && <p class="hero-sub">{intro}</p>}
-  <slot />
-</section>
+{scrub ? (
+  <section class="hero hero-scrub" aria-labelledby="hero-title" data-progress>
+    <div class="hero-pin wrap">
+      {eyebrow && <p class="hero-eyebrow">{eyebrow}</p>}
+      <h1 id="hero-title" class="hero-title">
+        {lines.map((_, li) => (
+          <span class="act-line">
+            {words.filter((x) => x.line === li).map((x) => (
+              <><span class:list={['w', x.em && 'em']} style={`--w:${x.w.toFixed(3)}`}>{x.t}</span>{' '}</>
+            ))}
+          </span>
+        ))}
+      </h1>
+      <div class="crew" aria-hidden="true">
+        {Array.from({ length: CREW }, (_, i) => <i style={`--c:${i}`}></i>)}
+        <b><span>me</span></b>
+      </div>
+      {intro && <p class="hero-sub scrub-sub">{intro}</p>}
+      <div class="scrub-slot"><slot /></div>
+      <p class="scroll-cue" aria-hidden="true"><span>scroll</span><i></i></p>
+    </div>
+  </section>
+) : (
+  <section class="hero wrap" aria-labelledby="hero-title">
+    {eyebrow && <p class="hero-eyebrow">{eyebrow}</p>}
+    <h1 id="hero-title" class="hero-title">
+      {lines.map((line, i) => (
+        <span class="act" style={`--i:${i}`}>
+          {line.emphasis && (<><em>{line.emphasis}</em> </>)}
+          {line.text}
+        </span>
+      ))}
+    </h1>
+    {intro && <p class="hero-sub">{intro}</p>}
+    <slot />
+  </section>
+)}
 
 <style>
   .hero {
@@ -82,5 +128,136 @@ const { eyebrow, lines, intro } = Astro.props;
     color: var(--muted);
     font-size: var(--text-md);
     line-height: var(--leading-body);
+  }
+
+  /* ======================================================== scrubbed hero */
+  .hero-scrub { padding: 0; position: relative; --ease-io: cubic-bezier(0.65, 0, 0.35, 1); }
+  .hero-pin { padding-top: var(--sp-10, 96px); padding-bottom: var(--sp-8); }
+  .act-line { display: block; text-wrap: balance; }
+  .w { display: inline; }
+  .w.em { font-style: italic; color: var(--purple-bright); }
+
+  .crew {
+    display: flex; align-items: center; gap: 10px;
+    margin-top: var(--sp-6);
+    height: 34px;
+  }
+  .crew i {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 1px dashed color-mix(in oklab, var(--muted) 70%, transparent);
+    flex-shrink: 0;
+  }
+  .crew b {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--purple-bright);
+    display: grid; place-items: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--purple-bright) 50%, transparent);
+  }
+  .crew b span {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    color: var(--bg);
+  }
+  .scrub-sub { margin-top: var(--sp-5); }
+  .scrub-slot { margin-top: var(--sp-1); }
+  .scroll-cue {
+    display: none;
+    align-items: center; gap: 10px;
+    margin-top: var(--sp-6);
+    font-family: var(--font-mono);
+    font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .scroll-cue i {
+    display: block; width: 1px; height: 26px;
+    background: linear-gradient(to bottom, var(--purple-bright), transparent);
+    animation: cue 1.8s ease-in-out infinite;
+    transform-origin: 50% 0;
+  }
+  @keyframes cue { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+
+  /* ---- pinned (desktop, scroll timelines, motion allowed) ---- */
+  @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .hero-scrub { view-timeline: --hero block; height: 210vh; }
+      .hero-pin {
+        position: sticky; top: 0;
+        height: 100vh; height: 100svh;
+        display: flex; flex-direction: column; justify-content: center;
+        box-sizing: border-box;
+        padding-top: 88px; padding-bottom: var(--sp-6);
+      }
+      /* Words light up, front to back, while the hero is pinned (32%..68%). */
+      .w {
+        opacity: 0.16;
+        animation: w-on var(--ease-out) both;
+        animation-timeline: --hero;
+        animation-range: cover calc(33% + var(--w) * 24%) cover calc(37.5% + var(--w) * 24%);
+      }
+      .crew i {
+        animation: crew-out var(--ease-io) both;
+        animation-timeline: --hero;
+        animation-range: cover calc(38% + var(--c) * 2.6%) cover calc(46% + var(--c) * 2.6%);
+      }
+      .crew b {
+        animation: crew-me var(--ease-out) both;
+        animation-timeline: --hero;
+        animation-range: cover 40% cover 62%;
+      }
+      .scrub-sub {
+        opacity: 0.3;
+        animation: sub-on var(--ease-out) both;
+        animation-timeline: --hero;
+        animation-range: cover 40% cover 58%;
+      }
+      .scroll-cue {
+        display: flex;
+        animation: cue-out linear both;
+        animation-timeline: --hero;
+        animation-range: cover 32% cover 42%;
+      }
+    }
+  }
+  @keyframes w-on    { from { opacity: 0.16; } to { opacity: 1; } }
+  @keyframes sub-on  { from { opacity: 0.3; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes crew-out { from { transform: scale(1); opacity: 1; } to { transform: scale(0.2) translateX(40px); opacity: 0; width: 0; margin-right: -10px; border-width: 0; } }
+  @keyframes crew-me {
+    0%   { transform: scale(1); box-shadow: 0 0 0 0 color-mix(in oklab, var(--purple-bright) 50%, transparent); }
+    60%  { transform: scale(1.35); box-shadow: 0 0 0 14px color-mix(in oklab, var(--purple-bright) 0%, transparent); }
+    100% { transform: scale(1.2); box-shadow: 0 0 0 0 transparent; }
+  }
+  @keyframes cue-out { to { opacity: 0; } }
+
+  /* ---- JS progress mode: phones, Firefox, iOS without scroll timelines ---- */
+  :global(html[data-jsp]) .hero-scrub { --p: 0.6; }
+  :global(html[data-jsp]) .w {
+    --wt: clamp(0, calc((var(--p) - 0.605 - var(--w) * 0.14) / 0.05), 1);
+    opacity: calc(0.16 + var(--wt) * 0.84);
+  }
+  :global(html[data-jsp]) .crew i {
+    --ct: clamp(0, calc((var(--p) - 0.63 - var(--c) * 0.014) / 0.06), 1);
+    transform: scale(calc(1 - var(--ct) * 0.8));
+    opacity: calc(1 - var(--ct));
+    margin-right: calc(var(--ct) * -26px);
+  }
+  :global(html[data-jsp]) .crew b {
+    transform: scale(calc(1 + clamp(0, calc((var(--p) - 0.66) / 0.14), 1) * 0.2));
+  }
+  :global(html[data-jsp]) .scrub-sub {
+    opacity: calc(0.3 + clamp(0, calc((var(--p) - 0.66) / 0.12), 1) * 0.7);
+  }
+  :global(html[data-jsp]) .scroll-cue {
+    display: flex;
+    opacity: calc(1 - clamp(0, calc((var(--p) - 0.6) / 0.06), 1));
+  }
+  @media (max-width: 480px) {
+    .crew { margin-top: var(--sp-5); }
+    .crew i { width: 20px; height: 20px; }
   }
 </style>

@@ -48,6 +48,7 @@ const defaultLabel = (kind: string) =>
         class:list={['chapter', m ? 'has-media' : 'no-media']}
         data-scene={p.scene}
         data-slug={p.slug}
+        data-progress
       >
         <div class="stage">
           <div class="scene-bg" aria-hidden="true">
@@ -181,6 +182,13 @@ const defaultLabel = (kind: string) =>
     .stage-inner { grid-template-columns: 1fr; gap: var(--sp-5); padding: var(--sp-6) 0; }
   }
 
+  .show-body > * { --k: 0; }
+  .show-body > *:nth-child(2) { --k: 1; }
+  .show-body > *:nth-child(3) { --k: 2; }
+  .show-body > *:nth-child(4) { --k: 3; }
+  .show-body > *:nth-child(5) { --k: 4; }
+  .show-body > *:nth-child(6) { --k: 5; }
+
   .scene-bg { display: none; }
   .ch-count { display: none; }
   .cable { display: none; }
@@ -245,6 +253,145 @@ const defaultLabel = (kind: string) =>
   .show-cta-arrow { transition: transform var(--dur) var(--ease-out); }
   .show-body:hover .show-cta-arrow { transform: translateX(4px); }
   .show-body:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 8px; border-radius: 2px; }
+
+  /* ---------------------------------------------------------------
+     Scene backdrops: the pictures. Hidden until a mode turns .scene-bg on
+     (pinned desktop, or the stacked-card mode on phones).
+     --------------------------------------------------------------- */
+  /* Scene backdrops (only drawn while pinned). */
+  .chapter[data-scene='nexus'] .scene-bg {
+    background-image:
+          linear-gradient(color-mix(in oklab, var(--purple-bright) 9%, transparent) 1px, transparent 1px),
+          linear-gradient(90deg, color-mix(in oklab, var(--purple-bright) 9%, transparent) 1px, transparent 1px);
+    background-size: 72px 72px;
+    -webkit-mask-image: radial-gradient(ellipse 60% 55% at 72% 50%, #000 0%, transparent 100%);
+    mask-image: radial-gradient(ellipse 60% 55% at 72% 50%, #000 0%, transparent 100%);
+  }
+  .chapter[data-scene='kanvaz'] .scene-bg {
+    background-image: radial-gradient(color-mix(in oklab, var(--text) 22%, transparent) 1.1px, transparent 1.4px);
+    background-size: 28px 28px;
+    -webkit-mask-image: radial-gradient(ellipse 75% 65% at 55% 50%, #000 0%, transparent 100%);
+    mask-image: radial-gradient(ellipse 75% 65% at 55% 50%, #000 0%, transparent 100%);
+  }
+  /* Ascent: you are climbing. The moon rises fast from behind the ridges,
+         the ground falls away at three different speeds, stars drift down
+         slowly, and shooting stars cut across at fixed scroll points. */
+  .chapter[data-scene='ascent'] .scene-bg {
+    background:
+          linear-gradient(to bottom, #04020c 0%, color-mix(in oklab, var(--purple-deep) 60%, #04020c) 100%);
+  }
+  .chapter[data-scene='ascent'] .scene-bg > * {
+    position: absolute;
+    pointer-events: none;
+  }
+  .chapter[data-scene='ascent'] .nebula {
+    inset: -10% -10% 10% -10%;
+    background:
+          radial-gradient(38vmax 26vmax at 18% 32%, rgba(124, 58, 237, 0.30), transparent 70%),
+          radial-gradient(34vmax 22vmax at 82% 18%, rgba(59, 130, 246, 0.20), transparent 70%),
+          radial-gradient(30vmax 20vmax at 62% 58%, rgba(236, 72, 153, 0.14), transparent 70%);
+    filter: blur(6px);
+  }
+  .chapter[data-scene='ascent'] .stars {
+    inset: 0 0 30% 0;
+    background-repeat: repeat;
+  }
+  .chapter[data-scene='ascent'] .stars.s1 {
+    background-image:
+          radial-gradient(1px 1px at 12px 18px, #EDE8FF, transparent 60%),
+          radial-gradient(1px 1px at 47px 63px, #EDE8FF, transparent 60%),
+          radial-gradient(1px 1px at 83px 29px, #EDE8FF, transparent 60%),
+          radial-gradient(1px 1px at 29px 91px, #EDE8FF, transparent 60%),
+          radial-gradient(1px 1px at 71px 77px, #EDE8FF, transparent 60%);
+    background-size: 100px 100px;
+    opacity: 0.55;
+  }
+  .chapter[data-scene='ascent'] .stars.s2 {
+    background-image:
+          radial-gradient(1.5px 1.5px at 30px 40px, #fff, transparent 65%),
+          radial-gradient(1.5px 1.5px at 120px 90px, #fff, transparent 65%),
+          radial-gradient(1.5px 1.5px at 75px 150px, #fff, transparent 65%),
+          radial-gradient(1.5px 1.5px at 160px 20px, #fff, transparent 65%);
+    background-size: 190px 190px;
+    opacity: 0.8;
+  }
+  .chapter[data-scene='ascent'] .stars.s3 {
+    background-image:
+          radial-gradient(2.2px 2.2px at 60px 70px, #fff, rgba(190, 170, 255, 0.5) 55%, transparent 75%),
+          radial-gradient(2px 2px at 210px 30px, #fff, rgba(170, 200, 255, 0.5) 55%, transparent 75%),
+          radial-gradient(2.4px 2.4px at 150px 190px, #fff, rgba(255, 190, 220, 0.5) 55%, transparent 75%);
+    background-size: 300px 260px;
+  }
+  .chapter[data-scene='ascent'] .shoot {
+    width: 140px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, transparent, #fff);
+    box-shadow: 0 0 8px 1px rgba(200, 190, 255, 0.6);
+    opacity: 0;
+  }
+  .chapter[data-scene='ascent'] .shoot.a {
+    top: 16%;
+    left: 22%;
+    rotate: 28deg;
+  }
+  .chapter[data-scene='ascent'] .shoot.b {
+    top: 30%;
+    left: 58%;
+    rotate: 32deg;
+  }
+  .chapter[data-scene='ascent'] .moon {
+    top: 38%;
+    right: 13%;
+    width: 12vmin;
+    height: 12vmin;
+    border-radius: 50%;
+  }
+  .chapter[data-scene='ascent'] .ridge {
+    left: -8%;
+    right: -8%;
+    bottom: 0;
+  }
+  .chapter[data-scene='ascent'] .ridge.far {
+    height: 34vh;
+    background: color-mix(in oklab, var(--purple-deep) 40%, #05030d);
+    opacity: 0.7;
+    clip-path: polygon(0 58%, 8% 40%, 15% 52%, 24% 26%, 33% 46%, 43% 20%, 52% 44%, 62% 24%, 72% 48%, 81% 30%, 90% 50%, 100% 36%, 100% 100%, 0 100%);
+  }
+  .chapter[data-scene='ascent'] .ridge.mid {
+    height: 28vh;
+    background: color-mix(in oklab, var(--purple-deep) 58%, #05030d);
+    opacity: 0.85;
+    clip-path: polygon(0 60%, 10% 34%, 19% 54%, 29% 22%, 40% 50%, 50% 28%, 59% 58%, 69% 20%, 79% 52%, 89% 30%, 100% 56%, 100% 100%, 0 100%);
+  }
+  .chapter[data-scene='ascent'] .ridge.near {
+    height: 20vh;
+    background: color-mix(in oklab, var(--purple-deep) 76%, #05030d);
+    opacity: 1;
+    clip-path: polygon(0 50%, 7% 30%, 16% 58%, 27% 24%, 36% 52%, 47% 18%, 57% 56%, 68% 26%, 78% 58%, 88% 22%, 100% 54%, 100% 100%, 0 100%);
+  }
+  /* Light theme: a lavender dusk instead of deep space. */
+  :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .scene-bg {
+    background: linear-gradient(to bottom, color-mix(in oklab, var(--purple) 8%, var(--bg)), color-mix(in oklab, var(--purple) 26%, var(--bg)));
+  }
+  :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .stars,
+      :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .shoot {
+    display: none;
+  }
+  :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .nebula {
+    opacity: 0.35;
+  }
+  :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .ridge.far {
+    background: color-mix(in oklab, var(--purple) 30%, var(--bg));
+    opacity: 0.8;
+  }
+  :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .ridge.mid {
+    background: color-mix(in oklab, var(--purple) 48%, var(--bg));
+    opacity: 0.9;
+  }
+  :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .ridge.near {
+    background: color-mix(in oklab, var(--purple) 66%, var(--bg));
+  }
 
   /* Scene title fonts (see styles/scenes.css for the families). */
   .chapter[data-scene='nexus'] .show-name  { font-family: var(--font-scene-nexus);  font-weight: 500; letter-spacing: -0.01em; }
@@ -485,77 +632,26 @@ const defaultLabel = (kind: string) =>
         animation-range: cover 0% cover 100%;
       }
 
-      /* Scene backdrops (only drawn while pinned). */
-      .chapter[data-scene='nexus'] .scene-bg {
-        background-image:
-          linear-gradient(color-mix(in oklab, var(--purple-bright) 9%, transparent) 1px, transparent 1px),
-          linear-gradient(90deg, color-mix(in oklab, var(--purple-bright) 9%, transparent) 1px, transparent 1px);
-        background-size: 72px 72px;
-        -webkit-mask-image: radial-gradient(ellipse 60% 55% at 72% 50%, #000 0%, transparent 100%);
-                mask-image: radial-gradient(ellipse 60% 55% at 72% 50%, #000 0%, transparent 100%);
-      }
-      .chapter[data-scene='kanvaz'] .scene-bg {
-        background-image: radial-gradient(color-mix(in oklab, var(--text) 22%, transparent) 1.1px, transparent 1.4px);
-        background-size: 28px 28px;
-        -webkit-mask-image: radial-gradient(ellipse 75% 65% at 55% 50%, #000 0%, transparent 100%);
-                mask-image: radial-gradient(ellipse 75% 65% at 55% 50%, #000 0%, transparent 100%);
-      }
-      /* Ascent: you are climbing. The moon rises fast from behind the ridges,
-         the ground falls away at three different speeds, stars drift down
-         slowly, and shooting stars cut across at fixed scroll points. */
+      /* Scene backdrop motion (pinned mode). The pictures themselves live in the base rules above. */
       .chapter[data-scene='ascent'] .scene-bg {
         animation-name: bg-fade;
-        background:
-          linear-gradient(to bottom, #04020c 0%, color-mix(in oklab, var(--purple-deep) 60%, #04020c) 100%);
       }
       .chapter[data-scene='ascent'] .scene-bg > * {
-        position: absolute;
-        pointer-events: none;
         animation-timeline: --ch;
         animation-range: cover 0% cover 100%;
         animation-timing-function: linear;
         animation-fill-mode: both;
       }
       .chapter[data-scene='ascent'] .nebula {
-        inset: -10% -10% 10% -10%;
-        background:
-          radial-gradient(38vmax 26vmax at 18% 32%, rgba(124, 58, 237, 0.30), transparent 70%),
-          radial-gradient(34vmax 22vmax at 82% 18%, rgba(59, 130, 246, 0.20), transparent 70%),
-          radial-gradient(30vmax 20vmax at 62% 58%, rgba(236, 72, 153, 0.14), transparent 70%);
-        filter: blur(6px);
         animation-name: nebula-drift;
       }
-      .chapter[data-scene='ascent'] .stars {
-        inset: 0 0 30% 0;
-        background-repeat: repeat;
-      }
       .chapter[data-scene='ascent'] .stars.s1 {
-        background-image:
-          radial-gradient(1px 1px at 12px 18px, #EDE8FF, transparent 60%),
-          radial-gradient(1px 1px at 47px 63px, #EDE8FF, transparent 60%),
-          radial-gradient(1px 1px at 83px 29px, #EDE8FF, transparent 60%),
-          radial-gradient(1px 1px at 29px 91px, #EDE8FF, transparent 60%),
-          radial-gradient(1px 1px at 71px 77px, #EDE8FF, transparent 60%);
-        background-size: 100px 100px;
-        opacity: 0.55;
         animation-name: stars-far;
       }
       .chapter[data-scene='ascent'] .stars.s2 {
-        background-image:
-          radial-gradient(1.5px 1.5px at 30px 40px, #fff, transparent 65%),
-          radial-gradient(1.5px 1.5px at 120px 90px, #fff, transparent 65%),
-          radial-gradient(1.5px 1.5px at 75px 150px, #fff, transparent 65%),
-          radial-gradient(1.5px 1.5px at 160px 20px, #fff, transparent 65%);
-        background-size: 190px 190px;
-        opacity: 0.8;
         animation-name: stars-mid;
       }
       .chapter[data-scene='ascent'] .stars.s3 {
-        background-image:
-          radial-gradient(2.2px 2.2px at 60px 70px, #fff, rgba(190, 170, 255, 0.5) 55%, transparent 75%),
-          radial-gradient(2px 2px at 210px 30px, #fff, rgba(170, 200, 255, 0.5) 55%, transparent 75%),
-          radial-gradient(2.4px 2.4px at 150px 190px, #fff, rgba(255, 190, 220, 0.5) 55%, transparent 75%);
-        background-size: 300px 260px;
         animation-name: stars-near, twinkle;
         animation-timeline: --ch, auto;
         animation-range: cover 0% cover 100%, normal;
@@ -565,58 +661,28 @@ const defaultLabel = (kind: string) =>
         animation-direction: normal, alternate;
         animation-fill-mode: both, none;
       }
-      .chapter[data-scene='ascent'] .shoot {
-        width: 140px; height: 2px;
-        border-radius: 2px;
-        background: linear-gradient(90deg, transparent, #fff);
-        box-shadow: 0 0 8px 1px rgba(200, 190, 255, 0.6);
-        opacity: 0;
+      .chapter[data-scene='ascent'] .shoot.a {
+        animation-name: shoot;
+        animation-range: cover 24% cover 34%;
       }
-      .chapter[data-scene='ascent'] .shoot.a { top: 16%; left: 22%; rotate: 28deg; animation-name: shoot; animation-range: cover 24% cover 34%; }
-      .chapter[data-scene='ascent'] .shoot.b { top: 30%; left: 58%; rotate: 32deg; animation-name: shoot; animation-range: cover 56% cover 66%; }
+      .chapter[data-scene='ascent'] .shoot.b {
+        animation-name: shoot;
+        animation-range: cover 56% cover 66%;
+      }
       .chapter[data-scene='ascent'] .moon {
-        top: 38%; right: 13%;
-        width: 12vmin; height: 12vmin;
-        border-radius: 50%;
         animation-name: moon-rise;
         animation-range: cover 4% cover 100%;
         animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
       }
-      .chapter[data-scene='ascent'] .ridge {
-        left: -8%; right: -8%;
-        bottom: 0;
-      }
       .chapter[data-scene='ascent'] .ridge.far {
-        height: 34vh;
-        background: color-mix(in oklab, var(--purple-deep) 40%, #05030d);
-        opacity: 0.7;
-        clip-path: polygon(0 58%, 8% 40%, 15% 52%, 24% 26%, 33% 46%, 43% 20%, 52% 44%, 62% 24%, 72% 48%, 81% 30%, 90% 50%, 100% 36%, 100% 100%, 0 100%);
         animation-name: ridge-far;
       }
       .chapter[data-scene='ascent'] .ridge.mid {
-        height: 28vh;
-        background: color-mix(in oklab, var(--purple-deep) 58%, #05030d);
-        opacity: 0.85;
-        clip-path: polygon(0 60%, 10% 34%, 19% 54%, 29% 22%, 40% 50%, 50% 28%, 59% 58%, 69% 20%, 79% 52%, 89% 30%, 100% 56%, 100% 100%, 0 100%);
         animation-name: ridge-mid;
       }
       .chapter[data-scene='ascent'] .ridge.near {
-        height: 20vh;
-        background: color-mix(in oklab, var(--purple-deep) 76%, #05030d);
-        opacity: 1;
-        clip-path: polygon(0 50%, 7% 30%, 16% 58%, 27% 24%, 36% 52%, 47% 18%, 57% 56%, 68% 26%, 78% 58%, 88% 22%, 100% 54%, 100% 100%, 0 100%);
         animation-name: ridge-near;
       }
-      /* Light theme: a lavender dusk instead of deep space. */
-      :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .scene-bg {
-        background: linear-gradient(to bottom, color-mix(in oklab, var(--purple) 8%, var(--bg)), color-mix(in oklab, var(--purple) 26%, var(--bg)));
-      }
-      :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .stars,
-      :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .shoot { display: none; }
-      :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .nebula { opacity: 0.35; }
-      :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .ridge.far  { background: color-mix(in oklab, var(--purple) 30%, var(--bg)); opacity: 0.8; }
-      :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .ridge.mid  { background: color-mix(in oklab, var(--purple) 48%, var(--bg)); opacity: 0.9; }
-      :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .ridge.near { background: color-mix(in oklab, var(--purple) 66%, var(--bg)); }
 
       /* -------- nexus: clean wipe with a scan line -------- */
       .chapter[data-scene='nexus'] .show-img {
@@ -691,16 +757,136 @@ const defaultLabel = (kind: string) =>
     }
   }
 
-  /* Phones: pinned mode is off, so give each card a light fade-up as it
-     scrolls in (same technique, much smaller). */
-  @media (max-width: 899px) and (prefers-reduced-motion: no-preference) {
-    @supports (animation-timeline: view()) {
-      .stage-inner {
-        animation: m-in linear both;
-        animation-timeline: view();
-        animation-range: entry 0% entry 45%;
-      }
-    }
+  /* ---------------------------------------------------------------
+     JS progress mode: phones, Firefox, iOS without scroll timelines.
+     --p (0..1) is written by src/scripts/progress.ts using the same
+     "cover" mapping as the CSS timelines, so the beats are the same as
+     on desktop, on stacked cards, and they reverse with the scroll.
+       words arrive  ~ 6%..30%     title fills 20%..48%     media 26%..52%
+     --------------------------------------------------------------- */
+  :global(html[data-jsp]) .chapter {
+    --p: 0.4;
+    --f: clamp(0, calc((var(--p) - 0.20) / 0.28), 1);
+    --m: clamp(0, calc((var(--p) - 0.26) / 0.26), 1);
+    --mi: calc(1 - var(--m));
+    --pp: clamp(0, var(--p), 1);
+  }
+  :global(html[data-jsp]) .show-body > * {
+    --t: clamp(0, calc((var(--p) - 0.06 - var(--k) * 0.022) / 0.16), 1);
+    opacity: var(--t);
+    transform: translateY(calc((1 - var(--t)) * 26px));
+  }
+  :global(html[data-jsp]) .show-name {
+    position: relative;
+    display: block;
+    width: fit-content;
+    color: transparent;
+    -webkit-text-stroke: 1.25px var(--purple-bright);
+  }
+  :global(html[data-jsp]) .show-name::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%;
+    color: var(--purple-bright);
+    -webkit-text-stroke: 0;
+    clip-path: inset(0 calc((1 - var(--f)) * 100%) 0 0);
+    pointer-events: none;
+  }
+
+  /* media, default: rise and unmask */
+  :global(html[data-jsp]) .chapter.has-media .show-img {
+    opacity: clamp(0, calc(var(--m) * 3), 1);
+    transform: translateY(calc(var(--mi) * 30px));
+    clip-path: inset(0 0 calc(var(--mi) * 40%) 0);
+  }
+  :global(html[data-jsp]) .show-media-tag { opacity: clamp(0, calc((var(--m) - 0.7) * 4), 1); }
+  :global(html[data-jsp]) .chapter.no-media .show-visual {
+    opacity: clamp(0, calc(var(--m) * 2.5), 1);
+    transform: translateY(calc(var(--mi) * 24px));
+  }
+
+  /* nexus: wipe with a scan line */
+  :global(html[data-jsp]) .chapter[data-scene='nexus'] .show-img {
+    opacity: 1;
+    clip-path: inset(0 calc(var(--mi) * 100%) 0 0);
+    transform: scale(calc(1 + var(--mi) * 0.035));
+  }
+  :global(html[data-jsp]) .chapter[data-scene='nexus'] .media-frame::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: calc(var(--m) * 100%);
+    width: 1px;
+    background: var(--purple-bright);
+    box-shadow: 0 0 14px 1px color-mix(in oklab, var(--purple-bright) 70%, transparent);
+    opacity: clamp(0, calc(min(var(--m), var(--mi)) * 8), 1);
+    pointer-events: none;
+  }
+
+  /* kanvaz: the card is dropped onto the board */
+  :global(html[data-jsp]) .chapter[data-scene='kanvaz'] .media-frame { transform: rotate(-1.2deg); }
+  :global(html[data-jsp]) .chapter[data-scene='kanvaz'] .show-img {
+    opacity: clamp(0, calc(var(--m) * 3), 1);
+    clip-path: none;
+    transform: translateY(calc(var(--mi) * -60px)) rotate(calc(var(--mi) * -6deg)) scale(calc(1 + var(--mi) * 0.05));
+  }
+  :global(html[data-jsp]) .chapter[data-scene='kanvaz'] .pin {
+    display: block;
+    position: absolute;
+    top: -7px; left: 50%;
+    width: 13px; height: 13px;
+    margin-left: -6px;
+    border-radius: 50%;
+    background: var(--purple-bright);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+    transform: scale(clamp(0, calc((var(--m) - 0.8) * 5), 1));
+  }
+
+  /* ascent: letterbox opens, lights come up, camera pulls back */
+  :global(html[data-jsp]) .chapter[data-scene='ascent'] .show-img {
+    opacity: 1;
+    clip-path: inset(calc(var(--mi) * 46%) 0 calc(var(--mi) * 46%) 0);
+    filter: brightness(calc(0.3 + var(--m) * 0.7));
+    transform: scale(calc(1 + var(--mi) * 0.07));
+  }
+
+  /* scene cards: on phones each scene chapter is a card with its backdrop inside */
+  :global(html[data-jsp]) .chapter[data-scene] .stage {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    margin: var(--sp-4) 0;
+  }
+  :global(html[data-jsp]) .chapter[data-scene] .stage-inner { padding: var(--sp-6) var(--sp-5); }
+  :global(html[data-jsp]) .chapter[data-scene='ascent'] .stage-inner { padding-top: calc(var(--sp-8) + 36px); }
+  :global(html[data-jsp]) .chapter[data-scene] .scene-bg {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  :global(html[data-jsp]) .chapter[data-scene='nexus'] .scene-bg { background-position: 0 calc(var(--pp) * -48px); }
+  :global(html[data-jsp]) .chapter[data-scene='kanvaz'] .scene-bg { background-position: 0 calc(var(--pp) * -36px); }
+  :global(html[data-jsp]) .chapter[data-scene='ascent'] .scene-bg > * { position: absolute; }
+  :global(html[data-jsp]) .chapter[data-scene='ascent'] .moon {
+    top: 5%; right: 8%;
+    width: 15vmin; height: 15vmin;
+    transform: translate(0, calc(150% - var(--pp) * 210%)) scale(calc(1.15 - var(--pp) * 0.2));
+  }
+  :global(html[data-jsp]) .chapter[data-scene='ascent'] .stars.s1 { transform: translateY(calc(var(--pp) * 10px)); }
+  :global(html[data-jsp]) .chapter[data-scene='ascent'] .stars.s2 { transform: translateY(calc(var(--pp) * 22px)); }
+  :global(html[data-jsp]) .chapter[data-scene='ascent'] .stars.s3 { transform: translateY(calc(var(--pp) * 40px)); animation: twinkle 3.4s ease-in-out infinite alternate; }
+  :global(html[data-jsp]) .chapter[data-scene='ascent'] .nebula { transform: translate(calc((var(--pp) - 0.5) * 8vw), calc((0.5 - var(--pp)) * 6vh)); }
+  :global(html[data-jsp]) .chapter[data-scene='ascent'] .ridge.far  { transform: translate(calc((var(--pp) - 0.5) * 6vw),  calc(var(--pp) * 5vh)); height: 22%; }
+  :global(html[data-jsp]) .chapter[data-scene='ascent'] .ridge.mid  { transform: translate(calc((0.5 - var(--pp)) * 10vw), calc(var(--pp) * 9vh)); height: 18%; }
+  :global(html[data-jsp]) .chapter[data-scene='ascent'] .ridge.near { transform: translate(calc((var(--pp) - 0.5) * 16vw), calc(var(--pp) * 13vh)); height: 13%; }
+  :global(html[data-jsp]) .chapter[data-scene='ascent'] .shoot { display: none; }
+  @media (prefers-reduced-motion: reduce) {
+    :global(html[data-jsp]) .chapter[data-scene='ascent'] .stars.s3 { animation: none; }
   }
 
   /* -------- keyframes -------- */

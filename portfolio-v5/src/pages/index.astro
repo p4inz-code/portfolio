@@ -10,9 +10,12 @@ import { FEATURED_PROJECTS, SUPPORTING_PROJECTS, PROJECTS } from '../data/projec
 import { SITE } from '../data/site';
 
 const projectCount = PROJECTS.length;
+const NUM = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight'];
+const featuredWord = NUM[FEATURED_PROJECTS.length] ?? String(FEATURED_PROJECTS.length);
 ---
 <BaseLayout title={`${SITE.title} — Software · 3D · VFX · Northbyte`} keywords="Atharva Patil, p4inz, P4INZ, painz, p4inz web dev, p4inz app dev, p4inz cli dev, p4inz game dev, Northbyte Studios">
   <EditorialHero
+    scrub
     eyebrow={`Building ${SITE.studio} · ${SITE.location}`}
     lines={[
       { text: 'software studio.', emphasis: 'Northbyte is a one-person' },
@@ -26,7 +29,7 @@ const projectCount = PROJECTS.length;
     </div>
   </EditorialHero>
 
-  <Section heading="Four things I'm shipping right now.">
+  <Section heading={`${featuredWord} things I'm shipping right now.`}>
     <FeaturedShowcase projects={FEATURED_PROJECTS} />
   </Section>
 

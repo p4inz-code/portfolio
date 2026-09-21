@@ -1,0 +1,124 @@
+---
+import type { Project } from '../../data/projects';
+
+/**
+ * /work: the whole roster as an index. Featured projects are cards above; this
+ * lists everything (including the smaller work) as rows you can scan in one
+ * glance: number, name, what it is, where it stands, what it is made of.
+ * Hover (or keyboard focus) lights the row and previews the picture where
+ * there is one. Rows slide in with the scroll (native view timeline, or the
+ * JS progress engine).
+ */
+interface Props {
+  projects: Project[];
+}
+const { projects } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<ol class="index" aria-label="All projects">
+  {projects.map((p, i) => (
+    <li class="row" style={`--r:${i}`} data-progress data-scene={p.scene}>
+      <a class="row-link" href={p.href} {...(p.isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+        <span class="r-num" aria-hidden="true">{pad(i + 1)}</span>
+        <span class="r-name">{p.name}</span>
+        <span class="r-tag">{p.tagline}</span>
+        <span class="r-status">{p.status.label}</span>
+        <span class="r-stack">{(p.stack ?? p.tags).slice(0, 3).join(' · ')}</span>
+        <span class="r-arrow" aria-hidden="true">{p.isExternal ? '↗' : '→'}</span>
+        {p.media && p.media.kind !== 'video' && (
+          <img class="r-peek" src={p.media.src} alt="" width="320" height="200" loading="lazy" decoding="async" />
+        )}
+      </a>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .index { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .row { border-bottom: 1px solid var(--line); position: relative; }
+  .row-link {
+    position: relative;
+    display: grid;
+    grid-template-columns: 56px minmax(150px, 1.1fr) minmax(0, 2fr) minmax(140px, 0.9fr) minmax(0, 1.1fr) 28px;
+    gap: var(--sp-4);
+    align-items: baseline;
+    padding: var(--sp-5) var(--sp-3);
+    color: var(--text);
+    text-decoration: none;
+    transition: background var(--dur-fast) var(--ease-out), padding-left var(--dur) var(--ease-out);
+  }
+  .row-link::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--purple-bright);
+    transform: scaleY(0);
+    transform-origin: 50% 100%;
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .row-link:hover, .row-link:focus-visible {
+    background: color-mix(in oklab, var(--purple) 7%, transparent);
+    padding-left: var(--sp-5);
+    outline: none;
+  }
+  .row-link:hover::before, .row-link:focus-visible::before { transform: scaleY(1); }
+  .r-num { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-eyebrow); color: var(--muted); }
+  .r-name { font-family: var(--font-display); font-size: clamp(20px, 2.2vw, 30px); font-weight: 500; letter-spacing: -0.02em; }
+  .row[data-scene='nexus'] .r-name  { font-family: var(--font-scene-nexus); }
+  .row[data-scene='kanvaz'] .r-name { font-family: var(--font-scene-kanvaz); font-weight: 700; }
+  .row[data-scene='ascent'] .r-name { font-family: var(--font-scene-ascent); font-weight: 400; font-size: clamp(24px, 2.6vw, 36px); }
+  .r-tag { color: var(--muted); font-size: var(--text-sm); line-height: 1.45; }
+  .r-status { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; color: var(--text); }
+  .r-stack { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; color: var(--muted); }
+  .r-arrow { color: var(--purple-bright); text-align: right; transition: transform var(--dur) var(--ease-out); }
+  .row-link:hover .r-arrow, .row-link:focus-visible .r-arrow { transform: translateX(4px); }
+
+  .r-peek {
+    position: absolute;
+    right: 90px; top: 50%;
+    width: 240px; height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--line-strong);
+    box-shadow: 0 24px 50px -24px rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    transform: translateY(-40%) scale(0.94) rotate(-2deg);
+    transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .row-link:hover .r-peek, .row-link:focus-visible .r-peek { opacity: 1; transform: translateY(-50%) scale(1) rotate(-2deg); }
+  @media (hover: none) { .r-peek { display: none; } }
+
+  @media (max-width: 900px) {
+    .row-link {
+      grid-template-columns: 34px 1fr auto;
+      grid-template-areas: 'n name arrow' '. tag tag' '. status stack';
+      gap: 4px var(--sp-3);
+      padding: var(--sp-4) var(--sp-2);
+    }
+    .r-num { grid-area: n; }
+    .r-name { grid-area: name; }
+    .r-arrow { grid-area: arrow; }
+    .r-tag { grid-area: tag; }
+    .r-status { grid-area: status; }
+    .r-stack { grid-area: stack; justify-self: end; text-align: right; }
+    .r-peek { display: none; }
+  }
+
+  /* rows slide in as they enter (native), staggered by nothing but their position */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .row-link { animation: row-in var(--ease-out) both; animation-timeline: view(); animation-range: entry 0% entry 55%; }
+    }
+  }
+  @keyframes row-in { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
+  :global(html[data-jsp]) .row { --p: 0.5; }
+  :global(html[data-jsp]) .row-link {
+    --rt: clamp(0, calc((var(--p) - 0.08) / 0.2), 1);
+    opacity: var(--rt);
+    transform: translateX(calc((1 - var(--rt)) * -24px));
+    animation: none;
+  }
+</style>
