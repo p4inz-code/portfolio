@@ -9,7 +9,7 @@
 interface Props { class?: string; withLabel?: boolean }
 const { class: cls = '', withLabel = false } = Astro.props;
 ---
-<button type="button" class:list={['motion-toggle', cls]} aria-pressed="false" aria-label="Pause ambient motion" title="Pause ambient motion">
+<button type="button" class:list={['motion-toggle', cls]} aria-pressed="false" aria-label="Pause ambient motion" title="Pause background motion: stars, glows, looping video, the running sprite">
   <svg class="mt-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
   <svg class="mt-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
   {withLabel && <span class="mt-label">Motion: on</span>}

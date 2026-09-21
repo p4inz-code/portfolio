@@ -388,6 +388,18 @@ const defaultLabel = (kind: string) =>
     border-radius: 4px;
     background: var(--surface-2);
   }
+  /* Ascent: a bigger frame with a colour grade (violet shadows, more punch), one recipe per theme */
+  .chapter[data-scene='ascent'] { --grade: saturate(1.2) contrast(1.06); }
+  :global(:root[data-theme='light']) .chapter[data-scene='ascent'] { --grade: saturate(1.08) brightness(1.08) contrast(1.02); }
+  .chapter[data-scene='ascent'] .show-img { filter: var(--grade); border-radius: 5px; box-shadow: 0 24px 60px -28px color-mix(in oklab, var(--purple-bright) 70%, transparent); }
+  .chapter[data-scene='ascent'] .media-frame::after {
+    content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; border-radius: 5px;
+    background: radial-gradient(120% 100% at 50% 40%, transparent 55%, rgba(12, 4, 40, 0.42)), linear-gradient(180deg, rgba(139, 92, 246, 0.2), rgba(20, 8, 60, 0.26));
+    mix-blend-mode: soft-light;
+  }
+  :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .media-frame::after {
+    background: radial-gradient(120% 100% at 50% 40%, transparent 60%, rgba(91, 33, 182, 0.26)), linear-gradient(180deg, rgba(196, 181, 253, 0.4), rgba(255, 255, 255, 0.14));
+  }
   .show-media-tag {
     margin-top: var(--sp-3);
     font-family: var(--font-mono);
@@ -493,6 +505,7 @@ const defaultLabel = (kind: string) =>
       .chapter:first-child .stage-inner { padding-top: 0; }
       /* Media gets the wider column: the picture is the payoff. */
       .chapter.has-media .stage-inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: var(--sp-8); }
+      .chapter.has-media[data-scene='ascent'] .stage-inner { grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.6fr); gap: var(--sp-7); }
 
       /* Chapter counter with a hairline that fills while the stage is pinned. */
       .ch-count {
@@ -924,8 +937,8 @@ const defaultLabel = (kind: string) =>
     to   { stroke-dashoffset: 0; }
   }
   @keyframes reveal-ascent {
-    from { clip-path: inset(46% 0 46% 0); transform: scale(1.07); filter: brightness(0.3); }
-    to   { clip-path: inset(0 0 0 0);     transform: none;        filter: brightness(1); }
+    from { clip-path: inset(46% 0 46% 0); transform: scale(1.07); filter: brightness(0.3) var(--grade, none); }
+    to   { clip-path: inset(0 0 0 0);     transform: none;        filter: var(--grade, none); }
   }
   @keyframes push-in {
     from { scale: 0.985; }

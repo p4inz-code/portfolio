@@ -20,6 +20,18 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.26.0',
+    kind: 'released',
+    summary: "Work deck rebuilt: pictures are never cropped and each product's arrives its own way. Ascent gets a bigger, colour-graded frame and a level counter with a runner that hops obstacles. The home hero steps are now cards.",
+    body: [
+      "Work: the pictures keep their own ratio and fit the card, so nothing is cut off (Nexus and Kanvaz were being clipped at the edges). Nexus wipes in with a scan line, Kanvaz drops onto the board and tilts into place (it had no motion before), Ascent reveals in pixel steps. Card backgrounds now move with the scroll: a grid for Nexus, dots for Kanvaz, drifting stars for Ascent, scanlines and a lattice for Mission OS and Pursue OS. The ticker strip and the dead space under each card are gone, and the big index numeral is smaller so it stays clear of the picture.",
+      "Ascent: the gameplay frame is wider on both the home page and /work, with a colour grade tuned separately for the dark and light themes. The level counter is now a small panel with a progress bar and a run strip: a ground line, spikes coming in, and the runner hopping each one, timed the way the offline dino game does it. The page-wide runner that floated across the screen is removed.",
+      "Home hero: the three steps are now glass cards that light up in turn, with the AP logo riding a bar underneath. On phones the captions are hidden and the cards shrink so nothing wraps badly. The release pill under the header hides the version below 430px so it no longer truncates.",
+      "The pause button in the header now says what it does when you hover it: it stops ambient motion (stars, glows, looping video, the running sprite), and leaves scroll-driven motion alone.",
+      "Donation page (p4inz-code.github.io/donate): Buy Me a Coffee first for anywhere in the world, with its QR, and UPI second for India. Every repo README support block now carries a Buy Me a Coffee badge, and the donate repo has a banner. The site README is updated to match.",
+    ],
+  },
+  {
     version: 'v5.25.0',
     kind: 'released',
     summary: "New home hero and scroll story, a glass release ladder, translucent cards, scene effects on every case study that also work on phones, a support page, and two more sites in the work list.",

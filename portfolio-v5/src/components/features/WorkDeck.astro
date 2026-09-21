@@ -9,8 +9,10 @@ import StatusPill from '../ui/StatusPill.astro';
  * then picture). Here they are a different object: each project is a card
  * that sticks near the top of the screen and the next card slides over it, so
  * the previous one shrinks and dims into a stack. Inside a card, the oversized
- * index numeral fills as the card settles, the picture drifts against the
- * card, and a ticker of the project's own tags slides sideways with the scroll.
+ * index numeral fills as the card settles, the background moves with the scroll,
+ * and the picture arrives its own way for each product (a scan wipe for Nexus,
+ * a card dropped on the board for Kanvaz, a pixel wipe for Ascent). The picture
+ * is never cropped: the frame takes the image's own ratio and is sized to fit.
  *
  * Wrapper height = 100vh, so a card's "being covered" phase is the last part
  * of its wrapper's cover range (50% to 96%). Native scroll timelines on
@@ -22,12 +24,12 @@ interface Props {
 }
 const { projects } = Astro.props;
 const pad = (n: number) => String(n).padStart(2, '0');
+const num = (r: string) => { const [a, b] = r.split('/').map(Number); return a / b; };
 ---
 <section class="deck" aria-label="Featured projects">
   {projects.map((p, i) => {
     const m = p.media;
     const last = i === projects.length - 1;
-    const ticker = [p.name, ...p.metaTags].join('  ·  ');
     return (
       <div class:list={['dwrap', last && 'is-last']} style={`--i:${i};--n:${projects.length}`} data-progress>
         <article class="dcard" data-scene={p.scene} data-slug={p.slug}>
@@ -46,7 +48,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
           {m ? (
             <figure class="dmedia" data-kind={m.kind}>
-              <div class="dframe" style={`aspect-ratio:${m.ratio};`}>
+              <div class="dframe" style={`aspect-ratio:${m.ratio};--rn:${num(m.ratio).toFixed(4)};`}>
                 {m.video ? (
                   <video class="dimg" muted loop playsinline preload="none" poster={m.src} role="img" aria-label={m.alt} data-showcase-video>
                     <source src={m.video.webm} type="video/webm" />
@@ -65,9 +67,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
             </div>
           )}
 
-          <div class="dticker" aria-hidden="true">
-            <span>{ticker}  ·  {ticker}  ·  {ticker}  ·  {ticker}</span>
-          </div>
         </article>
       </div>
     );
@@ -95,9 +94,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
     min-height: 460px;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
-    grid-template-rows: 1fr auto;
+    grid-template-rows: minmax(0, 1fr);
     gap: 0 var(--sp-7);
-    padding: var(--sp-7) var(--sp-8) 0;
+    padding: var(--sp-7) var(--sp-8);
+    background: color-mix(in oklab, var(--surface-1) 88%, transparent);
     border: 1px solid var(--line-strong);
     border-radius: 22px;
     background: var(--surface-1);
@@ -114,7 +114,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     z-index: -1;
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(120px, 22vw, 300px);
+    font-size: clamp(100px, 13vw, 190px);
     line-height: 1;
     letter-spacing: -0.04em;
     color: transparent;
@@ -134,7 +134,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
     align-self: center;
     display: flex; flex-direction: column; gap: var(--sp-4);
     min-width: 0;
-    padding-bottom: var(--sp-6);
   }
   .dname {
     font-family: var(--font-display);
@@ -174,18 +173,18 @@ const pad = (n: number) => String(n).padStart(2, '0');
     outline: none;
   }
 
-  .dmedia { margin: 0; align-self: center; min-width: 0; padding-bottom: var(--sp-6); }
+  .dmedia { margin: 0; align-self: center; min-width: 0; }
   .dframe {
     position: relative;
     overflow: hidden;
     border: 1px solid var(--line-strong);
     border-radius: 10px;
     background: var(--surface-2);
-    width: 100%;
-    max-height: calc(var(--card-h) - 150px);
+    /* the image's own ratio, capped by the card height: fit, never crop */
+    width: min(100%, calc((var(--card-h) - 190px) * var(--rn, 1.6)));
     margin-inline: auto;
   }
-  .dimg { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .dimg { display: block; width: 100%; height: 100%; object-fit: contain; }
   .dcap {
     margin-top: var(--sp-2);
     font-family: var(--font-mono);
@@ -200,30 +199,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
     border-radius: 10px;
     background: linear-gradient(135deg, color-mix(in oklab, var(--purple-deep) 40%, transparent), color-mix(in oklab, var(--surface-2) 90%, transparent));
     min-height: 220px;
-    margin-bottom: var(--sp-6);
   }
   .dempty-slug { font-family: var(--font-mono); font-size: 10px; letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--muted); }
   .dempty-name { font-family: var(--font-display); font-size: clamp(28px, 3vw, 42px); color: var(--text); letter-spacing: -0.02em; }
-
-  /* Ticker along the foot of the card. */
-  .dticker {
-    grid-column: 1 / -1;
-    margin: 0 calc(-1 * var(--sp-8));
-    border-top: 1px solid var(--line);
-    background: color-mix(in oklab, var(--surface-2) 70%, transparent);
-    overflow: hidden;
-    white-space: nowrap;
-    padding: 9px 0;
-  }
-  .dticker span {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 10.5px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-    translate: calc(var(--tk, 0) * -22%) 0;
-  }
 
   /* ------------------------------------------------------------ scenes */
   .dcard-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
@@ -248,7 +226,48 @@ const pad = (n: number) => String(n).padStart(2, '0');
   .dcard[data-scene='kanvaz'] .dname { font-family: var(--font-scene-kanvaz); font-weight: 700; letter-spacing: 0; font-size: clamp(38px, 4.8vw, 66px); }
   .dcard[data-scene='ascent'] .dname { font-family: var(--font-scene-ascent); font-weight: 400; letter-spacing: 0.01em; line-height: 1; font-size: clamp(44px, 5.6vw, 78px); }
   .dcard[data-scene='kanvaz'] .dframe { border-radius: 8px; box-shadow: 0 18px 36px -22px rgba(0, 0, 0, 0.6); rotate: -1deg; }
-  .dcard[data-scene='ascent'] .dframe { border-radius: 3px; }
+  .dcard[data-scene='ascent'] { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr); }
+  .dcard[data-scene='ascent'] .dframe { border-radius: 5px; box-shadow: 0 24px 60px -28px color-mix(in oklab, var(--purple-bright) 70%, transparent); }
+  /* colour grade: violet shadows, a little more punch, one recipe per theme */
+  .dcard[data-scene='ascent'] .dimg { filter: saturate(1.2) contrast(1.06); }
+  .dcard[data-scene='ascent'] .dframe::after {
+    content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(120% 100% at 50% 40%, transparent 55%, rgba(12, 4, 40, 0.42)), linear-gradient(180deg, rgba(139, 92, 246, 0.2), rgba(20, 8, 60, 0.26));
+    mix-blend-mode: soft-light;
+  }
+  :global(:root[data-theme='light']) .dcard[data-scene='ascent'] .dimg { filter: saturate(1.08) brightness(1.08) contrast(1.02); }
+  :global(:root[data-theme='light']) .dcard[data-scene='ascent'] .dframe::after {
+    background: radial-gradient(120% 100% at 50% 40%, transparent 60%, rgba(91, 33, 182, 0.26)), linear-gradient(180deg, rgba(196, 181, 253, 0.4), rgba(255, 255, 255, 0.14));
+  }
+  /* nexus: a scan line that travels with the wipe */
+  .dcard[data-scene='nexus'] .dframe::after {
+    content: ''; position: absolute; top: 0; bottom: 0; left: 100%; width: 1px; z-index: 1; pointer-events: none;
+    background: var(--purple-bright);
+    box-shadow: 0 0 14px 1px color-mix(in oklab, var(--purple-bright) 70%, transparent);
+    opacity: 0;
+  }
+  /* ascent: stars that drift with the scroll */
+  .dcard[data-scene='ascent'] .dcard-bg::before {
+    content: ''; position: absolute; inset: -60px;
+    background-image:
+      radial-gradient(1.4px 1.4px at 12% 22%, #fff, transparent),
+      radial-gradient(1px 1px at 38% 64%, #fff, transparent),
+      radial-gradient(1.6px 1.6px at 61% 18%, #fff, transparent),
+      radial-gradient(1px 1px at 77% 52%, #fff, transparent),
+      radial-gradient(1.2px 1.2px at 90% 84%, #fff, transparent),
+      radial-gradient(1px 1px at 24% 88%, #fff, transparent);
+    background-size: 220px 190px;
+    opacity: 0.55;
+  }
+  :global(:root[data-theme='light']) .dcard[data-scene='ascent'] .dcard-bg::before { filter: invert(1) hue-rotate(230deg) saturate(3); opacity: 0.35; }
+  /* the card that has no picture yet (Mission OS, Pursue OS) gets a live backdrop too */
+  .dcard[data-scene='mission'] .dcard-bg, .dcard[data-slug='mission-os'] .dcard-bg {
+    background-image: repeating-linear-gradient(0deg, color-mix(in oklab, var(--purple-bright) 9%, transparent) 0 1px, transparent 1px 7px);
+  }
+  .dcard[data-slug='pursue-os'] .dcard-bg {
+    background-image: radial-gradient(color-mix(in oklab, #14b8a6 30%, transparent) 1.3px, transparent 1.6px);
+    background-size: 26px 26px;
+  }
   :global(:root[data-theme='light']) .dcard[data-scene='ascent'] .dcard-bg {
     background: radial-gradient(circle 9vmin at 82% 22%, color-mix(in oklab, var(--purple-bright) 16%, transparent), transparent 70%), linear-gradient(to bottom, transparent 30%, color-mix(in oklab, var(--purple) 16%, transparent));
   }
@@ -260,16 +279,16 @@ const pad = (n: number) => String(n).padStart(2, '0');
     .dcard {
       height: auto; min-height: 0;
       grid-template-columns: 1fr;
-      grid-template-rows: auto auto auto;
-      padding: var(--sp-5) var(--sp-5) 0;
+      grid-template-rows: auto auto;
+      padding: var(--sp-5);
       gap: var(--sp-4);
     }
     .dmedia { order: -1; padding-bottom: 0; }
-    .dframe { max-height: none; }
+    .dframe { width: 100%; }
+    .dcard[data-scene='ascent'] { grid-template-columns: 1fr; }
     .dbody { padding-bottom: var(--sp-4); }
     .ddesc { -webkit-line-clamp: 3; }
     .dnum { font-size: clamp(90px, 30vw, 160px); right: var(--sp-4); }
-    .dticker { margin: 0 calc(-1 * var(--sp-5)); }
     .dmedia-empty { min-height: 120px; margin-bottom: 0; }
   }
 
@@ -288,16 +307,32 @@ const pad = (n: number) => String(n).padStart(2, '0');
         animation-timeline: --dw;
         animation-range: cover 6% cover 40%;
       }
-      .dimg {
-        animation: dimg-drift linear both;
+      /* live backgrounds: they move with the scroll, so they reverse with it */
+      .dcard-bg {
+        animation: dbg-pan linear both;
         animation-timeline: --dw;
         animation-range: cover 0% cover 100%;
       }
-      .dticker span {
-        animation: dticker-slide linear both;
+      .dcard[data-scene='ascent'] .dcard-bg { animation: none; }
+      .dcard[data-scene='ascent'] .dcard-bg::before {
+        animation: dstars linear both;
         animation-timeline: --dw;
         animation-range: cover 0% cover 100%;
       }
+      /* each product's picture arrives its own way, as the card settles */
+      .dframe, .dmedia-empty {
+        animation: dfr-default var(--ease-out) both;
+        animation-timeline: --dw;
+        animation-range: cover 4% cover 26%;
+      }
+      .dcard[data-scene='nexus'] .dframe { animation-name: dfr-nexus; animation-timing-function: var(--ease-io, ease-in-out); }
+      .dcard[data-scene='nexus'] .dframe::after {
+        animation: dscan var(--ease-io, ease-in-out) both;
+        animation-timeline: --dw;
+        animation-range: cover 4% cover 26%;
+      }
+      .dcard[data-scene='kanvaz'] .dframe { animation-name: dfr-kanvaz; animation-range: cover 4% cover 30%; }
+      .dcard[data-scene='ascent'] .dframe { animation-name: dfr-ascent; animation-timing-function: steps(12, end); }
       .dbody > * {
         animation: dbody-in var(--ease-out) both;
         animation-timeline: --dw;
@@ -311,8 +346,13 @@ const pad = (n: number) => String(n).padStart(2, '0');
   }
   @keyframes dcard-back { to { transform: scale(0.93); filter: brightness(0.6); } }
   @keyframes dnum-fill  { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
-  @keyframes dimg-drift { from { transform: scale(1.12) translateY(5%); } to { transform: scale(1.12) translateY(-5%); } }
-  @keyframes dticker-slide { from { translate: 0 0; } to { translate: -22% 0; } }
+  @keyframes dbg-pan { from { background-position: 0 0, 0 0; } to { background-position: -132px 88px, -132px 88px; } }
+  @keyframes dstars { from { translate: 0 0; } to { translate: -50px 60px; } }
+  @keyframes dfr-default { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+  @keyframes dfr-nexus { from { clip-path: inset(0 100% 0 0); transform: scale(1.03); } to { clip-path: inset(0 0 0 0); transform: none; } }
+  @keyframes dscan { 0% { left: 0; opacity: 0; } 6% { opacity: 1; } 94% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
+  @keyframes dfr-kanvaz { from { opacity: 0; transform: translateY(-90px) rotate(-7deg) scale(1.04); } 35% { opacity: 1; } to { opacity: 1; transform: none; } }
+  @keyframes dfr-ascent { from { clip-path: inset(0 0 100% 0); filter: brightness(0.4); } to { clip-path: inset(0 0 0 0); filter: brightness(1); } }
   @keyframes dbody-in { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
 
   /* --------------------- JS progress mode: phones, Firefox, older iOS Safari */
@@ -320,7 +360,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     --p: 0.5;
     --s: clamp(0, calc((var(--p) - 0.5) / 0.46), 1);      /* being covered */
     --nf: clamp(0, calc((var(--p) - 0.06) / 0.34), 1);    /* numeral fill */
-    --tk: var(--p);                                       /* ticker slide */
+    --fr: clamp(0, calc((var(--p) - 0.04) / 0.24), 1);    /* picture arrival */
   }
   :global(html[data-jsp]) .dwrap:not(.is-last) .dcard {
     transform: scale(calc(1 - var(--s) * 0.06));
@@ -335,5 +375,12 @@ const pad = (n: number) => String(n).padStart(2, '0');
   :global(html[data-jsp]) .dbody > *:nth-child(3) { --k: 2; }
   :global(html[data-jsp]) .dbody > *:nth-child(4) { --k: 3; }
   :global(html[data-jsp]) .dbody > *:nth-child(5) { --k: 4; }
-  :global(html[data-jsp]) .dimg { transform: scale(1.1) translateY(calc((0.5 - var(--p)) * 8%)); }
+  :global(html[data-jsp]) .dcard-bg { background-position: calc(var(--p) * -132px) calc(var(--p) * 88px); }
+  :global(html[data-jsp]) .dcard[data-scene='ascent'] .dcard-bg { background-position: 0 0; }
+  :global(html[data-jsp]) .dcard[data-scene='ascent'] .dcard-bg::before { translate: calc(var(--p) * -50px) calc(var(--p) * 60px); }
+  :global(html[data-jsp]) .dframe, :global(html[data-jsp]) .dmedia-empty { opacity: var(--fr); transform: translateY(calc((1 - var(--fr)) * 26px)); }
+  :global(html[data-jsp]) .dcard[data-scene='nexus'] .dframe { opacity: 1; transform: none; clip-path: inset(0 calc((1 - var(--fr)) * 100%) 0 0); }
+  :global(html[data-jsp]) .dcard[data-scene='nexus'] .dframe::after { left: calc(var(--fr) * 100%); opacity: calc(clamp(0, var(--fr) * 20, 1) * clamp(0, (1 - var(--fr)) * 20, 1)); }
+  :global(html[data-jsp]) .dcard[data-scene='kanvaz'] .dframe { opacity: var(--fr); transform: translateY(calc((1 - var(--fr)) * -70px)) rotate(calc((1 - var(--fr)) * -6deg)); }
+  :global(html[data-jsp]) .dcard[data-scene='ascent'] .dframe { opacity: 1; transform: none; clip-path: inset(0 0 calc((1 - var(--fr)) * 100%) 0); }
 </style>

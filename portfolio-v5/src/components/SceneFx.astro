@@ -71,9 +71,16 @@ const edges: Array<[number, number]> = [
 )}
 
 {scene === 'ascent' && (
-  <div class="sfx" aria-hidden="true">
-    <div class="runner">
-      <div class="hop">
+  <div class="hud" aria-hidden="true">
+      <span class="hud-lv">LEVEL</span>
+      <span class="hud-num"></span>
+      <span class="hud-of">of 25</span>
+      <i class="hud-bar"><b></b></i>
+      <div class="hud-track">
+        <i class="ground"></i>
+        <i class="ob o1"></i>
+        <i class="ob o2"></i>
+        <div class="dino"><div class="hop">
         <svg class="sprite" viewBox="0 0 12 16" shape-rendering="crispEdges">
           <g class="body">
             <rect x="4" y="1" width="4" height="4" fill="#BAE6FD" />
@@ -97,14 +104,8 @@ const edges: Array<[number, number]> = [
             <rect x="6" y="14" width="3" height="1" fill="#0EA5E9" />
           </g>
         </svg>
+        </div></div>
       </div>
-    </div>
-    <div class="hud">
-      <span class="hud-lv">LEVEL</span>
-      <span class="hud-num"></span>
-      <span class="hud-of">of 25</span>
-      <i class="hud-bar"><b></b></i>
-    </div>
   </div>
 )}
 
@@ -202,15 +203,26 @@ const edges: Array<[number, number]> = [
   .cur.c3 { --c: #E23E6A; translate: 40vw 68vh; }
 
   /* =================================================================== ASCENT */
-  .runner { left: 0; bottom: 6.5vh; width: 38px; height: 50px; translate: calc(4vw + var(--sp, 0) * 82vw) 0; }
-  .hop { width: 100%; height: 100%; transform: translateY(calc(max(sin(calc(var(--sp, 0) * 1800deg)), 0) * -11vh)); }
-  .sprite { width: 100%; height: 100%; display: block; overflow: visible; filter: drop-shadow(0 0 6px rgba(125, 211, 252, 0.6)); }
+  .sprite { width: 100%; height: 100%; display: block; overflow: visible; filter: drop-shadow(0 0 5px rgba(125, 211, 252, 0.6)); }
+
+  /* the run strip: a ground line, small spikes coming in, the runner hops each one (timed together, like the offline dino) */
+  .hud-track { --w: 130px; position: relative; flex-basis: 100%; width: var(--w); height: 32px; margin-top: 8px; overflow: hidden; }
+  .ground { position: absolute; left: 0; right: 0; bottom: 4px; height: 2px; color: rgba(125, 211, 252, 0.75); background: repeating-linear-gradient(90deg, currentColor 0 5px, transparent 5px 9px); }
+  .ob { position: absolute; left: 0; bottom: 6px; width: 8px; height: 8px; background: #F472B6; clip-path: polygon(50% 0, 100% 100%, 0 100%); translate: var(--w) 0; }
+  .ob.o2 { translate: 60px 0; }
+  .dino { position: absolute; left: 22px; bottom: 6px; width: 14px; height: 19px; }
+  .dino .hop { width: 100%; height: 100%; }
   .sprite .f2 { visibility: hidden; }
 
   .hud {
-    left: 16px; top: 44%;
+    position: fixed; z-index: 45; pointer-events: none;
+    left: 14px; top: 44%;
     display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px;
-    width: 130px;
+    width: 156px; box-sizing: border-box;
+    padding: 10px 12px 8px;
+    border: 1px solid rgba(125, 211, 252, 0.28);
+    border-radius: 10px;
+    background: rgba(6, 3, 22, 0.5);
     font-family: var(--font-scene-ascent, var(--font-mono));
     color: #E0F2FE;
     text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
@@ -221,8 +233,8 @@ const edges: Array<[number, number]> = [
   .hud-of { font-size: 18px; opacity: 0.6; }
   .hud-bar {
     display: block;
-    flex-basis: 84px;
-    width: 84px; height: 6px;
+    flex: 1 1 60px;
+    height: 6px;
     margin-top: 4px;
     border: 1px solid rgba(125, 211, 252, 0.7);
     background: rgba(4, 2, 12, 0.5);
@@ -295,7 +307,10 @@ const edges: Array<[number, number]> = [
   :global(:root[data-theme='light']) .dial circle { stroke: color-mix(in oklab, var(--purple) 55%, transparent); }
   :global(:root[data-theme='light']) .hex { color: var(--purple); opacity: 0.22; }
   :global(:root[data-theme='light']) .cur svg { stroke: #fff; }
-  :global(:root[data-theme='light']) .hud { color: var(--purple-deep); text-shadow: none; }
+  :global(:root[data-theme='light']) .hud { color: var(--purple-deep); text-shadow: none; background: rgba(255, 255, 255, 0.5); border-color: color-mix(in oklab, var(--purple) 35%, transparent); }
+  :global(:root[data-theme='light']) .ground { color: var(--purple); }
+  :global(:root[data-theme='light']) .ob { background: #BE185D; }
+  :global(:root[data-theme='light']) .sprite { filter: none; }
   :global(:root[data-theme='light']) .hud-bar { border-color: var(--purple); background: rgba(255, 255, 255, 0.4); }
   :global(:root[data-theme='light']) .hud-bar b { background: var(--purple); }
   :global(:root[data-theme='light']) .ms-sky { background: linear-gradient(to bottom, color-mix(in oklab, var(--purple) 8%, var(--bg)) 0%, color-mix(in oklab, var(--purple) 22%, var(--bg)) 64%, color-mix(in oklab, var(--purple) 12%, var(--bg)) 64.2%, var(--bg) 100%); }
@@ -317,13 +332,19 @@ const edges: Array<[number, number]> = [
     .hex.b { display: none; }
     .hex.a { opacity: 0.2; }
     .cur.c1 { translate: 8vw 24vh; } .cur.c2 { translate: 52vw 44vh; } .cur.c3 { translate: 22vw 70vh; }
-    .runner { width: 30px; height: 40px; bottom: 5.5vh; }
-    .hud { left: 10px; top: 92px; }
-    .hud-num { font-size: 30px; }
-    .hud-bar { width: 56px; }
     .ms-boot { width: 34ch; opacity: 0.28; font-size: 10px; }
     .ms-radar { right: 4vw; top: 14vh; width: 30vmin; height: 30vmin; }
     .pu-lens { width: 30vmin; height: 30vmin; }
+  }
+
+  /* no room in the side gutter: a slim game-style strip along the bottom edge, above the page */
+  @media (max-width: 1319px) {
+    .hud { left: 50%; top: auto; bottom: 12px; translate: -50% 0; width: auto; flex-wrap: nowrap; align-items: center; gap: 8px; padding: 5px 10px; }
+    .hud-lv { flex-basis: auto; font-size: 11px; }
+    .hud-num { font-size: 22px; }
+    .hud-of { display: none; }
+    .hud-bar { flex: 0 0 44px; margin-top: 0; }
+    .hud-track { --w: 84px; flex-basis: auto; width: var(--w); margin-top: 0; height: 30px; }
   }
 
   /* ================================================================== MOTION */
@@ -335,6 +356,10 @@ const edges: Array<[number, number]> = [
     .cur.c2 { animation: fx-cur2 23s ease-in-out infinite alternate; }
     .cur.c3 { animation: fx-cur3 17s ease-in-out infinite alternate; }
     .sprite .f1 { animation: fx-leg 0.36s steps(1) infinite; }
+    .ground { animation: fx-ground 0.59s linear infinite; }
+    .ob.o1 { animation: fx-ob 2.4s linear infinite; }
+    .ob.o2 { animation: fx-ob 2.4s linear infinite -1.2s; }
+    .dino .hop { animation: fx-jump 1.2s linear infinite; }
     .sprite .f2 { animation: fx-leg 0.36s steps(1) infinite reverse; visibility: visible; }
     .ms-boot .in { animation: fx-boot 70s linear infinite; }
     .ms-radar i { animation: fx-radar 4.8s ease-out infinite; }
@@ -348,8 +373,6 @@ const edges: Array<[number, number]> = [
     /* scroll linked, native */
     @supports (animation-timeline: scroll()) {
       .dial { animation: fx-dial linear both; animation-timeline: scroll(root block); }
-      .runner { animation: fx-run linear both; animation-timeline: scroll(root block); }
-      .hop { animation: fx-hop linear both; animation-timeline: scroll(root block); }
       .hud-num { animation: fx-lvl linear both; animation-timeline: scroll(root block); }
       .hud-bar b { animation: fx-bar linear both; animation-timeline: scroll(root block); }
       .pu-lens { animation: fx-lens linear both; animation-timeline: scroll(root block); }
@@ -372,10 +395,12 @@ const edges: Array<[number, number]> = [
   @keyframes fx-node  { from { transform: scale(0.85); } to { transform: scale(1.25); } }
   @keyframes fx-blink { to { visibility: hidden; } }
   @keyframes fx-dial  { from { transform: rotate(0deg); } to { transform: rotate(260deg); } }
-  @keyframes fx-run   { from { translate: 4vw 0; } to { translate: 86vw 0; } }
-  @keyframes fx-hop {
-    0%, 8%, 14%, 26%, 32%, 44%, 50%, 62%, 68%, 80%, 86%, 100% { transform: translateY(0); }
-    11%, 29%, 47%, 65%, 83% { transform: translateY(-11vh); }
+  @keyframes fx-ground { to { background-position: -36px 0; } }
+  @keyframes fx-ob { from { translate: var(--w) 0; } to { translate: -14px 0; } }
+  @keyframes fx-jump {
+    0%, 18% { translate: 0 0; animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1); }
+    46% { translate: 0 -18px; animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.5); }
+    73%, 100% { translate: 0 0; }
   }
   @keyframes fx-lvl { from { --lvl: 1; } to { --lvl: 25; } }
   @keyframes fx-bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }

@@ -51,7 +51,7 @@ if (scrub) {
           <li class="pipe-track" aria-hidden="true"><i></i><img src="/ap-mark.png" width="34" height="34" alt="" decoding="async" /></li>
           {steps.map((st, i) => (
             <li class="pipe-step" style={`--s:${(steps.length > 1 ? i / (steps.length - 1) : 0).toFixed(3)}`}>
-              <span class="pipe-dot" aria-hidden="true"></span>
+              <span class="pipe-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
               <b>{st.label}</b>
               <span>{st.sub}</span>
             </li>
@@ -153,19 +153,49 @@ if (scrub) {
     --fill: 0;
     list-style: none; padding: 0;
     margin: var(--sp-7) 0 0;
-    max-width: 760px;
+    max-width: 820px;
     display: grid;
     grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    gap: 10px;
     position: relative;
   }
+  /* three glass cards that light up in turn, and a bar under them with the logo riding it */
+  .pipe-step {
+    --nt: clamp(0, calc((var(--fill) - var(--s) + 0.1) / 0.1), 1);
+    display: flex; flex-direction: column; gap: 6px;
+    padding: 14px 16px 16px;
+    border-radius: 14px;
+    border: 1px solid color-mix(in oklab, var(--purple-bright) calc(10% + var(--nt) * 55%), var(--line));
+    background: color-mix(in oklab, var(--purple-bright) calc(var(--nt) * 11%), color-mix(in oklab, var(--surface-1) 50%, transparent));
+    -webkit-backdrop-filter: blur(12px) saturate(1.2); backdrop-filter: blur(12px) saturate(1.2);
+    transform: translateY(calc((1 - var(--nt)) * 8px));
+    min-width: 0;
+  }
+  .pipe-n {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+    color: color-mix(in oklab, var(--purple-bright) calc(var(--nt) * 100%), var(--muted));
+  }
+  .pipe-step b {
+    font-family: var(--font-display); font-weight: 400;
+    font-size: clamp(15px, 1.7vw, 20px);
+    letter-spacing: -0.01em;
+    color: color-mix(in oklab, var(--text) calc(40% + var(--nt) * 60%), var(--muted));
+  }
+  .pipe-step > span:not(.pipe-n) {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.02em; line-height: 1.5;
+    color: var(--muted);
+  }
   .pipe-track {
-    position: absolute;
-    left: calc(50% / var(--n)); right: calc(50% / var(--n));
-    top: 16px; height: 1px;
+    order: 2; grid-column: 1 / -1;
+    position: relative; height: 34px; margin: 4px 17px 0;
+  }
+  .pipe-track::before {
+    content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px;
     background: var(--line-strong);
   }
   .pipe-track i {
-    position: absolute; inset: 0;
+    position: absolute; left: 0; right: 0; top: 50%; height: 1px;
     background: var(--purple-bright);
     transform-origin: 0 50%;
     transform: scaleX(var(--fill));
@@ -180,32 +210,7 @@ if (scrub) {
     -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
     box-shadow: 0 0 0 1px var(--line-strong), 0 0 22px color-mix(in oklab, var(--purple-bright) 45%, transparent);
     transform: rotate(calc(var(--fill) * 360deg));
-    z-index: 2;
-  }
-  .pipe-step {
-    --nt: clamp(0, calc((var(--fill) - var(--s) + 0.12) / 0.1), 1);
-    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px;
-    padding: 0 6px;
-    position: relative;
-  }
-  .pipe-dot {
-    width: 11px; height: 11px; margin: 11px 0 12px;
-    border-radius: 50%;
-    border: 1px solid var(--purple-bright);
-    background: color-mix(in oklab, var(--purple-bright) calc(var(--nt) * 100%), var(--bg));
-    box-shadow: 0 0 0 calc(var(--nt) * 5px) color-mix(in oklab, var(--purple-bright) 16%, transparent);
-    position: relative; z-index: 1;
-  }
-  .pipe-step b {
-    font-family: var(--font-display); font-weight: 400;
-    font-size: clamp(14px, 1.6vw, 18px);
-    letter-spacing: -0.01em;
-    color: color-mix(in oklab, var(--text) calc(var(--nt) * 100%), var(--muted));
-  }
-  .pipe-step span:not(.pipe-dot) {
-    font-family: var(--font-mono);
-    font-size: 11px; letter-spacing: 0.02em; line-height: 1.5;
-    color: var(--muted);
+    max-width: none;
   }
   .scrub-sub { margin-top: var(--sp-5); }
   .scrub-slot { margin-top: var(--sp-1); }
@@ -297,6 +302,9 @@ if (scrub) {
   }
   @media (prefers-reduced-motion: reduce) { .pipe { --fill: 1; } .pipe-track img { transform: none; } }
   @media (max-width: 640px) {
-    .pipe-step span:not(.pipe-dot) { display: none; }
+    .pipe { gap: 6px; }
+    .pipe-step { padding: 10px 10px 12px; }
+    .pipe-step > span:not(.pipe-n) { display: none; }
+    .pipe-track { margin-inline: 12px; }
   }
 </style>

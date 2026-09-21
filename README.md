@@ -10,11 +10,11 @@ India.
 
 ## What this repo is
 
-An Astro 5 static site: 18 pages, a 404, and build-time endpoints for the
+An Astro 5 static site: 19 pages, a 404, and build-time endpoints for the
 sitemap and the RSS feed. Zero JavaScript by default, with small vanilla
 islands where interactivity earns it (theme toggle, command palette,
-Mission OS demo state machine, mobile nav drawer, the contact composer and
-its magnetic card, the Ascent gameplay loop's play/pause).
+Mission OS demo state machine, mobile nav drawer, the contact composer, the
+scroll engine, the release ladder, the Ascent gameplay loop's play/pause).
 
 All source lives under `portfolio-v5/`. The build outputs static HTML and
 one small CSS bundle per route and deploys to Cloudflare Pages on every
@@ -73,6 +73,34 @@ portfolio/
 
 ## Signature interactions
 
+- **Home hero** — `/`. "I identify unmet needs in software and turn them
+  into products." The words light up as you scroll, then three glass cards
+  (spot the gap, build it, ship it) light in turn while the AP logo rides a
+  bar beneath them. A proof strip counts four plain facts up.
+- **Release ladder** — while the project chapters scroll, a glass ladder in
+  the left gutter shows where you are with each project's real version, and
+  the logo slides from dot to dot. Click a dot and it jumps straight to that
+  chapter. It only appears where there is empty side space; below 1320px it
+  is a small pill under the header, so it never sits on top of text.
+- **Tab icon** — the favicon is the AP mark in a ring that fills as you
+  scroll (static under reduced motion or when motion is paused).
+- **Work deck** — `/work/`. Featured projects are a stack of sticky cards.
+  Each picture arrives its own way (Nexus scan wipe, Kanvaz card dropped on
+  the board, Ascent pixel wipe) and never gets cropped; the backgrounds move
+  with the scroll. Below the deck is an index of every project, including
+  client and event sites (AniFX Fest, Kalasadhana Academy).
+- **Scroll engine** — `src/scripts/progress.ts`. Native scroll timelines on
+  desktop; a small JS driver (`--p`, `--sp`) everywhere else (phones, Firefox,
+  older Safari). Reversible, and static under reduced motion. Jumps are
+  instant, not animated through the steps in between.
+- **Glass** — content cards on every page are translucent with a blur, in
+  both themes.
+- **Motion pause** — the pause button in the header stops ambient motion
+  (stars, glows, looping video, the running sprite). Scroll-driven motion is
+  left alone because the visitor drives it. This is WCAG 2.2.2.
+- **Support** — `/support/`. Buy Me a Coffee for anywhere in the world, UPI
+  for India. It is a plain link, not an embedded widget, so the site still
+  loads nothing from third parties.
 - **Featured showcase** — `/` and `/work/`. Each featured project is a
   pinned chapter: the words arrive first, one more scroll reveals the
   picture. Project names start as outlines and fill with the accent as you
@@ -85,12 +113,14 @@ portfolio/
     reference cards joined by flowing cables. A card drops onto the board.
   - *Ascent* — Jersey 10 titles, a night sky with a nebula, star layers,
     shooting stars and a moon that fills out as you scroll, over ridges that
-    fall away. The letterbox opens on a real gameplay loop.
+    fall away. The gameplay frame is larger and colour graded for each
+    theme. A level counter tracks the scroll, with a small run strip under it
+    where the runner hops each obstacle, like the offline dino.
+  - *Mission OS* and *Pursue OS* have their own backdrops too.
 - **Contact composer** — `/contact/`. A terminal-style card with
   keyboard-accessible custom selects, a live character count and
-  `Ctrl`/`Cmd` + `Enter` to send. The whole card is magnetic: it leans and
-  tilts toward the pointer and lights up where it is (off on touch and for
-  reduced motion). Submitting opens a `mailto:` message with the fields
+  `Ctrl`/`Cmd` + `Enter` to send, a live clock, copy-email and a send
+  animation. Submitting opens a `mailto:` message with the fields
   formatted in the body. No backend, no fetch, nothing leaves the page.
 - **Command palette** — `⌘K` / `Ctrl+K` / `/`. Recent searches, match
   highlighting, keyboard navigation, suggestion chips on empty results.
@@ -169,13 +199,17 @@ GitHub [`p4inz-code`](https://github.com/p4inz-code)
 
 ### Support my work
 
-I make these tools on my own and keep them free. If one helped you, you can chip in by UPI. Any amount.
+I make these tools on my own and keep them free. If one helped you, you can chip in. Any amount.
 
 <a href="https://p4inz-code.github.io/donate/"><img src="https://raw.githubusercontent.com/p4inz-code/donate/main/qr.svg" alt="UPI QR code. Scan it with any UPI app." width="200"></a>
 
 `9321614988@jio`
 
 On your phone? [Open the donation page](https://p4inz-code.github.io/donate/).
+
+Outside India, or prefer a card?
+
+<a href="https://buymeacoffee.com/p4inz"><img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-p4inz-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=black" alt="Buy me a coffee"></a>
 
 </div>
 <!-- SUPPORT-BLOCK:END -->

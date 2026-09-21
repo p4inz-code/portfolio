@@ -178,7 +178,7 @@ const sub = (p: Project) => p.currentVersion ?? p.status.label;
     .rail-pill-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--line); }
     .rail-pill-bar u { position: absolute; inset: 0; background: var(--purple-bright); transform-origin: 0 50%; transform: scaleX(var(--rp)); text-decoration: none; }
   }
-  @media (max-width: 380px) { .rail-pill em { display: none; } }
+  @media (max-width: 430px) { .rail-pill em { display: none; } }
   @media (prefers-reduced-motion: reduce) {
     .rail, .rail.is-on, .rail-dot { transition: none; }
     .rail-line img { transform: translateY(calc(var(--ri) * var(--step))); }
