@@ -85,3 +85,9 @@ feature cards and screenshot frames pick up the scene. Set through a `scene` pro
 - Nexus: wipe and scan line share one easing so they stay locked; slight zoom-in settle; brackets scale in.
 - Ascent: letterbox opens while the footage fades up from dark and the camera pulls back; HUD corners settle onto the frame.
 - Backdrops drift slower than the page for depth. A small "02 / 05" counter with a filling hairline shows chapter progress.
+
+## Pass 3 (no dead scroll)
+
+- Chapters shortened (240vh with media, 160vh without) and re-timed so the words start while the stage is still rising into view; the reveal follows immediately; the rest of the pin is a slow push-in plus backdrop parallax. Measured at 0.1-screen steps: no step with nothing changing.
+- Ascent: HUD corner frames removed. Backdrop is now layered: stars, moon, and three ridges (far/mid/near) moving at different rates.
+- Nexus corner brackets kept (they are that scene's identity); say the word to drop them too.

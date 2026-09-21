@@ -15,8 +15,13 @@ import StatusPill from '../ui/StatusPill.astro';
  * Range maths (so the numbers below are not magic): for a chapter of height
  * H and viewport height V, the `cover` range is V + H long and the stage is
  * pinned from V/(V+H) to H/(V+H).
- *   media chapter    H = 280vh  ->  pinned 26.3% .. 73.7%
- *   no-media chapter H = 180vh  ->  pinned 35.7% .. 64.3%
+ *   media chapter    H = 240vh  ->  pinned 29.4% .. 70.6%  (1.4 screens of scroll)
+ *   no-media chapter H = 160vh  ->  pinned 38.5% .. 61.5%  (0.6 screens)
+ *
+ * No dead scroll: the words start arriving while the stage is still rising
+ * into view (17%), the media reveals right behind them (33-53%), and from
+ * 54% to the end of the pin a slow push-in and the backdrop parallax keep
+ * every notch of the wheel doing something.
  *
  * Feel: arrivals ease out (fast start, soft landing), wipes ease in-out,
  * the Kanvaz card overshoots slightly and settles. Nothing is linear
@@ -45,7 +50,17 @@ const defaultLabel = (kind: string) =>
         data-slug={p.slug}
       >
         <div class="stage">
-          <div class="scene-bg" aria-hidden="true"></div>
+          <div class="scene-bg" aria-hidden="true">
+            {p.scene === 'ascent' && (
+              <>
+                <span class="stars"></span>
+                <span class="moon"></span>
+                <span class="ridge far"></span>
+                <span class="ridge mid"></span>
+                <span class="ridge near"></span>
+              </>
+            )}
+          </div>
           <div class="ch-count" aria-hidden="true"><span>{pad(i + 1)} / {pad(projects.length)}</span><i></i></div>
           <div class="stage-inner">
             <a class="show-body" href={p.href}>
@@ -325,8 +340,8 @@ const defaultLabel = (kind: string) =>
         --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
         --ease-settle: cubic-bezier(0.34, 1.32, 0.64, 1);
       }
-      .chapter.has-media { height: 280vh; }
-      .chapter.no-media  { height: 180vh; }
+      .chapter.has-media { height: 240vh; }
+      .chapter.no-media  { height: 160vh; }
 
       .stage {
         position: sticky;
@@ -364,19 +379,19 @@ const defaultLabel = (kind: string) =>
         animation: ch-progress linear both;
         animation-timeline: --ch;
       }
-      .chapter.has-media .ch-count i { animation-range: cover 26% cover 74%; }
-      .chapter.no-media  .ch-count i { animation-range: cover 36% cover 64%; }
+      .chapter.has-media .ch-count i { animation-range: cover 29% cover 71%; }
+      .chapter.no-media  .ch-count i { animation-range: cover 38% cover 62%; }
 
       /* Leave: the stage lifts and dims as the next chapter arrives. */
       .chapter.has-media .stage-inner {
         animation: ch-leave var(--ease-io) both;
         animation-timeline: --ch;
-        animation-range: cover 76% cover 96%;
+        animation-range: cover 72% cover 92%;
       }
       .chapter.no-media .stage-inner {
         animation: ch-leave var(--ease-io) both;
         animation-timeline: --ch;
-        animation-range: cover 66% cover 94%;
+        animation-range: cover 63% cover 90%;
       }
 
       /* Arrive: words rise in, staggered along the scroll. */
@@ -384,10 +399,10 @@ const defaultLabel = (kind: string) =>
         animation: ch-rise var(--ease-out) both;
         animation-timeline: --ch;
         --k: 0;
-        --t0: 27%;
-        animation-range: cover calc(var(--t0) + var(--k) * 1.2%) cover calc(var(--t0) + 9% + var(--k) * 1.2%);
+        --t0: 17%;
+        animation-range: cover calc(var(--t0) + var(--k) * 1.1%) cover calc(var(--t0) + 9% + var(--k) * 1.1%);
       }
-      .chapter.no-media .show-body > * { --t0: 36%; }
+      .chapter.no-media .show-body > * { --t0: 26%; }
       .show-body > *:nth-child(2) { --k: 1; }
       .show-body > *:nth-child(3) { --k: 2; }
       .show-body > *:nth-child(4) { --k: 3; }
@@ -398,17 +413,24 @@ const defaultLabel = (kind: string) =>
       .chapter.has-media .show-img {
         animation: reveal-default var(--ease-out) both;
         animation-timeline: --ch;
-        animation-range: cover 42% cover 60%;
+        animation-range: cover 33% cover 53%;
+      }
+      /* Slow push-in after the reveal (uses the `scale` property so it
+         composes with each scene's own transforms). */
+      .chapter.has-media .media-frame {
+        animation: push-in linear both;
+        animation-timeline: --ch;
+        animation-range: cover 33% cover 70%;
       }
       .chapter.has-media .show-media-tag {
         animation: ch-fade var(--ease-out) both;
         animation-timeline: --ch;
-        animation-range: cover 56% cover 63%;
+        animation-range: cover 50% cover 57%;
       }
       .chapter.no-media .show-visual {
         animation: reveal-default var(--ease-out) both;
         animation-timeline: --ch;
-        animation-range: cover 44% cover 58%;
+        animation-range: cover 40% cover 54%;
       }
 
       /* Backdrop: fades in with the words and drifts slower than the page,
@@ -424,7 +446,7 @@ const defaultLabel = (kind: string) =>
         z-index: -1;
         animation: bg-drift linear both;
         animation-timeline: --ch;
-        animation-range: cover 10% cover 90%;
+        animation-range: cover 0% cover 100%;
       }
 
       /* Scene backdrops (only drawn while pinned). */
@@ -444,23 +466,75 @@ const defaultLabel = (kind: string) =>
       }
       .chapter[data-scene='ascent'] .scene-bg {
         background:
-          radial-gradient(circle 16vmin at 82% 30%, color-mix(in oklab, var(--text) 16%, transparent), transparent 70%),
-          linear-gradient(to top, color-mix(in oklab, var(--purple-deep) 55%, transparent), transparent 55%);
+          linear-gradient(to top, color-mix(in oklab, var(--purple-deep) 55%, transparent), transparent 60%);
       }
       :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .scene-bg {
         background:
-          radial-gradient(circle 16vmin at 82% 30%, color-mix(in oklab, var(--purple-bright) 16%, transparent), transparent 70%),
-          linear-gradient(to top, color-mix(in oklab, var(--purple) 22%, transparent), transparent 55%);
+          linear-gradient(to top, color-mix(in oklab, var(--purple) 22%, transparent), transparent 60%);
       }
-      .chapter[data-scene='ascent'] .scene-bg::after {
-        /* ridge line along the bottom */
-        content: '';
+      /* Layered night sky: stars, moon, and three ridges at different depths.
+         Everything moves with the scroll at its own rate (parallax). */
+      .chapter[data-scene='ascent'] .stars,
+      .chapter[data-scene='ascent'] .moon,
+      .chapter[data-scene='ascent'] .ridge {
         position: absolute;
-        left: 0; right: 0; bottom: 8vh;
-        height: 22vh;
-        background: color-mix(in oklab, var(--purple-deep) 70%, var(--bg));
-        clip-path: polygon(0 62%, 9% 38%, 17% 55%, 27% 24%, 38% 52%, 49% 30%, 60% 58%, 71% 20%, 82% 50%, 91% 34%, 100% 56%, 100% 100%, 0 100%);
-        opacity: 0.65;
+        pointer-events: none;
+        animation-timeline: --ch;
+        animation-range: cover 0% cover 100%;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+      }
+      .chapter[data-scene='ascent'] .stars {
+        inset: 0 0 40% 0;
+        background-image:
+          radial-gradient(1.2px 1.2px at 12% 22%, var(--text) 50%, transparent 51%),
+          radial-gradient(1px 1px at 27% 68%, var(--text) 50%, transparent 51%),
+          radial-gradient(1.4px 1.4px at 41% 14%, var(--text) 50%, transparent 51%),
+          radial-gradient(1px 1px at 58% 46%, var(--text) 50%, transparent 51%),
+          radial-gradient(1.2px 1.2px at 71% 24%, var(--text) 50%, transparent 51%),
+          radial-gradient(1px 1px at 84% 60%, var(--text) 50%, transparent 51%),
+          radial-gradient(1.4px 1.4px at 93% 18%, var(--text) 50%, transparent 51%),
+          radial-gradient(1px 1px at 6% 52%, var(--text) 50%, transparent 51%);
+        opacity: 0.5;
+        animation-name: stars-drift;
+      }
+      .chapter[data-scene='ascent'] .moon {
+        top: 24%; right: 14%;
+        width: 11vmin; height: 11vmin;
+        border-radius: 50%;
+        background: radial-gradient(circle at 38% 36%, #F1EAD9 0%, #E2D9C6 55%, rgba(226, 217, 198, 0) 71%);
+        box-shadow: 0 0 9vmin 2vmin rgba(241, 234, 217, 0.16);
+        opacity: 0.9;
+        animation-name: moon-rise;
+      }
+      :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .moon {
+        background: radial-gradient(circle at 38% 36%, color-mix(in oklab, var(--purple-bright) 40%, #fff) 0%, color-mix(in oklab, var(--purple-bright) 26%, transparent) 60%, transparent 72%);
+        box-shadow: 0 0 9vmin 2vmin color-mix(in oklab, var(--purple-bright) 14%, transparent);
+      }
+      .chapter[data-scene='ascent'] .ridge {
+        left: -8%; right: -8%;
+        bottom: 0;
+      }
+      .chapter[data-scene='ascent'] .ridge.far {
+        height: 30vh;
+        background: color-mix(in oklab, var(--purple-deep) 45%, var(--bg));
+        opacity: 0.55;
+        clip-path: polygon(0 58%, 8% 40%, 15% 52%, 24% 26%, 33% 46%, 43% 20%, 52% 44%, 62% 24%, 72% 48%, 81% 30%, 90% 50%, 100% 36%, 100% 100%, 0 100%);
+        animation-name: ridge-far;
+      }
+      .chapter[data-scene='ascent'] .ridge.mid {
+        height: 24vh;
+        background: color-mix(in oklab, var(--purple-deep) 62%, var(--bg));
+        opacity: 0.75;
+        clip-path: polygon(0 60%, 10% 34%, 19% 54%, 29% 22%, 40% 50%, 50% 28%, 59% 58%, 69% 20%, 79% 52%, 89% 30%, 100% 56%, 100% 100%, 0 100%);
+        animation-name: ridge-mid;
+      }
+      .chapter[data-scene='ascent'] .ridge.near {
+        height: 17vh;
+        background: color-mix(in oklab, var(--purple-deep) 80%, var(--bg));
+        opacity: 0.95;
+        clip-path: polygon(0 50%, 7% 30%, 16% 58%, 27% 24%, 36% 52%, 47% 18%, 57% 56%, 68% 26%, 78% 58%, 88% 22%, 100% 54%, 100% 100%, 0 100%);
+        animation-name: ridge-near;
       }
 
       /* -------- nexus: clean wipe with a scan line -------- */
@@ -486,7 +560,7 @@ const defaultLabel = (kind: string) =>
           linear-gradient(var(--b), var(--b)) bottom right / 1px 14px no-repeat;
         animation: brackets-in var(--ease-out) both;
         animation-timeline: --ch;
-        animation-range: cover 40% cover 56%;
+        animation-range: cover 30% cover 45%;
       }
       .chapter[data-scene='nexus'] .media-frame::after {
         /* scan line that travels with the wipe, same easing so they stay locked */
@@ -500,7 +574,7 @@ const defaultLabel = (kind: string) =>
         pointer-events: none;
         animation: nexus-scan var(--ease-io) both;
         animation-timeline: --ch;
-        animation-range: cover 42% cover 60%;
+        animation-range: cover 33% cover 53%;
       }
 
       /* -------- kanvaz: line first, then the card is dropped on -------- */
@@ -508,7 +582,7 @@ const defaultLabel = (kind: string) =>
       .chapter[data-scene='kanvaz'] .show-img {
         animation-name: reveal-kanvaz;
         animation-timing-function: var(--ease-settle);
-        animation-range: cover 47% cover 61%;
+        animation-range: cover 35% cover 52%;
       }
       .chapter[data-scene='kanvaz'] .pin {
         display: block;
@@ -521,7 +595,7 @@ const defaultLabel = (kind: string) =>
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
         animation: ch-pop var(--ease-settle) both;
         animation-timeline: --ch;
-        animation-range: cover 58% cover 63%;
+        animation-range: cover 50% cover 54%;
       }
       .chapter[data-scene='kanvaz'] .cable {
         display: block;
@@ -540,38 +614,18 @@ const defaultLabel = (kind: string) =>
         stroke-dasharray: 1;
         animation: cable-draw var(--ease-io) both;
         animation-timeline: --ch;
-        animation-range: cover 40% cover 49%;
+        animation-range: cover 29% cover 37%;
       }
       .chapter[data-scene='kanvaz'] .cable circle {
         animation: ch-pop var(--ease-settle) both;
         animation-timeline: --ch;
-        animation-range: cover 40% cover 45%;
+        animation-range: cover 29% cover 33%;
       }
 
       /* -------- ascent: letterbox opens, lights come up, camera pulls back -------- */
       .chapter[data-scene='ascent'] .show-img {
         animation-name: reveal-ascent;
         animation-timing-function: var(--ease-io);
-      }
-      .chapter[data-scene='ascent'] .media-frame::before {
-        /* HUD corner marks: start pulled in, settle onto the frame */
-        content: '';
-        position: absolute;
-        inset: -7px;
-        pointer-events: none;
-        --b: color-mix(in oklab, var(--text) 85%, transparent);
-        background:
-          linear-gradient(var(--b), var(--b)) top left / 18px 2px no-repeat,
-          linear-gradient(var(--b), var(--b)) top left / 2px 18px no-repeat,
-          linear-gradient(var(--b), var(--b)) top right / 18px 2px no-repeat,
-          linear-gradient(var(--b), var(--b)) top right / 2px 18px no-repeat,
-          linear-gradient(var(--b), var(--b)) bottom left / 18px 2px no-repeat,
-          linear-gradient(var(--b), var(--b)) bottom left / 2px 18px no-repeat,
-          linear-gradient(var(--b), var(--b)) bottom right / 18px 2px no-repeat,
-          linear-gradient(var(--b), var(--b)) bottom right / 2px 18px no-repeat;
-        animation: hud-in var(--ease-settle) both;
-        animation-timeline: --ch;
-        animation-range: cover 46% cover 62%;
       }
     }
   }
@@ -646,10 +700,21 @@ const defaultLabel = (kind: string) =>
     from { clip-path: inset(46% 0 46% 0); transform: scale(1.07); filter: brightness(0.3); }
     to   { clip-path: inset(0 0 0 0);     transform: none;        filter: brightness(1); }
   }
-  @keyframes hud-in {
-    from { opacity: 0; transform: scale(0.9); }
-    to   { opacity: 1; transform: scale(1); }
+  @keyframes push-in {
+    from { scale: 0.985; }
+    to   { scale: 1.03; }
   }
+  @keyframes stars-drift {
+    from { transform: translateY(6vh); opacity: 0.2; }
+    to   { transform: translateY(-4vh); opacity: 0.55; }
+  }
+  @keyframes moon-rise {
+    from { transform: translate(3vw, 10vh); }
+    to   { transform: translate(-5vw, -8vh); }
+  }
+  @keyframes ridge-far  { from { transform: translate(-3vw, 6vh);  } to { transform: translate(3vw, -1vh); } }
+  @keyframes ridge-mid  { from { transform: translate(5vw, 9vh);   } to { transform: translate(-5vw, -2vh); } }
+  @keyframes ridge-near { from { transform: translate(-9vw, 12vh); } to { transform: translate(9vw, -3vh); } }
   @keyframes m-in {
     from { opacity: 0; transform: translateY(28px); }
     to   { opacity: 1; transform: none; }
