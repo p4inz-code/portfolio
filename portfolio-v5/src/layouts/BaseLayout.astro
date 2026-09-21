@@ -10,7 +10,7 @@ import SceneBackdrop from '../components/SceneBackdrop.astro';
 import SceneFx from '../components/SceneFx.astro';
 import LiveStats from '../components/LiveStats.astro';
 import { SITE, NAV, CONTACT } from '../data/site';
-import { PROJECTS } from '../data/projects';
+import { PROJECTS, PRODUCT_COUNT } from '../data/projects';
 
 interface Props {
   title: string;
@@ -422,7 +422,7 @@ const jsonLd = {
     </script>
 
     <SideRail />
-    <script>import '../scripts/progress';
+    <script>import '../scripts/progress'; import '../scripts/favicon';
 import '../scripts/fx';</script>
     <LiveStats />
 
@@ -438,7 +438,7 @@ import '../scripts/fx';</script>
       {currentPath === '/' && (
         <div class="wrap">
           <ul class="trust-strip" role="list" aria-label="Trust signals">
-            <li><span class="ts-num">{PROJECTS.length}</span><span class="ts-label">Products in flight / shipped</span></li>
+            <li><span class="ts-num">{PRODUCT_COUNT}</span><span class="ts-label">Products in flight / shipped</span></li>
             <li><span class="ts-num">4,100+</span><span class="ts-label">Automated tests across products</span></li>
             <li><span class="ts-num">0</span><span class="ts-label">Telemetry on any product</span></li>
             <li><span class="ts-num">0</span><span class="ts-label">Third-party analytics on this site</span></li>

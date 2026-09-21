@@ -14,46 +14,47 @@
  */
 interface Props {
   eyebrow?: string;
-  lines: Array<{ text: string; emphasis?: string }>;
+  text: string;          // scrub: *words in stars* are emphasised
+  lines?: Array<{ text: string; emphasis?: string }>;  // plain (non-scrub) hero
   intro?: string;
   scrub?: boolean;
-  roles?: string[];  // scrub only: what "on my own" means, lit one by one
+  steps?: Array<{ label: string; sub: string }>;  // scrub only: the pipeline the logo travels along
 }
-const { eyebrow, lines, intro, scrub = false, roles = [] } = Astro.props;
+const { eyebrow, text = '', lines = [], intro, scrub = false, steps = [] } = Astro.props;
 
 // word list for the scrubbed version: [{ t, em, w }] with w in 0..1
-const words: Array<{ t: string; em: boolean; line: number; w: number }> = [];
+const words: Array<{ t: string; em: boolean; w: number }> = [];
 if (scrub) {
-  lines.forEach((line, li) => {
-    (line.emphasis ? line.emphasis.split(' ').map((t) => ({ t, em: true })) : [])
-      .concat(line.text.split(' ').map((t) => ({ t, em: false })))
-      .forEach((x) => words.push({ ...x, line: li, w: 0 }));
+  let em = false;
+  text.split(' ').forEach((tok) => {
+    const start = tok.startsWith('*'), end = tok.endsWith('*');
+    if (start) em = true;
+    words.push({ t: tok.replace(/\*/g, ''), em, w: 0 });
+    if (end) em = false;
   });
   words.forEach((x, i) => { x.w = words.length > 1 ? i / (words.length - 1) : 0; });
 }
-const CREW = 7;
 ---
 {scrub ? (
   <section class="hero hero-scrub" aria-labelledby="hero-title" data-progress="hero">
     <div class="hero-pin wrap">
       {eyebrow && <p class="hero-eyebrow">{eyebrow}</p>}
       <h1 id="hero-title" class="hero-title">
-        {lines.map((_, li) => (
-          <span class="act-line">
-            {words.filter((x) => x.line === li).map((x) => (
-              <><span class:list={['w', x.em && 'em']} style={`--w:${x.w.toFixed(3)}`}>{x.t}</span>{' '}</>
-            ))}
-          </span>
-        ))}
+        <span class="act-line">
+          {words.map((x) => (
+            <><span class:list={['w', x.em && 'em']} style={`--w:${x.w.toFixed(3)}`}>{x.t}</span>{' '}</>
+          ))}
+        </span>
       </h1>
-      <div class="crew" aria-hidden="true">
-        {Array.from({ length: CREW }, (_, i) => <i style={`--c:${i}`}></i>)}
-        <b><span>me</span></b>
-      </div>
-      {roles.length > 0 && (
-        <ol class="roles" aria-label="What I do myself">
-          {roles.map((r, i) => (
-            <li style={`--r:${i}`}><span class="role-dot" aria-hidden="true"></span><span class="role-text">{r}</span></li>
+      {steps.length > 0 && (
+        <ol class="pipe" aria-label="How I work" style={`--n:${steps.length}`}>
+          <li class="pipe-track" aria-hidden="true"><i></i><img src="/ap-mark.png" width="34" height="34" alt="" decoding="async" /></li>
+          {steps.map((st, i) => (
+            <li class="pipe-step" style={`--s:${(steps.length > 1 ? i / (steps.length - 1) : 0).toFixed(3)}`}>
+              <span class="pipe-dot" aria-hidden="true"></span>
+              <b>{st.label}</b>
+              <span>{st.sub}</span>
+            </li>
           ))}
         </ol>
       )}
@@ -145,45 +146,66 @@ const CREW = 7;
   .w { display: inline; }
   .w.em { font-style: italic; color: var(--purple-bright); }
 
-  .crew {
-    display: flex; align-items: center; gap: 10px;
-    margin-top: var(--sp-6);
-    height: 34px;
-  }
-  .crew i {
-    width: 26px; height: 26px;
-    border-radius: 50%;
-    border: 1px dashed color-mix(in oklab, var(--muted) 70%, transparent);
-    flex-shrink: 0;
-  }
-  .crew b {
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    background: var(--purple-bright);
-    display: grid; place-items: center;
-    flex-shrink: 0;
-    box-shadow: 0 0 0 0 color-mix(in oklab, var(--purple-bright) 50%, transparent);
-  }
-  .crew b span {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.04em;
-    color: var(--bg);
-  }
-  .roles {
+  @property --fill { syntax: '<number>'; inherits: true; initial-value: 0; }
+  /* The pipeline: three steps, and the logo travels along it as you scroll.
+     Everything derives from --fill (0..1): the line, the token, each step. */
+  .pipe {
+    --fill: 0;
     list-style: none; padding: 0;
-    margin: var(--sp-5) 0 0;
-    display: flex; flex-wrap: wrap; gap: 8px 22px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.02em;
+    margin: var(--sp-7) 0 0;
+    max-width: 760px;
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    position: relative;
   }
-  .roles li { display: inline-flex; align-items: center; gap: 8px; color: var(--text); }
-  .role-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    border: 1px solid var(--purple-bright);
+  .pipe-track {
+    position: absolute;
+    left: calc(50% / var(--n)); right: calc(50% / var(--n));
+    top: 16px; height: 1px;
+    background: var(--line-strong);
+  }
+  .pipe-track i {
+    position: absolute; inset: 0;
     background: var(--purple-bright);
-    flex-shrink: 0;
+    transform-origin: 0 50%;
+    transform: scaleX(var(--fill));
+  }
+  .pipe-track img {
+    position: absolute; top: 50%; left: calc(var(--fill) * 100%);
+    width: 34px; height: 34px;
+    margin: -17px 0 0 -17px;
+    padding: 4px; box-sizing: border-box;
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--bg) 60%, transparent);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    box-shadow: 0 0 0 1px var(--line-strong), 0 0 22px color-mix(in oklab, var(--purple-bright) 45%, transparent);
+    transform: rotate(calc(var(--fill) * 360deg));
+    z-index: 2;
+  }
+  .pipe-step {
+    --nt: clamp(0, calc((var(--fill) - var(--s) + 0.12) / 0.1), 1);
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px;
+    padding: 0 6px;
+    position: relative;
+  }
+  .pipe-dot {
+    width: 11px; height: 11px; margin: 11px 0 12px;
+    border-radius: 50%;
+    border: 1px solid var(--purple-bright);
+    background: color-mix(in oklab, var(--purple-bright) calc(var(--nt) * 100%), var(--bg));
+    box-shadow: 0 0 0 calc(var(--nt) * 5px) color-mix(in oklab, var(--purple-bright) 16%, transparent);
+    position: relative; z-index: 1;
+  }
+  .pipe-step b {
+    font-family: var(--font-display); font-weight: 400;
+    font-size: clamp(14px, 1.6vw, 18px);
+    letter-spacing: -0.01em;
+    color: color-mix(in oklab, var(--text) calc(var(--nt) * 100%), var(--muted));
+  }
+  .pipe-step span:not(.pipe-dot) {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.02em; line-height: 1.5;
+    color: var(--muted);
   }
   .scrub-sub { margin-top: var(--sp-5); }
   .scrub-slot { margin-top: var(--sp-1); }
@@ -221,38 +243,17 @@ const CREW = 7;
         color: var(--muted);
         animation: w-on var(--ease-out) both;
         animation-timeline: --hero;
-        animation-range: cover calc(29% + var(--w) * 17%) cover calc(33.5% + var(--w) * 17%);
+        animation-range: cover calc(29% + var(--w) * 13%) cover calc(33% + var(--w) * 13%);
       }
-      .crew i {
-        animation: crew-out var(--ease-io) both;
+      .pipe {
+        animation: fill-up linear both;
         animation-timeline: --hero;
-        animation-range: cover calc(33% + var(--c) * 1.6%) cover calc(40% + var(--c) * 1.6%);
-      }
-      .crew b {
-        animation: crew-me var(--ease-out) both;
-        animation-timeline: --hero;
-        animation-range: cover 36% cover 60%;
-      }
-      .w.em {
-        color: color-mix(in oklab, var(--purple-bright) 55%, var(--muted));
-        animation-name: w-on-em;
+        animation-range: cover 46% cover 64%;
       }
       .scrub-sub {
         animation: sub-on var(--ease-out) both;
         animation-timeline: --hero;
-        animation-range: cover 52% cover 64%;
-      }
-      .roles .role-dot {
-        background: transparent;
-        animation: role-on var(--ease-out) both;
-        animation-timeline: --hero;
-        animation-range: cover calc(45% + var(--r) * 3.6%) cover calc(49% + var(--r) * 3.6%);
-      }
-      .roles .role-text {
-        color: var(--muted);
-        animation: role-text var(--ease-out) both;
-        animation-timeline: --hero;
-        animation-range: cover calc(45% + var(--r) * 3.6%) cover calc(49% + var(--r) * 3.6%);
+        animation-range: cover 62% cover 70%;
       }
       .scroll-cue {
         display: flex;
@@ -265,19 +266,11 @@ const CREW = 7;
   @keyframes w-on    { from { color: var(--muted); } to { color: var(--text); } }
   @keyframes w-on-em { from { color: color-mix(in oklab, var(--purple-bright) 55%, var(--muted)); } to { color: var(--purple-bright); } }
   @keyframes sub-on  { from { transform: translateY(12px); } to { transform: none; } }
-  @keyframes crew-out { from { transform: scale(1); opacity: 1; } to { transform: scale(0.2) translateX(40px); opacity: 0; width: 0; margin-right: -10px; border-width: 0; } }
-  @keyframes crew-me {
-    0%   { transform: scale(1); box-shadow: 0 0 0 0 color-mix(in oklab, var(--purple-bright) 50%, transparent); }
-    60%  { transform: scale(1.35); box-shadow: 0 0 0 14px color-mix(in oklab, var(--purple-bright) 0%, transparent); }
-    100% { transform: scale(1.2); box-shadow: 0 0 0 0 transparent; }
-  }
-  @keyframes role-on   { from { background: transparent; box-shadow: 0 0 0 0 transparent; } 60% { box-shadow: 0 0 0 6px color-mix(in oklab, var(--purple-bright) 0%, transparent); } to { background: var(--purple-bright); } }
-  @keyframes role-text { from { color: var(--muted); } to { color: var(--text); } }
+  @keyframes fill-up { from { --fill: 0; } to { --fill: 1; } }
   @keyframes cue-out { to { opacity: 0; } }
   /* People who ask for more contrast get the finished sentence at once. */
   @media (prefers-contrast: more) {
-    .roles .role-text { color: var(--text) !important; animation: none !important; }
-    .roles .role-dot { background: var(--purple-bright) !important; animation: none !important; }
+    .pipe { animation: none !important; --fill: 1 !important; }
     .w { color: var(--text) !important; animation: none !important; }
     .w.em { color: var(--purple-bright) !important; }
     .scrub-sub { animation: none !important; transform: none !important; }
@@ -294,29 +287,16 @@ const CREW = 7;
   :global(html[data-jsp]) .w.em {
     color: color-mix(in oklab, var(--purple-bright) calc(55% + var(--wt) * 45%), var(--muted));
   }
-  :global(html[data-jsp]) .crew i {
-    --ct: clamp(0, calc((var(--p) - 0.18 - var(--c) * 0.02) / 0.1), 1);
-    transform: scale(calc(1 - var(--ct) * 0.8));
-    opacity: calc(1 - var(--ct));
-    margin-right: calc(var(--ct) * -26px);
-  }
-  :global(html[data-jsp]) .crew b {
-    transform: scale(calc(1 + clamp(0, calc((var(--p) - 0.3) / 0.2), 1) * 0.2));
-  }
-  :global(html[data-jsp]) .roles li {
-    --rt: clamp(0, calc((var(--p) - 0.34 - var(--r) * 0.07) / 0.08), 1);
-  }
-  :global(html[data-jsp]) .role-dot { background: color-mix(in oklab, var(--purple-bright) calc(var(--rt) * 100%), transparent); }
-  :global(html[data-jsp]) .role-text { color: color-mix(in oklab, var(--text) calc(var(--rt) * 100%), var(--muted)); }
+  :global(html[data-jsp]) .pipe { --fill: clamp(0, calc((var(--p) - 0.3) / 0.3), 1); }
   :global(html[data-jsp]) .scrub-sub {
-    transform: translateY(calc((1 - clamp(0, calc((var(--p) - 0.55) / 0.2), 1)) * 12px));
+    transform: translateY(calc((1 - clamp(0, calc((var(--p) - 0.6) / 0.15), 1)) * 12px));
   }
   :global(html[data-jsp]) .scroll-cue {
     display: flex;
     opacity: calc(1 - clamp(0, calc(var(--p) / 0.08), 1));
   }
-  @media (max-width: 480px) {
-    .crew { margin-top: var(--sp-5); }
-    .crew i { width: 20px; height: 20px; }
+  @media (prefers-reduced-motion: reduce) { .pipe { --fill: 1; } .pipe-track img { transform: none; } }
+  @media (max-width: 640px) {
+    .pipe-step span:not(.pipe-dot) { display: none; }
   }
 </style>

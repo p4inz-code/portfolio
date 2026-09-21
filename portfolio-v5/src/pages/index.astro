@@ -8,10 +8,10 @@ import FeaturedShowcase from '../components/features/FeaturedShowcase.astro';
 import Button from '../components/ui/Button.astro';
 import ProofStrip from '../components/features/ProofStrip.astro';
 import ShippingRail from '../components/features/ShippingRail.astro';
-import { FEATURED_PROJECTS, SUPPORTING_PROJECTS, PROJECTS } from '../data/projects';
+import { FEATURED_PROJECTS, SUPPORTING_PROJECTS, PRODUCT_COUNT } from '../data/projects';
 import { SITE } from '../data/site';
 
-const projectCount = PROJECTS.length;
+const projectCount = PRODUCT_COUNT;
 const NUM = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight'];
 const featuredWord = NUM[FEATURED_PROJECTS.length] ?? String(FEATURED_PROJECTS.length);
 ---
@@ -19,12 +19,13 @@ const featuredWord = NUM[FEATURED_PROJECTS.length] ?? String(FEATURED_PROJECTS.l
   <EditorialHero
     scrub
     eyebrow={`Atharva Patil · ${SITE.location}`}
-    lines={[
-      { text: 'on my own,', emphasis: 'I build software' },
-      { text: 'and study animation on the side.' },
+    text="I identify *unmet needs* in software and turn them into *products.*"
+    steps={[
+      { label: 'Spot the gap', sub: 'Something people keep working around' },
+      { label: 'Build it', sub: 'Alone, end to end' },
+      { label: 'Ship it', sub: 'A real version, a real download' },
     ]}
-    roles={['writes the code', 'designs the screens', 'renders the 3D', 'ships the build', 'answers the email']}
-    intro={`I'm Atharva, a solo founder in Navi Mumbai and a second-year 3D animation student. I write the software, ship it and support it myself. ${projectCount} products so far, none of them with a marketing team and none of them phoning home. Every case study links to a real repository or a real download, and the version numbers stay honest even when that means saying something is still rough.`}
+    intro={`I'm Atharva, a solo founder in Navi Mumbai, and a second-year 3D animation student on the side. ${projectCount} products so far, each one starting from something that annoyed me or someone I know. No marketing team, nothing phoning home. Every case study links to a real repository or a real download, and the version numbers stay honest even when that means saying something is still rough.`}
   >
     <div class="hero-actions">
       <Button href="/work" variant="primary">See selected work →</Button>

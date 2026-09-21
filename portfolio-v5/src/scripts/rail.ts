@@ -27,12 +27,15 @@ if (rail && showcase && chapters.length) {
     if (!on) return;
 
     const mid = vh * 0.5;
+    const tops = chapters.map((c) => c.getBoundingClientRect().top);
     let idx = 0;
-    chapters.forEach((c, i) => {
-      if (c.getBoundingClientRect().top <= mid) idx = i;
-    });
+    tops.forEach((t, i) => { if (t <= mid) idx = i; });
     const rp = Math.max(0, Math.min(1, (mid - sr.top) / sr.height));
+    // fractional chapter index: the logo sits on a dot at a chapter's start and glides to the next
+    const next = tops[idx + 1];
+    const frac = next === undefined ? 0 : Math.max(0, Math.min(1, (mid - tops[idx]) / (next - tops[idx])));
     rail.style.setProperty('--rp', rp.toFixed(4));
+    rail.style.setProperty('--ri', (idx + frac).toFixed(4));
 
     if (idx !== active) {
       active = idx;

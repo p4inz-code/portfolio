@@ -293,8 +293,49 @@ export const PROJECTS: Project[] = [
     currentVersion: 'v3.0.0',
     nextMilestone: 'Ongoing content expansion',
   },
+  {
+    slug: 'anifx-fest',
+    name: 'AniFX Fest 2026',
+    tagline: 'Festival site for a two-day creative competition.',
+    description:
+      'The website for AniFX 2026, a creative festival run by the School of Creative Studies at DY Patil Deemed to be University, Navi Mumbai (23 to 24 October 2026). One site for five competitions (film festival, a 100-hour game jam, VALORANT, FC26 and character design) with per-event pages, registration, FAQs and contact channels grouped by event. Designed, built and deployed by me.',
+    status: { kind: 'released', label: 'Live · Event site' },
+    tags: ['Web', 'Event site', 'Firebase'],
+    metaTags: ['Web', 'Event site', 'Client work'],
+    featured: false,
+    order: 10,
+    href: 'https://anifx-fest.web.app/',
+    isExternal: true,
+    links: [{ label: 'Visit the site', href: 'https://anifx-fest.web.app/', external: true }],
+    stack: ['Web', 'Firebase Hosting'],
+    role: 'Designer and developer',
+    started: '2026',
+    nextMilestone: 'Live for the festival on 23 to 24 October 2026.',
+  },
+  {
+    slug: 'kalasadhana',
+    name: 'Kalasadhana Academy',
+    tagline: 'Website for a performing-arts academy in Kharghar.',
+    description:
+      'A full production website for Kalasadhana Academy of Performing Arts, a music academy in Kharghar, Navi Mumbai teaching Western instruments (Trinity College London) and Hindustani vocal and tabla. Course information, faculty, studio facilities, gallery, exam resources and contact, built and launched for the academy.',
+    status: { kind: 'released', label: 'Live · Client site' },
+    tags: ['Web', 'Client work'],
+    metaTags: ['Web', 'Client work', 'Live'],
+    featured: false,
+    order: 11,
+    href: 'https://kalasadhana-navimumbai.in/',
+    isExternal: true,
+    links: [{ label: 'Visit the site', href: 'https://kalasadhana-navimumbai.in/', external: true }],
+    stack: ['Web'],
+    role: 'Designer and developer',
+    started: '2026',
+    nextMilestone: 'Maintained for the academy.',
+  },
 ];
 
 export const FEATURED_PROJECTS = PROJECTS.filter((p) => p.featured).sort((a, b) => a.order - b.order);
 export const SUPPORTING_PROJECTS = PROJECTS.filter((p) => !p.featured).sort((a, b) => a.order - b.order);
 export const CASE_STUDY_PROJECTS = PROJECTS.filter((p) => !p.isExternal);
+
+/** Products only: client and event websites are listed in /work but are not counted as products. */
+export const PRODUCT_COUNT = PROJECTS.filter((p) => !p.tags.includes('Client work') && !p.tags.includes('Event site')).length;
