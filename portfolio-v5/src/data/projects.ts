@@ -45,7 +45,7 @@ export interface Project {
   notes?: string;
   /** Real media taken from the project's own README or release assets.
    *  'banner' = brand art, not a product capture; 'screenshot' = real UI. */
-  media?: { src: string; alt: string; kind: 'banner' | 'screenshot' };
+  media?: { src: string; alt: string; kind: 'banner' | 'screenshot'; ratio: string };
 }
 
 export const PROJECTS: Project[] = [
@@ -59,8 +59,8 @@ export const PROJECTS: Project[] = [
     tags: ['Linux', 'GPLv3', 'Privacy'],
     metaTags: ['Debian Stable', 'KDE Plasma', 'Rust', 'GPLv3'],
     featured: true,
-    order: 0,
-    media: { src: '/assets/banners/mission-os.webp', alt: 'Mission OS banner art: a dark desk with a monitor showing a lavender mountain-lake wallpaper and a System Overview panel, with the title Mission OS, Privacy-first Desktop Operating System.', kind: 'banner' },
+    order: 3,
+    media: { src: '/assets/banners/mission-os.webp', alt: 'Mission OS banner art: a dark desk with a monitor showing a lavender mountain-lake wallpaper and a System Overview panel, with the title Mission OS, Privacy-first Desktop Operating System.', kind: 'banner', ratio: '16 / 9' },
     href: '/mission-os',
     isExternal: false,
     links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/mission-os', external: true }],
@@ -82,8 +82,8 @@ export const PROJECTS: Project[] = [
     tags: ['WPF', 'AES-256-GCM'],
     metaTags: ['Windows Desktop', 'AES-256-GCM', 'Fully Offline'],
     featured: true,
-    order: 1,
-    media: { src: '/assets/banners/nexus-desktop.webp', alt: 'Nexus banner art: a violet isometric cube on a deep purple background with the wordmark Nexus and the line Secure Environment.', kind: 'banner' },
+    order: 0,
+    media: { src: '/assets/banners/nexus-desktop.webp', alt: 'Nexus banner art: a violet isometric cube on a deep purple background with the wordmark Nexus and the line Secure Environment.', kind: 'banner', ratio: '5 / 2' },
     href: '/nexus',
     isExternal: false,
     links: [
@@ -108,8 +108,8 @@ export const PROJECTS: Project[] = [
     tags: ['Electron', 'MIT'],
     metaTags: ['Electron', 'MIT', 'Open Source'],
     featured: true,
-    order: 2,
-    media: { src: '/assets/kanvaz/kanvaz-showcase-dark.webp', alt: 'Kanvaz reference board in the dark theme: image, note, color and URL cards joined by a Related To connection.', kind: 'screenshot' },
+    order: 1,
+    media: { src: '/assets/kanvaz/kanvaz-showcase-dark.webp', alt: 'Kanvaz reference board in the dark theme: image, note, color and URL cards joined by a Related To connection.', kind: 'screenshot', ratio: '1960 / 1224' },
     href: '/kanvaz',
     isExternal: false,
     links: [
@@ -134,7 +134,7 @@ export const PROJECTS: Project[] = [
     tags: ['Linux', 'OSINT', 'Apache 2.0'],
     metaTags: ['Linux', 'OSINT / DFIR', 'Apache 2.0'],
     featured: true,
-    order: 3,
+    order: 4,
     href: '/pursue-os',
     isExternal: false,
     links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/pursue-os', external: true }],
@@ -157,7 +157,7 @@ export const PROJECTS: Project[] = [
     metaTags: ['TypeScript', 'Node.js', 'SQLite', 'Modular Monorepo'],
     featured: false,
     order: 4,
-    media: { src: '/assets/banners/veris.webp', alt: 'Veris banner art: a dark desk with a monitor showing an investigation session for sample.exe, with the title Veris, Explainable Investigation Platform.', kind: 'banner' },
+    media: { src: '/assets/banners/veris.webp', alt: 'Veris banner art: a dark desk with a monitor showing an investigation session for sample.exe, with the title Veris, Explainable Investigation Platform.', kind: 'banner', ratio: '16 / 9' },
     href: 'https://github.com/p4inz-code/veris',
     isExternal: true,
     links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/veris', external: true }],
@@ -178,8 +178,8 @@ export const PROJECTS: Project[] = [
     tags: ['Godot 4', 'GDScript', 'Platformer'],
     metaTags: ['Godot 4', 'GDScript', 'Cross-Platform'],
     featured: true,
-    order: 4,
-    media: { src: '/assets/ascent/ascent-01-level1-card.webp', alt: 'Project Ascent gameplay: the first level of the precision platformer.', kind: 'screenshot' },
+    order: 2,
+    media: { src: '/assets/ascent/ascent-01-level1-card.webp', alt: 'Project Ascent gameplay: the first level of the precision platformer.', kind: 'screenshot', ratio: '1400 / 874' },
     href: '/ascent',
     isExternal: false,
     links: [
@@ -205,7 +205,7 @@ export const PROJECTS: Project[] = [
     metaTags: ['Luau', 'MIT', 'Roblox'],
     featured: false,
     order: 6,
-    media: { src: '/assets/banners/obscura.webp', alt: 'Obscura banner art: a dark desk with a monitor showing an AST visualizer and transformation pipeline, with the title Obscura, Luau Protection Toolkit.', kind: 'banner' },
+    media: { src: '/assets/banners/obscura.webp', alt: 'Obscura banner art: a dark desk with a monitor showing an AST visualizer and transformation pipeline, with the title Obscura, Luau Protection Toolkit.', kind: 'banner', ratio: '16 / 9' },
     href: 'https://github.com/p4inz-code/obscura',
     isExternal: true,
     links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/obscura', external: true }],

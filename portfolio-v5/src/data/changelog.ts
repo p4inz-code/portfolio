@@ -20,6 +20,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.23.1',
+    kind: 'released',
+    summary: 'Tidy-up after v5.23.0: showcase order, the slash in status labels, and the project thumbnails.',
+    body: [
+      'Featured order is now Nexus, Kanvaz, Ascent, Mission OS, Pursue OS. The "/" between a status and its version is gone. Featured images sit in a fixed-width column at their own aspect ratio (no cropping, no parallax), and the Obscura test ledger no longer squeezes its bar next to the number.',
+    ],
+  },
+  {
     version: 'v5.23.0',
     kind: 'released',
     summary: 'Repo sync and media pass: Kanvaz was three major versions behind (site said v5.3.0, "final release"; the repo ships v8.8.5 almost weekly), 3D Ref Skills was described as something it isn\'t, and the README banners now show on the site.',
@@ -30,7 +38,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       'Checked against real releases and left alone: Nexus v10.12.5, Ascent v0.14.1, Obscura v1.0.0, Glint v1.1.0, Veris v1.0.0. Glint\'s own README still says v1.0.0-alpha while its release is v1.1.0; the site follows the release.',
       'Media: the README banners for Mission OS, Nexus, Veris and Obscura are now on the site as WebP (about 10 to 90 KB each instead of 1.5 MB PNGs), shown in the featured cards and case-study heroes and labelled Banner art, since they are branding renders and not product captures. Kanvaz\'s README banner turned out to be an empty-board screenshot, so I used its dark and light showcase screenshots instead. Ascent\'s featured card uses a real gameplay frame.',
       'Resume PDF, Markdown and page updated for Kanvaz v8.8.5. llms.txt, the work page intro and the Kanvaz page metadata no longer say "development complete".',
-      'Scroll sweep: smooth scrolling is now off for people who ask for reduced motion (it was on for everyone), in-page anchors clear the sticky nav, the section reveal no longer leaves a permanent transform behind, the featured cards stopped stacking two perspectives, and each card\'s image drifts slightly as it crosses the viewport.',
+      'Scroll sweep: smooth scrolling is now off for people who ask for reduced motion (it was on for everyone), in-page anchors clear the sticky nav, the section reveal no longer leaves a permanent transform behind, and the featured cards stopped stacking two perspectives.',
     ],
   },
   {

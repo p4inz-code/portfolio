@@ -66,6 +66,7 @@ const { project } = Astro.props;
 
   .oc-ledger {
     display: flex;
+    flex-wrap: wrap;
     align-items: baseline;
     gap: 6px;
     margin-bottom: var(--sp-4);
@@ -80,6 +81,7 @@ const { project } = Astro.props;
     line-height: 1;
   }
   .oc-ledger-total {
+    white-space: nowrap;
     font-size: var(--text-xs);
     color: var(--muted);
     letter-spacing: 0.02em;

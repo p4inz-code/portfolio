@@ -54,12 +54,13 @@ const NameTag = headingLevel;
             class="show-img"
             src={p.media.src}
             alt={p.media.alt}
+            style={`aspect-ratio:${p.media.ratio};`}
             width="1600"
             height="900"
             loading="lazy"
             decoding="async"
           />
-          {p.media.kind === 'banner' && <figcaption class="show-media-tag">Banner art</figcaption>}
+          {p.media.kind === 'banner' && <figcaption class="show-media-tag">Banner art from the project README</figcaption>}
         </figure>
       ) : (
         <aside class="show-visual" aria-hidden="true">
@@ -84,7 +85,7 @@ const NameTag = headingLevel;
   }
   .show-card {
     display: grid;
-    grid-template-columns: 1.15fr 1fr;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
     gap: var(--sp-7);
     align-items: stretch;
     min-height: 60vh;
@@ -179,28 +180,30 @@ const NameTag = headingLevel;
   .show-visual.has-media {
     margin: 0;
     min-height: 0;
-    aspect-ratio: 16 / 9;
+    display: block;
     align-self: center;
-    background: var(--surface-2);
+    background: none;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
   }
   .show-visual.has-media::before { display: none; }
   .show-img {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
     display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    background: var(--surface-2);
   }
   .show-media-tag {
-    position: absolute; left: 12px; bottom: 12px;
+    margin-top: var(--sp-2);
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: var(--text-xxs);
     letter-spacing: var(--tracking-eyebrow);
     text-transform: uppercase;
-    color: #E8E1D0;
-    background: rgba(10, 5, 23, 0.72);
-    padding: 3px 8px;
-    border-radius: 2px;
-    backdrop-filter: blur(4px);
+    color: var(--muted);
   }
   .show-visual-frame {
     display: flex; flex-direction: column; align-items: center; gap: 12px;
@@ -265,20 +268,6 @@ const NameTag = headingLevel;
       animation-name: show-wheel-alt;
     }
   }
-  /* Slow parallax on the media while the card crosses the viewport: the
-     image drifts a few percent inside its frame. Cheap (transform only). */
-  @supports (animation-timeline: view()) {
-    .show-img {
-      transform: scale(1.1);
-      animation: show-drift linear both;
-      animation-timeline: view();
-      animation-range: cover 0% cover 100%;
-    }
-  }
-  @keyframes show-drift {
-    from { transform: scale(1.1) translateY(4%); }
-    to   { transform: scale(1.1) translateY(-4%); }
-  }
   @keyframes show-wheel {
     0%   { opacity: 0.15; transform: perspective(1600px) rotateY(-22deg) translateY(80px) scale(0.94); }
     28%  { opacity: 1;    transform: perspective(1600px) rotateY(0deg)   translateY(0)    scale(1); }
@@ -293,7 +282,6 @@ const NameTag = headingLevel;
   }
   @media (prefers-reduced-motion: reduce) {
     .show-card { animation: none; opacity: 1; transform: none; }
-    .show-img { animation: none; transform: none; }
   }
   /* v5.16.0 mobile fix — the merry-go-round 3D rotation is disorienting
      on phones (small viewport + tall stack = every card wheeling as you

@@ -34,7 +34,6 @@ const versionLabel = parts.length > 1 ? parts.slice(1).join(' · ') : '';
   <span class="mark-bar" style={`background:${markColor[status.kind]};`} aria-hidden="true"></span>
   <span class="mark-state">{stateLabel}</span>
   {versionLabel && (
-    <span class="mark-sep" aria-hidden="true">/</span>
     <span class="mark-version">{versionLabel}</span>
   )}
 </span>
@@ -75,13 +74,6 @@ const versionLabel = parts.length > 1 ? parts.slice(1).join(' · ') : '';
     color: var(--text);
     font-weight: 500;
     letter-spacing: 0.01em;
-  }
-  .mark-sep {
-    color: var(--muted-2);
-    font-family: var(--font-mono);
-    font-size: 0.85em;
-    font-weight: 400;
-    margin: 0 2px;
   }
   .mark-version {
     color: var(--muted);
