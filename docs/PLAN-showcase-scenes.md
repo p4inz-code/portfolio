@@ -112,3 +112,10 @@ feature cards and screenshot frames pick up the scene. Set through a `scene` pro
   - /kanvaz: a board that pans as you scroll (dot grid, ghost reference cards, flowing cables, a marquee selection).
   - /ascent: deep space (nebula, three star depths, shooting stars), ridges falling away, and the moon.
 - Moon: craters and maria, terminator shadow, halo, and a scroll-driven phase (crescent at the top of the page, full by the bottom) with faint earthshine on the unlit side. Same orb used in the /work Ascent chapter.
+
+## Pass 7 (final)
+
+- Moon phase mask fixed: the cut-out circle used closest-side, which shrank as its centre moved; it now uses the moon's real radius with a soft terminator, plus dim earthshine. Phase goes 64% to 158% monotonically over the page.
+- Nexus: cube hovers over the floor with a counter-rotating core and a breathing shadow; data motes rise; the floor is shorter and calmer so text stays readable.
+- Ascent font: Pixelify Sans replaced by Jersey 10 (self-hosted, OFL).
+- Audited: build, no missing assets on 7 pages, no horizontal scroll at 375px on 5 pages, Lighthouse desktop /ascent 100/100/100. Merged as v5.24.0.

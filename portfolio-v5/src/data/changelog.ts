@@ -20,6 +20,19 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.24.0',
+    kind: 'released',
+    summary: "Featured work rebuilt as scroll chapters, and Nexus, Kanvaz and Ascent each get their own scene: a title font, a page background and a reveal that fit the product.",
+    body: [
+      "Featured work (home and /work): each project is now a pinned chapter. The words arrive first, then one more scroll reveals the picture. Project names start as outlines and fill with the accent as you scroll. The pacing was measured at 0.1-screen steps so no stretch of scrolling does nothing. Under 900px, with reduced motion, or without scroll timelines, it falls back to plain stacked cards.",
+      "Nexus: Technor for titles, a floor grid flowing toward you, data packets on the grid lines, a scan beam and a slow wireframe cube with a core turning the other way. The picture wipes in with a scan line.",
+      "Kanvaz: Kalam (handwriting) for titles, a dotted board that pans as you scroll with faint reference cards joined by flowing cables, tilted pinned cards on the page, and a card that drops onto the board on the /work reveal.",
+      "Ascent: Jersey 10, a pixel face, for titles. The page and the /work chapter get a night sky with a nebula, three star depths, shooting stars and a moon that climbs and fills out as you scroll, over three ridges that fall away at different speeds. The letterbox opens on the gameplay loop.",
+      "Media: Ascent now shows a 12-second loop cut from a real screen recording (325 KB MP4, 240 KB WebM, plays only while on screen). Nexus uses a cropped v11 lock-screen slide and says it is a design mockup. The Mission OS banner is off the site for now. Corner-bracket frames were tried and removed everywhere.",
+      "Fonts: Jersey 10 is self-hosted (SIL OFL, Latin subset, about 8 KB). Technor and Kalam come from Fontshare, one request each. The game's own pixel font is from a paid asset pack, so it is not used here.",
+    ],
+  },
+  {
     version: 'v5.23.1',
     kind: 'released',
     summary: 'Tidy-up after v5.23.0: showcase order, the slash in status labels, and the project thumbnails.',

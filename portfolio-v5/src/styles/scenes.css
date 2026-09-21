@@ -15,20 +15,20 @@
 /* Scene title fonts.
  *   nexus  : Technor (Fontshare), a clean techno sans.
  *   kanvaz : Kalam (Fontshare), handwriting, like a note pinned to the board.
- *   ascent : Pixelify Sans (SIL OFL, self-hosted, Latin subset ~9 KB).
+ *   ascent : Jersey 10 (SIL OFL, self-hosted, Latin subset ~8 KB), an arcade pixel face.
  * Only titles use them (project name, page h1, Ascent stat numbers);
  * body copy stays in the site's own families. */
 @font-face {
-  font-family: 'Pixelify Sans';
-  src: url('/fonts/PixelifySans.woff2') format('woff2');
-  font-weight: 400 700;
+  font-family: 'Jersey 10';
+  src: url('/fonts/Jersey10.woff2') format('woff2');
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 :root {
   --font-scene-nexus: 'Technor', var(--font-display);
   --font-scene-kanvaz: 'Kalam', var(--font-display);
-  --font-scene-ascent: 'Pixelify Sans', var(--font-display);
+  --font-scene-ascent: 'Jersey 10', var(--font-display);
 }
 
 
@@ -109,13 +109,14 @@ body[data-scene='ascent'] .section-eyebrow::before {
 /* ------------------------------------------------------ scene title fonts */
 body[data-scene='nexus'] .case-title  { font-family: var(--font-scene-nexus);  font-style: normal; font-weight: 500; letter-spacing: -0.01em; }
 body[data-scene='kanvaz'] .case-title { font-family: var(--font-scene-kanvaz); font-style: normal; font-weight: 700; letter-spacing: 0; }
-body[data-scene='ascent'] .case-title { font-family: var(--font-scene-ascent); font-style: normal; font-weight: 600; letter-spacing: 0; font-size: calc(var(--text-h1) * 0.78); line-height: 1.12; }
-body[data-scene='ascent'] .stat-cell dd { font-family: var(--font-scene-ascent); font-weight: 600; }
+body[data-scene='ascent'] .case-title { font-family: var(--font-scene-ascent); font-style: normal; font-weight: 400; letter-spacing: 0.01em; font-size: calc(var(--text-h1) * 1.02); line-height: 1.02; }
+body[data-scene='ascent'] .stat-cell dd { font-family: var(--font-scene-ascent); font-weight: 400; font-size: 1.25em; }
 
 /* ------------------------------------------------------------------ moon */
 /* A moon with maria and craters, a terminator shadow and a soft highlight.
    `.phased` adds a waxing crescent-to-full mask driven by --cx (registered in
-   SceneBackdrop.astro). Without @property support the mask is dropped and the
+   SceneBackdrop.astro); the cut-out circle uses the moon's real radius
+   (--moon-size / 2) so the crescent keeps its true shape at every phase. Without @property support the mask is dropped and the
    moon is simply full. */
 .moon-orb {
   border-radius: 50%;
@@ -133,8 +134,8 @@ body[data-scene='ascent'] .stat-cell dd { font-family: var(--font-scene-ascent);
     inset 0.5vmin 0.5vmin 1.2vmin rgba(255, 255, 255, 0.30);
 }
 .moon-orb.phased {
-  -webkit-mask-image: radial-gradient(circle closest-side at var(--cx) 50%, transparent 98%, #000 100%);
-          mask-image: radial-gradient(circle closest-side at var(--cx) 50%, transparent 98%, #000 100%);
+  -webkit-mask-image: radial-gradient(circle at var(--cx) 50%, transparent calc(var(--moon-size) * 0.5 - 0.5vmin), #000 calc(var(--moon-size) * 0.5 + 0.8vmin));
+          mask-image: radial-gradient(circle at var(--cx) 50%, transparent calc(var(--moon-size) * 0.5 - 0.5vmin), #000 calc(var(--moon-size) * 0.5 + 0.8vmin));
 }
 :root[data-theme='light'] .as-moon .moon-orb,
 :root[data-theme='light'] .chapter[data-scene='ascent'] .moon-orb {

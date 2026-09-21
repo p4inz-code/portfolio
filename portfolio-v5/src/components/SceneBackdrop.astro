@@ -16,6 +16,11 @@ interface Props {
   scene?: 'nexus' | 'kanvaz' | 'ascent';
 }
 const { scene } = Astro.props;
+// Data motes for the Nexus backdrop: fixed seed so the markup is stable.
+const motes = Array.from({ length: 14 }, (_, i) => {
+  const r = (n: number) => ((Math.sin((i + 1) * 91.7 + n * 13.3) + 1) / 2);
+  return { x: Math.round(r(1) * 96 + 2), s: Math.round((1 + r(2) * 2) * 10) / 10, d: Math.round(9 + r(3) * 11), l: -Math.round(r(4) * 18) };
+});
 ---
 {scene && (
   <div class="sb" data-scene={scene} aria-hidden="true">
@@ -23,13 +28,22 @@ const { scene } = Astro.props;
       <>
         <span class="nx-glow"></span>
         <span class="nx-lines"></span>
-        <span class="nx-cube"><i></i><i></i><i></i><i></i><i></i><i></i></span>
         <span class="nx-beam"></span>
+        {motes.map((m) => (
+          <span class="nx-mote" style={`left:${m.x}%;--s:${m.s}px;--d:${m.d}s;--l:${m.l}s`}></span>
+        ))}
         <span class="nx-floor"><span class="nx-plane"><span class="nx-grid"></span></span></span>
         <span class="nx-packet p1"></span>
         <span class="nx-packet p2"></span>
         <span class="nx-packet p3"></span>
         <span class="nx-packet p4"></span>
+        <span class="nx-hover">
+          <span class="nx-cube">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+            <span class="core"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+          </span>
+          <span class="nx-shadow"></span>
+        </span>
       </>
     )}
 
@@ -122,12 +136,12 @@ const { scene } = Astro.props;
   }
   .nx-floor {
     left: -20%; right: -20%; bottom: 0;
-    height: 58vh;
+    height: 40vh;
     perspective: 520px;
     perspective-origin: 50% 0%;
     overflow: hidden;
-    -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 74%);
-            mask-image: linear-gradient(to top, #000 0%, transparent 74%);
+    -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 82%);
+            mask-image: linear-gradient(to top, #000 0%, transparent 82%);
   }
   .nx-plane {
     inset: 0;
@@ -139,29 +153,62 @@ const { scene } = Astro.props;
     position: absolute; display: block;
     left: 0; right: 0; top: -60px; bottom: 0;
     background-image:
-      linear-gradient(color-mix(in oklab, var(--purple-bright) 34%, transparent) 1px, transparent 1px),
-      linear-gradient(90deg, color-mix(in oklab, var(--purple-bright) 34%, transparent) 1px, transparent 1px);
+      linear-gradient(color-mix(in oklab, var(--purple-bright) 26%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in oklab, var(--purple-bright) 26%, transparent) 1px, transparent 1px);
     background-size: 60px 60px;
   }
+  /* A cube (the Nexus mark) hovering over the floor, with a core turning the
+     other way and a shadow that breathes with the bob. */
+  .nx-hover {
+    right: 7vw; bottom: 20vh;
+    width: 13vmin; height: 13vmin;
+  }
   .nx-cube {
-    top: 16vh; right: 9vw;
-    width: 15vmin; height: 15vmin;
+    --s: 13vmin;
+    position: absolute; inset: 0;
     transform-style: preserve-3d;
     transform: rotateX(-24deg) rotateY(30deg);
     perspective: 900px;
   }
   .nx-cube i {
     position: absolute; inset: 0;
-    border: 1px solid color-mix(in oklab, var(--purple-bright) 55%, transparent);
-    background: linear-gradient(135deg, color-mix(in oklab, var(--purple-bright) 9%, transparent), transparent 60%);
+    border: 1px solid color-mix(in oklab, var(--purple-bright) 60%, transparent);
+    background: linear-gradient(135deg, color-mix(in oklab, var(--purple-bright) 12%, transparent), transparent 62%);
     backface-visibility: visible;
   }
-  .nx-cube i:nth-child(1) { transform: translateZ(7.5vmin); }
-  .nx-cube i:nth-child(2) { transform: rotateY(180deg) translateZ(7.5vmin); }
-  .nx-cube i:nth-child(3) { transform: rotateY(90deg) translateZ(7.5vmin); }
-  .nx-cube i:nth-child(4) { transform: rotateY(-90deg) translateZ(7.5vmin); }
-  .nx-cube i:nth-child(5) { transform: rotateX(90deg) translateZ(7.5vmin); }
-  .nx-cube i:nth-child(6) { transform: rotateX(-90deg) translateZ(7.5vmin); }
+  .nx-cube i:nth-child(1) { transform: translateZ(calc(var(--s) / 2)); }
+  .nx-cube i:nth-child(2) { transform: rotateY(180deg) translateZ(calc(var(--s) / 2)); }
+  .nx-cube i:nth-child(3) { transform: rotateY(90deg) translateZ(calc(var(--s) / 2)); }
+  .nx-cube i:nth-child(4) { transform: rotateY(-90deg) translateZ(calc(var(--s) / 2)); }
+  .nx-cube i:nth-child(5) { transform: rotateX(90deg) translateZ(calc(var(--s) / 2)); }
+  .nx-cube i:nth-child(6) { transform: rotateX(-90deg) translateZ(calc(var(--s) / 2)); }
+  .nx-cube .core {
+    --s: 6.5vmin;
+    position: absolute; inset: 25%;
+    transform-style: preserve-3d;
+    transform: rotateX(24deg) rotateY(-30deg);
+  }
+  .nx-cube .core i {
+    border-color: color-mix(in oklab, var(--purple-bright) 90%, #fff);
+    background: color-mix(in oklab, var(--purple-bright) 22%, transparent);
+    box-shadow: 0 0 1.2vmin color-mix(in oklab, var(--purple-bright) 50%, transparent);
+  }
+  .nx-shadow {
+    left: 50%; bottom: -6vmin;
+    width: 11vmin; height: 2.6vmin;
+    margin-left: -5.5vmin;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, color-mix(in oklab, var(--purple-bright) 55%, transparent), transparent 70%);
+    filter: blur(2px);
+  }
+  .nx-mote {
+    bottom: -4vh;
+    width: var(--s); height: var(--s);
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--purple-bright) 80%, #fff);
+    box-shadow: 0 0 6px 1px color-mix(in oklab, var(--purple-bright) 50%, transparent);
+    opacity: 0;
+  }
 
   .nx-packet {
     width: 1px; height: 64px;
@@ -289,8 +336,9 @@ const { scene } = Astro.props;
   .as-shoot.c { top: 8%;  left: 70%; rotate: 24deg; }
 
   .as-moon {
+    --moon-size: 16vmin;
     top: 18vh; right: 11vw;
-    width: 16vmin; height: 16vmin;
+    width: var(--moon-size); height: var(--moon-size);
   }
   .as-moon .halo {
     position: absolute; inset: -60%;
@@ -306,8 +354,7 @@ const { scene } = Astro.props;
   .as-moon .earthshine {
     position: absolute; inset: 0;
     border-radius: 50%;
-    background: radial-gradient(circle at 42% 40%, rgba(150, 140, 200, 0.22), rgba(52, 40, 96, 0.55) 70%, rgba(30, 22, 62, 0.7));
-    box-shadow: inset 0 0 1.6vmin rgba(0, 0, 0, 0.45);
+    background: radial-gradient(circle at 42% 40%, rgba(150, 140, 200, 0.16), rgba(60, 46, 112, 0.30) 72%, rgba(60, 46, 112, 0.22));
   }
   .as-ridge { left: -8%; right: -8%; bottom: 0; }
   .as-ridge.far {
@@ -342,13 +389,18 @@ const { scene } = Astro.props;
   :global(:root[data-theme='light']) .as-ridge.mid  { background: color-mix(in oklab, var(--purple) 48%, var(--bg)); opacity: 0.9; }
   :global(:root[data-theme='light']) .as-ridge.near { background: color-mix(in oklab, var(--purple) 66%, var(--bg)); }
   :global(:root[data-theme='light']) .nx-cube i { border-color: color-mix(in oklab, var(--purple) 60%, transparent); }
+  :global(:root[data-theme='light']) .nx-mote { background: var(--purple); box-shadow: none; }
   :global(:root[data-theme='light']) .kz-card { opacity: 0.32; }
 
   /* ---------------------------------------------------------------- phones */
   @media (max-width: 760px) {
-    .nx-cube, .nx-packet, .as-shoot, .kz-card.c6, .kz-card.c7, .kz-marquee { display: none; }
+    .nx-packet, .as-shoot, .kz-card.c6, .kz-card.c7, .kz-marquee { display: none; }
+    .nx-hover { right: 4vw; bottom: 16vh; width: 18vmin; height: 18vmin; }
+    .nx-cube { --s: 18vmin; }
+    .nx-cube .core { --s: 9vmin; }
     .nx-floor { height: 34vh; }
-    .as-moon { width: 22vmin; height: 22vmin; right: 8vw; }
+    .as-moon { --moon-size: 22vmin; right: 8vw; }
+    .nx-mote { display: none; }
     .kz-card { width: 34vw; min-width: 0; }
   }
 
@@ -359,6 +411,10 @@ const { scene } = Astro.props;
     .nx-beam { animation: nx-beam 9s cubic-bezier(0.4, 0, 0.2, 1) 1.5s infinite; }
     .nx-glow { animation: nx-breathe 8s ease-in-out infinite alternate; }
     .nx-cube { animation: nx-spin 46s linear infinite; }
+    .nx-cube .core { animation: nx-spin-rev 30s linear infinite; }
+    .nx-hover { animation: nx-bob 6s ease-in-out infinite alternate; }
+    .nx-shadow { animation: nx-shadow 6s ease-in-out infinite alternate; }
+    .nx-mote { animation: nx-mote var(--d) linear var(--l) infinite; }
     .nx-packet { animation: nx-packet 5.5s cubic-bezier(0.5, 0, 0.5, 1) infinite; }
     .nx-packet.p1 { animation-delay: 0.4s; }
     .nx-packet.p2 { animation-delay: 2.1s; animation-duration: 7s; }
@@ -383,7 +439,7 @@ const { scene } = Astro.props;
     /* Scroll linked (root scroller) */
     @supports (animation-timeline: scroll()) {
       .nx-lines { animation: nx-lines-pan linear both; animation-timeline: scroll(root block); }
-      .nx-cube { animation: nx-spin 46s linear infinite, nx-cube-lift linear both; animation-timeline: auto, scroll(root block); }
+      .nx-hover { animation: nx-bob 6s ease-in-out infinite alternate, nx-cube-lift linear both; animation-timeline: auto, scroll(root block); }
 
       .kz-dots.far  { animation: kz-pan-far linear both;  animation-timeline: scroll(root block); }
       .kz-dots.near { animation: kz-pan-near linear both; animation-timeline: scroll(root block); }
@@ -406,9 +462,13 @@ const { scene } = Astro.props;
   @keyframes nx-beam    { 0% { transform: translateY(-2vh); opacity: 0; } 8% { opacity: 1; } 60% { opacity: 0.9; } 100% { transform: translateY(102vh); opacity: 0; } }
   @keyframes nx-breathe { from { opacity: 0.7; } to { opacity: 1; } }
   @keyframes nx-spin    { from { transform: rotateX(-24deg) rotateY(30deg); } to { transform: rotateX(-24deg) rotateY(390deg); } }
+  @keyframes nx-spin-rev { from { transform: rotateX(24deg) rotateY(-30deg); } to { transform: rotateX(24deg) rotateY(-390deg); } }
+  @keyframes nx-bob     { from { translate: 0 -1.4vmin; } to { translate: 0 1.4vmin; } }
+  @keyframes nx-shadow  { from { transform: scale(1); opacity: 0.9; } to { transform: scale(0.82); opacity: 0.55; } }
+  @keyframes nx-mote    { 0% { transform: translateY(0); opacity: 0; } 12% { opacity: 0.9; } 80% { opacity: 0.6; } 100% { transform: translateY(-105vh); opacity: 0; } }
   @keyframes nx-packet  { 0% { transform: translateY(-80px); opacity: 0; } 10% { opacity: 1; } 70% { opacity: 1; } 100% { transform: translateY(70vh); opacity: 0; } }
   @keyframes nx-lines-pan { from { transform: translateY(0); } to { transform: translateY(-18vh); } }
-  @keyframes nx-cube-lift { from { translate: 0 0; } to { translate: 0 -22vh; } }
+  @keyframes nx-cube-lift { from { transform: translateY(0); } to { transform: translateY(-16vh); } }
 
   @keyframes kz-flow   { to { stroke-dashoffset: -24; } }
   @keyframes kz-float  { from { translate: 0 -6px; } to { translate: 0 8px; } }
