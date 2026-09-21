@@ -61,8 +61,11 @@ function update() {
   queued = false;
   const vh = window.innerHeight || root.clientHeight;
   const max = Math.max(1, root.scrollHeight - vh);
-  root.style.setProperty('--sp', reduce.matches || isStill() ? '0' : clamp(window.scrollY / max).toFixed(4));
-  if (!root.hasAttribute('data-jsp')) return;
+  const sp = reduce.matches || isStill() ? '0' : clamp(window.scrollY / max).toFixed(4);
+  if (!root.hasAttribute('data-jsp')) { root.style.setProperty('--sp', sp); return; }
+  // read every rect first, then write every variable: interleaving them makes
+  // the browser recompute layout once per element on every scroll frame
+  const reads: Array<[HTMLElement, number]> = [];
   for (const el of els) {
     const r = el.getBoundingClientRect();
     if (r.bottom < -vh * 0.3 || r.top > vh * 1.3) continue; // off screen: leave it be
@@ -71,8 +74,10 @@ function update() {
     const p = el.dataset.progress === 'hero'
       ? clamp(-r.top / (r.height * 0.8))
       : clamp((vh - r.top) / (vh + r.height));
-    el.style.setProperty('--p', p.toFixed(4));
+    reads.push([el, p]);
   }
+  root.style.setProperty('--sp', sp);
+  for (const [el, p] of reads) el.style.setProperty('--p', p.toFixed(4));
 }
 
 function queue() {

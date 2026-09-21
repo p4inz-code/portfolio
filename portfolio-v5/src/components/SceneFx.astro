@@ -375,7 +375,8 @@ const edges: Array<[number, number]> = [
   }
 
   @property --lvl { syntax: '<integer>'; inherits: false; initial-value: 1; }
-  .hud-num { --lvl: calc(1 + var(--sp, 0) * 24); }
+  /* round() keeps this a true integer for the registered property (a plain calc() gives 11.08) */
+  .hud-num { --lvl: round(down, calc(1 + var(--sp, 0) * 24), 1); }
 
   @keyframes fx-hex   { from { transform: translateY(0); } to { transform: translateY(-50%); } }
   @keyframes fx-boot  { from { transform: translateY(0); } to { transform: translateY(-33.33%); } }

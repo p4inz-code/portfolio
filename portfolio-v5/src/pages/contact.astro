@@ -315,6 +315,9 @@ import { CONTACT, SITE } from '../data/site';
 
       form.addEventListener('submit', function (e) {
         e.preventDefault();
+        // Ctrl/Cmd+Enter can re-submit while the transmit beat is playing
+        const busyCard = document.getElementById('termCard');
+        if (busyCard && busyCard.classList.contains('is-sending')) return;
         const nameInput = /** @type {HTMLInputElement} */ (document.getElementById('c-name'));
         const emailInput = /** @type {HTMLInputElement} */ (document.getElementById('c-email'));
         const messageInput = /** @type {HTMLTextAreaElement} */ (document.getElementById('c-message'));

@@ -127,13 +127,13 @@ const defaultLabel = (kind: string) =>
                 )}
               </figure>
             ) : (
-              <aside class="show-visual" aria-hidden="true">
+              <div class="show-visual" aria-hidden="true">
                 <div class="show-visual-frame">
                   <span class="show-visual-slug">{p.slug}</span>
                   <span class="show-visual-name">{p.name}</span>
                   <span class="show-visual-role">{p.license || 'proprietary'}</span>
                 </div>
-              </aside>
+              </div>
             )}
           </div>
         </div>

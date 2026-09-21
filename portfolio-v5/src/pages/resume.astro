@@ -219,7 +219,8 @@ const additionalProjects = [
     .proj-item-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-4); margin-bottom: var(--sp-3); flex-wrap: wrap; }
     .proj-item-name { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 500; }
     .proj-item-tagline { font-weight: 400; color: var(--muted); font-size: var(--text-sm); }
-    .proj-item-period { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-mono); text-transform: uppercase; color: var(--purple-bright); white-space: nowrap; }
+    .proj-item-period { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-mono); text-transform: uppercase; color: var(--purple-bright); white-space: nowrap; max-width: 100%; }
+    @media (max-width: 400px) { .proj-item { padding: var(--sp-5) var(--sp-4); } .proj-item-period { white-space: normal; } }
     .proj-item-bullets { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--sp-2); }
     .proj-item-bullets li { color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); padding-left: var(--sp-4); position: relative; }
     .proj-item-bullets li::before { content: ''; position: absolute; left: 0; top: 10px; width: 8px; height: 1px; background: var(--purple-bright); }
