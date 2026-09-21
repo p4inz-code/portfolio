@@ -493,7 +493,7 @@ import { CONTACT, SITE } from '../data/site';
     .cl-channels { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--sp-3); }
     .cl-channels li {
       display: grid;
-      grid-template-columns: 90px 1fr;
+      grid-template-columns: 80px minmax(0, 1fr);
       gap: var(--sp-4);
       align-items: baseline;
       padding: var(--sp-3) 0;
@@ -525,7 +525,9 @@ import { CONTACT, SITE } from '../data/site';
     }
     .cl-channels a:hover::after, .cl-channels a:focus-visible::after { opacity: 1; transform: none; }
     .cl-channels em { color: var(--purple-bright); font-style: italic; }
-    .cl-email-row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-3); }
+    .cl-email-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--sp-2) var(--sp-3); min-width: 0; }
+    .cl-channels a, .cl-channels span:not(.cl-key) { overflow-wrap: anywhere; }
+    .contact-grid > * { min-width: 0; }
     .cl-copy {
       background: transparent;
       border: 1px solid var(--line-strong);

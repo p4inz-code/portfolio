@@ -510,9 +510,9 @@ import '../scripts/fx';</script>
       .brand { display: inline-flex; align-items: center; gap: var(--sp-3); color: var(--text); transition: opacity var(--dur-fast) var(--ease-out); }
       .brand:hover { opacity: 0.85; }
       .brand-name { font-family: var(--font-display); font-size: var(--text-md); font-style: italic; }
-      .nav-links { display: flex; align-items: center; gap: var(--sp-6); }
+      .nav-links { display: flex; align-items: center; gap: clamp(14px, 2vw, var(--sp-6)); }
       .nav-links a {
-        color: var(--muted); font-size: var(--text-sm);
+        color: var(--muted); font-size: var(--text-sm); white-space: nowrap;
         transition: color var(--dur-fast) var(--ease-out);
         position: relative;
       }
@@ -740,7 +740,10 @@ import '../scripts/fx';</script>
       }
       .nmu-theme { display: flex; align-items: center; }
 
-      @media (max-width: 760px) {
+      /* The desktop nav needs about 900px to sit on one line, so the drawer
+         takes over at 900px and below (it used to wait until 760px, which
+         left tablets with a wrapped, cramped bar). */
+      @media (max-width: 900px) {
         .nav-links { display: none !important; }
         .nav-mobile-toggle { display: inline-flex; }
       }

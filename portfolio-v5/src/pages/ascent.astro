@@ -286,5 +286,9 @@ const bosses = [
     }
     .boss-table td { color: var(--muted); }
     .boss-table td:first-child { color: var(--text); font-family: var(--font-mono); }
+    @media (max-width: 420px) {
+      .boss-table th, .boss-table td { padding: var(--sp-2) var(--sp-2); font-size: 12px; }
+      .boss-table th { font-size: 9px; letter-spacing: 0.06em; }
+    }
   </style>
 </BaseLayout>

@@ -10,7 +10,8 @@
  *   [data-progress]     element gets --p, 0..1, the same "cover" mapping the
  *                       CSS timelines use: 0 when its top edge enters at the
  *                       bottom of the viewport, 1 when its bottom edge leaves
- *                       at the top
+ *                       at the top. [data-progress="hero"] is for things that
+ *                       start on screen: 0 at rest, 1 once 80% has scrolled by.
  *   html --sp           whole-page scroll progress, 0..1 (used by backdrops
  *                       when scroll() timelines are missing)
  *
@@ -47,7 +48,12 @@ function update() {
   for (const el of els) {
     const r = el.getBoundingClientRect();
     if (r.bottom < -vh * 0.3 || r.top > vh * 1.3) continue; // off screen: leave it be
-    el.style.setProperty('--p', clamp((vh - r.top) / (vh + r.height)).toFixed(4));
+    // data-progress="hero": an element that starts on screen at load. Progress is
+    // how far it has scrolled up, 0 at rest, 1 after 80% of its height.
+    const p = el.dataset.progress === 'hero'
+      ? clamp(-r.top / (r.height * 0.8))
+      : clamp((vh - r.top) / (vh + r.height));
+    el.style.setProperty('--p', p.toFixed(4));
   }
 }
 

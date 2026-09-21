@@ -33,7 +33,7 @@ if (scrub) {
 const CREW = 7;
 ---
 {scrub ? (
-  <section class="hero hero-scrub" aria-labelledby="hero-title" data-progress>
+  <section class="hero hero-scrub" aria-labelledby="hero-title" data-progress="hero">
     <div class="hero-pin wrap">
       {eyebrow && <p class="hero-eyebrow">{eyebrow}</p>}
       <h1 id="hero-title" class="hero-title">
@@ -234,27 +234,29 @@ const CREW = 7;
   }
   @keyframes cue-out { to { opacity: 0; } }
 
-  /* ---- JS progress mode: phones, Firefox, iOS without scroll timelines ---- */
-  :global(html[data-jsp]) .hero-scrub { --p: 0.6; }
+  /* ---- JS progress mode: phones, Firefox, iOS without scroll timelines ----
+     --p is 0 at rest and reaches 1 after 80% of the hero has scrolled away, so
+     the first few words are already lit on arrival and the rest follow. */
+  :global(html[data-jsp]) .hero-scrub { --p: 0; }
   :global(html[data-jsp]) .w {
-    --wt: clamp(0, calc((var(--p) - 0.605 - var(--w) * 0.14) / 0.05), 1);
+    --wt: clamp(0, calc((var(--p) - var(--w) * 0.62 + 0.16) / 0.1), 1);
     opacity: calc(0.16 + var(--wt) * 0.84);
   }
   :global(html[data-jsp]) .crew i {
-    --ct: clamp(0, calc((var(--p) - 0.63 - var(--c) * 0.014) / 0.06), 1);
+    --ct: clamp(0, calc((var(--p) - 0.22 - var(--c) * 0.035) / 0.12), 1);
     transform: scale(calc(1 - var(--ct) * 0.8));
     opacity: calc(1 - var(--ct));
     margin-right: calc(var(--ct) * -26px);
   }
   :global(html[data-jsp]) .crew b {
-    transform: scale(calc(1 + clamp(0, calc((var(--p) - 0.66) / 0.14), 1) * 0.2));
+    transform: scale(calc(1 + clamp(0, calc((var(--p) - 0.45) / 0.2), 1) * 0.2));
   }
   :global(html[data-jsp]) .scrub-sub {
-    opacity: calc(0.3 + clamp(0, calc((var(--p) - 0.66) / 0.12), 1) * 0.7);
+    opacity: calc(0.3 + clamp(0, calc((var(--p) - 0.3) / 0.25), 1) * 0.7);
   }
   :global(html[data-jsp]) .scroll-cue {
     display: flex;
-    opacity: calc(1 - clamp(0, calc((var(--p) - 0.6) / 0.06), 1));
+    opacity: calc(1 - clamp(0, calc(var(--p) / 0.08), 1));
   }
   @media (max-width: 480px) {
     .crew { margin-top: var(--sp-5); }
