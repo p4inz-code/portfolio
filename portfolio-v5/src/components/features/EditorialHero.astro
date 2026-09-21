@@ -17,8 +17,9 @@ interface Props {
   lines: Array<{ text: string; emphasis?: string }>;
   intro?: string;
   scrub?: boolean;
+  roles?: string[];  // scrub only: what "on my own" means, lit one by one
 }
-const { eyebrow, lines, intro, scrub = false } = Astro.props;
+const { eyebrow, lines, intro, scrub = false, roles = [] } = Astro.props;
 
 // word list for the scrubbed version: [{ t, em, w }] with w in 0..1
 const words: Array<{ t: string; em: boolean; line: number; w: number }> = [];
@@ -49,6 +50,13 @@ const CREW = 7;
         {Array.from({ length: CREW }, (_, i) => <i style={`--c:${i}`}></i>)}
         <b><span>me</span></b>
       </div>
+      {roles.length > 0 && (
+        <ol class="roles" aria-label="What I do myself">
+          {roles.map((r, i) => (
+            <li style={`--r:${i}`}><span class="role-dot" aria-hidden="true"></span><span class="role-text">{r}</span></li>
+          ))}
+        </ol>
+      )}
       {intro && <p class="hero-sub scrub-sub">{intro}</p>}
       <div class="scrub-slot"><slot /></div>
       <p class="scroll-cue" aria-hidden="true"><span>scroll</span><i></i></p>
@@ -162,6 +170,21 @@ const CREW = 7;
     letter-spacing: 0.04em;
     color: var(--bg);
   }
+  .roles {
+    list-style: none; padding: 0;
+    margin: var(--sp-5) 0 0;
+    display: flex; flex-wrap: wrap; gap: 8px 22px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+  }
+  .roles li { display: inline-flex; align-items: center; gap: 8px; color: var(--text); }
+  .role-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    border: 1px solid var(--purple-bright);
+    background: var(--purple-bright);
+    flex-shrink: 0;
+  }
   .scrub-sub { margin-top: var(--sp-5); }
   .scrub-slot { margin-top: var(--sp-1); }
   .scroll-cue {
@@ -185,7 +208,7 @@ const CREW = 7;
   /* ---- pinned (desktop, scroll timelines, motion allowed) ---- */
   @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
-      .hero-scrub { view-timeline: --hero block; height: 210vh; }
+      .hero-scrub { view-timeline: --hero block; height: 260vh; }
       .hero-pin {
         position: sticky; top: 0;
         height: 100vh; height: 100svh;
@@ -198,17 +221,17 @@ const CREW = 7;
         color: var(--muted);
         animation: w-on var(--ease-out) both;
         animation-timeline: --hero;
-        animation-range: cover calc(33% + var(--w) * 24%) cover calc(37.5% + var(--w) * 24%);
+        animation-range: cover calc(29% + var(--w) * 17%) cover calc(33.5% + var(--w) * 17%);
       }
       .crew i {
         animation: crew-out var(--ease-io) both;
         animation-timeline: --hero;
-        animation-range: cover calc(38% + var(--c) * 2.6%) cover calc(46% + var(--c) * 2.6%);
+        animation-range: cover calc(33% + var(--c) * 1.6%) cover calc(40% + var(--c) * 1.6%);
       }
       .crew b {
         animation: crew-me var(--ease-out) both;
         animation-timeline: --hero;
-        animation-range: cover 40% cover 62%;
+        animation-range: cover 36% cover 60%;
       }
       .w.em {
         color: color-mix(in oklab, var(--purple-bright) 55%, var(--muted));
@@ -217,13 +240,25 @@ const CREW = 7;
       .scrub-sub {
         animation: sub-on var(--ease-out) both;
         animation-timeline: --hero;
-        animation-range: cover 40% cover 58%;
+        animation-range: cover 52% cover 64%;
+      }
+      .roles .role-dot {
+        background: transparent;
+        animation: role-on var(--ease-out) both;
+        animation-timeline: --hero;
+        animation-range: cover calc(45% + var(--r) * 3.6%) cover calc(49% + var(--r) * 3.6%);
+      }
+      .roles .role-text {
+        color: var(--muted);
+        animation: role-text var(--ease-out) both;
+        animation-timeline: --hero;
+        animation-range: cover calc(45% + var(--r) * 3.6%) cover calc(49% + var(--r) * 3.6%);
       }
       .scroll-cue {
         display: flex;
         animation: cue-out linear both;
         animation-timeline: --hero;
-        animation-range: cover 32% cover 42%;
+        animation-range: cover 28% cover 36%;
       }
     }
   }
@@ -236,9 +271,13 @@ const CREW = 7;
     60%  { transform: scale(1.35); box-shadow: 0 0 0 14px color-mix(in oklab, var(--purple-bright) 0%, transparent); }
     100% { transform: scale(1.2); box-shadow: 0 0 0 0 transparent; }
   }
+  @keyframes role-on   { from { background: transparent; box-shadow: 0 0 0 0 transparent; } 60% { box-shadow: 0 0 0 6px color-mix(in oklab, var(--purple-bright) 0%, transparent); } to { background: var(--purple-bright); } }
+  @keyframes role-text { from { color: var(--muted); } to { color: var(--text); } }
   @keyframes cue-out { to { opacity: 0; } }
   /* People who ask for more contrast get the finished sentence at once. */
   @media (prefers-contrast: more) {
+    .roles .role-text { color: var(--text) !important; animation: none !important; }
+    .roles .role-dot { background: var(--purple-bright) !important; animation: none !important; }
     .w { color: var(--text) !important; animation: none !important; }
     .w.em { color: var(--purple-bright) !important; }
     .scrub-sub { animation: none !important; transform: none !important; }
@@ -249,23 +288,28 @@ const CREW = 7;
      the first few words are already lit on arrival and the rest follow. */
   :global(html[data-jsp]) .hero-scrub { --p: 0; }
   :global(html[data-jsp]) .w {
-    --wt: clamp(0, calc((var(--p) - var(--w) * 0.62 + 0.16) / 0.1), 1);
+    --wt: clamp(0, calc((var(--p) - var(--w) * 0.36 + 0.16) / 0.1), 1);
     color: color-mix(in oklab, var(--text) calc(var(--wt) * 100%), var(--muted));
   }
   :global(html[data-jsp]) .w.em {
     color: color-mix(in oklab, var(--purple-bright) calc(55% + var(--wt) * 45%), var(--muted));
   }
   :global(html[data-jsp]) .crew i {
-    --ct: clamp(0, calc((var(--p) - 0.22 - var(--c) * 0.035) / 0.12), 1);
+    --ct: clamp(0, calc((var(--p) - 0.18 - var(--c) * 0.02) / 0.1), 1);
     transform: scale(calc(1 - var(--ct) * 0.8));
     opacity: calc(1 - var(--ct));
     margin-right: calc(var(--ct) * -26px);
   }
   :global(html[data-jsp]) .crew b {
-    transform: scale(calc(1 + clamp(0, calc((var(--p) - 0.45) / 0.2), 1) * 0.2));
+    transform: scale(calc(1 + clamp(0, calc((var(--p) - 0.3) / 0.2), 1) * 0.2));
   }
+  :global(html[data-jsp]) .roles li {
+    --rt: clamp(0, calc((var(--p) - 0.34 - var(--r) * 0.07) / 0.08), 1);
+  }
+  :global(html[data-jsp]) .role-dot { background: color-mix(in oklab, var(--purple-bright) calc(var(--rt) * 100%), transparent); }
+  :global(html[data-jsp]) .role-text { color: color-mix(in oklab, var(--text) calc(var(--rt) * 100%), var(--muted)); }
   :global(html[data-jsp]) .scrub-sub {
-    transform: translateY(calc((1 - clamp(0, calc((var(--p) - 0.3) / 0.25), 1)) * 12px));
+    transform: translateY(calc((1 - clamp(0, calc((var(--p) - 0.55) / 0.2), 1)) * 12px));
   }
   :global(html[data-jsp]) .scroll-cue {
     display: flex;

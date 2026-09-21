@@ -1,0 +1,152 @@
+---
+import type { Project } from '../../data/projects';
+
+/**
+ * A release ladder for the home page. While the featured chapters scroll by,
+ * a rail keeps track of where you are in them, using each project's real
+ * version or status as the label (v10.12.5, v8.8.5, v0.14.1, Open Beta, ...).
+ * Desktop: a fixed rail on the left edge. Phones and tablets: a small pill
+ * under the header. Only visible while the chapters are on screen.
+ *
+ * The rail is navigation (plain links to each chapter) with progress on top;
+ * src/scripts/rail.ts does the spying. Reduced motion: no fade or fill motion.
+ */
+interface Props { projects: Project[] }
+const { projects } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
+const sub = (p: Project) => p.currentVersion ?? p.status.label;
+---
+<nav class="rail" id="shipRail" aria-label="Featured projects">
+  <span class="rail-line" aria-hidden="true"><i></i></span>
+  <ol>
+    {projects.map((p, i) => (
+      <li>
+        <a href={`#ch-${p.slug}`} data-rail-target={p.slug} data-name={p.name} data-sub={sub(p)}>
+          <span class="rail-dot" aria-hidden="true"></span>
+          <span class="rail-num">{pad(i + 1)}</span>
+          <span class="rail-name">{p.name}</span>
+          <span class="rail-sub">{sub(p)}</span>
+        </a>
+      </li>
+    ))}
+  </ol>
+  <p class="rail-pill" aria-hidden="true">
+    <b id="railPillNum">01 / {pad(projects.length)}</b>
+    <span id="railPillName">{projects[0]?.name}</span>
+    <em id="railPillSub">{projects[0] ? sub(projects[0]) : ''}</em>
+    <i class="rail-pill-bar"><u></u></i>
+  </p>
+</nav>
+
+<script>
+  import '../../scripts/rail';
+</script>
+
+<style>
+  .rail {
+    position: fixed;
+    z-index: 60;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.35s var(--ease-out), visibility 0s linear 0.35s;
+    --rp: 0;
+  }
+  .rail.is-on { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity 0.35s var(--ease-out), visibility 0s; }
+
+  /* ---- desktop: left-edge ladder ---- */
+  .rail {
+    left: 22px; top: 50%; transform: translateY(-50%);
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: color-mix(in oklab, var(--bg) 55%, transparent);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border: 1px solid var(--line);
+  }
+  .rail ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 22px; position: relative; }
+  .rail-line {
+    position: absolute; left: 18px; top: 18px; bottom: 18px;
+    width: 1px;
+    background: var(--line-strong);
+  }
+  .rail-line i {
+    position: absolute; inset: 0;
+    background: var(--purple-bright);
+    transform-origin: 50% 0;
+    transform: scaleY(var(--rp));
+  }
+  .rail a {
+    position: relative;
+    display: grid;
+    grid-template-columns: 9px auto;
+    grid-template-areas: 'dot num' 'dot name' 'dot sub';
+    column-gap: 12px;
+    align-items: baseline;
+    text-decoration: none;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+  .rail-dot {
+    grid-area: dot;
+    align-self: start;
+    margin-top: 2px;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid var(--muted);
+    transition: background 0.3s var(--ease-out), border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+    position: relative; z-index: 1;
+  }
+  .rail-num  { grid-area: num; opacity: 0.8; }
+  /* visually hidden, not display:none, so every link keeps its full name for screen readers */
+  .rail-name, .rail-sub { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .rail a:hover .rail-name, .rail a:focus-visible .rail-name,
+  .rail a.is-active .rail-name { position: static; width: auto; height: auto; overflow: visible; clip-path: none; display: block; grid-area: name; font-family: var(--font-display); font-size: 13px; letter-spacing: -0.01em; color: var(--text); }
+  .rail a:hover .rail-sub, .rail a:focus-visible .rail-sub,
+  .rail a.is-active .rail-sub { position: static; width: auto; height: auto; overflow: visible; clip-path: none; display: block; grid-area: sub; color: var(--purple-bright); }
+  .rail a.is-active { color: var(--text); }
+  .rail a.is-active .rail-dot, .rail a.is-passed .rail-dot { background: var(--purple-bright); border-color: var(--purple-bright); }
+  .rail a.is-active .rail-dot { box-shadow: 0 0 0 5px color-mix(in oklab, var(--purple-bright) 22%, transparent); }
+  .rail a:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 6px; border-radius: 3px; }
+  .rail-pill { display: none; }
+
+  /* the ladder needs room beside the 1100px content column; below 1320px a small pill takes over */
+  @media (max-width: 1319px) {
+    .rail {
+      left: 50%; top: 72px;
+      transform: translateX(-50%);
+      padding: 0; border: none; background: none;
+      -webkit-backdrop-filter: none; backdrop-filter: none;
+      pointer-events: none;
+    }
+    .rail.is-on { pointer-events: none; }
+    .rail ol, .rail-line { display: none; }
+    .rail-pill {
+      display: flex; align-items: baseline; gap: 10px;
+      margin: 0;
+      padding: 7px 14px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      background: color-mix(in oklab, var(--bg) 70%, transparent);
+      -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
+    }
+    .rail-pill b { color: var(--purple-bright); font-weight: 400; }
+    .rail-pill span { color: var(--text); font-family: var(--font-display); font-size: 13px; letter-spacing: -0.01em; }
+    .rail-pill em { font-style: normal; }
+    .rail-pill-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--line); }
+    .rail-pill-bar u { position: absolute; inset: 0; background: var(--purple-bright); transform-origin: 0 50%; transform: scaleX(var(--rp)); text-decoration: none; }
+  }
+  @media (max-width: 380px) { .rail-pill em { display: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .rail, .rail.is-on, .rail-dot { transition: none; }
+  }
+</style>

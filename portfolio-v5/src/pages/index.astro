@@ -6,6 +6,8 @@ import ProjectCard from '../components/features/ProjectCard.astro';
 import ObscuraCard from '../components/features/ObscuraCard.astro';
 import FeaturedShowcase from '../components/features/FeaturedShowcase.astro';
 import Button from '../components/ui/Button.astro';
+import ProofStrip from '../components/features/ProofStrip.astro';
+import ShippingRail from '../components/features/ShippingRail.astro';
 import { FEATURED_PROJECTS, SUPPORTING_PROJECTS, PROJECTS } from '../data/projects';
 import { SITE } from '../data/site';
 
@@ -16,12 +18,13 @@ const featuredWord = NUM[FEATURED_PROJECTS.length] ?? String(FEATURED_PROJECTS.l
 <BaseLayout title={`${SITE.title} — Software · 3D · VFX · Northbyte`} keywords="Atharva Patil, p4inz, P4INZ, painz, p4inz web dev, p4inz app dev, p4inz cli dev, p4inz game dev, Northbyte Studios">
   <EditorialHero
     scrub
-    eyebrow={`Building ${SITE.studio} · ${SITE.location}`}
+    eyebrow={`Atharva Patil · ${SITE.location}`}
     lines={[
-      { text: 'software studio.', emphasis: 'Northbyte is a one-person' },
-      { text: 'the rest of my time.', emphasis: 'A VFX degree takes up' },
+      { text: 'on my own,', emphasis: 'I build software' },
+      { text: 'and study animation on the side.' },
     ]}
-    intro={`Solo founder: I write the software, ship it, and support it myself, and I'm partway through a 3D animation degree on the side. ${projectCount} products shipped or in progress so far, none of them with a marketing team, none of them phoning home. Every case study here links to a real repository or a real download, and the version numbers stay honest even when that means saying something's still rough.`}
+    roles={['writes the code', 'designs the screens', 'renders the 3D', 'ships the build', 'answers the email']}
+    intro={`I'm Atharva, a solo founder in Navi Mumbai and a second-year 3D animation student. I write the software, ship it and support it myself. ${projectCount} products so far, none of them with a marketing team and none of them phoning home. Every case study links to a real repository or a real download, and the version numbers stay honest even when that means saying something is still rough.`}
   >
     <div class="hero-actions">
       <Button href="/work" variant="primary">See selected work →</Button>
@@ -29,9 +32,13 @@ const featuredWord = NUM[FEATURED_PROJECTS.length] ?? String(FEATURED_PROJECTS.l
     </div>
   </EditorialHero>
 
+  <ProofStrip projectCount={projectCount} />
+
   <Section heading={`${featuredWord} things I'm shipping right now.`}>
     <FeaturedShowcase projects={FEATURED_PROJECTS} />
   </Section>
+
+  <ShippingRail projects={FEATURED_PROJECTS} />
 
   <Section eyebrow="Also on the shelf" heading="Open source, on hold, or maintained." intro="Smaller work, older projects, and things that don't need a case study of their own.">
     <div class="secondary-grid">

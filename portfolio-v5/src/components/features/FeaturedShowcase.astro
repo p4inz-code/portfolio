@@ -48,6 +48,7 @@ const defaultLabel = (kind: string) =>
         class:list={['chapter', m ? 'has-media' : 'no-media']}
         data-scene={p.scene}
         data-slug={p.slug}
+        id={`ch-${p.slug}`}
         data-progress
       >
         <div class="stage">
@@ -610,6 +611,11 @@ const defaultLabel = (kind: string) =>
         animation-range: cover 0% cover 100%;
       }
 
+      /* the sky fades in and out at its top and bottom edges, so chapters melt into each other */
+      .chapter[data-scene='ascent'] .scene-bg {
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16vh, #000 calc(100% - 16vh), transparent 100%);
+                mask-image: linear-gradient(to bottom, transparent 0, #000 16vh, #000 calc(100% - 16vh), transparent 100%);
+      }
       /* Scene backdrop motion (pinned mode). The pictures themselves live in the base rules above. */
       .chapter[data-scene='ascent'] .scene-bg {
         animation-name: bg-fade;

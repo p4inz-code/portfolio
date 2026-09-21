@@ -219,3 +219,35 @@ html[data-still] .term-cursor { animation: none !important; }
   .term-chip, .cl-copy { min-height: 40px; padding-inline: 14px; }
   .motion-toggle { min-width: 44px; height: 44px; }
 }
+
+/* ------------------------------------------------------------------ glass */
+/* Content cards are frosted glass, like the header: the page (and the scene
+   behind it) shows through, blurred, instead of a flat cream or violet slab.
+   Overlays that must stay readable on their own (command palette, dropdowns,
+   the stacked /work deck cards, image frames) keep their solid surface. The
+   !important is deliberate: this is a theming layer over per-component
+   backgrounds that each use their own scoped selector. */
+:root {
+  --glass-bg: color-mix(in oklab, var(--surface-1) 50%, transparent);
+  --glass-bg-hover: color-mix(in oklab, var(--surface-2) 62%, transparent);
+  --glass-edge: color-mix(in oklab, var(--text) 9%, transparent);
+  --glass-blur: blur(14px) saturate(1.25);
+}
+:root[data-theme='dark'] {
+  --glass-bg: color-mix(in oklab, var(--surface-1) 58%, transparent);
+  --glass-bg-hover: color-mix(in oklab, var(--surface-2) 68%, transparent);
+}
+:is(
+  .stat-cell, .feature-card, .status-cell, .persona-card, .proj-item, .skill-block, .s-lede-item,
+  .tr-cell, .avail-list li, .cl-clock, .term-card, .tdd-meta-item, .site-status, .cl-entry,
+  .trust-strip li, .area-chip, .project-card, .obscura-card, .product-row, .demo-cta
+) {
+  background: var(--glass-bg) !important;
+  -webkit-backdrop-filter: var(--glass-blur);
+          backdrop-filter: var(--glass-blur);
+}
+:is(.project-card, .obscura-card, .product-row):hover { background: var(--glass-bg-hover) !important; }
+/* the panel that holds a row of stat cells: no slab behind the cells */
+.stat-row { background: color-mix(in oklab, var(--line) 70%, transparent) !important; }  /* no filter here: nested backdrop-filters would hide the page from the cells */
+.term-card { border-color: var(--glass-edge); }
+.term-head { background: color-mix(in oklab, var(--surface-2) 40%, transparent) !important; }

@@ -4,7 +4,7 @@
  *
  *   nexus   : a combination dial that turns with the page, hex streams
  *   kanvaz  : collaborator cursors drifting across the board
- *   ascent  : game orbs, a pixel runner that crosses the page and jumps, a
+ *   ascent  : a pixel runner that crosses the page and jumps, a
  *             level readout that climbs 01 to 25 as you scroll
  *   mission : the whole backdrop (dusk over a lake, a boot log, a privacy radar)
  *   pursue  : the whole backdrop (an investigation graph and a tracing lens)
@@ -72,8 +72,6 @@ const edges: Array<[number, number]> = [
 
 {scene === 'ascent' && (
   <div class="sfx" aria-hidden="true">
-    <span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span><span class="orb o4"></span>
-    <span class="orb o5"></span><span class="orb o6"></span><span class="orb o7"></span>
     <div class="runner">
       <div class="hop">
         <svg class="sprite" viewBox="0 0 12 16" shape-rendering="crispEdges">
@@ -204,16 +202,6 @@ const edges: Array<[number, number]> = [
   .cur.c3 { --c: #E23E6A; translate: 40vw 68vh; }
 
   /* =================================================================== ASCENT */
-  .orb {
-    width: 11px; height: 11px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #FFF7C2, #FBBF24 60%, #B45309);
-    box-shadow: 0 0 12px 3px rgba(251, 191, 36, 0.55);
-  }
-  .orb.o2, .orb.o5 { background: radial-gradient(circle at 35% 30%, #E0F7FF, #38BDF8 60%, #0369A1); box-shadow: 0 0 12px 3px rgba(56, 189, 248, 0.55); }
-  .orb.o1 { left: 14%; top: 34%; } .orb.o2 { left: 27%; top: 58%; } .orb.o3 { left: 43%; top: 26%; }
-  .orb.o4 { left: 58%; top: 52%; } .orb.o5 { left: 71%; top: 36%; } .orb.o6 { left: 84%; top: 62%; } .orb.o7 { left: 92%; top: 24%; }
-
   .runner { left: 0; bottom: 6.5vh; width: 38px; height: 50px; translate: calc(4vw + var(--sp, 0) * 82vw) 0; }
   .hop { width: 100%; height: 100%; transform: translateY(calc(max(sin(calc(var(--sp, 0) * 1800deg)), 0) * -11vh)); }
   .sprite { width: 100%; height: 100%; display: block; overflow: visible; filter: drop-shadow(0 0 6px rgba(125, 211, 252, 0.6)); }
@@ -307,8 +295,6 @@ const edges: Array<[number, number]> = [
   :global(:root[data-theme='light']) .dial circle { stroke: color-mix(in oklab, var(--purple) 55%, transparent); }
   :global(:root[data-theme='light']) .hex { color: var(--purple); opacity: 0.22; }
   :global(:root[data-theme='light']) .cur svg { stroke: #fff; }
-  :global(:root[data-theme='light']) .orb { box-shadow: 0 0 10px 2px rgba(180, 83, 9, 0.35); }
-  :global(:root[data-theme='light']) .orb.o2, :global(:root[data-theme='light']) .orb.o5 { box-shadow: 0 0 10px 2px rgba(3, 105, 161, 0.35); }
   :global(:root[data-theme='light']) .hud { color: var(--purple-deep); text-shadow: none; }
   :global(:root[data-theme='light']) .hud-bar { border-color: var(--purple); background: rgba(255, 255, 255, 0.4); }
   :global(:root[data-theme='light']) .hud-bar b { background: var(--purple); }
@@ -331,7 +317,6 @@ const edges: Array<[number, number]> = [
     .hex.b { display: none; }
     .hex.a { opacity: 0.2; }
     .cur.c1 { translate: 8vw 24vh; } .cur.c2 { translate: 52vw 44vh; } .cur.c3 { translate: 22vw 70vh; }
-    .orb.o3, .orb.o5, .orb.o7 { display: none; }
     .runner { width: 30px; height: 40px; bottom: 5.5vh; }
     .hud { left: 10px; top: 92px; }
     .hud-num { font-size: 30px; }
@@ -349,9 +334,6 @@ const edges: Array<[number, number]> = [
     .cur.c1 { animation: fx-cur1 19s ease-in-out infinite alternate; }
     .cur.c2 { animation: fx-cur2 23s ease-in-out infinite alternate; }
     .cur.c3 { animation: fx-cur3 17s ease-in-out infinite alternate; }
-    .orb { animation: fx-orb 3.6s ease-in-out infinite alternate; }
-    .orb.o2 { animation-delay: -0.8s; } .orb.o3 { animation-delay: -1.6s; } .orb.o4 { animation-delay: -2.4s; }
-    .orb.o5 { animation-delay: -1.1s; } .orb.o6 { animation-delay: -2s; } .orb.o7 { animation-delay: -0.4s; }
     .sprite .f1 { animation: fx-leg 0.36s steps(1) infinite; }
     .sprite .f2 { animation: fx-leg 0.36s steps(1) infinite reverse; visibility: visible; }
     .ms-boot .in { animation: fx-boot 70s linear infinite; }
@@ -383,7 +365,6 @@ const edges: Array<[number, number]> = [
   @keyframes fx-cur1 { 0% { translate: 18vw 22vh; } 30% { translate: 34vw 30vh; } 60% { translate: 26vw 52vh; } 100% { translate: 44vw 40vh; } }
   @keyframes fx-cur2 { 0% { translate: 70vw 40vh; } 35% { translate: 58vw 24vh; } 70% { translate: 78vw 60vh; } 100% { translate: 64vw 70vh; } }
   @keyframes fx-cur3 { 0% { translate: 40vw 68vh; } 40% { translate: 22vw 58vh; } 75% { translate: 52vw 80vh; } 100% { translate: 34vw 46vh; } }
-  @keyframes fx-orb   { from { transform: translateY(-7px) scale(0.9); opacity: 0.75; } to { transform: translateY(7px) scale(1.08); opacity: 1; } }
   @keyframes fx-leg   { 0% { visibility: visible; } 50% { visibility: hidden; } }
   @keyframes fx-radar { 0% { transform: scale(0.35); opacity: 0.8; } 100% { transform: scale(1.35); opacity: 0; } }
   @keyframes fx-lake  { from { background-position: 0 0, 0 0; } to { background-position: 0 8px, 0 0; } }
