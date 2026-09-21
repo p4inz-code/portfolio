@@ -30,6 +30,7 @@ const routes: Array<{ path: string; priority: number; changefreq: string }> = [
   { path: '/accessibility/',    priority: 0.4, changefreq: 'yearly' },
   { path: '/privacy/',          priority: 0.4, changefreq: 'yearly' },
   { path: '/terms/',            priority: 0.4, changefreq: 'yearly' },
+  { path: '/support/',          priority: 0.4, changefreq: 'yearly' },
   { path: '/editorial/',        priority: 0.4, changefreq: 'yearly' },
 ];
 

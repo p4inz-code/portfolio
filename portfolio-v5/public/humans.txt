@@ -1,6 +1,6 @@
 /* TEAM */
 
-  Founder / Developer / Designer:  Atharva Patil
+  Founder, Developer, Designer:  Atharva Patil
   Handle:                          p4inz  (github.com/p4inz-code)
   Studio:                          Northbyte Studios
   Location:                        Navi Mumbai, India

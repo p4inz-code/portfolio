@@ -1,28 +1,83 @@
 ---
 /**
- * Multi-line narrative hero. Each line rises in sequence on load.
- * Reduced-motion collapses to instant.
+ * Multi-line narrative hero.
+ *
+ * Default: each line rises in sequence on load.
+ *
+ * `scrub`: the headline is read by scrolling. Words start dim and light up one
+ * by one as you scroll, the intro comes up behind them, and a row of ghost
+ * "team members" collapses into the single solid one, which is the whole
+ * point of the sentence. Desktop pins the hero while this plays (CSS view
+ * timeline); phones and browsers without scroll timelines get the same beats
+ * from the JS progress engine (--p), un-pinned. Reduced motion shows the
+ * finished state.
  */
 interface Props {
   eyebrow?: string;
-  lines: Array<{ text: string; emphasis?: string }>;
+  text: string;          // scrub: *words in stars* are emphasised
+  lines?: Array<{ text: string; emphasis?: string }>;  // plain (non-scrub) hero
   intro?: string;
+  scrub?: boolean;
+  steps?: Array<{ label: string; sub: string }>;  // scrub only: the pipeline the logo travels along
 }
-const { eyebrow, lines, intro } = Astro.props;
+const { eyebrow, text = '', lines = [], intro, scrub = false, steps = [] } = Astro.props;
+
+// word list for the scrubbed version: [{ t, em, w }] with w in 0..1
+const words: Array<{ t: string; em: boolean; w: number }> = [];
+if (scrub) {
+  let em = false;
+  text.split(' ').forEach((tok) => {
+    const start = tok.startsWith('*'), end = tok.endsWith('*');
+    if (start) em = true;
+    words.push({ t: tok.replace(/\*/g, ''), em, w: 0 });
+    if (end) em = false;
+  });
+  words.forEach((x, i) => { x.w = words.length > 1 ? i / (words.length - 1) : 0; });
+}
 ---
-<section class="hero wrap" aria-labelledby="hero-title">
-  {eyebrow && <p class="hero-eyebrow">{eyebrow}</p>}
-  <h1 id="hero-title" class="hero-title">
-    {lines.map((line, i) => (
-      <span class="act" style={`--i:${i}`}>
-        {line.emphasis && (<><em>{line.emphasis}</em> </>)}
-        {line.text}
-      </span>
-    ))}
-  </h1>
-  {intro && <p class="hero-sub">{intro}</p>}
-  <slot />
-</section>
+{scrub ? (
+  <section class="hero hero-scrub" aria-labelledby="hero-title" data-progress="hero">
+    <div class="hero-pin wrap">
+      {eyebrow && <p class="hero-eyebrow">{eyebrow}</p>}
+      <h1 id="hero-title" class="hero-title">
+        <span class="act-line">
+          {words.map((x) => (
+            <><span class:list={['w', x.em && 'em']} style={`--w:${x.w.toFixed(3)}`}>{x.t}</span>{' '}</>
+          ))}
+        </span>
+      </h1>
+      {steps.length > 0 && (
+        <ol class="pipe" aria-label="How I work" style={`--n:${steps.length}`}>
+          <li class="pipe-track" aria-hidden="true"><i></i><img src="/ap-mark.png" width="34" height="34" alt="" decoding="async" /></li>
+          {steps.map((st, i) => (
+            <li class="pipe-step" style={`--s:${(steps.length > 1 ? i / (steps.length - 1) : 0).toFixed(3)}`}>
+              <span class="pipe-dot" aria-hidden="true"></span>
+              <b>{st.label}</b>
+              <span>{st.sub}</span>
+            </li>
+          ))}
+        </ol>
+      )}
+      {intro && <p class="hero-sub scrub-sub">{intro}</p>}
+      <div class="scrub-slot"><slot /></div>
+      <p class="scroll-cue" aria-hidden="true"><span>scroll</span><i></i></p>
+    </div>
+  </section>
+) : (
+  <section class="hero wrap" aria-labelledby="hero-title">
+    {eyebrow && <p class="hero-eyebrow">{eyebrow}</p>}
+    <h1 id="hero-title" class="hero-title">
+      {lines.map((line, i) => (
+        <span class="act" style={`--i:${i}`}>
+          {line.emphasis && (<><em>{line.emphasis}</em> </>)}
+          {line.text}
+        </span>
+      ))}
+    </h1>
+    {intro && <p class="hero-sub">{intro}</p>}
+    <slot />
+  </section>
+)}
 
 <style>
   .hero {
@@ -82,5 +137,166 @@ const { eyebrow, lines, intro } = Astro.props;
     color: var(--muted);
     font-size: var(--text-md);
     line-height: var(--leading-body);
+  }
+
+  /* ======================================================== scrubbed hero */
+  .hero-scrub { padding: 0; position: relative; --ease-io: cubic-bezier(0.65, 0, 0.35, 1); }
+  .hero-pin { padding-top: var(--sp-10, 96px); padding-bottom: var(--sp-8); }
+  .act-line { display: block; text-wrap: balance; }
+  .w { display: inline; }
+  .w.em { font-style: italic; color: var(--purple-bright); }
+
+  @property --fill { syntax: '<number>'; inherits: true; initial-value: 0; }
+  /* The pipeline: three steps, and the logo travels along it as you scroll.
+     Everything derives from --fill (0..1): the line, the token, each step. */
+  .pipe {
+    --fill: 0;
+    list-style: none; padding: 0;
+    margin: var(--sp-7) 0 0;
+    max-width: 760px;
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    position: relative;
+  }
+  .pipe-track {
+    position: absolute;
+    left: calc(50% / var(--n)); right: calc(50% / var(--n));
+    top: 16px; height: 1px;
+    background: var(--line-strong);
+  }
+  .pipe-track i {
+    position: absolute; inset: 0;
+    background: var(--purple-bright);
+    transform-origin: 0 50%;
+    transform: scaleX(var(--fill));
+  }
+  .pipe-track img {
+    position: absolute; top: 50%; left: calc(var(--fill) * 100%);
+    width: 34px; height: 34px;
+    margin: -17px 0 0 -17px;
+    padding: 4px; box-sizing: border-box;
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--bg) 60%, transparent);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    box-shadow: 0 0 0 1px var(--line-strong), 0 0 22px color-mix(in oklab, var(--purple-bright) 45%, transparent);
+    transform: rotate(calc(var(--fill) * 360deg));
+    z-index: 2;
+  }
+  .pipe-step {
+    --nt: clamp(0, calc((var(--fill) - var(--s) + 0.12) / 0.1), 1);
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px;
+    padding: 0 6px;
+    position: relative;
+  }
+  .pipe-dot {
+    width: 11px; height: 11px; margin: 11px 0 12px;
+    border-radius: 50%;
+    border: 1px solid var(--purple-bright);
+    background: color-mix(in oklab, var(--purple-bright) calc(var(--nt) * 100%), var(--bg));
+    box-shadow: 0 0 0 calc(var(--nt) * 5px) color-mix(in oklab, var(--purple-bright) 16%, transparent);
+    position: relative; z-index: 1;
+  }
+  .pipe-step b {
+    font-family: var(--font-display); font-weight: 400;
+    font-size: clamp(14px, 1.6vw, 18px);
+    letter-spacing: -0.01em;
+    color: color-mix(in oklab, var(--text) calc(var(--nt) * 100%), var(--muted));
+  }
+  .pipe-step span:not(.pipe-dot) {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.02em; line-height: 1.5;
+    color: var(--muted);
+  }
+  .scrub-sub { margin-top: var(--sp-5); }
+  .scrub-slot { margin-top: var(--sp-1); }
+  .scroll-cue {
+    display: none;
+    align-items: center; gap: 10px;
+    margin-top: var(--sp-6);
+    font-family: var(--font-mono);
+    font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .scroll-cue i {
+    display: block; width: 1px; height: 26px;
+    background: linear-gradient(to bottom, var(--purple-bright), transparent);
+    animation: cue 1.8s ease-in-out infinite;
+    transform-origin: 50% 0;
+  }
+  @keyframes cue { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+
+  /* ---- pinned (desktop, scroll timelines, motion allowed) ---- */
+  @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .hero-scrub { view-timeline: --hero block; height: 260vh; }
+      .hero-pin {
+        position: sticky; top: 0;
+        height: 100vh; height: 100svh;
+        display: flex; flex-direction: column; justify-content: center;
+        box-sizing: border-box;
+        padding-top: 88px; padding-bottom: var(--sp-6);
+      }
+      /* Words light up, front to back, while the hero is pinned (32%..68%). */
+      .w {
+        color: var(--muted);
+        animation: w-on var(--ease-out) both;
+        animation-timeline: --hero;
+        animation-range: cover calc(29% + var(--w) * 13%) cover calc(33% + var(--w) * 13%);
+      }
+      .pipe {
+        animation: fill-up linear both;
+        animation-timeline: --hero;
+        animation-range: cover 46% cover 64%;
+      }
+      .scrub-sub {
+        animation: sub-on var(--ease-out) both;
+        animation-timeline: --hero;
+        animation-range: cover 62% cover 70%;
+      }
+      .scroll-cue {
+        display: flex;
+        animation: cue-out linear both;
+        animation-timeline: --hero;
+        animation-range: cover 28% cover 36%;
+      }
+    }
+  }
+  @keyframes w-on    { from { color: var(--muted); } to { color: var(--text); } }
+  @keyframes w-on-em { from { color: color-mix(in oklab, var(--purple-bright) 55%, var(--muted)); } to { color: var(--purple-bright); } }
+  @keyframes sub-on  { from { transform: translateY(12px); } to { transform: none; } }
+  @keyframes fill-up { from { --fill: 0; } to { --fill: 1; } }
+  @keyframes cue-out { to { opacity: 0; } }
+  /* People who ask for more contrast get the finished sentence at once. */
+  @media (prefers-contrast: more) {
+    .pipe { animation: none !important; --fill: 1 !important; }
+    .w { color: var(--text) !important; animation: none !important; }
+    .w.em { color: var(--purple-bright) !important; }
+    .scrub-sub { animation: none !important; transform: none !important; }
+  }
+
+  /* ---- JS progress mode: phones, Firefox, iOS without scroll timelines ----
+     --p is 0 at rest and reaches 1 after 80% of the hero has scrolled away, so
+     the first few words are already lit on arrival and the rest follow. */
+  :global(html[data-jsp]) .hero-scrub { --p: 0; }
+  :global(html[data-jsp]) .w {
+    --wt: clamp(0, calc((var(--p) - var(--w) * 0.36 + 0.16) / 0.1), 1);
+    color: color-mix(in oklab, var(--text) calc(var(--wt) * 100%), var(--muted));
+  }
+  :global(html[data-jsp]) .w.em {
+    color: color-mix(in oklab, var(--purple-bright) calc(55% + var(--wt) * 45%), var(--muted));
+  }
+  :global(html[data-jsp]) .pipe { --fill: clamp(0, calc((var(--p) - 0.3) / 0.3), 1); }
+  :global(html[data-jsp]) .scrub-sub {
+    transform: translateY(calc((1 - clamp(0, calc((var(--p) - 0.6) / 0.15), 1)) * 12px));
+  }
+  :global(html[data-jsp]) .scroll-cue {
+    display: flex;
+    opacity: calc(1 - clamp(0, calc(var(--p) / 0.08), 1));
+  }
+  @media (prefers-reduced-motion: reduce) { .pipe { --fill: 1; } .pipe-track img { transform: none; } }
+  @media (max-width: 640px) {
+    .pipe-step span:not(.pipe-dot) { display: none; }
   }
 </style>

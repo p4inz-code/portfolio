@@ -5,14 +5,16 @@ import ThemeToggle from '../components/ThemeToggle.astro';
 import CommandPalette from '../components/features/CommandPalette.astro';
 import APMark from '../components/APMark.astro';
 import SideRail from '../components/SideRail.astro';
+import MotionToggle from '../components/MotionToggle.astro';
 import SceneBackdrop from '../components/SceneBackdrop.astro';
+import SceneFx from '../components/SceneFx.astro';
 import LiveStats from '../components/LiveStats.astro';
 import { SITE, NAV, CONTACT } from '../data/site';
-import { PROJECTS } from '../data/projects';
+import { PROJECTS, PRODUCT_COUNT } from '../data/projects';
 
 interface Props {
   title: string;
-  scene?: 'nexus' | 'kanvaz' | 'ascent'; // per-project sub-theme, see styles/scenes.css
+  scene?: 'nexus' | 'kanvaz' | 'ascent' | 'mission' | 'pursue'; // per-project sub-theme, see styles/scenes.css
   description?: string;
   keywords?: string; // v5.21.0 — per-page override of SITE.keywords, for
                       // project pages that want their own name + handle
@@ -205,7 +207,7 @@ const jsonLd = {
     <meta name="author" content={SITE.title} />
 
     <!-- Structured data — Person / Organization / WebSite entity graph.
-         Ties p4inz / p4inz-code / Atharva Patil / Northbyte Studios into
+         Ties p4inz / p4inz-code / Atharva Patil, Northbyte Studios into
          one linked graph so search + LLM crawlers resolve consistently. -->
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
@@ -287,7 +289,8 @@ const jsonLd = {
     </script>
   </head>
   <body data-scene={scene}>
-    <SceneBackdrop scene={scene} />
+    <SceneBackdrop scene={scene === 'nexus' || scene === 'kanvaz' || scene === 'ascent' ? scene : undefined} />
+    <SceneFx scene={scene} />
     <!-- Scroll progress bar — hairline at very top of viewport, fills as
          the page scrolls. Zero-JS: powered by CSS animation-timeline: scroll().
          Falls back to nothing (element stays at scaleX 0) on browsers without
@@ -321,6 +324,7 @@ const jsonLd = {
               <line x1="21" y1="21" x2="16.65" y2="16.65"/>
             </svg>
           </button>
+          <MotionToggle />
           <ThemeToggle />
         </nav>
 
@@ -371,7 +375,7 @@ const jsonLd = {
               <span>Search &amp; jump</span>
               <span class="nmu-kbd">⌘K</span>
             </button>
-            <div class="nmu-theme"><ThemeToggle /></div>
+            <div class="nmu-theme"><MotionToggle withLabel /><ThemeToggle /></div>
           </div>
         </nav>
       </div>
@@ -418,6 +422,8 @@ const jsonLd = {
     </script>
 
     <SideRail />
+    <script>import '../scripts/progress'; import '../scripts/favicon';
+import '../scripts/fx';</script>
     <LiveStats />
 
     <main id="main"><slot /></main>
@@ -432,7 +438,7 @@ const jsonLd = {
       {currentPath === '/' && (
         <div class="wrap">
           <ul class="trust-strip" role="list" aria-label="Trust signals">
-            <li><span class="ts-num">{PROJECTS.length}</span><span class="ts-label">Products in flight / shipped</span></li>
+            <li><span class="ts-num">{PRODUCT_COUNT}</span><span class="ts-label">Products in flight or shipped</span></li>
             <li><span class="ts-num">4,100+</span><span class="ts-label">Automated tests across products</span></li>
             <li><span class="ts-num">0</span><span class="ts-label">Telemetry on any product</span></li>
             <li><span class="ts-num">0</span><span class="ts-label">Third-party analytics on this site</span></li>
@@ -448,11 +454,12 @@ const jsonLd = {
         </div>
         <nav class="footer-nav" aria-label="Footer">
           <a href="/work/">Work</a>
-          <a href="/3d/">3D / VFX</a>
+          <a href="/3d/">3D & VFX</a>
           <a href="/services/">Services</a>
           <a href="/about/">About</a>
           <a href="/resume/">Resume</a>
           <a href="/contact/">Contact</a>
+          <a href="/support/">Support the free tools</a>
           <a href="/status/">Status</a>
           <a href="/accessibility/">Accessibility</a>
           <a href="/privacy/">Privacy</a>
@@ -506,9 +513,9 @@ const jsonLd = {
       .brand { display: inline-flex; align-items: center; gap: var(--sp-3); color: var(--text); transition: opacity var(--dur-fast) var(--ease-out); }
       .brand:hover { opacity: 0.85; }
       .brand-name { font-family: var(--font-display); font-size: var(--text-md); font-style: italic; }
-      .nav-links { display: flex; align-items: center; gap: var(--sp-6); }
+      .nav-links { display: flex; align-items: center; gap: clamp(14px, 2vw, var(--sp-6)); }
       .nav-links a {
-        color: var(--muted); font-size: var(--text-sm);
+        color: var(--muted); font-size: var(--text-sm); white-space: nowrap;
         transition: color var(--dur-fast) var(--ease-out);
         position: relative;
       }
@@ -736,7 +743,10 @@ const jsonLd = {
       }
       .nmu-theme { display: flex; align-items: center; }
 
-      @media (max-width: 760px) {
+      /* The desktop nav needs about 900px to sit on one line, so the drawer
+         takes over at 900px and below (it used to wait until 760px, which
+         left tablets with a wrapped, cramped bar). */
+      @media (max-width: 900px) {
         .nav-links { display: none !important; }
         .nav-mobile-toggle { display: inline-flex; }
       }

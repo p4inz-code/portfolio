@@ -229,3 +229,23 @@ html {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* ============================================================================
+ * Page transitions. Cross-document view transitions (Chrome 126+, Safari 18.2+):
+ * navigating between pages cross-fades with a small lift instead of a hard
+ * cut, and the header stays put. Browsers without support just navigate.
+ * Off for reduced motion.
+ * ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  .nav { view-transition-name: site-nav; }
+  ::view-transition-old(root) {
+    animation: vt-out 0.28s cubic-bezier(0.4, 0, 1, 1) both;
+  }
+  ::view-transition-new(root) {
+    animation: vt-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  ::view-transition-group(site-nav) { animation-duration: 0s; }
+}
+@keyframes vt-out { to { opacity: 0; transform: translateY(-8px); } }
+@keyframes vt-in  { from { opacity: 0; transform: translateY(14px); } }

@@ -1,0 +1,187 @@
+---
+import type { Project } from '../../data/projects';
+
+/**
+ * A release ladder for the home page. While the featured chapters scroll by,
+ * a rail keeps track of where you are in them, using each project's real
+ * version or status as the label (v10.12.5, v8.8.5, v0.14.1, Open Beta, ...).
+ *
+ * The logo is the marker: it slides from dot to dot as you scroll and turns as
+ * it goes. Wide screens (1640px+): a glass ladder in the left gutter with the
+ * active name and version. 1320-1639px: dots only (name on hover). Below that:
+ * a small glass pill under the header. It only ever sits in empty gutter space
+ * or over the header line, never on top of the page text, and only shows while
+ * the chapters are on screen.
+ *
+ * The rail is navigation (plain links to each chapter) with progress on top;
+ * src/scripts/rail.ts does the spying. Reduced motion: no fade or fill motion.
+ */
+interface Props { projects: Project[] }
+const { projects } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
+const sub = (p: Project) => p.currentVersion ?? p.status.label;
+---
+<nav class="rail" id="shipRail" aria-label="Featured projects" style={`--n:${projects.length}`}>
+  <ol>
+    <li class="rail-line" aria-hidden="true"><i></i><img src="/ap-mark.png" width="28" height="28" alt="" decoding="async" /></li>
+    {projects.map((p, i) => (
+      <li>
+        <a href={`#ch-${p.slug}`} data-rail-target={p.slug} data-name={p.name} data-sub={sub(p)}>
+          <span class="rail-dot" aria-hidden="true"></span>
+          <span class="rail-num" aria-hidden="true">{pad(i + 1)}</span>
+          <span class="rail-txt"><b>{p.name}</b><em>{sub(p)}</em></span>
+        </a>
+      </li>
+    ))}
+  </ol>
+  <p class="rail-pill" aria-hidden="true">
+    <img src="/ap-mark.png" width="18" height="18" alt="" decoding="async" />
+    <b id="railPillNum">01 | {pad(projects.length)}</b>
+    <span id="railPillName">{projects[0]?.name}</span>
+    <em id="railPillSub">{projects[0] ? sub(projects[0]) : ''}</em>
+    <i class="rail-pill-bar"><u></u></i>
+  </p>
+</nav>
+
+<script>
+  import '../../scripts/rail';
+</script>
+
+<style>
+  .rail {
+    --step: 44px;
+    --rp: 0; --ri: 0;
+    position: fixed;
+    z-index: 60;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.35s var(--ease-out), visibility 0s linear 0.35s;
+  }
+  .rail.is-on { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity 0.35s var(--ease-out), visibility 0s; }
+
+  /* glass, same recipe as the header and the cards */
+  .rail {
+    top: 50%; transform: translateY(-50%);
+    padding: 10px 14px;
+    border-radius: 18px;
+    background: var(--glass-bg, color-mix(in oklab, var(--bg) 50%, transparent));
+    -webkit-backdrop-filter: var(--glass-blur, blur(14px) saturate(1.25)); backdrop-filter: var(--glass-blur, blur(14px) saturate(1.25));
+    border: 1px solid var(--line-strong);
+    box-shadow: 0 10px 40px -14px rgb(0 0 0 / 0.5);
+  }
+  .rail ol { list-style: none; margin: 0; padding: 0; position: relative; }
+  .rail li:not(.rail-line) { height: var(--step); }
+  .rail-line {
+    position: absolute; left: 4px; top: calc(var(--step) / 2);
+    width: 1px; height: calc((var(--n) - 1) * var(--step));
+    background: var(--line-strong);
+    pointer-events: none;
+  }
+  .rail-line i {
+    position: absolute; inset: 0;
+    background: var(--purple-bright);
+    transform-origin: 50% 0;
+    transform: scaleY(calc(var(--ri) / (var(--n) - 1)));
+  }
+  /* the logo rides the line, one dot per chapter, turning as it goes */
+  .rail-line img {
+    position: absolute; left: -13px; top: -13px; max-width: none;
+    width: 27px; height: 27px; box-sizing: border-box; padding: 3px;
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--bg) 70%, transparent);
+    box-shadow: 0 0 0 1px var(--line-strong), 0 0 18px color-mix(in oklab, var(--purple-bright) 50%, transparent);
+    transform: translateY(calc(var(--ri) * var(--step))) rotate(calc(var(--ri) * 180deg));
+  }
+  .rail a {
+    position: relative;
+    height: var(--step);
+    display: grid;
+    grid-template-columns: 9px 22px minmax(0, 1fr);
+    column-gap: 10px;
+    align-items: center;
+    text-decoration: none;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+  .rail-dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid var(--muted);
+    transition: background 0.3s var(--ease-out), border-color 0.3s var(--ease-out);
+    position: relative; z-index: 1;
+  }
+  .rail-num { opacity: 0.8; }
+  .rail a.is-passed .rail-dot, .rail a.is-active .rail-dot { background: var(--purple-bright); border-color: var(--purple-bright); }
+  .rail a.is-active { color: var(--text); }
+  .rail a:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; border-radius: 8px; }
+  /* name + version: hidden visually but always readable to assistive tech */
+  .rail-txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; display: flex; flex-direction: column; gap: 2px; }
+  .rail-txt b { font-family: var(--font-display); font-weight: 400; font-size: 13px; letter-spacing: -0.01em; color: var(--text); }
+  .rail-txt em { font-style: normal; color: var(--purple-bright); }
+  .rail-pill { display: none; }
+
+  /* wide: the ladder sits in the empty gutter beside the content column */
+  @media (min-width: 1640px) {
+    .rail { left: max(14px, calc((100vw - var(--wrap)) / 2 - 232px)); width: 190px; box-sizing: border-box; }
+    .rail a.is-active .rail-txt { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
+  }
+  /* mid: dots only, the name appears beside the dot on hover or focus */
+  @media (min-width: 1320px) and (max-width: 1639px) {
+    .rail { left: 10px; padding: 10px 12px; }
+    .rail a { grid-template-columns: 9px; position: static; }
+    .rail li:not(.rail-line) { position: relative; }
+    .rail-num { display: none; }
+    .rail a:hover .rail-txt, .rail a:focus-visible .rail-txt {
+      left: calc(100% + 14px); top: 50%; transform: translateY(-50%);
+      width: auto; height: auto; overflow: visible; clip-path: none;
+      padding: 7px 12px; border-radius: 10px;
+      background: var(--glass-bg, color-mix(in oklab, var(--bg) 50%, transparent));
+      -webkit-backdrop-filter: var(--glass-blur, blur(14px)); backdrop-filter: var(--glass-blur, blur(14px));
+      border: 1px solid var(--line-strong);
+    }
+  }
+
+  /* below 1320px there is no gutter: a small pill under the header takes over */
+  @media (max-width: 1319px) {
+    .rail {
+      left: 50%; top: 72px;
+      transform: translateX(-50%);
+      padding: 0; border: none; background: none; box-shadow: none;
+      -webkit-backdrop-filter: none; backdrop-filter: none;
+      pointer-events: none;
+    }
+    .rail.is-on { pointer-events: none; }
+    .rail ol { display: none; }
+    .rail-pill {
+      display: flex; align-items: center; gap: 10px;
+      margin: 0;
+      padding: 6px 14px 8px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      background: var(--glass-bg, color-mix(in oklab, var(--bg) 50%, transparent));
+      -webkit-backdrop-filter: var(--glass-blur, blur(14px)); backdrop-filter: var(--glass-blur, blur(14px));
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
+    }
+    .rail-pill img { width: 20px; height: 20px; transform: rotate(calc(var(--rp) * 360deg)); }
+    .rail-pill b { color: var(--purple-bright); font-weight: 400; }
+    .rail-pill span { color: var(--text); font-family: var(--font-display); font-size: 13px; letter-spacing: -0.01em; }
+    .rail-pill em { font-style: normal; }
+    .rail-pill-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--line); }
+    .rail-pill-bar u { position: absolute; inset: 0; background: var(--purple-bright); transform-origin: 0 50%; transform: scaleX(var(--rp)); text-decoration: none; }
+  }
+  @media (max-width: 380px) { .rail-pill em { display: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .rail, .rail.is-on, .rail-dot { transition: none; }
+    .rail-line img { transform: translateY(calc(var(--ri) * var(--step))); }
+    .rail-pill img { transform: none; }
+  }
+</style>

@@ -57,7 +57,7 @@ const bosses = [
   { level: 'L25', boss: 'Dawn (Final)', minions: 6, speed: '300 px/s' },
 ];
 ---
-<BaseLayout scene={project.scene} title={`${project.name} — ${project.tagline}`} description="25-level, 5-act 2D precision platformer built in Godot 4. Full moveset from the start, 5 boss chases, offline-first. Windows, macOS, Linux, and browser. Play on itch.io." keywords="Project Ascent, project ascent p4inz, project ascent painz, p4inz game dev, painz platformer, Godot platformer, itch.io platformer" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
+<BaseLayout scene={project.scene} title="Project Ascent — Precision Platformer · Atharva Patil" description="25-level, 5-act 2D precision platformer built in Godot 4. Full moveset from the start, five boss chases, offline-first. Playable in the browser on itch.io." keywords="Project Ascent, project ascent p4inz, project ascent painz, p4inz game dev, painz platformer, Godot platformer, itch.io platformer" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
   <section class="stat-row-wrap">
@@ -286,5 +286,9 @@ const bosses = [
     }
     .boss-table td { color: var(--muted); }
     .boss-table td:first-child { color: var(--text); font-family: var(--font-mono); }
+    @media (max-width: 420px) {
+      .boss-table th, .boss-table td { padding: var(--sp-2) var(--sp-2); font-size: 12px; }
+      .boss-table th { font-size: 9px; letter-spacing: 0.06em; }
+    }
   </style>
 </BaseLayout>

@@ -110,6 +110,8 @@ const motes = Array.from({ length: 14 }, (_, i) => {
     pointer-events: none;
     contain: strict;
   }
+  .sb { --star: #EDE8FF; --star-glow: rgba(200, 190, 255, 0.6); }
+  :global(:root[data-theme='light']) .sb { --star: #3B1A9F; --star-glow: rgba(91, 61, 245, 0.4); }
   .sb > * { position: absolute; display: block; }
 
   /* ================================================================== NEXUS */
@@ -300,35 +302,35 @@ const motes = Array.from({ length: 14 }, (_, i) => {
   .as-stars { inset: 0 0 24% 0; background-repeat: repeat; }
   .as-stars.s1 {
     background-image:
-      radial-gradient(1px 1px at 12px 18px, #EDE8FF, transparent 60%),
-      radial-gradient(1px 1px at 47px 63px, #EDE8FF, transparent 60%),
-      radial-gradient(1px 1px at 83px 29px, #EDE8FF, transparent 60%),
-      radial-gradient(1px 1px at 29px 91px, #EDE8FF, transparent 60%),
-      radial-gradient(1px 1px at 71px 77px, #EDE8FF, transparent 60%);
+      radial-gradient(1px 1px at 12px 18px, var(--star), transparent 60%),
+      radial-gradient(1px 1px at 47px 63px, var(--star), transparent 60%),
+      radial-gradient(1px 1px at 83px 29px, var(--star), transparent 60%),
+      radial-gradient(1px 1px at 29px 91px, var(--star), transparent 60%),
+      radial-gradient(1px 1px at 71px 77px, var(--star), transparent 60%);
     background-size: 100px 100px;
     opacity: 0.55;
   }
   .as-stars.s2 {
     background-image:
-      radial-gradient(1.5px 1.5px at 30px 40px, #fff, transparent 65%),
-      radial-gradient(1.5px 1.5px at 120px 90px, #fff, transparent 65%),
-      radial-gradient(1.5px 1.5px at 75px 150px, #fff, transparent 65%),
-      radial-gradient(1.5px 1.5px at 160px 20px, #fff, transparent 65%);
+      radial-gradient(1.5px 1.5px at 30px 40px, var(--star), transparent 65%),
+      radial-gradient(1.5px 1.5px at 120px 90px, var(--star), transparent 65%),
+      radial-gradient(1.5px 1.5px at 75px 150px, var(--star), transparent 65%),
+      radial-gradient(1.5px 1.5px at 160px 20px, var(--star), transparent 65%);
     background-size: 190px 190px;
     opacity: 0.8;
   }
   .as-stars.s3 {
     background-image:
-      radial-gradient(2.2px 2.2px at 60px 70px, #fff, rgba(190, 170, 255, 0.5) 55%, transparent 75%),
-      radial-gradient(2px 2px at 210px 30px, #fff, rgba(170, 200, 255, 0.5) 55%, transparent 75%),
-      radial-gradient(2.4px 2.4px at 150px 190px, #fff, rgba(255, 190, 220, 0.5) 55%, transparent 75%);
+      radial-gradient(2.2px 2.2px at 60px 70px, var(--star), rgba(190, 170, 255, 0.5) 55%, transparent 75%),
+      radial-gradient(2px 2px at 210px 30px, var(--star), rgba(170, 200, 255, 0.5) 55%, transparent 75%),
+      radial-gradient(2.4px 2.4px at 150px 190px, var(--star), rgba(255, 190, 220, 0.5) 55%, transparent 75%);
     background-size: 300px 260px;
   }
   .as-shoot {
     width: 150px; height: 2px;
     border-radius: 2px;
-    background: linear-gradient(90deg, transparent, #fff);
-    box-shadow: 0 0 8px 1px rgba(200, 190, 255, 0.6);
+    background: linear-gradient(90deg, transparent, var(--star));
+    box-shadow: 0 0 8px 1px var(--star-glow);
     opacity: 0;
   }
   .as-shoot.a { top: 12%; left: 18%; rotate: 28deg; }
@@ -379,8 +381,9 @@ const motes = Array.from({ length: 14 }, (_, i) => {
   :global(:root[data-theme='light']) .as-sky {
     background: linear-gradient(to bottom, color-mix(in oklab, var(--purple) 7%, var(--bg)), color-mix(in oklab, var(--purple) 24%, var(--bg)));
   }
-  :global(:root[data-theme='light']) .as-stars,
-  :global(:root[data-theme='light']) .as-shoot { display: none; }
+  :global(:root[data-theme='light']) .as-stars.s1 { opacity: 0.5; }
+  :global(:root[data-theme='light']) .as-stars.s2 { opacity: 0.6; }
+  :global(:root[data-theme='light']) .as-stars.s3 { opacity: 0.85; }
   :global(:root[data-theme='light']) .as-nebula { opacity: 0.32; }
   :global(:root[data-theme='light']) .as-moon .halo {
     background: radial-gradient(circle, color-mix(in oklab, var(--purple-bright) 26%, transparent) 0%, transparent 62%);
@@ -394,7 +397,8 @@ const motes = Array.from({ length: 14 }, (_, i) => {
 
   /* ---------------------------------------------------------------- phones */
   @media (max-width: 760px) {
-    .nx-packet, .as-shoot, .kz-card.c6, .kz-card.c7, .kz-marquee { display: none; }
+    .nx-packet, .kz-card.c6, .kz-card.c7, .kz-marquee { display: none; }
+    .as-shoot { width: 100px; }
     .nx-hover { right: 4vw; bottom: 16vh; width: 18vmin; height: 18vmin; }
     .nx-cube { --s: 18vmin; }
     .nx-cube .core { --s: 9vmin; }
@@ -457,6 +461,26 @@ const motes = Array.from({ length: 14 }, (_, i) => {
       .as-ridge.near { animation: as-ridge-near linear both; animation-timeline: scroll(root block); }
     }
   }
+
+
+  /* -------------------------------------------- no scroll() timelines (older iOS, Firefox)
+     src/scripts/progress.ts writes --sp (0..1 page progress) on <html>; the same
+     layers follow it directly. Reduced motion pins --sp at 0. */
+  :global(html[data-nosp]) .nx-lines { transform: translateY(calc(var(--sp) * -18vh)); }
+  :global(html[data-nosp]) .nx-hover { transform: translateY(calc(var(--sp) * -16vh)); }
+  :global(html[data-nosp]) .kz-dots.far  { transform: translateY(calc(var(--sp) * -9vh)); }
+  :global(html[data-nosp]) .kz-dots.near { transform: translateY(calc(var(--sp) * -22vh)); }
+  :global(html[data-nosp]) .kz-board     { transform: translateY(calc(var(--sp) * -70vh)); }
+  :global(html[data-nosp]) .as-nebula   { transform: translate(calc(-3vw + var(--sp) * 6vw), calc(3vh - var(--sp) * 9vh)) scale(calc(1.02 + var(--sp) * 0.1)); }
+  :global(html[data-nosp]) .as-stars.s1 { transform: translateY(calc(var(--sp) * 6vh)); }
+  :global(html[data-nosp]) .as-stars.s2 { transform: translateY(calc(var(--sp) * 14vh)); }
+  :global(html[data-nosp]) .as-stars.s3 { transform: translateY(calc(var(--sp) * 26vh)); }
+  :global(html[data-nosp]) .as-moon { transform: translate(calc(4vw - var(--sp) * 10vw), calc(26vh - var(--sp) * 40vh)) scale(calc(1.12 - var(--sp) * 0.18)); }
+  :global(html[data-nosp]) .as-moon .moon-orb { --cx: calc(64% + var(--sp) * 94%); }
+  :global(html[data-nosp]) .as-moon .halo { opacity: calc(0.35 + var(--sp) * 0.65); }
+  :global(html[data-nosp]) .as-ridge.far  { transform: translate(calc(-3vw + var(--sp) * 6vw),  calc(var(--sp) * 8vh)); }
+  :global(html[data-nosp]) .as-ridge.mid  { transform: translate(calc(5vw - var(--sp) * 10vw),  calc(var(--sp) * 14vh)); }
+  :global(html[data-nosp]) .as-ridge.near { transform: translate(calc(-8vw + var(--sp) * 16vw), calc(var(--sp) * 20vh)); }
 
   @keyframes nx-flow    { from { transform: translateY(0); } to { transform: translateY(60px); } }
   @keyframes nx-beam    { 0% { transform: translateY(-2vh); opacity: 0; } 8% { opacity: 1; } 60% { opacity: 0.9; } 100% { transform: translateY(102vh); opacity: 0; } }

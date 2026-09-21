@@ -29,7 +29,7 @@ const breadcrumbJsonLd = {
   ],
 };
 ---
-<BaseLayout scene={project.scene} title={`${project.name} — ${project.tagline}`} description="Encrypted personal vault for Windows: AES-256-GCM, Argon2id, Windows Hello unlock. Zero telemetry, zero cloud. Public beta, v10.12.5." keywords="Nexus, Nexus p4inz, Nexus painz, p4inz app dev, encrypted vault Windows" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
+<BaseLayout scene={project.scene} title="Nexus — Encrypted Windows Vault · Atharva Patil" description="Encrypted personal vault for Windows: AES-256-GCM, Argon2id, Windows Hello unlock. Zero telemetry, zero cloud. Public beta, v10.12.5." keywords="Nexus, Nexus p4inz, Nexus painz, p4inz app dev, encrypted vault Windows" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
   <section class="stat-row-wrap">
@@ -63,7 +63,7 @@ const breadcrumbJsonLd = {
 
   <Section heading="Current status + what's next.">
     <div class="feature-grid feature-grid-4">
-      <article class="feature-card"><h3 class="feature-name">v10.12.0 · In-app updater</h3><p class="feature-desc">Settings → Updates. SHA-256-verified downloads, manual restart-to-install always required. Off / Notify / Automatic modes.</p></article>
+      <article class="feature-card"><h3 class="feature-name">v10.12.0 · In-app updater</h3><p class="feature-desc">Settings → Updates. SHA-256-verified downloads, manual restart-to-install always required. Off, Notify or Automatic modes.</p></article>
       <article class="feature-card"><h3 class="feature-name">v10.12.0 · AES-256-GCM upgrade</h3><p class="feature-desc">Vault cipher upgraded to real AES-256-GCM under a new NXG1 format. Old vaults stay readable forever; new writes get GCM automatically.</p></article>
       <article class="feature-card"><h3 class="feature-name">Windows Hello unlock</h3><p class="feature-desc">Optional Windows Hello unlock on top of the master password: face, fingerprint, or PIN, backed by the platform TPM.</p></article>
       <article class="feature-card"><h3 class="feature-name">v10.11.0 · Theme consistency</h3><p class="feature-desc">Whole-app theme pass across 17 screens and all 12 themes. Visible keyboard-focus indicator app-wide. Destructive-action styling fixed on Factory Reset.</p></article>
@@ -94,7 +94,7 @@ const breadcrumbJsonLd = {
       <Screenshot
         src="/assets/nexus/nexus-v11-05.png"
         alt="Nexus v11 Splash Screen — centered isometric vault cube glyph, Nexus wordmark, 'Encrypted Personal Vault' subtitle, three animated loading dots. Version tag v1.4.2, build 20260312, Northbyte Studios credit at bottom."
-        caption="Splash — startup / loading"
+        caption="Splash — startup and loading"
         aspect="16 / 10"
         span="half"
       />
@@ -107,21 +107,21 @@ const breadcrumbJsonLd = {
       />
       <Screenshot
         src="/assets/nexus/nexus-v11-11.png"
-        alt="Nexus v11 Import Files — same left sidebar, right pane shows a large dashed drop zone with soft purple encrypted-container icon, 'Drop files here or click to browse' text, file type constraints, Browse Files (primary) + Browse Folder buttons. Progress row underneath shows Encrypting · travel-japan-2026.zip at 62%, 4 of 7 files, 2.4 GB / 3.8 GB. Footer: 'Import behavior: Ask each time — Change in Settings'."
+        alt="Nexus v11 Import Files — same left sidebar, right pane shows a large dashed drop zone with soft purple encrypted-container icon, 'Drop files here or click to browse' text, file type constraints, Browse Files (primary) + Browse Folder buttons. Progress row underneath shows Encrypting · travel-japan-2026.zip at 62%, 4 of 7 files, 2.4 of 3.8 GB. Footer: 'Import behavior: Ask each time — Change in Settings'."
         caption="Import Files — drop-zone + live encryption progress"
         aspect="16 / 10"
         span="half"
       />
       <Screenshot
         src="/assets/nexus/nexus-v11-25.png"
-        alt="Nexus v11 Image Viewer — full-window preview of an image (travel-japan-2026-day3.jpg, 4.2 MB, 4032×3024). Filename chip at top-left. Bottom action bar: 3 of 284 counter, zoom slider at 132%, Fit / Fill toggle, Export button, Close button. Blurred purple/blue image content shown."
-        caption="Image Viewer — full-window preview with zoom / export controls"
+        alt="Nexus v11 Image Viewer — full-window preview of an image (travel-japan-2026-day3.jpg, 4.2 MB, 4032×3024). Filename chip at top-left. Bottom action bar: 3 of 284 counter, zoom slider at 132%, Fit and Fill toggle, Export button, Close button. Blurred purple/blue image content shown."
+        caption="Image Viewer — full-window preview with zoom and export controls"
         aspect="16 / 10"
         span="half"
       />
       <Screenshot
         src="/assets/nexus/nexus-v11-27.png"
-        alt="Nexus v11 Audio Player — centered purple album artwork, filename voice-memo-thursday.m4a, metadata line (Recorded Mar 12 2026 · 14:32 · AAC · 256 kbps), animated waveform, timestamps 3:24 / 8:12, transport controls with -15 rewind / play button / +30 skip, scrub bar, playback rate 1.0×."
+        alt="Nexus v11 Audio Player — centered purple album artwork, filename voice-memo-thursday.m4a, metadata line (Recorded Mar 12 2026 · 14:32 · AAC · 256 kbps), animated waveform, timestamps 3:24 of 8:12, transport controls with -15 rewind, play button / +30 skip, scrub bar, playback rate 1.0×."
         caption="Audio Player — waveform + transport"
         aspect="16 / 10"
         span="half"
@@ -137,7 +137,7 @@ const breadcrumbJsonLd = {
     <dl class="v11-list">
       <div class="v11-item">
         <dt>What changes</dt>
-        <dd>Full visual system rebuild, new lock screen, refreshed vault browser, cleaner credential and note detail views, tighter settings, redesigned updater flow, new media surfaces (browser / image viewer / audio player) that never existed before v11. Kept: every keyboard shortcut, every existing vault format, every security guarantee.</dd>
+        <dd>Full visual system rebuild, new lock screen, refreshed vault browser, cleaner credential and note detail views, tighter settings, redesigned updater flow, new media surfaces (browser, image viewer, audio player) that never existed before v11. Kept: every keyboard shortcut, every existing vault format, every security guarantee.</dd>
       </div>
       <div class="v11-item">
         <dt>What does NOT change</dt>

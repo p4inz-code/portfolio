@@ -1,0 +1,43 @@
+---
+/**
+ * Pause / resume ambient motion (WCAG 2.2.2). Ambient motion is anything that
+ * moves on its own for more than five seconds: the page backdrops, the
+ * gameplay loop. Scroll-driven motion is not affected, because the visitor is
+ * the one driving it. The choice is kept in localStorage['nb-still'] and
+ * applied as html[data-still]; src/scripts/progress.ts owns the behaviour.
+ */
+interface Props { class?: string; withLabel?: boolean }
+const { class: cls = '', withLabel = false } = Astro.props;
+---
+<button type="button" class:list={['motion-toggle', cls]} aria-pressed="false" aria-label="Pause ambient motion" title="Pause ambient motion">
+  <svg class="mt-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+  <svg class="mt-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+  {withLabel && <span class="mt-label">Motion: on</span>}
+</button>
+
+<style>
+  .motion-toggle {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-width: 34px; height: 34px;
+    padding: 0 6px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    transition: color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+  }
+  .motion-toggle svg { width: 15px; height: 15px; }
+  .motion-toggle:hover, .motion-toggle:focus-visible {
+    color: var(--purple-bright);
+    background: color-mix(in oklab, var(--purple) 10%, transparent);
+    outline: none;
+  }
+  .motion-toggle:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
+  .motion-toggle .mt-play { display: none; }
+  .motion-toggle[aria-pressed='true'] .mt-pause { display: none; }
+  .motion-toggle[aria-pressed='true'] .mt-play { display: block; }
+  .motion-toggle[aria-pressed='true'] { color: var(--purple-bright); }
+</style>
