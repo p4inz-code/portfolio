@@ -76,3 +76,12 @@ feature cards and screenshot frames pick up the scene. Set through a `scene` pro
 - `scene` prop on BaseLayout, styles in `src/styles/scenes.css`, set on /nexus, /kanvaz, /ascent.
 - Not verified: autoplay of the Ascent loop in a foreground tab (the preview pane was hidden, so the browser paused it), Safari, Firefox (falls back to the static layout), and real reduced-motion (gated by media query, not emulated).
 - Version and changelog are not bumped here on purpose; do it at merge (v5.24.0).
+
+## Polish pass (same branch)
+
+- Chapters are taller (280vh with media) so the reveal has room; text arrives 27-42%, media reveals 42-60%, leave 76-96%.
+- No more linear scroll mapping: arrivals ease out, wipes ease in-out, the Kanvaz card overshoots and settles.
+- Kanvaz: the cable draws first, then the card drops, then the pin pops.
+- Nexus: wipe and scan line share one easing so they stay locked; slight zoom-in settle; brackets scale in.
+- Ascent: letterbox opens while the footage fades up from dark and the camera pulls back; HUD corners settle onto the frame.
+- Backdrops drift slower than the page for depth. A small "02 / 05" counter with a filling hairline shows chapter progress.
