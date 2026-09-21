@@ -298,36 +298,36 @@ const defaultLabel = (kind: string) =>
   }
   .chapter[data-scene='ascent'] .stars.s1 {
     background-image:
-          radial-gradient(1px 1px at 12px 18px, #EDE8FF, transparent 60%),
-          radial-gradient(1px 1px at 47px 63px, #EDE8FF, transparent 60%),
-          radial-gradient(1px 1px at 83px 29px, #EDE8FF, transparent 60%),
-          radial-gradient(1px 1px at 29px 91px, #EDE8FF, transparent 60%),
-          radial-gradient(1px 1px at 71px 77px, #EDE8FF, transparent 60%);
+          radial-gradient(1px 1px at 12px 18px, var(--star, #EDE8FF), transparent 60%),
+          radial-gradient(1px 1px at 47px 63px, var(--star, #EDE8FF), transparent 60%),
+          radial-gradient(1px 1px at 83px 29px, var(--star, #EDE8FF), transparent 60%),
+          radial-gradient(1px 1px at 29px 91px, var(--star, #EDE8FF), transparent 60%),
+          radial-gradient(1px 1px at 71px 77px, var(--star, #EDE8FF), transparent 60%);
     background-size: 100px 100px;
     opacity: 0.55;
   }
   .chapter[data-scene='ascent'] .stars.s2 {
     background-image:
-          radial-gradient(1.5px 1.5px at 30px 40px, #fff, transparent 65%),
-          radial-gradient(1.5px 1.5px at 120px 90px, #fff, transparent 65%),
-          radial-gradient(1.5px 1.5px at 75px 150px, #fff, transparent 65%),
-          radial-gradient(1.5px 1.5px at 160px 20px, #fff, transparent 65%);
+          radial-gradient(1.5px 1.5px at 30px 40px, var(--star, #fff), transparent 65%),
+          radial-gradient(1.5px 1.5px at 120px 90px, var(--star, #fff), transparent 65%),
+          radial-gradient(1.5px 1.5px at 75px 150px, var(--star, #fff), transparent 65%),
+          radial-gradient(1.5px 1.5px at 160px 20px, var(--star, #fff), transparent 65%);
     background-size: 190px 190px;
     opacity: 0.8;
   }
   .chapter[data-scene='ascent'] .stars.s3 {
     background-image:
-          radial-gradient(2.2px 2.2px at 60px 70px, #fff, rgba(190, 170, 255, 0.5) 55%, transparent 75%),
-          radial-gradient(2px 2px at 210px 30px, #fff, rgba(170, 200, 255, 0.5) 55%, transparent 75%),
-          radial-gradient(2.4px 2.4px at 150px 190px, #fff, rgba(255, 190, 220, 0.5) 55%, transparent 75%);
+          radial-gradient(2.2px 2.2px at 60px 70px, var(--star, #fff), rgba(190, 170, 255, 0.5) 55%, transparent 75%),
+          radial-gradient(2px 2px at 210px 30px, var(--star, #fff), rgba(170, 200, 255, 0.5) 55%, transparent 75%),
+          radial-gradient(2.4px 2.4px at 150px 190px, var(--star, #fff), rgba(255, 190, 220, 0.5) 55%, transparent 75%);
     background-size: 300px 260px;
   }
   .chapter[data-scene='ascent'] .shoot {
     width: 140px;
     height: 2px;
     border-radius: 2px;
-    background: linear-gradient(90deg, transparent, #fff);
-    box-shadow: 0 0 8px 1px rgba(200, 190, 255, 0.6);
+    background: linear-gradient(90deg, transparent, var(--star, #fff));
+    box-shadow: 0 0 8px 1px var(--star-glow, rgba(200, 190, 255, 0.6));
     opacity: 0;
   }
   .chapter[data-scene='ascent'] .shoot.a {
@@ -374,10 +374,7 @@ const defaultLabel = (kind: string) =>
   :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .scene-bg {
     background: linear-gradient(to bottom, color-mix(in oklab, var(--purple) 8%, var(--bg)), color-mix(in oklab, var(--purple) 26%, var(--bg)));
   }
-  :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .stars,
-      :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .shoot {
-    display: none;
-  }
+  :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .scene-bg { --star: #3B1A9F; --star-glow: rgba(91, 61, 245, 0.4); }
   :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .nebula {
     opacity: 0.35;
   }

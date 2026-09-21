@@ -1,0 +1,401 @@
+---
+/**
+ * Extra layers for the case-study pages, on top of SceneBackdrop.
+ *
+ *   nexus   : a combination dial that turns with the page, hex streams
+ *   kanvaz  : collaborator cursors drifting across the board
+ *   ascent  : game orbs, a pixel runner that crosses the page and jumps, a
+ *             level readout that climbs 01 to 25 as you scroll
+ *   mission : the whole backdrop (dusk over a lake, a boot log, a privacy radar)
+ *   pursue  : the whole backdrop (an investigation graph and a tracing lens)
+ *
+ * Fixed, behind content (z-index -1), pointer-events none. Motion comes from
+ * the root scroll timeline where it exists, and from --sp (set by
+ * src/scripts/progress.ts) where it does not. Ambient motion is off for
+ * reduced motion.
+ */
+interface Props {
+  scene?: 'nexus' | 'kanvaz' | 'ascent' | 'mission' | 'pursue';
+}
+const { scene } = Astro.props;
+
+const byte = (i: number, j: number) => {
+  const x = Math.sin(i * 12.9898 + j * 78.233) * 43758.5453;
+  return Math.floor((x - Math.floor(x)) * 256).toString(16).padStart(2, '0').toUpperCase();
+};
+const hexLines = (seed: number) =>
+  Array.from({ length: 44 }, (_, i) => Array.from({ length: 4 }, (_, j) => byte(i + seed, j)).join(' '));
+
+const bootLog = [
+  'Started nftables firewall',
+  'Reached target Network',
+  'Telemetry: disabled',
+  'Started sysctl hardening',
+  'Mounted /home',
+  'Started Rust system services',
+  'Reached target Privacy Hardening',
+  'Started KDE Plasma 6',
+  'Reached target Graphical Interface',
+  'Started Calamares installer',
+];
+
+// investigation graph, in a 100 x 60 box
+const nodes: Array<[number, number, 'c' | 's' | 'd']> = [
+  [10, 14, 'c'], [24, 26, 's'], [18, 44, 'd'], [38, 12, 'd'], [44, 34, 'c'], [32, 52, 's'],
+  [58, 20, 's'], [64, 42, 'd'], [52, 56, 'c'], [76, 14, 'c'], [84, 32, 's'], [78, 52, 'd'], [92, 46, 'c'], [68, 30, 'd'],
+];
+const edges: Array<[number, number]> = [
+  [0, 1], [1, 2], [1, 4], [0, 3], [3, 4], [4, 5], [4, 6], [6, 9], [6, 13], [13, 7], [7, 8], [7, 11], [9, 10], [10, 12], [10, 13], [5, 8], [11, 12],
+];
+---
+{scene === 'nexus' && (
+  <div class="sfx" aria-hidden="true">
+    <svg class="dial" viewBox="0 0 200 200">
+      <circle class="r1" cx="100" cy="100" r="92" />
+      <circle class="r2" cx="100" cy="100" r="76" />
+      <circle class="r3" cx="100" cy="100" r="58" />
+      <circle class="r4" cx="100" cy="100" r="40" />
+      <path class="notch" d="M100 4 L106 18 L94 18 Z" />
+    </svg>
+    <span class="hex a"><span class="in">{[...hexLines(3), ...hexLines(3)].map((l) => <b>{l}</b>)}</span></span>
+    <span class="hex b"><span class="in">{[...hexLines(17), ...hexLines(17)].map((l) => <b>{l}</b>)}</span></span>
+  </div>
+)}
+
+{scene === 'kanvaz' && (
+  <div class="sfx" aria-hidden="true">
+    <span class="cur c1"><svg viewBox="0 0 16 20"><path d="M1 1 L1 15 L5 11.5 L8 18 L10.5 17 L7.5 10.5 L13 10.5 Z" /></svg><em>atharva</em></span>
+    <span class="cur c2"><svg viewBox="0 0 16 20"><path d="M1 1 L1 15 L5 11.5 L8 18 L10.5 17 L7.5 10.5 L13 10.5 Z" /></svg><em>reviewer</em></span>
+    <span class="cur c3"><svg viewBox="0 0 16 20"><path d="M1 1 L1 15 L5 11.5 L8 18 L10.5 17 L7.5 10.5 L13 10.5 Z" /></svg><em>you</em></span>
+  </div>
+)}
+
+{scene === 'ascent' && (
+  <div class="sfx" aria-hidden="true">
+    <span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span><span class="orb o4"></span>
+    <span class="orb o5"></span><span class="orb o6"></span><span class="orb o7"></span>
+    <div class="runner">
+      <div class="hop">
+        <svg class="sprite" viewBox="0 0 12 16" shape-rendering="crispEdges">
+          <g class="body">
+            <rect x="4" y="1" width="4" height="4" fill="#BAE6FD" />
+            <rect x="6" y="2" width="1" height="1" fill="#0B0620" />
+            <rect x="3" y="5" width="6" height="1" fill="#F472B6" />
+            <rect x="1" y="5" width="2" height="1" fill="#F472B6" />
+            <rect x="0" y="6" width="2" height="1" fill="#F472B6" />
+            <rect x="3" y="6" width="5" height="4" fill="#7DD3FC" />
+            <rect x="8" y="7" width="2" height="1" fill="#7DD3FC" />
+          </g>
+          <g class="f1">
+            <rect x="3" y="10" width="2" height="4" fill="#38BDF8" />
+            <rect x="6" y="10" width="2" height="3" fill="#38BDF8" />
+            <rect x="2" y="14" width="3" height="1" fill="#0EA5E9" />
+            <rect x="6" y="13" width="3" height="1" fill="#0EA5E9" />
+          </g>
+          <g class="f2">
+            <rect x="4" y="10" width="2" height="3" fill="#38BDF8" />
+            <rect x="6" y="10" width="2" height="4" fill="#38BDF8" />
+            <rect x="3" y="13" width="3" height="1" fill="#0EA5E9" />
+            <rect x="6" y="14" width="3" height="1" fill="#0EA5E9" />
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div class="hud">
+      <span class="hud-lv">LEVEL</span>
+      <span class="hud-num"></span>
+      <span class="hud-of">/ 25</span>
+      <i class="hud-bar"><b></b></i>
+    </div>
+  </div>
+)}
+
+{scene === 'mission' && (
+  <div class="sfx ms" aria-hidden="true">
+    <span class="ms-sky"></span>
+    <span class="ms-boot"><span class="in">{[...bootLog, ...bootLog, ...bootLog].map((l) => <b><i>[  OK  ]</i> {l}</b>)}</span></span>
+    <span class="ms-radar"><i></i><i></i><i></i>
+      <svg viewBox="0 0 24 28"><path d="M12 1 L22 5 V13 C22 20 17.5 24.5 12 27 C6.5 24.5 2 20 2 13 V5 Z" /><path d="M7.5 13.5 L11 17 L17 10" /></svg>
+    </span>
+    <span class="ms-mtn far"></span>
+    <span class="ms-mtn near"></span>
+    <span class="ms-lake"></span>
+  </div>
+)}
+
+{scene === 'pursue' && (
+  <div class="sfx pu" aria-hidden="true">
+    <span class="pu-bg"></span>
+    <svg class="pu-graph" viewBox="0 0 100 60" preserveAspectRatio="xMidYMid slice">
+      {edges.map(([a, b], i) => (
+        <line class="edge" style={`--e:${i}`} x1={nodes[a][0]} y1={nodes[a][1]} x2={nodes[b][0]} y2={nodes[b][1]} />
+      ))}
+      {nodes.map(([x, y, t], i) => (
+        t === 'c' ? <circle class="node" style={`--n:${i}`} cx={x} cy={y} r="0.6" /> :
+        t === 's' ? <rect class="node" style={`--n:${i}`} x={x - 0.55} y={y - 0.55} width="1.1" height="1.1" /> :
+        <path class="node" style={`--n:${i}`} d={`M${x} ${y - 0.85} L${x + 0.85} ${y} L${x} ${y + 0.85} L${x - 0.85} ${y} Z`} />
+      ))}
+    </svg>
+    <span class="pu-lens"><i></i><i></i><em>tracing</em></span>
+  </div>
+)}
+
+<style>
+  .sfx {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    contain: strict;
+  }
+  .sfx > * { position: absolute; }
+
+  /* =================================================================== NEXUS */
+  .dial {
+    left: -14vmin; top: 44%;
+    width: 46vmin; height: 46vmin;
+    margin-top: -23vmin;
+    opacity: 0.55;
+    transform: rotate(calc(var(--sp, 0) * 260deg));
+    overflow: visible;
+  }
+  .dial circle { fill: none; stroke: color-mix(in oklab, var(--purple-bright) 60%, transparent); stroke-width: 0.6; }
+  .dial .r1 { stroke-dasharray: 1.2 3.6; stroke-width: 3; }
+  .dial .r2 { stroke-dasharray: 0.6 2.4; }
+  .dial .r3 { stroke-dasharray: 18 6 2 6; stroke-width: 1; }
+  .dial .r4 { stroke-dasharray: 0.8 1.8; }
+  .dial .notch { fill: var(--purple-bright); }
+  .hex {
+    top: 0; bottom: 0;
+    width: 9ch;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1.9;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    color: color-mix(in oklab, var(--purple-bright) 60%, transparent);
+    opacity: 0.32;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 78%, transparent);
+            mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 78%, transparent);
+  }
+  .hex .in, .ms-boot .in { display: flex; flex-direction: column; }
+  .hex b, .ms-boot b { font-weight: 400; }
+  .hex.a { left: 1.2vw; }
+  .hex.b { right: 6.5vw; opacity: 0.22; }
+
+  /* =================================================================== KANVAZ */
+  .cur { display: flex; align-items: flex-start; gap: 2px; left: 0; top: 0; }
+  .cur svg { width: 18px; height: 22px; fill: var(--c); stroke: #fff; stroke-width: 1; stroke-linejoin: round; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4)); }
+  .cur em {
+    margin: 12px 0 0 2px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--c);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+  }
+  .cur.c1 { --c: #7C4DFF; translate: 18vw 22vh; }
+  .cur.c2 { --c: #14B8A6; translate: 70vw 40vh; }
+  .cur.c3 { --c: #E23E6A; translate: 40vw 68vh; }
+
+  /* =================================================================== ASCENT */
+  .orb {
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #FFF7C2, #FBBF24 60%, #B45309);
+    box-shadow: 0 0 12px 3px rgba(251, 191, 36, 0.55);
+  }
+  .orb.o2, .orb.o5 { background: radial-gradient(circle at 35% 30%, #E0F7FF, #38BDF8 60%, #0369A1); box-shadow: 0 0 12px 3px rgba(56, 189, 248, 0.55); }
+  .orb.o1 { left: 14%; top: 34%; } .orb.o2 { left: 27%; top: 58%; } .orb.o3 { left: 43%; top: 26%; }
+  .orb.o4 { left: 58%; top: 52%; } .orb.o5 { left: 71%; top: 36%; } .orb.o6 { left: 84%; top: 62%; } .orb.o7 { left: 92%; top: 24%; }
+
+  .runner { left: 0; bottom: 6.5vh; width: 38px; height: 50px; translate: calc(4vw + var(--sp, 0) * 82vw) 0; }
+  .hop { width: 100%; height: 100%; transform: translateY(calc(max(sin(calc(var(--sp, 0) * 1800deg)), 0) * -11vh)); }
+  .sprite { width: 100%; height: 100%; display: block; overflow: visible; filter: drop-shadow(0 0 6px rgba(125, 211, 252, 0.6)); }
+  .sprite .f2 { visibility: hidden; }
+
+  .hud {
+    left: 16px; top: 44%;
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px;
+    width: 130px;
+    font-family: var(--font-scene-ascent, var(--font-mono));
+    color: #E0F2FE;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+  }
+  .hud-lv { flex-basis: 100%; font-size: 16px; letter-spacing: 0.12em; opacity: 0.8; }
+  .hud-num { font-size: 40px; line-height: 1; counter-reset: lv var(--lvl, 1); }
+  .hud-num::after { content: counter(lv, decimal-leading-zero); }
+  .hud-of { font-size: 18px; opacity: 0.6; }
+  .hud-bar {
+    display: block;
+    flex-basis: 84px;
+    width: 84px; height: 6px;
+    margin-top: 4px;
+    border: 1px solid rgba(125, 211, 252, 0.7);
+    background: rgba(4, 2, 12, 0.5);
+    align-self: center;
+  }
+  .hud-bar b { display: block; height: 100%; width: 100%; background: #38BDF8; transform-origin: 0 50%; transform: scaleX(var(--sp, 0)); }
+
+  /* =================================================================== MISSION */
+  .ms-sky {
+    inset: 0;
+    background: linear-gradient(to bottom, #07030f 0%, #150c33 40%, #2a1a5c 66%, #120a2b 66.2%, #0a0519 100%);
+  }
+  .ms-boot {
+    left: 1.6vw; top: 0; bottom: 0;
+    width: 46ch;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 11px; line-height: 1.9;
+    white-space: nowrap;
+    color: color-mix(in oklab, var(--text) 45%, transparent);
+    opacity: 0.4;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 16%, #000 70%, transparent);
+            mask-image: linear-gradient(to bottom, transparent, #000 16%, #000 70%, transparent);
+  }
+  .ms-boot i { font-style: normal; color: #4ADE80; }
+  .ms-radar {
+    right: 9vw; top: 16vh;
+    width: 22vmin; height: 22vmin;
+    display: grid; place-items: center;
+  }
+  .ms-radar i {
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    border: 1px solid color-mix(in oklab, var(--purple-bright) 70%, transparent);
+    opacity: 0;
+  }
+  .ms-radar svg { width: 34%; height: auto; fill: color-mix(in oklab, var(--purple-bright) 20%, transparent); stroke: var(--purple-bright); stroke-width: 1.4; stroke-linejoin: round; stroke-linecap: round; filter: drop-shadow(0 0 10px color-mix(in oklab, var(--purple-bright) 60%, transparent)); }
+  .ms-mtn { left: -6%; right: -6%; bottom: 34vh; }
+  .ms-mtn.far  { height: 22vh; background: #1a1140; opacity: 0.9; clip-path: polygon(0 70%, 10% 44%, 20% 62%, 32% 24%, 44% 58%, 56% 30%, 68% 60%, 80% 20%, 92% 52%, 100% 40%, 100% 100%, 0 100%); }
+  .ms-mtn.near { height: 15vh; background: #0f0826; clip-path: polygon(0 60%, 12% 30%, 24% 64%, 38% 34%, 52% 66%, 66% 26%, 80% 62%, 92% 34%, 100% 58%, 100% 100%, 0 100%); }
+  .ms-lake {
+    left: 0; right: 0; bottom: 0; height: 34vh;
+    background:
+      repeating-linear-gradient(to bottom, color-mix(in oklab, var(--purple-bright) 22%, transparent) 0 1px, transparent 1px 8px),
+      linear-gradient(to bottom, #150c33, #07030f);
+    -webkit-mask-image: linear-gradient(to bottom, #000, transparent 96%);
+            mask-image: linear-gradient(to bottom, #000, transparent 96%);
+    opacity: 0.7;
+  }
+
+  /* =================================================================== PURSUE */
+  .pu-bg { inset: 0; background: radial-gradient(90vmax 60vmax at 70% 30%, #0f1a2e 0%, #070a12 70%); }
+  .pu-graph { inset: 0; width: 100%; height: 100%; overflow: visible; opacity: 0.6; }
+  .pu-graph .edge { stroke: color-mix(in oklab, #5EEAD4 55%, transparent); stroke-width: 1px; vector-effect: non-scaling-stroke; stroke-dasharray: 5 6; }
+  .pu-graph .node { fill: #0b1220; stroke: #5EEAD4; stroke-width: 1.4px; vector-effect: non-scaling-stroke; transform-box: fill-box; transform-origin: center; }
+  .pu-lens {
+    left: 0; top: 0;
+    width: 22vmin; height: 22vmin;
+    border-radius: 50%;
+    border: 1px solid rgba(94, 234, 212, 0.75);
+    box-shadow: 0 0 40px rgba(94, 234, 212, 0.18), inset 0 0 30px rgba(94, 234, 212, 0.08);
+    translate: calc(8vw + var(--sp, 0) * 60vw) calc(70vh - var(--sp, 0) * 46vh);
+  }
+  .pu-lens i { position: absolute; background: rgba(94, 234, 212, 0.55); }
+  .pu-lens i:nth-child(1) { left: 50%; top: -8px; bottom: -8px; width: 1px; }
+  .pu-lens i:nth-child(2) { top: 50%; left: -8px; right: -8px; height: 1px; }
+  .pu-lens em { position: absolute; left: 50%; top: 100%; transform: translateX(-50%); margin-top: 10px; font-family: var(--font-mono); font-style: normal; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #5EEAD4; }
+
+  /* ================================================================== LIGHT THEME */
+  :global(:root[data-theme='light']) .dial circle { stroke: color-mix(in oklab, var(--purple) 55%, transparent); }
+  :global(:root[data-theme='light']) .hex { color: var(--purple); opacity: 0.22; }
+  :global(:root[data-theme='light']) .cur svg { stroke: #fff; }
+  :global(:root[data-theme='light']) .orb { box-shadow: 0 0 10px 2px rgba(180, 83, 9, 0.35); }
+  :global(:root[data-theme='light']) .orb.o2, :global(:root[data-theme='light']) .orb.o5 { box-shadow: 0 0 10px 2px rgba(3, 105, 161, 0.35); }
+  :global(:root[data-theme='light']) .hud { color: var(--purple-deep); text-shadow: none; }
+  :global(:root[data-theme='light']) .hud-bar { border-color: var(--purple); background: rgba(255, 255, 255, 0.4); }
+  :global(:root[data-theme='light']) .hud-bar b { background: var(--purple); }
+  :global(:root[data-theme='light']) .ms-sky { background: linear-gradient(to bottom, color-mix(in oklab, var(--purple) 8%, var(--bg)) 0%, color-mix(in oklab, var(--purple) 22%, var(--bg)) 64%, color-mix(in oklab, var(--purple) 12%, var(--bg)) 64.2%, var(--bg) 100%); }
+  :global(:root[data-theme='light']) .ms-boot { color: var(--purple-deep); opacity: 0.32; }
+  :global(:root[data-theme='light']) .ms-boot i { color: #15803D; }
+  :global(:root[data-theme='light']) .ms-mtn.far  { background: color-mix(in oklab, var(--purple) 34%, var(--bg)); }
+  :global(:root[data-theme='light']) .ms-mtn.near { background: color-mix(in oklab, var(--purple) 52%, var(--bg)); }
+  :global(:root[data-theme='light']) .ms-lake { background: repeating-linear-gradient(to bottom, color-mix(in oklab, var(--purple) 28%, transparent) 0 1px, transparent 1px 8px); }
+  :global(:root[data-theme='light']) .pu-bg { background: radial-gradient(90vmax 60vmax at 70% 30%, color-mix(in oklab, #14B8A6 10%, var(--bg)) 0%, var(--bg) 70%); }
+  :global(:root[data-theme='light']) .pu-graph .edge { stroke: #0F766E; }
+  :global(:root[data-theme='light']) .pu-graph .node { fill: var(--bg); stroke: #0F766E; }
+  :global(:root[data-theme='light']) .pu-lens { border-color: #0F766E; box-shadow: none; }
+  :global(:root[data-theme='light']) .pu-lens i { background: #0F766E; }
+  :global(:root[data-theme='light']) .pu-lens em { color: #0F766E; }
+
+  /* ================================================================== PHONES */
+  @media (max-width: 760px) {
+    .dial { left: -22vmin; width: 60vmin; height: 60vmin; margin-top: -30vmin; opacity: 0.4; }
+    .hex.b { display: none; }
+    .hex.a { opacity: 0.2; }
+    .cur.c1 { translate: 8vw 24vh; } .cur.c2 { translate: 52vw 44vh; } .cur.c3 { translate: 22vw 70vh; }
+    .orb.o3, .orb.o5, .orb.o7 { display: none; }
+    .runner { width: 30px; height: 40px; bottom: 5.5vh; }
+    .hud { left: 10px; top: 92px; }
+    .hud-num { font-size: 30px; }
+    .hud-bar { width: 56px; }
+    .ms-boot { width: 34ch; opacity: 0.28; font-size: 10px; }
+    .ms-radar { right: 4vw; top: 14vh; width: 30vmin; height: 30vmin; }
+    .pu-lens { width: 30vmin; height: 30vmin; }
+  }
+
+  /* ================================================================== MOTION */
+  @media (prefers-reduced-motion: no-preference) {
+    /* ambient */
+    .hex .in { animation: fx-hex 60s linear infinite; }
+    .hex.b .in { animation-duration: 84s; animation-direction: reverse; }
+    .cur.c1 { animation: fx-cur1 19s ease-in-out infinite alternate; }
+    .cur.c2 { animation: fx-cur2 23s ease-in-out infinite alternate; }
+    .cur.c3 { animation: fx-cur3 17s ease-in-out infinite alternate; }
+    .orb { animation: fx-orb 3.6s ease-in-out infinite alternate; }
+    .orb.o2 { animation-delay: -0.8s; } .orb.o3 { animation-delay: -1.6s; } .orb.o4 { animation-delay: -2.4s; }
+    .orb.o5 { animation-delay: -1.1s; } .orb.o6 { animation-delay: -2s; } .orb.o7 { animation-delay: -0.4s; }
+    .sprite .f1 { animation: fx-leg 0.36s steps(1) infinite; }
+    .sprite .f2 { animation: fx-leg 0.36s steps(1) infinite reverse; visibility: visible; }
+    .ms-boot .in { animation: fx-boot 70s linear infinite; }
+    .ms-radar i { animation: fx-radar 4.8s ease-out infinite; }
+    .ms-radar i:nth-child(2) { animation-delay: 1.6s; }
+    .ms-radar i:nth-child(3) { animation-delay: 3.2s; }
+    .ms-lake { animation: fx-lake 6s linear infinite; }
+    .pu-graph .edge { animation: fx-edge 2.4s linear infinite; animation-delay: calc(var(--e) * -0.3s); }
+    .pu-graph .node { animation: fx-node 3s ease-in-out infinite alternate; animation-delay: calc(var(--n) * -0.4s); }
+    .pu-lens em { animation: fx-blink 1.2s steps(2, start) infinite; }
+
+    /* scroll linked, native */
+    @supports (animation-timeline: scroll()) {
+      .dial { animation: fx-dial linear both; animation-timeline: scroll(root block); }
+      .runner { animation: fx-run linear both; animation-timeline: scroll(root block); }
+      .hop { animation: fx-hop linear both; animation-timeline: scroll(root block); }
+      .hud-num { animation: fx-lvl linear both; animation-timeline: scroll(root block); }
+      .hud-bar b { animation: fx-bar linear both; animation-timeline: scroll(root block); }
+      .pu-lens { animation: fx-lens linear both; animation-timeline: scroll(root block); }
+    }
+  }
+
+  @property --lvl { syntax: '<integer>'; inherits: false; initial-value: 1; }
+  .hud-num { --lvl: calc(1 + var(--sp, 0) * 24); }
+
+  @keyframes fx-hex   { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+  @keyframes fx-boot  { from { transform: translateY(0); } to { transform: translateY(-33.33%); } }
+  @keyframes fx-cur1 { 0% { translate: 18vw 22vh; } 30% { translate: 34vw 30vh; } 60% { translate: 26vw 52vh; } 100% { translate: 44vw 40vh; } }
+  @keyframes fx-cur2 { 0% { translate: 70vw 40vh; } 35% { translate: 58vw 24vh; } 70% { translate: 78vw 60vh; } 100% { translate: 64vw 70vh; } }
+  @keyframes fx-cur3 { 0% { translate: 40vw 68vh; } 40% { translate: 22vw 58vh; } 75% { translate: 52vw 80vh; } 100% { translate: 34vw 46vh; } }
+  @keyframes fx-orb   { from { transform: translateY(-7px) scale(0.9); opacity: 0.75; } to { transform: translateY(7px) scale(1.08); opacity: 1; } }
+  @keyframes fx-leg   { 0% { visibility: visible; } 50% { visibility: hidden; } }
+  @keyframes fx-radar { 0% { transform: scale(0.35); opacity: 0.8; } 100% { transform: scale(1.35); opacity: 0; } }
+  @keyframes fx-lake  { from { background-position: 0 0, 0 0; } to { background-position: 0 8px, 0 0; } }
+  @keyframes fx-edge  { to { stroke-dashoffset: -22; } }
+  @keyframes fx-node  { from { transform: scale(0.85); } to { transform: scale(1.25); } }
+  @keyframes fx-blink { to { visibility: hidden; } }
+  @keyframes fx-dial  { from { transform: rotate(0deg); } to { transform: rotate(260deg); } }
+  @keyframes fx-run   { from { translate: 4vw 0; } to { translate: 86vw 0; } }
+  @keyframes fx-hop {
+    0%, 8%, 14%, 26%, 32%, 44%, 50%, 62%, 68%, 80%, 86%, 100% { transform: translateY(0); }
+    11%, 29%, 47%, 65%, 83% { transform: translateY(-11vh); }
+  }
+  @keyframes fx-lvl { from { --lvl: 1; } to { --lvl: 25; } }
+  @keyframes fx-bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes fx-lens { from { translate: 8vw 70vh; } to { translate: 68vw 24vh; } }
+</style>

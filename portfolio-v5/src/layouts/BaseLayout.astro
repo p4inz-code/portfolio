@@ -6,13 +6,14 @@ import CommandPalette from '../components/features/CommandPalette.astro';
 import APMark from '../components/APMark.astro';
 import SideRail from '../components/SideRail.astro';
 import SceneBackdrop from '../components/SceneBackdrop.astro';
+import SceneFx from '../components/SceneFx.astro';
 import LiveStats from '../components/LiveStats.astro';
 import { SITE, NAV, CONTACT } from '../data/site';
 import { PROJECTS } from '../data/projects';
 
 interface Props {
   title: string;
-  scene?: 'nexus' | 'kanvaz' | 'ascent'; // per-project sub-theme, see styles/scenes.css
+  scene?: 'nexus' | 'kanvaz' | 'ascent' | 'mission' | 'pursue'; // per-project sub-theme, see styles/scenes.css
   description?: string;
   keywords?: string; // v5.21.0 — per-page override of SITE.keywords, for
                       // project pages that want their own name + handle
@@ -287,7 +288,8 @@ const jsonLd = {
     </script>
   </head>
   <body data-scene={scene}>
-    <SceneBackdrop scene={scene} />
+    <SceneBackdrop scene={scene === 'nexus' || scene === 'kanvaz' || scene === 'ascent' ? scene : undefined} />
+    <SceneFx scene={scene} />
     <!-- Scroll progress bar — hairline at very top of viewport, fills as
          the page scrolls. Zero-JS: powered by CSS animation-timeline: scroll().
          Falls back to nothing (element stays at scaleX 0) on browsers without
@@ -418,7 +420,8 @@ const jsonLd = {
     </script>
 
     <SideRail />
-    <script>import '../scripts/progress';</script>
+    <script>import '../scripts/progress';
+import '../scripts/fx';</script>
     <LiveStats />
 
     <main id="main"><slot /></main>

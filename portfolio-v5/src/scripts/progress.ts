@@ -42,7 +42,7 @@ function update() {
   queued = false;
   const vh = window.innerHeight || root.clientHeight;
   const max = Math.max(1, root.scrollHeight - vh);
-  root.style.setProperty('--sp', clamp(window.scrollY / max).toFixed(4));
+  root.style.setProperty('--sp', reduce.matches ? '0' : clamp(window.scrollY / max).toFixed(4));
   if (!root.hasAttribute('data-jsp')) return;
   for (const el of els) {
     const r = el.getBoundingClientRect();

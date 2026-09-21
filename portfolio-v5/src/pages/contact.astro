@@ -22,7 +22,10 @@ import { CONTACT, SITE } from '../data/site';
         <ul class="cl-channels" role="list">
           <li>
             <span class="cl-key">Email</span>
-            <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+            <span class="cl-email-row">
+              <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+              <button type="button" class="cl-copy" id="copyEmail" aria-label="Copy email address">copy</button>
+            </span>
           </li>
           <li>
             <span class="cl-key">Discord</span>
@@ -42,18 +45,37 @@ import { CONTACT, SITE } from '../data/site';
           <span class="cl-dot" aria-hidden="true"></span>
           Freelance capacity: <em>selective, taking new work</em>
         </p>
+
+        <div class="cl-clock" id="clock" aria-live="off">
+          <span class="cl-clock-time" id="clockTime">--:--</span>
+          <span class="cl-clock-meta">
+            <span id="clockPlace">Navi Mumbai, IST</span>
+            <span id="clockDiff" class="cl-clock-diff"></span>
+          </span>
+        </div>
       </aside>
 
       <!-- RIGHT: terminal-style form -->
-      <div class="term-card" data-magnet>
-        <span class="term-glow" aria-hidden="true"></span>
+      <div class="term-card" id="termCard">
         <header class="term-head">
           <span class="term-dot term-dot-close" aria-hidden="true"></span>
           <span class="term-dot term-dot-min"   aria-hidden="true"></span>
           <span class="term-dot term-dot-max"   aria-hidden="true"></span>
           <span class="term-title">msg — mailto composer · <span class="term-title-secondary">no data leaves this page</span></span>
           <span class="term-cursor" aria-hidden="true"></span>
+          <span class="term-signal" id="signal" role="img" aria-label="0 of 5 fields filled">
+            <i></i><i></i><i></i><i></i><i></i>
+          </span>
         </header>
+
+        <div class="term-topics" role="group" aria-label="Quick start">
+          <span class="term-topics-label">start with</span>
+          <button type="button" class="term-chip" data-topic="Product / Web Development" data-starter="I'd like to build ">a product or site</button>
+          <button type="button" class="term-chip" data-topic="UI / UX & Product Design" data-starter="I need design help with ">design</button>
+          <button type="button" class="term-chip" data-topic="3D / VFX & Visualization" data-starter="I have a 3D / VFX project: ">3D / VFX</button>
+          <button type="button" class="term-chip" data-topic="Security / Privacy consulting" data-starter="I'd like to talk about security: ">security</button>
+          <button type="button" class="term-chip" data-topic="Something else" data-starter="Hi Atharva, ">just saying hi</button>
+        </div>
 
         <form class="term-form" id="contactForm" novalidate>
           <div class="term-line term-line-field">
@@ -118,7 +140,7 @@ import { CONTACT, SITE } from '../data/site';
 
           <div class="term-actions">
             <button type="submit" class="term-submit">
-              <span class="term-caret" aria-hidden="true">›</span> send message
+              <span class="term-caret" aria-hidden="true">›</span> <span class="term-label">send message</span>
               <span class="term-arrow" aria-hidden="true">→</span>
             </button>
             <p class="term-hint">
@@ -206,6 +228,49 @@ import { CONTACT, SITE } from '../data/site';
       const form = document.getElementById('contactForm');
       const status = document.getElementById('c-status');
       if (!form) return;
+
+      // -------- signal meter: one bar per field that has something in it --------
+      const signal = document.getElementById('signal');
+      function updateSignal() {
+        const sel = form.querySelectorAll('[data-term-select]');
+        const filled = [
+          document.getElementById('c-name').value.trim() !== '',
+          document.getElementById('c-email').value.trim() !== '',
+          !!(sel[0] && sel[0].getAttribute('data-selected')),
+          !!(sel[1] && sel[1].getAttribute('data-selected')),
+          document.getElementById('c-message').value.trim() !== '',
+        ];
+        const n = filled.filter(Boolean).length;
+        if (signal) {
+          signal.setAttribute('aria-label', n + ' of 5 fields filled');
+          signal.setAttribute('data-level', String(n));
+        }
+      }
+      form.addEventListener('input', updateSignal);
+      form.addEventListener('click', function () { setTimeout(updateSignal, 0); });
+      updateSignal();
+
+      // -------- quick-start chips: pick a topic, drop a starter line into the message --------
+      document.querySelectorAll('.term-chip').forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          const topic = chip.getAttribute('data-topic') || '';
+          const starter = chip.getAttribute('data-starter') || '';
+          const selects = form.querySelectorAll('[data-term-select]');
+          if (selects[0]) {
+            selects[0].setAttribute('data-selected', topic);
+            const v = selects[0].querySelector('[data-term-select-value]');
+            if (v) v.textContent = topic;
+          }
+          const msg = document.getElementById('c-message');
+          if (msg && !msg.value.trim()) {
+            msg.value = starter;
+            msg.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+          document.querySelectorAll('.term-chip').forEach(function (c) { c.classList.toggle('is-on', c === chip); });
+          if (msg) { msg.focus(); msg.setSelectionRange(msg.value.length, msg.value.length); }
+          updateSignal();
+        });
+      });
 
       // -------- small conveniences: live character count, Ctrl/Cmd+Enter to send --------
       const msgEl = document.getElementById('c-message');
@@ -299,28 +364,41 @@ import { CONTACT, SITE } from '../data/site';
 
         const fallback = document.getElementById('c-fallback');
         const fallbackBody = /** @type {HTMLTextAreaElement} */ (document.getElementById('c-fallback-body'));
+        const card = document.getElementById('termCard');
+        const submitBtn = form.querySelector('.term-submit');
         const wasHiddenBefore = document.visibilityState;
-        window.location.href = href;
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        if (status) {
-          status.hidden = false;
-          status.textContent = 'opened your mail client. If nothing happened, check below.';
+        function launch() {
+          window.location.href = href;
+          if (card) card.classList.remove('is-sending');
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.querySelector('.term-label').textContent = 'send message'; }
+          if (status) {
+            status.hidden = false;
+            status.textContent = 'opened your mail client. If nothing happened, check below.';
+          }
+          // v5.17.0 auto-recovery: if the tab is still visible and focused
+          // ~1.4s later, no mail client took the mailto: link. Offer the
+          // message as copyable text instead of leaving a dead end.
+          setTimeout(function () {
+            if (document.visibilityState === wasHiddenBefore && document.hasFocus()) {
+              if (fallback && fallbackBody) {
+                fallbackBody.value = 'To: ' + to + '\nSubject: ' + subject + '\n\n' + plainBody;
+                fallback.hidden = false;
+                fallback.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'nearest' });
+              }
+              window.__nbDiag && window.__nbDiag.log('contact-form', 'No mail client responded to mailto:, showed copyable fallback', { recovered: true });
+            }
+          }, 1400);
         }
 
-        // v5.17.0 auto-recovery — if the tab is still visible/focused
-        // ~1.4s later, no mail client intercepted the mailto: link (a
-        // real, common failure mode on machines with none configured).
-        // Surface the message as copyable text instead of a dead end.
-        setTimeout(function () {
-          if (document.visibilityState === wasHiddenBefore && document.hasFocus()) {
-            if (fallback && fallbackBody) {
-              fallbackBody.value = 'To: ' + to + '\nSubject: ' + subject + '\n\n' + plainBody;
-              fallback.hidden = false;
-              fallback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-            window.__nbDiag && window.__nbDiag.log('contact-form', 'No mail client responded to mailto:, showed copyable fallback', { recovered: true });
-          }
-        }, 1400);
+        if (reducedMotion || !card) { launch(); return; }
+        // A short "transmit" beat: a packet runs along the top of the card
+        // and the button says so, then the mail client opens.
+        card.classList.add('is-sending');
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.querySelector('.term-label').textContent = 'transmitting'; }
+        if (status) { status.hidden = false; status.textContent = 'transmitting…'; }
+        setTimeout(launch, 950);
       });
 
       const copyMsgBtn = document.getElementById('c-copy-message');
@@ -347,60 +425,37 @@ import { CONTACT, SITE } from '../data/site';
   </script>
 
   <script is:inline>
-    // -------- Magnetic card --------
-    // The composer leans toward the pointer while it is near (a 90px field
-    // around the card), tilts a few degrees, and lights up where the pointer
-    // is. It eases back when the pointer leaves. Off for touch, for reduced
-    // motion, and the tilt is paused while you are typing or a menu is open.
+    // -------- Local time (Navi Mumbai) and copy-email --------
     (function () {
-      const card = document.querySelector('[data-magnet]');
-      if (!card) return;
-      if (matchMedia('(hover: none)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-      const REACH = 90, EASE = 0.12;
-      let tx = 0, ty = 0, trx = 0, try_ = 0;      // targets
-      let cx = 0, cy = 0, crx = 0, cry = 0;       // current
-      let raf = 0, near = false;
-
-      function frame() {
-        cx += (tx - cx) * EASE;  cy += (ty - cy) * EASE;
-        crx += (trx - crx) * EASE; cry += (try_ - cry) * EASE;
-        card.style.transform =
-          'perspective(1100px) translate3d(' + cx.toFixed(2) + 'px,' + cy.toFixed(2) + 'px,0) rotateX(' + crx.toFixed(2) + 'deg) rotateY(' + cry.toFixed(2) + 'deg)';
-        const moving = Math.abs(tx - cx) + Math.abs(ty - cy) + Math.abs(trx - crx) + Math.abs(try_ - cry) > 0.02;
-        if (moving || near) { raf = requestAnimationFrame(frame); }
-        else { raf = 0; card.style.transform = ''; card.style.willChange = ''; }
+      const timeEl = document.getElementById('clockTime');
+      const diffEl = document.getElementById('clockDiff');
+      if (timeEl) {
+        const fmt = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Kolkata' });
+        const tick = function () {
+          const now = new Date();
+          timeEl.textContent = fmt.format(now);
+          if (diffEl) {
+            // IST is UTC+5:30 with no DST; the visitor's offset comes from their own clock.
+            const diffMin = 330 + now.getTimezoneOffset();     // minutes IST is ahead of the visitor
+            if (diffMin === 0) diffEl.textContent = 'same time as you';
+            else {
+              const a = Math.abs(diffMin), h = Math.floor(a / 60), m = a % 60;
+              diffEl.textContent = (h ? h + 'h ' : '') + (m ? m + 'm ' : '') + (diffMin > 0 ? 'ahead of you' : 'behind you');
+            }
+          }
+        };
+        tick();
+        setInterval(tick, 20000);
       }
-      function kick() { if (!raf) { card.style.willChange = 'transform'; raf = requestAnimationFrame(frame); } }
-      function release() {
-        near = false; tx = ty = trx = try_ = 0;
-        card.classList.remove('is-magnet');
-        kick();
+      const copy = document.getElementById('copyEmail');
+      if (copy) {
+        copy.addEventListener('click', function () {
+          const addr = ['atharva.patil.cg', 'gmail.com'].join('@');
+          const done = function () { copy.textContent = 'copied'; setTimeout(function () { copy.textContent = 'copy'; }, 1500); };
+          if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(addr).then(done, done);
+          else done();
+        });
       }
-
-      addEventListener('pointermove', function (e) {
-        if (e.pointerType === 'touch') return;
-        const r = card.getBoundingClientRect();
-        // measure against the un-moved card so the target does not chase itself
-        const left = r.left - cx, top = r.top - cy;
-        const midX = left + r.width / 2, midY = top + r.height / 2;
-        const inside = e.clientX > left - REACH && e.clientX < left + r.width + REACH &&
-                       e.clientY > top - REACH && e.clientY < top + r.height + REACH;
-        if (!inside) { if (near) release(); return; }
-        near = true;
-        const nx = Math.max(-1, Math.min(1, (e.clientX - midX) / (r.width / 2 + REACH)));
-        const ny = Math.max(-1, Math.min(1, (e.clientY - midY) / (r.height / 2 + REACH)));
-        const busy = card.matches(':focus-within') || card.querySelector('.term-select.open');
-        tx = nx * 10;  ty = ny * 8;
-        trx = busy ? 0 : -ny * 3;
-        try_ = busy ? 0 : nx * 3.5;
-        card.style.setProperty('--mx', (((e.clientX - left) / r.width) * 100).toFixed(1) + '%');
-        card.style.setProperty('--my', (((e.clientY - top) / r.height) * 100).toFixed(1) + '%');
-        card.classList.add('is-magnet');
-        kick();
-      }, { passive: true });
-      document.addEventListener('pointerleave', release);
-      addEventListener('blur', release);
     })();
   </script>
 
@@ -470,6 +525,37 @@ import { CONTACT, SITE } from '../data/site';
     }
     .cl-channels a:hover::after, .cl-channels a:focus-visible::after { opacity: 1; transform: none; }
     .cl-channels em { color: var(--purple-bright); font-style: italic; }
+    .cl-email-row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-3); }
+    .cl-copy {
+      background: transparent;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      padding: 2px 10px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+    }
+    .cl-copy:hover, .cl-copy:focus-visible { color: var(--purple-bright); border-color: var(--purple-bright); outline: none; }
+    .cl-clock {
+      margin-top: var(--sp-5);
+      display: flex; align-items: center; gap: var(--sp-4);
+      padding: var(--sp-4);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: color-mix(in oklab, var(--surface-1) 80%, transparent);
+    }
+    .cl-clock-time {
+      font-family: var(--font-mono);
+      font-size: 30px;
+      letter-spacing: 0.02em;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+    .cl-clock-meta { display: flex; flex-direction: column; gap: 2px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+    .cl-clock-diff { color: var(--purple-bright); }
     .cl-avail {
       margin-top: var(--sp-5);
       display: inline-flex; align-items: center; gap: 10px;
@@ -505,22 +591,61 @@ import { CONTACT, SITE } from '../data/site';
         0 30px 80px color-mix(in oklab, #000 40%, transparent),
         0 0 0 1px color-mix(in oklab, var(--purple) 6%, transparent);
     }
-    .term-glow {
-      position: absolute; inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 0%), color-mix(in oklab, var(--purple-bright) 17%, transparent), transparent 62%);
-      opacity: 0;
-      transition: opacity var(--dur) var(--ease-out);
-    }
-    .term-card.is-magnet .term-glow { opacity: 1; }
-    .term-card.is-magnet {
-      border-color: color-mix(in oklab, var(--purple-bright) 45%, var(--line-strong));
-      box-shadow:
-        0 44px 90px -24px color-mix(in oklab, #000 46%, transparent),
-        0 0 0 1px color-mix(in oklab, var(--purple-bright) 22%, transparent);
-    }
     .term-head, .term-form { position: relative; z-index: 1; }
+    .term-signal { margin-left: auto; display: inline-flex; align-items: flex-end; gap: 3px; height: 12px; }
+    .term-signal i {
+      display: block; width: 3px; border-radius: 1px;
+      background: color-mix(in oklab, var(--muted) 45%, transparent);
+      transition: background var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
+    }
+    .term-signal i:nth-child(1) { height: 4px; }
+    .term-signal i:nth-child(2) { height: 6px; }
+    .term-signal i:nth-child(3) { height: 8px; }
+    .term-signal i:nth-child(4) { height: 10px; }
+    .term-signal i:nth-child(5) { height: 12px; }
+    .term-signal[data-level='1'] i:nth-child(-n+1),
+    .term-signal[data-level='2'] i:nth-child(-n+2),
+    .term-signal[data-level='3'] i:nth-child(-n+3),
+    .term-signal[data-level='4'] i:nth-child(-n+4),
+    .term-signal[data-level='5'] i:nth-child(-n+5) { background: var(--purple-bright); }
+
+    .term-topics {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+      padding: var(--sp-4) var(--sp-7) 0;
+      position: relative; z-index: 1;
+    }
+    .term-topics-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--muted); margin-right: 4px; }
+    .term-chip {
+      background: transparent;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      padding: 5px 12px;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      cursor: pointer;
+      transition: background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+    }
+    .term-chip:hover, .term-chip:focus-visible { border-color: var(--purple-bright); color: var(--purple-bright); outline: none; }
+    .term-chip.is-on { background: color-mix(in oklab, var(--purple) 16%, transparent); border-color: var(--purple-bright); color: var(--purple-bright); }
+
+    /* the transmit beat: a packet runs along the top edge of the card */
+    .term-card::before {
+      content: '';
+      position: absolute; left: 0; top: 0;
+      height: 2px; width: 100%;
+      background: linear-gradient(90deg, transparent, var(--purple-bright) 40%, #fff 50%, var(--purple-bright) 60%, transparent);
+      transform: translateX(-100%);
+      opacity: 0;
+      z-index: 3;
+      pointer-events: none;
+    }
+    .term-card.is-sending::before { animation: term-transmit 0.9s cubic-bezier(0.5, 0, 0.2, 1) forwards; }
+    .term-card.is-sending .term-submit { opacity: 0.85; }
+    .term-card.is-sending .term-arrow { animation: term-fly 0.9s ease-in forwards; }
+    @keyframes term-transmit { 0% { transform: translateX(-100%); opacity: 1; } 100% { transform: translateX(100%); opacity: 1; } }
+    @keyframes term-fly { to { transform: translate(60px, -14px); opacity: 0; } }
+    .term-submit:disabled { cursor: default; }
     .term-cursor {
       width: 7px; height: 12px;
       margin-left: -4px;

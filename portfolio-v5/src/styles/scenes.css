@@ -141,3 +141,63 @@ body[data-scene='ascent'] .stat-cell dd { font-family: var(--font-scene-ascent);
 :root[data-theme='light'] .chapter[data-scene='ascent'] .moon-orb {
   filter: hue-rotate(-30deg) saturate(1.2) brightness(0.96);
 }
+
+/* ------------------------------------------------------------ fx helpers */
+/* The real value of an animated stat, kept for screen readers and crawlers. */
+.fx-sr {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.fx-vis { font-variant-numeric: tabular-nums; }
+
+/* section eyebrow rule grows as the section scrolls into view (scene pages) */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    body[data-scene='nexus'] .section-eyebrow::before,
+    body[data-scene='mission'] .section-eyebrow::before,
+    body[data-scene='pursue'] .section-eyebrow::before {
+      animation: eyebrow-grow linear both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 90%;
+    }
+    body[data-scene='kanvaz'] .shot .frame {
+      animation: frame-settle linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 90%;
+    }
+    body[data-scene='ascent'] .shot .frame {
+      animation: frame-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 80%;
+    }
+  }
+}
+@keyframes eyebrow-grow { from { width: 4px; opacity: 0.4; } to { width: 40px; opacity: 1; } }
+@keyframes frame-settle { from { rotate: -3.2deg; transform: translateY(26px); } to { rotate: 0deg; transform: none; } }
+@keyframes frame-rise { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+
+/* Nexus cards: a sheen crosses the card on hover */
+body[data-scene='nexus'] .feature-card { position: relative; overflow: hidden; }
+body[data-scene='nexus'] .feature-card::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 35%, color-mix(in oklab, var(--purple-bright) 16%, transparent) 50%, transparent 65%);
+  transform: translateX(-120%);
+  transition: transform 0.9s var(--ease-out);
+  pointer-events: none;
+}
+body[data-scene='nexus'] .feature-card:hover::after { transform: translateX(120%); }
+
+/* Mission OS and Pursue OS pages: feature cards and stat cells pick up the scene */
+body[data-scene='mission'] .feature-card,
+body[data-scene='mission'] .stat-cell { border-color: color-mix(in oklab, var(--purple-bright) 24%, var(--line)); }
+body[data-scene='mission'] .feature-card:hover { border-color: var(--purple-bright); box-shadow: 0 0 40px -14px color-mix(in oklab, var(--purple-bright) 70%, transparent); }
+body[data-scene='pursue'] .feature-card,
+body[data-scene='pursue'] .stat-cell,
+body[data-scene='pursue'] .status-cell { border-color: color-mix(in oklab, #5EEAD4 22%, var(--line)); }
+body[data-scene='pursue'] .section-eyebrow::before { content: ''; display: inline-block; width: 18px; height: 1px; margin-right: 10px; vertical-align: middle; background: #5EEAD4; }
+body[data-scene='mission'] .section-eyebrow::before { content: ''; display: inline-block; width: 18px; height: 1px; margin-right: 10px; vertical-align: middle; background: var(--purple-bright); }
