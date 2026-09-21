@@ -53,12 +53,6 @@ body[data-scene='nexus'] .feature-card,
 body[data-scene='nexus'] .stat-cell {
   border-radius: 2px;
   border-color: color-mix(in oklab, var(--purple-bright) 22%, var(--line));
-  --nb: color-mix(in oklab, var(--purple-bright) 70%, transparent);
-  background-image:
-    linear-gradient(var(--nb), var(--nb)) top left / 12px 1px no-repeat,
-    linear-gradient(var(--nb), var(--nb)) top left / 1px 12px no-repeat,
-    linear-gradient(var(--nb), var(--nb)) bottom right / 12px 1px no-repeat,
-    linear-gradient(var(--nb), var(--nb)) bottom right / 1px 12px no-repeat;
 }
 body[data-scene='nexus'] .shot .frame {
   border-radius: 2px;
@@ -123,12 +117,7 @@ body[data-scene='ascent'] .stat-cell,
 body[data-scene='ascent'] .feature-card,
 body[data-scene='ascent'] .act-row {
   position: relative;
-  --hb: color-mix(in oklab, var(--text) 70%, transparent);
-  background-image:
-    linear-gradient(var(--hb), var(--hb)) top left / 14px 2px no-repeat,
-    linear-gradient(var(--hb), var(--hb)) top left / 2px 14px no-repeat,
-    linear-gradient(var(--hb), var(--hb)) bottom right / 14px 2px no-repeat,
-    linear-gradient(var(--hb), var(--hb)) bottom right / 2px 14px no-repeat;
+  border-color: color-mix(in oklab, var(--text) 26%, var(--line));
 }
 body[data-scene='ascent'] .shot .frame {
   border-radius: 2px;

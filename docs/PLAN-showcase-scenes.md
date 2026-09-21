@@ -98,3 +98,9 @@ feature cards and screenshot frames pick up the scene. Set through a `scene` pro
 - Not used: the game's own font (Craftpix asset pack, not licensed for redistribution here).
 - "Real capture / Real gameplay" captions removed. "v11 design mockup" stays on Nexus because it is a mockup, not the shipping UI.
 - FINDING: the site's base font link asks Fontshare for neue-machina, neue-montreal and supply-mono. Fontshare's catalogue (100 fonts) has none of them, so the request returns no CSS and the whole site renders in the fallback stack (Helvetica Neue / Arial / system mono). Confirmed on the live site: document.fonts is empty. Not changed here; needs a decision.
+
+## Pass 5 (title fill, cosmos, brackets gone)
+
+- Project names start as an outline and fill with the accent as you scroll (a clipped copy of the text swept by the scroll timeline, the same idea as the AniFX outline-fill, but pure CSS). Ascent fills in 16 pixel-sized steps.
+- All corner-bracket motifs removed: Nexus thumbnail, Nexus/Ascent page cards.
+- Ascent sky rebuilt as a climb: deep-space gradient, nebula, three star layers (far/mid/near, the near one twinkles), two shooting stars at fixed scroll points, a moon that rises fast from behind the ridges, and three ridges that fall away at different speeds. Light theme keeps a lavender dusk without stars.
