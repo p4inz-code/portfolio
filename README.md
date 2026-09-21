@@ -10,12 +10,13 @@ India.
 
 ## What this repo is
 
-An Astro 5 static site. Built with a single-family file-based routing
-setup across 14 real pages, zero-JS-by-default with small vanilla-JS
-islands where interactivity is needed (theme toggle, command palette,
-Mission OS demo state machine, mobile nav drawer, contact terminal).
+An Astro 5 static site: 18 pages, a 404, and build-time endpoints for the
+sitemap and the RSS feed. Zero JavaScript by default, with small vanilla
+islands where interactivity earns it (theme toggle, command palette,
+Mission OS demo state machine, mobile nav drawer, the contact composer and
+its magnetic card, the Ascent gameplay loop's play/pause).
 
-All source lives under `portfolio-v5/`. The build outputs static HTML +
+All source lives under `portfolio-v5/`. The build outputs static HTML and
 one small CSS bundle per route and deploys to Cloudflare Pages on every
 push to `main`.
 
@@ -25,23 +26,27 @@ push to `main`.
 portfolio/
   portfolio-v5/                    Astro workspace (the whole site)
     src/
-      pages/                       14 routes — file-based
-      layouts/BaseLayout.astro     Head, nav, footer, JSON-LD, mobile drawer
-      components/                  layout / ui / features (incl. MissionDemo/)
+      pages/                       Routes, file-based
+      layouts/BaseLayout.astro     Head, nav, footer, JSON-LD, drawer, `scene` prop
+      components/
+        layout/ ui/ features/      Sections, atoms, showcase, palette, MissionDemo/
+        SceneBackdrop.astro        Fixed page backdrops for Nexus / Kanvaz / Ascent
+        SideRail.astro             Right rail: email, GitHub, Discord, WhatsApp,
+                                   Instagram, search, copy-URL pill
       data/
         projects.ts                Single source of truth for every project
         site.ts                    SITE / CONTACT / NAV / SERVICES
-        changelog.ts               Every version, newest-first
+        changelog.ts               Every version, newest first
       styles/
         tokens.css                 Dual-theme design tokens (dark + light)
         global.css                 Reset, base, custom scrollbars, parchment grain
-    public/                        Anything served as-is (og.svg, robots.txt,
-                                   security.txt, llms.txt, sitemap loader,
-                                   ai.txt, humans.txt, manifest, RSS, resume/)
-  docs/                            Handoff + spec docs
+        scenes.css                 Scene title fonts, the moon
+    public/                        Served as-is: assets/, fonts/, resume/, og images,
+                                   robots.txt, llms.txt, ai.txt, humans.txt,
+                                   security.txt, manifest, opensearch
+  docs/                            Handoffs and plans (PLAN-showcase-scenes.md)
   README.md                        You are here
   LICENSE                          All rights reserved
-  .gitignore
   .nvmrc                           Node 20
 ```
 
@@ -50,47 +55,70 @@ portfolio/
 - **Palette** — dual theme. Dark = *Ultraviolet Cathedral* (`#0A0517`
   base, cream `#E8E1D0` text, purples `#B993FF` / `#7B3FE4`). Light =
   *Parchment Manuscript* (`#F3EDDD` base, deep ink `#1A0F28`, darker
-  purples for AA contrast). Every text/background pair verified WCAG-AA.
-- **Fonts** — three families from Fontshare, each doing one job:
-  `Neue Machina` (display / hero / H1-H2), `Neue Montreal` (body / UI),
-  `Supply Mono` (eyebrows / code / kbd / status). No PP Editorial New,
-  no JetBrains Mono, no Inter — all three are the "safe designer" fonts
-  AI generators reach for and were flagged as AI-tells in the v5.6.3
-  audit. Whole stack now reads as chosen, not defaulted.
-- **Motion** — every scroll-linked animation via CSS
-  `animation-timeline: view()`, zero JS. Falls back to static end-state
-  on unsupported browsers and honors `prefers-reduced-motion` globally.
+  purples for AA contrast). Text and background pairs were checked for
+  WCAG AA. Toggle with the button or the `T` key; the choice is kept in
+  `localStorage['nb-theme']`.
+- **Type** — the intended stack is `Neue Machina` (display), `Neue
+  Montreal` (body) and `Supply Mono` (mono), set as `--font-display`,
+  `--font-body` and `--font-mono`. Those are Pangram Pangram families and
+  are **not on Fontshare**, so the current Fontshare request returns
+  nothing and the site renders the fallback stack (Helvetica Neue / Arial /
+  system mono) until they are licensed and self-hosted or replaced.
+  Scene titles use their own faces: Technor and Kalam (Fontshare, one
+  request each) and Jersey 10 (SIL OFL, self-hosted in `public/fonts/`).
+- **Motion** — scroll-linked effects use CSS scroll-driven animations
+  (`animation-timeline: view()` and `scroll()`), not JavaScript. Everything
+  is gated on `@supports` and `prefers-reduced-motion`, and falls back to a
+  static layout in browsers without support and below 900px.
 
 ## Signature interactions
 
-- **Command palette** — `⌘K` / `Ctrl+K` / press `/` from anywhere.
-  Recent searches, match highlighting, keyboard nav (arrows, Home/End,
-  PgUp/PgDn), suggestion chips on empty results.
-- **Mission OS interactive demo** — `/mission-os/demo/`. Cold-boot →
-  GRUB → kernel messages → login → desktop with 6 real informational
-  apps (Installer, Settings, About, Files, Terminal, Firefox). Respects
-  site theme. Every dock icon opens a real window with substantive
-  content. Explicitly labeled concept demo.
-- **Featured showcase** — `/` and `/work/`. Hero-scale project cards
-  with 3D Y-axis merry-go-round rotation tied to scroll position.
-- **Contact terminal** — `/contact/`. macOS-style terminal card with
-  keyboard-accessible custom selects. Submits to a `mailto:` composer
-  with all fields formatted in the body. No backend, no fetch, no data
-  leaves the page.
+- **Featured showcase** — `/` and `/work/`. Each featured project is a
+  pinned chapter: the words arrive first, one more scroll reveals the
+  picture. Project names start as outlines and fill with the accent as you
+  scroll. Every scroll step moves something; there are no dead stretches.
+- **Scenes** — Nexus, Kanvaz and Ascent each have their own look on their
+  page and in the showcase (`scene` prop on `BaseLayout`):
+  - *Nexus* — Technor titles, a floor grid flowing toward you, data
+    packets, a scan beam, a wireframe cube. The picture wipes in.
+  - *Kanvaz* — Kalam titles, a dotted board that pans as you scroll, faint
+    reference cards joined by flowing cables. A card drops onto the board.
+  - *Ascent* — Jersey 10 titles, a night sky with a nebula, star layers,
+    shooting stars and a moon that fills out as you scroll, over ridges that
+    fall away. The letterbox opens on a real gameplay loop.
+- **Contact composer** — `/contact/`. A terminal-style card with
+  keyboard-accessible custom selects, a live character count and
+  `Ctrl`/`Cmd` + `Enter` to send. The whole card is magnetic: it leans and
+  tilts toward the pointer and lights up where it is (off on touch and for
+  reduced motion). Submitting opens a `mailto:` message with the fields
+  formatted in the body. No backend, no fetch, nothing leaves the page.
+- **Command palette** — `⌘K` / `Ctrl+K` / `/`. Recent searches, match
+  highlighting, keyboard navigation, suggestion chips on empty results.
+- **Mission OS demo** — `/mission-os/demo/`. Boot sequence to a desktop with
+  six windows (Installer, Settings, About, Files, Terminal, Firefox), each
+  with a per-window error boundary. Labeled as a concept demo.
+
+## How content is kept honest
+
+Project versions, statuses and claims are checked against the real GitHub
+repos and release tags before they ship, and `projects.ts` is the only
+place they live. Media is real or labeled: screenshots and recordings are
+captures, banners are marked as banner art, and design-deck slides are
+marked as mockups. The policy is written up at `/editorial/`.
 
 ## Discoverability suite
 
 - `sitemap.xml` — Astro endpoint, build-time `lastmod`.
 - `robots.txt` — full AI crawler allowlist.
-- `llms.txt` — AI-readable structured content index with identity
-  resolution (Atharva Patil ↔ p4inz ↔ p4inz-code ↔ Northbyte Studios).
-- `ai.txt` — training + attribution terms.
-- `humans.txt` — counterpart to robots.txt.
-- `.well-known/security.txt` — RFC 9116.
-- `manifest.webmanifest` + `browserconfig.xml` — PWA / Windows tile.
-- `opensearch.xml` — browsers can add the site as a search engine.
+- `llms.txt` — AI-readable content index with identity resolution
+  (Atharva Patil ↔ p4inz ↔ p4inz-code ↔ Northbyte Studios).
+- `ai.txt` — training and attribution terms.
+- `humans.txt`, `.well-known/security.txt` (RFC 9116).
+- `manifest.webmanifest`, `browserconfig.xml`, `opensearch.xml`.
 - `feed.xml` — RSS 2.0 for the changelog.
-- JSON-LD `@graph` (Person + Organization + WebSite) on every page.
+- IndexNow key file for Bing, Yandex, Seznam and Naver.
+- JSON-LD `@graph` (Person + Organization + WebSite) on every page, plus
+  per-page `SoftwareApplication`, `BreadcrumbList` and `FAQPage` nodes.
 
 ## Running locally
 
@@ -106,13 +134,15 @@ Node version pinned to 20 via `.nvmrc`.
 
 ## Deployment
 
-Cloudflare Pages, `main` branch. Build config:
+Cloudflare Pages, `main` branch.
 
 - **Build command** — `cd portfolio-v5 && npm install && npm run build`
 - **Output directory** — `portfolio-v5/dist`
-- **Node** — 20 (auto-detected from `.nvmrc`)
+- **Node** — 20 (from `.nvmrc`)
 
-Every push to `main` triggers a rebuild. Cloudflare deploys in ~1-2 min.
+Every push to `main` rebuilds and deploys in about 90 seconds. `main` is
+production. `v5-astro` is a mirror kept in sync with fast-forward merges;
+larger work happens on a feature branch and merges to `main` once reviewed.
 
 ## Version history
 

@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.24.1',
+    kind: 'released',
+    summary: "Contact page polish: the composer card is magnetic, the fields are easier to see, and the README is rewritten to match the site as it is now.",
+    body: [
+      "The whole composer card now leans toward the pointer while it is near, tilts a few degrees and lights up where the pointer is, then eases back. It is off on touch screens and for reduced motion, and the tilt pauses while you type or a menu is open.",
+      "Fields: each row highlights on hover and on focus so it is obvious where you are typing, the caret blinks in the active row, the message box has a live character count, and Ctrl or Cmd plus Enter sends from anywhere in the form. The send button got a softer gradient, a sliding arrow and a pressed state. The channel list on the left picks up an arrow and a small nudge on hover.",
+      "README rewritten: 18 pages, the scene system, the scroll chapters, the contact composer, and an honest note that the Neue Machina, Neue Montreal and Supply Mono stack is not on Fontshare, so the site currently renders the fallback fonts until that is fixed.",
+    ],
+  },
+  {
     version: 'v5.24.0',
     kind: 'released',
     summary: "Featured work rebuilt as scroll chapters, and Nexus, Kanvaz and Ascent each get their own scene: a title font, a page background and a reveal that fit the product.",

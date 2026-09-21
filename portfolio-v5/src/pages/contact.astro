@@ -45,12 +45,14 @@ import { CONTACT, SITE } from '../data/site';
       </aside>
 
       <!-- RIGHT: terminal-style form -->
-      <div class="term-card">
+      <div class="term-card" data-magnet>
+        <span class="term-glow" aria-hidden="true"></span>
         <header class="term-head">
           <span class="term-dot term-dot-close" aria-hidden="true"></span>
           <span class="term-dot term-dot-min"   aria-hidden="true"></span>
           <span class="term-dot term-dot-max"   aria-hidden="true"></span>
           <span class="term-title">msg — mailto composer · <span class="term-title-secondary">no data leaves this page</span></span>
+          <span class="term-cursor" aria-hidden="true"></span>
         </header>
 
         <form class="term-form" id="contactForm" novalidate>
@@ -109,6 +111,7 @@ import { CONTACT, SITE } from '../data/site';
             <label for="c-message" class="term-prompt"><span class="term-caret">›</span> message</label>
             <div class="term-field">
               <textarea id="c-message" class="term-textarea" placeholder="What are you trying to build, and what's the timeline?" required></textarea>
+              <span class="term-count" id="c-count" aria-hidden="true">0 chars</span>
               <span class="term-field-error" id="c-message-error" role="alert"></span>
             </div>
           </div>
@@ -116,10 +119,11 @@ import { CONTACT, SITE } from '../data/site';
           <div class="term-actions">
             <button type="submit" class="term-submit">
               <span class="term-caret" aria-hidden="true">›</span> send message
+              <span class="term-arrow" aria-hidden="true">→</span>
             </button>
             <p class="term-hint">
               Opens your mail client with everything pre-filled to <span>{CONTACT.email}</span>.
-              Nothing is stored, POSTed, or logged.
+              Nothing is stored, POSTed, or logged. <kbd>Ctrl</kbd> + <kbd>Enter</kbd> sends from anywhere in the form.
             </p>
           </div>
 
@@ -202,6 +206,22 @@ import { CONTACT, SITE } from '../data/site';
       const form = document.getElementById('contactForm');
       const status = document.getElementById('c-status');
       if (!form) return;
+
+      // -------- small conveniences: live character count, Ctrl/Cmd+Enter to send --------
+      const msgEl = document.getElementById('c-message');
+      const countEl = document.getElementById('c-count');
+      if (msgEl && countEl) {
+        msgEl.addEventListener('input', function () {
+          const n = msgEl.value.length;
+          countEl.textContent = n + (n === 1 ? ' char' : ' chars');
+        });
+      }
+      form.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event('submit', { cancelable: true }));
+        }
+      });
 
       const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -326,6 +346,64 @@ import { CONTACT, SITE } from '../data/site';
     })();
   </script>
 
+  <script is:inline>
+    // -------- Magnetic card --------
+    // The composer leans toward the pointer while it is near (a 90px field
+    // around the card), tilts a few degrees, and lights up where the pointer
+    // is. It eases back when the pointer leaves. Off for touch, for reduced
+    // motion, and the tilt is paused while you are typing or a menu is open.
+    (function () {
+      const card = document.querySelector('[data-magnet]');
+      if (!card) return;
+      if (matchMedia('(hover: none)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      const REACH = 90, EASE = 0.12;
+      let tx = 0, ty = 0, trx = 0, try_ = 0;      // targets
+      let cx = 0, cy = 0, crx = 0, cry = 0;       // current
+      let raf = 0, near = false;
+
+      function frame() {
+        cx += (tx - cx) * EASE;  cy += (ty - cy) * EASE;
+        crx += (trx - crx) * EASE; cry += (try_ - cry) * EASE;
+        card.style.transform =
+          'perspective(1100px) translate3d(' + cx.toFixed(2) + 'px,' + cy.toFixed(2) + 'px,0) rotateX(' + crx.toFixed(2) + 'deg) rotateY(' + cry.toFixed(2) + 'deg)';
+        const moving = Math.abs(tx - cx) + Math.abs(ty - cy) + Math.abs(trx - crx) + Math.abs(try_ - cry) > 0.02;
+        if (moving || near) { raf = requestAnimationFrame(frame); }
+        else { raf = 0; card.style.transform = ''; card.style.willChange = ''; }
+      }
+      function kick() { if (!raf) { card.style.willChange = 'transform'; raf = requestAnimationFrame(frame); } }
+      function release() {
+        near = false; tx = ty = trx = try_ = 0;
+        card.classList.remove('is-magnet');
+        kick();
+      }
+
+      addEventListener('pointermove', function (e) {
+        if (e.pointerType === 'touch') return;
+        const r = card.getBoundingClientRect();
+        // measure against the un-moved card so the target does not chase itself
+        const left = r.left - cx, top = r.top - cy;
+        const midX = left + r.width / 2, midY = top + r.height / 2;
+        const inside = e.clientX > left - REACH && e.clientX < left + r.width + REACH &&
+                       e.clientY > top - REACH && e.clientY < top + r.height + REACH;
+        if (!inside) { if (near) release(); return; }
+        near = true;
+        const nx = Math.max(-1, Math.min(1, (e.clientX - midX) / (r.width / 2 + REACH)));
+        const ny = Math.max(-1, Math.min(1, (e.clientY - midY) / (r.height / 2 + REACH)));
+        const busy = card.matches(':focus-within') || card.querySelector('.term-select.open');
+        tx = nx * 10;  ty = ny * 8;
+        trx = busy ? 0 : -ny * 3;
+        try_ = busy ? 0 : nx * 3.5;
+        card.style.setProperty('--mx', (((e.clientX - left) / r.width) * 100).toFixed(1) + '%');
+        card.style.setProperty('--my', (((e.clientY - top) / r.height) * 100).toFixed(1) + '%');
+        card.classList.add('is-magnet');
+        kick();
+      }, { passive: true });
+      document.addEventListener('pointerleave', release);
+      addEventListener('blur', release);
+    })();
+  </script>
+
   <style>
     /* ============ Layout ============ */
     .contact-grid {
@@ -380,6 +458,17 @@ import { CONTACT, SITE } from '../data/site';
       font-size: var(--text-sm);
     }
     .cl-channels a:hover { color: var(--purple-bright); }
+    .cl-channels li { transition: padding-left var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out); }
+    .cl-channels li:hover { padding-left: var(--sp-2); border-top-color: color-mix(in oklab, var(--purple-bright) 45%, var(--line)); }
+    .cl-channels a::after {
+      content: ' ↗';
+      color: var(--purple-bright);
+      opacity: 0;
+      display: inline-block;
+      transform: translate(-4px, 2px);
+      transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+    }
+    .cl-channels a:hover::after, .cl-channels a:focus-visible::after { opacity: 1; transform: none; }
     .cl-channels em { color: var(--purple-bright); font-style: italic; }
     .cl-avail {
       margin-top: var(--sp-5);
@@ -404,6 +493,8 @@ import { CONTACT, SITE } from '../data/site';
 
     /* ============ Terminal card ============ */
     .term-card {
+      position: relative;
+      transition: box-shadow var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out);
       background:
         radial-gradient(ellipse 100% 100% at 100% 0%, color-mix(in oklab, var(--purple-deep) 10%, transparent), transparent 55%),
         var(--surface-1);
@@ -414,6 +505,30 @@ import { CONTACT, SITE } from '../data/site';
         0 30px 80px color-mix(in oklab, #000 40%, transparent),
         0 0 0 1px color-mix(in oklab, var(--purple) 6%, transparent);
     }
+    .term-glow {
+      position: absolute; inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 0%), color-mix(in oklab, var(--purple-bright) 17%, transparent), transparent 62%);
+      opacity: 0;
+      transition: opacity var(--dur) var(--ease-out);
+    }
+    .term-card.is-magnet .term-glow { opacity: 1; }
+    .term-card.is-magnet {
+      border-color: color-mix(in oklab, var(--purple-bright) 45%, var(--line-strong));
+      box-shadow:
+        0 44px 90px -24px color-mix(in oklab, #000 46%, transparent),
+        0 0 0 1px color-mix(in oklab, var(--purple-bright) 22%, transparent);
+    }
+    .term-head, .term-form { position: relative; z-index: 1; }
+    .term-cursor {
+      width: 7px; height: 12px;
+      margin-left: -4px;
+      background: var(--purple-bright);
+      animation: term-blink 1.1s steps(2, start) infinite;
+    }
+    @keyframes term-blink { to { visibility: hidden; } }
+    @media (prefers-reduced-motion: reduce) { .term-cursor { animation: none; } }
     .term-head {
       display: flex; align-items: center; gap: 8px;
       padding: 12px 16px;
@@ -445,9 +560,20 @@ import { CONTACT, SITE } from '../data/site';
       grid-template-columns: 110px 1fr;
       gap: var(--sp-4);
       align-items: center;
-      padding: var(--sp-3) 0;
+      /* the row is a soft highlighted strip on hover and focus, so it is
+         obvious where you are typing; the negative margin keeps the text
+         aligned with the rest of the card */
+      margin: 0 calc(-1 * var(--sp-3));
+      padding: var(--sp-3) var(--sp-3);
       border-bottom: 1px dashed var(--line);
+      border-radius: 8px;
+      transition: background var(--dur-fast) var(--ease-out);
     }
+    .term-line:hover { background: color-mix(in oklab, var(--purple) 4%, transparent); }
+    .term-line:focus-within { background: color-mix(in oklab, var(--purple) 9%, transparent); border-bottom-color: transparent; }
+    .term-line:focus-within .term-prompt { color: var(--purple-bright); }
+    .term-line:focus-within .term-caret { animation: term-blink 1s steps(2, start) infinite; }
+    @media (prefers-reduced-motion: reduce) { .term-line:focus-within .term-caret { animation: none; } }
     .term-line-block { grid-template-columns: 110px 1fr; align-items: start; }
     .term-line:last-of-type { border-bottom: none; }
     .term-prompt {
@@ -469,11 +595,20 @@ import { CONTACT, SITE } from '../data/site';
       padding: 6px 0;
       width: 100%;
       outline: none;
+      caret-color: var(--purple-bright);
       transition: border-color var(--dur) var(--ease-out);
     }
     .term-input::placeholder, .term-textarea::placeholder { color: var(--muted-2); font-style: italic; }
     .term-input:focus, .term-textarea:focus { border-bottom-color: var(--purple-bright); }
     .term-textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+    .term-count {
+      align-self: flex-end;
+      margin-top: 2px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      color: var(--muted-2);
+    }
 
     /* v5.17.0 — per-field inline error state */
     .term-line-field { align-items: start; }
@@ -587,11 +722,12 @@ import { CONTACT, SITE } from '../data/site';
       flex-wrap: wrap;
     }
     .term-submit {
-      background: var(--purple-bright);
+      background: linear-gradient(135deg, var(--purple-bright), var(--purple));
       color: var(--bg);
       border: none;
       border-radius: var(--radius-pill);
-      padding: 10px 20px;
+      box-shadow: 0 10px 24px -12px color-mix(in oklab, var(--purple) 70%, transparent);
+      padding: 11px 22px;
       font-family: var(--font-mono);
       font-size: 13px;
       letter-spacing: 0.04em;
@@ -600,7 +736,10 @@ import { CONTACT, SITE } from '../data/site';
       transition: transform var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
     }
     .term-submit .term-caret { color: var(--bg); }
-    .term-submit:hover { background: var(--purple); transform: translateY(-1px); }
+    .term-submit:hover { transform: translateY(-1px); box-shadow: 0 14px 28px -12px color-mix(in oklab, var(--purple) 80%, transparent); }
+    .term-submit:active { transform: translateY(0) scale(0.98); }
+    .term-arrow { display: inline-block; transition: transform var(--dur-fast) var(--ease-out); }
+    .term-submit:hover .term-arrow, .term-submit:focus-visible .term-arrow { transform: translateX(4px); }
     .term-submit:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 3px; }
     .term-hint {
       color: var(--muted);
@@ -610,6 +749,14 @@ import { CONTACT, SITE } from '../data/site';
       flex: 1; min-width: 240px;
     }
     .term-hint span { color: var(--purple-bright); }
+    .term-hint kbd {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 1px 5px;
+      border: 1px solid var(--line-strong);
+      border-radius: 3px;
+      color: var(--text);
+    }
     .term-status {
       margin-top: var(--sp-4);
       padding: var(--sp-3) var(--sp-4);
