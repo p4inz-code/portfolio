@@ -12,6 +12,25 @@
  *   ascent : game. Dusk sky, moon glow, HUD corner marks.
  */
 
+/* Scene title fonts.
+ *   nexus  : Technor (Fontshare), a clean techno sans.
+ *   kanvaz : Kalam (Fontshare), handwriting, like a note pinned to the board.
+ *   ascent : Pixelify Sans (SIL OFL, self-hosted, Latin subset ~9 KB).
+ * Only titles use them (project name, page h1, Ascent stat numbers);
+ * body copy stays in the site's own families. */
+@font-face {
+  font-family: 'Pixelify Sans';
+  src: url('/fonts/PixelifySans.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+:root {
+  --font-scene-nexus: 'Technor', var(--font-display);
+  --font-scene-kanvaz: 'Kalam', var(--font-display);
+  --font-scene-ascent: 'Pixelify Sans', var(--font-display);
+}
+
 body[data-scene] { position: relative; }
 body[data-scene]::before {
   content: '';
@@ -129,3 +148,9 @@ body[data-scene='ascent'] .section-eyebrow::before {
   body[data-scene='kanvaz'] .feature-card,
   body[data-scene='kanvaz'] .feature-card:hover { transition: none; }
 }
+
+/* ------------------------------------------------------ scene title fonts */
+body[data-scene='nexus'] .case-title  { font-family: var(--font-scene-nexus);  font-style: normal; font-weight: 500; letter-spacing: -0.01em; }
+body[data-scene='kanvaz'] .case-title { font-family: var(--font-scene-kanvaz); font-style: normal; font-weight: 700; letter-spacing: 0; }
+body[data-scene='ascent'] .case-title { font-family: var(--font-scene-ascent); font-style: normal; font-weight: 600; letter-spacing: 0; font-size: calc(var(--text-h1) * 0.78); line-height: 1.12; }
+body[data-scene='ascent'] .stat-cell dd { font-family: var(--font-scene-ascent); font-weight: 600; }

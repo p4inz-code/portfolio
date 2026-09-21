@@ -91,3 +91,10 @@ feature cards and screenshot frames pick up the scene. Set through a `scene` pro
 - Chapters shortened (240vh with media, 160vh without) and re-timed so the words start while the stage is still rising into view; the reveal follows immediately; the rest of the pin is a slow push-in plus backdrop parallax. Measured at 0.1-screen steps: no step with nothing changing.
 - Ascent: HUD corner frames removed. Backdrop is now layered: stars, moon, and three ridges (far/mid/near) moving at different rates.
 - Nexus corner brackets kept (they are that scene's identity); say the word to drop them too.
+
+## Pass 4 (title fonts)
+
+- Titles only (project name in the showcase, page h1, Ascent stat numbers): Nexus = Technor, Kanvaz = Kalam (both Fontshare, one link each), Ascent = Pixelify Sans (SIL OFL, self-hosted, Latin subset, 8.7 KB at /fonts/PixelifySans.woff2).
+- Not used: the game's own font (Craftpix asset pack, not licensed for redistribution here).
+- "Real capture / Real gameplay" captions removed. "v11 design mockup" stays on Nexus because it is a mockup, not the shipping UI.
+- FINDING: the site's base font link asks Fontshare for neue-machina, neue-montreal and supply-mono. Fontshare's catalogue (100 fonts) has none of them, so the request returns no CSS and the whole site renders in the fallback stack (Helvetica Neue / Arial / system mono). Confirmed on the live site: document.fonts is empty. Not changed here; needs a decision.

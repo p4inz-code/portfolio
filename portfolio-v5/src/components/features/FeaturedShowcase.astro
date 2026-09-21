@@ -241,6 +241,11 @@ const defaultLabel = (kind: string) =>
   .show-body:hover .show-cta-arrow { transform: translateX(4px); }
   .show-body:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 8px; border-radius: 2px; }
 
+  /* Scene title fonts (see styles/scenes.css for the families). */
+  .chapter[data-scene='nexus'] .show-name  { font-family: var(--font-scene-nexus);  font-weight: 500; letter-spacing: -0.01em; }
+  .chapter[data-scene='kanvaz'] .show-name { font-family: var(--font-scene-kanvaz); font-weight: 700; letter-spacing: 0; font-size: clamp(36px, 4.6vw, 58px); }
+  .chapter[data-scene='ascent'] .show-name { font-family: var(--font-scene-ascent); font-weight: 600; letter-spacing: 0; line-height: 1.05; }
+
   /* Media */
   .show-visual.has-media { margin: 0; min-width: 0; }
   .media-frame { position: relative; width: 100%; }
