@@ -68,7 +68,7 @@ const defaultLabel = (kind: string) =>
               </>
             )}
           </div>
-          <div class="ch-count" aria-hidden="true"><span>{pad(i + 1)} / {pad(projects.length)}</span><i></i></div>
+          <div class="ch-count" aria-hidden="true"><span>{pad(i + 1)} | {pad(projects.length)}</span><i></i></div>
           <div class="stage-inner">
             <a class="show-body" href={p.href}>
               <StatusPill status={p.status} size="sm" />

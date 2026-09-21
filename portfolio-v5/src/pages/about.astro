@@ -16,15 +16,15 @@ import { PROJECTS, PRODUCT_COUNT } from '../data/projects';
 const stackReasons = [
   {
     slug: 'wpf',
-    label: 'C# / .NET 8 / WPF',
+    label: 'C# · .NET 8 · WPF',
     verdict: 'For Windows-native products',
     reason: 'WPF is the least-glamorous choice a modern .NET dev can make, and the right one for Nexus. Native windowing, real ClearType, no Electron bloat, integrates with Windows Hello and the Credential Manager the way users expect. Chose WPF over Avalonia specifically because Nexus ships Windows-only for now and I wanted to lean into the platform, not abstract it.',
   },
   {
     slug: 'avalonia',
-    label: 'C# / .NET 8 / Avalonia',
+    label: 'C# · .NET 8 · Avalonia',
     verdict: 'For cross-platform desktop tooling',
-    reason: 'When cross-platform matters (Glint, future Nexus port), Avalonia gets the exact same code running on Windows / macOS / Linux without hitting Electron. WPF muscle memory transfers over cleanly.',
+    reason: 'When cross-platform matters (Glint, future Nexus port), Avalonia gets the exact same code running on Windows, macOS and Linux without hitting Electron. WPF muscle memory transfers over cleanly.',
   },
   {
     slug: 'electron',
@@ -88,7 +88,7 @@ const timeline = [
 // a one-person studio.
 const traction = [
   { k: 'Products shipped or in flight', v: `${PRODUCT_COUNT}` },
-  { k: 'Open source (MIT / GPLv3 / Apache 2.0)', v: `${PROJECTS.filter((p) => p.license && p.license !== 'Proprietary').length}` },
+  { k: 'Open source (MIT, GPLv3, Apache 2.0)', v: `${PROJECTS.filter((p) => p.license && p.license !== 'Proprietary').length}` },
   { k: 'Automated tests across products', v: '4,100+ (Veris 3,100 + repo-map 870 + others)' },
   { k: 'People between design and shipping', v: 'Just me' },
   { k: 'Third-party analytics on any product', v: '0' },

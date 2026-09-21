@@ -36,7 +36,7 @@ const sub = (p: Project) => p.currentVersion ?? p.status.label;
   </ol>
   <p class="rail-pill" aria-hidden="true">
     <img src="/ap-mark.png" width="18" height="18" alt="" decoding="async" />
-    <b id="railPillNum">01 / {pad(projects.length)}</b>
+    <b id="railPillNum">01 | {pad(projects.length)}</b>
     <span id="railPillName">{projects[0]?.name}</span>
     <em id="railPillSub">{projects[0] ? sub(projects[0]) : ''}</em>
     <i class="rail-pill-bar"><u></u></i>

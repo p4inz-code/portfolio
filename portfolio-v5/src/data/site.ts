@@ -15,7 +15,7 @@ export const SITE = {
   location: 'Navi Mumbai, India',
   studio: 'Northbyte Studios',
   studioFounded: '2026',
-  currentVersion: 'v5.24.1',
+  currentVersion: 'v5.25.0',
   domain: 'atharvapatil.tech',
   // Sitewide meta-keywords fallback — covers name/handle variants people
   // actually type (including the retired "painz" spelling) so search
@@ -32,6 +32,8 @@ export const CONTACT = {
   githubHandle: 'github.com/p4inz-code',
   discord: 'p4inz',
   discordInvite: 'https://discord.gg/8UKt8s5FbW',
+  buyMeACoffee: 'https://buymeacoffee.com/p4inz',
+  donatePage: 'https://p4inz-code.github.io/donate/',
 } as const;
 
 export interface Service {
@@ -47,12 +49,12 @@ export const SERVICES: Service[] = [
     slug: 'product',
     name: 'Product & Web Development',
     short: 'Full-stack builds for products and marketing sites, from first line of code to a deployed, maintainable system.',
-    bullets: ['Marketing & portfolio sites', 'Product dashboards & internal tools', 'Astro / Next.js / TypeScript builds'],
+    bullets: ['Marketing & portfolio sites', 'Product dashboards & internal tools', 'Astro, Next.js and TypeScript builds'],
     cta: { label: 'See it in Kanvaz →', href: '/kanvaz' },
   },
   {
     slug: 'ui-ux',
-    name: 'UI / UX & Product Design',
+    name: 'UI, UX & Product Design',
     short: 'Interfaces designed for clarity first, wireframes through to high-fidelity, production-ready design systems.',
     bullets: ['Product & marketing interfaces', 'Design systems + tokens', 'User flows and prototypes'],
     cta: { label: 'See it in Nexus →', href: '/nexus' },
@@ -66,10 +68,10 @@ export const SERVICES: Service[] = [
   },
   {
     slug: '3d-vfx',
-    name: '3D / VFX & Visualization',
+    name: '3D & VFX & Visualization',
     short: 'Renders, lighting studies, and motion work, for product showcases, brand visuals, or standalone pieces.',
     bullets: ['Product renders', 'Lighting studies', 'Motion + camera work'],
-    cta: { label: 'See the 3D / VFX page →', href: '/3d' },
+    cta: { label: 'See the 3D & VFX page →', href: '/3d' },
   },
 ];
 
@@ -81,7 +83,7 @@ export interface NavLink {
 
 export const NAV: NavLink[] = [
   { label: 'Work', href: '/work' },
-  { label: '3D / VFX', href: '/3d' },
+  { label: '3D & VFX', href: '/3d' },
   { label: 'Services', href: '/services' },
   { label: 'About', href: '/about' },
   { label: 'Resume', href: '/resume' },

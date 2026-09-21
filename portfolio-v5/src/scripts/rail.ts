@@ -46,7 +46,7 @@ if (rail && showcase && chapters.length) {
       });
       const a = links[idx];
       if (a && pillNum && pillName && pillSub) {
-        pillNum.textContent = `${pad(idx + 1)} / ${pad(chapters.length)}`;
+        pillNum.textContent = `${pad(idx + 1)} | ${pad(chapters.length)}`;
         pillName.textContent = a.dataset.name || '';
         pillSub.textContent = a.dataset.sub || '';
       }
@@ -54,7 +54,7 @@ if (rail && showcase && chapters.length) {
   };
   const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
 
-  // jump so the chapter's picture is up, not the empty run-in before it
+  // jump straight there (no scrolling through the chapters in between) so the picture is up, not the empty run-in
   links.forEach((a, i) => {
     a.addEventListener('click', (e) => {
       const c = chapters[i];
@@ -63,7 +63,7 @@ if (rail && showcase && chapters.length) {
       const stage = c.querySelector('.stage');
       const pinned = !!stage && getComputedStyle(stage).position === 'sticky';
       const top = c.getBoundingClientRect().top + window.scrollY + (pinned ? window.innerHeight * 0.62 : -72);
-      window.scrollTo({ top, behavior: 'smooth' });
+      window.scrollTo({ top, behavior: 'instant' });
     });
   });
 

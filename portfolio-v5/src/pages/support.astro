@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, CONTACT } from '../data/site';
+
+const free = [
+  { name: 'Kanvaz', what: 'Infinite reference board for artists', href: '/kanvaz/' },
+  { name: 'Obscura', what: 'Luau protection toolkit', href: 'https://github.com/p4inz-code/obscura' },
+  { name: 'Glint', what: 'Brightness and volume tray utility', href: 'https://github.com/p4inz-code/glint' },
+  { name: 'MINK', what: 'A programming language and its compiler', href: 'https://github.com/p4inz-code/mink' },
+  { name: '3D Ref Skills', what: 'Reference skills for 3D artists', href: 'https://github.com/p4inz-code/3d-ref-skills' },
+];
+---
+<BaseLayout title={`Support the free tools — ${SITE.title}`} description="Kanvaz, Obscura, Glint, MINK and 3D Ref Skills are free and open source. If one of them saved you time, you can chip in on Buy Me a Coffee or by UPI.">
+  <section class="sup wrap" aria-labelledby="sup-title">
+    <p class="sup-eyebrow">Support</p>
+    <h1 id="sup-title" class="sup-title">Free tools take <em>real</em> time. If one helped you, chip in.</h1>
+    <p class="sup-lede">I build these on my own, alongside a degree. Nothing here is gated, nothing tracks you, and nothing changes if you don't donate. Support just buys more evenings for the next release.</p>
+
+    <div class="sup-grid">
+      <article class="sup-card sup-main">
+        <div class="cup" aria-hidden="true">
+          <svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 24h32v12a16 16 0 0 1-16 16h0a16 16 0 0 1-16-16V24Z" />
+            <path d="M46 28h4a6 6 0 0 1 0 12h-5" />
+            <path class="steam s1" d="M24 8c-3 3 3 5 0 9" />
+            <path class="steam s2" d="M32 6c-3 3 3 5 0 9" />
+            <path class="steam s3" d="M40 8c-3 3 3 5 0 9" />
+          </svg>
+        </div>
+        <h2>Buy me a coffee</h2>
+        <p>One-off or monthly, any amount, works with cards and most wallets worldwide.</p>
+        <a class="sup-btn" href={CONTACT.buyMeACoffee} target="_blank" rel="noopener noreferrer">buymeacoffee.com/p4inz <span aria-hidden="true">↗</span></a>
+        <img class="bmc-qr" src="/assets/support/bmc-qr.svg" width="132" height="132" alt="QR code for buymeacoffee.com/p4inz" loading="lazy" decoding="async" />
+      </article>
+
+      <article class="sup-card sup-upi">
+        <h2>UPI, if you're in India</h2>
+        <p>Scan with any UPI app. No account, no fee.</p>
+        <img src="/assets/support/upi-qr.svg" width="240" height="262" alt="UPI QR code. Scan it with any UPI app to send a payment to Atharva Patil." loading="lazy" decoding="async" />
+        <p class="sup-small">On your phone? <a href={CONTACT.donatePage} target="_blank" rel="noopener noreferrer">Open the UPI page</a>.</p>
+      </article>
+    </div>
+
+    <h2 class="sup-h2">What you'd be supporting</h2>
+    <ul class="sup-list">
+      {free.map((f) => (
+        <li>
+          <a href={f.href} {...(f.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+            <b>{f.name}</b><span>{f.what}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="sup-note">Nexus is a paid product, so it isn't part of this. Donations don't buy features or priority support. If you want something built for you, <a href="/contact/">get in touch</a>.</p>
+  </section>
+
+  <style>
+    .sup { padding-top: var(--sp-10, 96px); padding-bottom: var(--sp-10, 96px); }
+    .sup-eyebrow { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--muted); margin-bottom: var(--sp-6); }
+    .sup-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(34px, 5.2vw, 64px); line-height: 1.06; letter-spacing: var(--tracking-tight); max-width: 900px; text-wrap: balance; }
+    .sup-title em { color: var(--purple-bright); font-style: italic; }
+    .sup-lede { margin-top: var(--sp-6); max-width: var(--wrap-narrow); color: var(--muted); font-size: var(--text-md); line-height: var(--leading-body); }
+    .sup-grid { margin-top: var(--sp-9, 72px); display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--sp-5); align-items: stretch; }
+    .sup-card { position: relative; border: 1px solid var(--line-strong); border-radius: 22px; padding: var(--sp-7) var(--sp-7); display: flex; flex-direction: column; gap: var(--sp-3); overflow: hidden; }
+    .sup-card h2 { font-family: var(--font-display); font-weight: 400; font-size: var(--text-lg); letter-spacing: -0.01em; }
+    .sup-card p { color: var(--muted); line-height: 1.6; }
+    .sup-main::before { content: ''; position: absolute; inset: auto -20% -60% -20%; height: 90%; background: radial-gradient(closest-side, color-mix(in oklab, var(--purple-bright) 26%, transparent), transparent); pointer-events: none; }
+    .cup { color: var(--purple-bright); margin-bottom: var(--sp-2); }
+    .steam { stroke-dasharray: 14; stroke-dashoffset: 14; animation: steam 3.2s ease-in-out infinite; }
+    .s2 { animation-delay: 0.5s; } .s3 { animation-delay: 1s; }
+    @keyframes steam { 0% { stroke-dashoffset: 14; opacity: 0; } 35% { opacity: 1; } 100% { stroke-dashoffset: -14; opacity: 0; } }
+    :global(html[data-still]) .steam { animation: none; stroke-dashoffset: 0; }
+    .sup-btn { align-self: flex-start; margin-top: var(--sp-4); display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 22px; border-radius: 999px; background: var(--text); color: var(--bg); font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.02em; text-decoration: none; transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur) var(--ease-out); position: relative; }
+    .sup-btn:hover, .sup-btn:focus-visible { transform: translateY(-2px); box-shadow: 0 10px 30px -10px color-mix(in oklab, var(--purple-bright) 70%, transparent); }
+    .sup-btn:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 3px; }
+    .bmc-qr { position: relative; margin-top: var(--sp-4); width: 132px; height: 132px; border-radius: 12px; background: #fff; }
+    .sup-upi img { width: 100%; max-width: 240px; height: auto; margin-top: var(--sp-3); border-radius: 14px; background: #fff; }
+    .sup-small { font-size: 13px; }
+    .sup-small a, .sup-note a { color: var(--purple-bright); text-underline-offset: 3px; }
+    .sup-h2 { margin-top: var(--sp-9, 72px); font-family: var(--font-display); font-weight: 400; font-size: var(--text-lg); letter-spacing: -0.01em; }
+    .sup-list { list-style: none; padding: 0; margin: var(--sp-5) 0 0; border-top: 1px solid var(--line); }
+    .sup-list li { border-bottom: 1px solid var(--line); }
+    .sup-list a { display: grid; grid-template-columns: minmax(120px, 0.6fr) minmax(0, 2fr); gap: var(--sp-4); padding: var(--sp-4) var(--sp-2); text-decoration: none; color: var(--text); transition: background var(--dur-fast) var(--ease-out); }
+    .sup-list a:hover, .sup-list a:focus-visible { background: color-mix(in oklab, var(--purple) 8%, transparent); }
+    .sup-list b { font-family: var(--font-display); font-weight: 400; font-size: var(--text-md); }
+    .sup-list span { color: var(--muted); }
+    .sup-note { margin-top: var(--sp-6); max-width: var(--wrap-narrow); color: var(--muted); line-height: 1.6; }
+    @media (max-width: 800px) {
+      .sup-grid { grid-template-columns: minmax(0, 1fr); }
+      .sup-card { padding: var(--sp-6) var(--sp-5); }
+      .sup-list a { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+    }
+    @media (prefers-reduced-motion: reduce) { .steam { animation: none; stroke-dashoffset: 0; } .sup-btn { transition: none; } }
+  </style>
+</BaseLayout>

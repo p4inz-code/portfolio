@@ -70,10 +70,10 @@ Software engineer and product builder focused on desktop applications, developer
 
 ## TECHNICAL SKILLS
 
-**Languages** — C#, Rust, TypeScript, C / C++, JavaScript, Lua / Luau
-**Frameworks** — .NET 8, WPF, Node.js, Astro, Qt / QML, Debian Linux
+**Languages** — C#, Rust, TypeScript, C and C++, JavaScript, Lua and Luau
+**Frameworks** — .NET 8, WPF, Node.js, Astro, Qt and QML, Debian Linux
 **Security** — AES-256-GCM, Argon2id, LUKS2, TPM, Secure Boot, Windows Hello
-**Tools** — Git / GitHub Actions, VS Code, FFmpeg, Cloudflare Pages
+**Tools** — Git and GitHub Actions, VS Code, FFmpeg, Cloudflare Pages
 
 ---
 
