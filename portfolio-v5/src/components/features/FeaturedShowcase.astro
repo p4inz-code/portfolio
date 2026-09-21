@@ -46,15 +46,30 @@ const NameTag = headingLevel;
         </span>
       </a>
 
-      <!-- Visual side — placeholder frame with project mark until real
-           hero screenshots ship. Reads intentional, not blob-y. -->
-      <aside class="show-visual" aria-hidden="true">
-        <div class="show-visual-frame">
-          <span class="show-visual-slug">{p.slug}</span>
-          <span class="show-visual-name">{p.name}</span>
-          <span class="show-visual-role">{p.license || 'proprietary'}</span>
-        </div>
-      </aside>
+      <!-- Visual side — real media from the project's own README/release
+           assets when it has any; otherwise the labelled placeholder frame. -->
+      {p.media ? (
+        <figure class="show-visual has-media">
+          <img
+            class="show-img"
+            src={p.media.src}
+            alt={p.media.alt}
+            width="1600"
+            height="900"
+            loading="lazy"
+            decoding="async"
+          />
+          {p.media.kind === 'banner' && <figcaption class="show-media-tag">Banner art</figcaption>}
+        </figure>
+      ) : (
+        <aside class="show-visual" aria-hidden="true">
+          <div class="show-visual-frame">
+            <span class="show-visual-slug">{p.slug}</span>
+            <span class="show-visual-name">{p.name}</span>
+            <span class="show-visual-role">{p.license || 'proprietary'}</span>
+          </div>
+        </aside>
+      )}
     </article>
   ))}
 </section>
@@ -161,6 +176,32 @@ const NameTag = headingLevel;
       radial-gradient(circle at 80% 70%, color-mix(in oklab, var(--purple) 15%, transparent), transparent 55%);
     pointer-events: none;
   }
+  .show-visual.has-media {
+    margin: 0;
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+    align-self: center;
+    background: var(--surface-2);
+  }
+  .show-visual.has-media::before { display: none; }
+  .show-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .show-media-tag {
+    position: absolute; left: 12px; bottom: 12px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: #E8E1D0;
+    background: rgba(10, 5, 23, 0.72);
+    padding: 3px 8px;
+    border-radius: 2px;
+    backdrop-filter: blur(4px);
+  }
   .show-visual-frame {
     display: flex; flex-direction: column; align-items: center; gap: 12px;
     position: relative; z-index: 1;
@@ -205,7 +246,9 @@ const NameTag = headingLevel;
      like cards on a slow-turning wheel. Uses animation-timeline: view()
      — zero JS, GPU-only transforms. Falls back to static end-state on
      unsupported browsers and prefers-reduced-motion. */
-  .showcase { perspective: 1600px; }
+  /* Each card carries its own perspective() in the keyframes, so the
+     vanishing point stays centred on the card. A second perspective on
+     .showcase shifted it to the stack's centre and skewed the edges. */
   .show-card { transform-style: preserve-3d; }
 
   @supports (animation-timeline: view()) {
@@ -222,6 +265,20 @@ const NameTag = headingLevel;
       animation-name: show-wheel-alt;
     }
   }
+  /* Slow parallax on the media while the card crosses the viewport: the
+     image drifts a few percent inside its frame. Cheap (transform only). */
+  @supports (animation-timeline: view()) {
+    .show-img {
+      transform: scale(1.1);
+      animation: show-drift linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+  }
+  @keyframes show-drift {
+    from { transform: scale(1.1) translateY(4%); }
+    to   { transform: scale(1.1) translateY(-4%); }
+  }
   @keyframes show-wheel {
     0%   { opacity: 0.15; transform: perspective(1600px) rotateY(-22deg) translateY(80px) scale(0.94); }
     28%  { opacity: 1;    transform: perspective(1600px) rotateY(0deg)   translateY(0)    scale(1); }
@@ -236,6 +293,7 @@ const NameTag = headingLevel;
   }
   @media (prefers-reduced-motion: reduce) {
     .show-card { animation: none; opacity: 1; transform: none; }
+    .show-img { animation: none; transform: none; }
   }
   /* v5.16.0 mobile fix — the merry-go-round 3D rotation is disorienting
      on phones (small viewport + tall stack = every card wheeling as you

@@ -29,6 +29,9 @@ const CardTag = project.href ? 'a' : 'div';
       <span class="card-media-sub">Concept preview</span>
     </div>
   )}
+  {project.media && variant !== 'featured' && (
+    <img class="card-thumb" src={project.media.src} alt={project.media.alt} width="1600" height="900" loading="lazy" decoding="async" />
+  )}
   <div class="card-body">
     <StatusPill status={project.status} size="sm" />
     <h3 class="card-title">{project.name}</h3>
@@ -50,6 +53,16 @@ const CardTag = project.href ? 'a' : 'div';
 </CardTag>
 
 <style>
+  .card-thumb {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--sp-4);
+    background: var(--surface-2);
+  }
   .project-card {
     display: block;
     padding: var(--sp-6);

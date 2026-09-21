@@ -20,6 +20,20 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.23.0',
+    kind: 'released',
+    summary: 'Repo sync and media pass: Kanvaz was three major versions behind (site said v5.3.0, "final release"; the repo ships v8.8.5 almost weekly), 3D Ref Skills was described as something it isn\'t, and the README banners now show on the site.',
+    body: [
+      'Kanvaz: the site called v5.3.0 the end of development. The repo has since published 39 releases across v6, v7 and v8, and the README says outright that updates land most weeks. Status flipped from Final Release to Active, version bumped to v8.8.5 (the latest published release, with Windows, macOS arm64 and Linux builds), and the case study rewritten around what actually changed: live 3D model preview, shared cards, Layers panel, Smart Search, profiles, 14 templates. The main branch is already at v8.9.8 and not yet released, so the site follows the release, not the branch.',
+      '3D Ref Skills was listed as an open-source knowledge graph. The README describes nine AI skills for reference gathering that work with Claude, Cursor, Codex and Gemini. Tagline, description, tags and stack corrected; version set to v3.0.0 to match the README badge and CHANGELOG.',
+      'MINK stays at v1.0.1 (that matches the npm package and the GitHub release). Its roadmap note was out of date, since main now has async fn/await, non-blocking I/O and a package manifest and resolver that have not shipped yet.',
+      'Checked against real releases and left alone: Nexus v10.12.5, Ascent v0.14.1, Obscura v1.0.0, Glint v1.1.0, Veris v1.0.0. Glint\'s own README still says v1.0.0-alpha while its release is v1.1.0; the site follows the release.',
+      'Media: the README banners for Mission OS, Nexus, Veris and Obscura are now on the site as WebP (about 10 to 90 KB each instead of 1.5 MB PNGs), shown in the featured cards and case-study heroes and labelled Banner art, since they are branding renders and not product captures. Kanvaz\'s README banner turned out to be an empty-board screenshot, so I used its dark and light showcase screenshots instead. Ascent\'s featured card uses a real gameplay frame.',
+      'Resume PDF, Markdown and page updated for Kanvaz v8.8.5. llms.txt, the work page intro and the Kanvaz page metadata no longer say "development complete".',
+      'Scroll sweep: smooth scrolling is now off for people who ask for reduced motion (it was on for everyone), in-page anchors clear the sticky nav, the section reveal no longer leaves a permanent transform behind, the featured cards stopped stacking two perspectives, and each card\'s image drifts slightly as it crosses the viewport.',
+    ],
+  },
+  {
     version: 'v5.22.0',
     kind: 'released',
     summary: 'Multi-engine push: found and fixed a real bug where Project Ascent was missing from sitemap.xml entirely (the hand-maintained route list was never updated when the case study shipped), and added IndexNow so Bing, Yandex, Seznam.cz, and Naver get pushed updates instantly instead of waiting to crawl.',

@@ -23,6 +23,12 @@ const { project } = Astro.props;
         <Button href={link.href} variant="ghost" external={link.external}>{link.label} →</Button>
       ))}
     </div>
+    {project.media && project.media.kind === 'banner' && (
+      <figure class="case-banner">
+        <img src={project.media.src} alt={project.media.alt} width="1600" height="900" decoding="async" fetchpriority="low" />
+        <figcaption>Banner art from the project README. Not a product screenshot.</figcaption>
+      </figure>
+    )}
   </div>
 </header>
 
@@ -64,6 +70,23 @@ const { project } = Astro.props;
     line-height: var(--leading-body);
     color: var(--muted);
     max-width: 720px;
+  }
+  .case-banner { margin: var(--sp-8) 0 0; }
+  .case-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    background: var(--surface-2);
+  }
+  .case-banner figcaption {
+    margin-top: var(--sp-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--muted);
   }
   .case-actions {
     margin-top: var(--sp-7);

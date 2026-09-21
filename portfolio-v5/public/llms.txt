@@ -46,11 +46,10 @@ crawlable and canonical.
   system with an MCP Bridge (30 tools, off by default, undo-reversible)
   letting an AI agent read and edit the active board, a command palette,
   a safer `.kanvaz` zip container with per-asset SHA-256 integrity hashes,
-  a template gallery, text cards, and broader .pur (PureRef) import,
-  and GitHub Actions CI. v5.3.0 closed out the development arc with a
-  dedicated bug-bounty pass; real bugs still get fixed, new features
-  are not on a continued release cadence. Status: **Final Release ·
-  v5.3.0**.
+  live 3D model preview (glTF, OBJ, FBX, STL, PLY, USD), shared cards
+  across boards, a Layers panel, 14 board templates, and broader .pur
+  (PureRef) import. Windows, macOS and Linux builds. Shipping most weeks
+  with no fixed roadmap. Status: **Active · v8.8.5**.
 - [Pursue OS](https://atharvapatil.tech/pursue-os/): Investigation-focused
   Linux OS for OSINT / DFIR / secure research / intelligence gathering /
   evidence-driven workflows. Two flagship interfaces: Investigation
@@ -94,8 +93,9 @@ crawlable and canonical.
   **Avalonia**. Free forever, zero telemetry. Status: **Released ·
   v1.1.0**.
 - [3D Ref Skills](https://github.com/p4inz-code/3d-ref-skills):
-  Open-source knowledge graph for 3D / VFX learners. MIT.
-  Status: Live / Maintained.
+  Nine AI skills for the reference stage of 3D / VFX work (silhouette,
+  ortho, materials, scale briefs). Works with Claude, Cursor, Codex and
+  Gemini. MIT. Status: **v3.0.0**, maintained.
 
 ## Site sections (real routes)
 

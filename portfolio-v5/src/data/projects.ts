@@ -43,6 +43,9 @@ export interface Project {
   currentVersion?: string;
   nextMilestone?: string;
   notes?: string;
+  /** Real media taken from the project's own README or release assets.
+   *  'banner' = brand art, not a product capture; 'screenshot' = real UI. */
+  media?: { src: string; alt: string; kind: 'banner' | 'screenshot' };
 }
 
 export const PROJECTS: Project[] = [
@@ -57,6 +60,7 @@ export const PROJECTS: Project[] = [
     metaTags: ['Debian Stable', 'KDE Plasma', 'Rust', 'GPLv3'],
     featured: true,
     order: 0,
+    media: { src: '/assets/banners/mission-os.webp', alt: 'Mission OS banner art: a dark desk with a monitor showing a lavender mountain-lake wallpaper and a System Overview panel, with the title Mission OS, Privacy-first Desktop Operating System.', kind: 'banner' },
     href: '/mission-os',
     isExternal: false,
     links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/mission-os', external: true }],
@@ -79,6 +83,7 @@ export const PROJECTS: Project[] = [
     metaTags: ['Windows Desktop', 'AES-256-GCM', 'Fully Offline'],
     featured: true,
     order: 1,
+    media: { src: '/assets/banners/nexus-desktop.webp', alt: 'Nexus banner art: a violet isometric cube on a deep purple background with the wordmark Nexus and the line Secure Environment.', kind: 'banner' },
     href: '/nexus',
     isExternal: false,
     links: [
@@ -98,12 +103,13 @@ export const PROJECTS: Project[] = [
     name: 'Kanvaz',
     tagline: 'Your canvas. Your references.',
     description:
-      'Visual reference workspace for VFX and 3D artists. Plugin system with a local-only MCP Bridge: an AI agent can read and edit the active board through 30 tools, off by default and undo-reversible. Command palette, a template gallery, text cards, safer .kanvaz and .pur import, GitHub Actions CI. Free forever, MIT-licensed.',
-    status: { kind: 'final', label: 'Final Release · v5.3.0' },
+      'Visual reference workspace for VFX and 3D artists. Live 3D model preview (glTF, OBJ, FBX, STL, USD, and more), typed connections with a Map View, shared cards across boards, a Layers panel, and 14 board templates. Plugin system with a local-only MCP Bridge: an AI agent can read and edit the active board, off by default and undo-reversible. Windows, macOS and Linux builds. Free forever, MIT-licensed.',
+    status: { kind: 'active', label: 'Active · v8.8.5' },
     tags: ['Electron', 'MIT'],
     metaTags: ['Electron', 'MIT', 'Open Source'],
     featured: true,
     order: 2,
+    media: { src: '/assets/kanvaz/kanvaz-showcase-dark.webp', alt: 'Kanvaz reference board in the dark theme: image, note, color and URL cards joined by a Related To connection.', kind: 'screenshot' },
     href: '/kanvaz',
     isExternal: false,
     links: [
@@ -114,9 +120,9 @@ export const PROJECTS: Project[] = [
     stack: ['Electron', 'vanilla JS'],
     role: 'Sole engineer + designer',
     started: 'June 2026',
-    currentVersion: 'v5.3.0',
-    nextMilestone: 'Development arc closed with v5.3.0\'s own bug-bounty pass. Real bugs still get fixed; feature development is not on a continued release cadence.',
-    notes: 'Kanvaz About screenshot in the case study is from a v4.2.1 build; v5.3.0 is what actually ships. v5.0.0–v5.2.0 added a template gallery, text cards, and broader .pur import support before the project closed out its development arc.',
+    currentVersion: 'v8.8.5',
+    nextMilestone: 'Shipping most weeks, driven by user feedback. No fixed roadmap.',
+    notes: 'v8.8.5 is the latest published release (Windows, macOS arm64 and Linux builds). The main branch is already at v8.9.8 with Presentation Mode, Layers panel highlight/grouping and template connections, awaiting release. The About screenshot in the case study is from an older v4.2.1 build.',
   },
   {
     slug: 'pursue-os',
@@ -151,6 +157,7 @@ export const PROJECTS: Project[] = [
     metaTags: ['TypeScript', 'Node.js', 'SQLite', 'Modular Monorepo'],
     featured: false,
     order: 4,
+    media: { src: '/assets/banners/veris.webp', alt: 'Veris banner art: a dark desk with a monitor showing an investigation session for sample.exe, with the title Veris, Explainable Investigation Platform.', kind: 'banner' },
     href: 'https://github.com/p4inz-code/veris',
     isExternal: true,
     links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/veris', external: true }],
@@ -172,6 +179,7 @@ export const PROJECTS: Project[] = [
     metaTags: ['Godot 4', 'GDScript', 'Cross-Platform'],
     featured: true,
     order: 4,
+    media: { src: '/assets/ascent/ascent-01-level1-card.webp', alt: 'Project Ascent gameplay: the first level of the precision platformer.', kind: 'screenshot' },
     href: '/ascent',
     isExternal: false,
     links: [
@@ -197,6 +205,7 @@ export const PROJECTS: Project[] = [
     metaTags: ['Luau', 'MIT', 'Roblox'],
     featured: false,
     order: 6,
+    media: { src: '/assets/banners/obscura.webp', alt: 'Obscura banner art: a dark desk with a monitor showing an AST visualizer and transformation pipeline, with the title Obscura, Luau Protection Toolkit.', kind: 'banner' },
     href: 'https://github.com/p4inz-code/obscura',
     isExternal: true,
     links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/obscura', external: true }],
@@ -248,28 +257,28 @@ export const PROJECTS: Project[] = [
     role: 'Sole engineer',
     started: '2026',
     currentVersion: 'v1.0.1',
-    nextMilestone: 'mink test and mink fmt still not implemented. Roadmap tracked in the repo: Linux/aarch64 targets, concurrency primitives.',
+    nextMilestone: 'Linux is the next platform target. Unreleased work on main since v1.0.1 adds async fn/await, non-blocking I/O and a package manifest/resolver; roadmap tracked in the repo.',
     notes: 'v1.0.0 shipped 2026-08-24 with 1928 compiler tests passing. v1.0.1 added static CRT linking, a mink run command, and completed environment, process, and filesystem standard-library coverage (Win32 API, full test suites per library).',
   },
   {
     slug: '3d-ref-skills',
     name: '3D Ref Skills',
-    tagline: 'A knowledge graph for 3D and VFX learners.',
+    tagline: 'Reference engineering for 3D artists.',
     description:
-      'An open-source knowledge graph for creative and 3D skill development, for learners and the people who teach them.',
+      'Nine AI skills for the reference stage of 3D work: silhouette, ortho, materials, scale and detail briefs before you open your DCC. Works with Claude, Cursor, Codex and Gemini, and with any DCC or engine. MIT-licensed.',
     status: { kind: 'released', label: 'Live · Open Source' },
-    tags: ['Open Source', 'Knowledge Graph'],
-    metaTags: ['Open Source', 'Knowledge Graph', '3D / VFX'],
+    tags: ['Open Source', 'AI Skills'],
+    metaTags: ['Open Source', 'AI Skills', '3D / VFX'],
     featured: false,
     order: 8,
     href: 'https://github.com/p4inz-code/3d-ref-skills',
     isExternal: true,
     links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/3d-ref-skills', external: true }],
     license: 'MIT',
-    stack: ['Open source knowledge graph'],
+    stack: ['Markdown skill files', 'Agent-agnostic'],
     role: 'Creator',
     started: '2026',
-    currentVersion: 'Stable, maintained',
+    currentVersion: 'v3.0.0',
     nextMilestone: 'Ongoing content expansion',
   },
 ];

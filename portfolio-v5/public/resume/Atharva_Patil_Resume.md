@@ -63,7 +63,7 @@ Software engineer and product builder focused on desktop applications, developer
 
 ### Additional Projects
 
-- **Kanvaz** — Electron visual reference workspace for VFX artists · MIT · v5.3.0, final release
+- **Kanvaz** — Electron visual reference workspace for VFX artists · MIT · v8.8.5, Windows/macOS/Linux
 - **Obscura** — Luau AST toolkit for Roblox developers · MIT · v1.0.0, 340/340 tests passing
 
 ---

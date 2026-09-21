@@ -28,13 +28,29 @@ const breadcrumbJsonLd = {
   ],
 };
 ---
-<BaseLayout title={`${project.name} — ${project.tagline}`} description="Free, open-source visual reference workspace for VFX and 3D artists. Plugin system with an MCP Bridge for AI-agent control, safer container format. MIT licensed, v5.3.0, final release." keywords="Kanvaz, Kanvaz p4inz, Kanvaz painz, p4inz app dev, reference board app, VFX reference tool" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
+<BaseLayout title={`${project.name} — ${project.tagline}`} description="Free, open-source visual reference workspace for VFX and 3D artists. Live 3D model preview, typed connections, shared cards, plugin system with an MCP Bridge. Windows, macOS, Linux. MIT licensed, v8.8.5." keywords="Kanvaz, Kanvaz p4inz, Kanvaz painz, p4inz app dev, reference board app, VFX reference tool" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
   <!-- Screenshots first — visual hook before the wall of text. The Board view
        is the product's whole thesis; put it front and center. -->
   <Section eyebrow="What Kanvaz looks like">
     <div class="shot-grid">
+      <!-- README showcase pair (v7.26.0): the same board in both themes. -->
+      <Screenshot
+        src="/assets/kanvaz/kanvaz-showcase-dark.webp"
+        alt="Kanvaz reference board in the dark theme: image, note, color and URL cards with a Related To connection."
+        caption="Dark theme · v7.26.0"
+        aspect="16 / 10"
+        span="half"
+      />
+      <Screenshot
+        src="/assets/kanvaz/kanvaz-showcase-light.webp"
+        alt="The same Kanvaz reference board in the light theme."
+        caption="Light theme · press L to switch"
+        aspect="16 / 10"
+        span="half"
+      />
+
       <!-- HERO SHOT: full-width board view. Wide-screen source, 16:10 fits it -->
       <Screenshot
         src="/assets/kanvaz/kanvaz-02-board.png"
@@ -70,8 +86,8 @@ const breadcrumbJsonLd = {
       />
       <Screenshot
         src="/assets/kanvaz/kanvaz-05-about.png"
-        alt="Kanvaz About dialog — v4.2.1 build shown here; v5.3.0 is the current shipping version. Reads 'Your canvas. Your references. Made by Atharva Patil, Northbyte Studios. Built for VFX artists, 3D artists, and the people who teach them.'"
-        caption="About · v4.2.1 build shown (v5.3.0 is current)"
+        alt="Kanvaz About dialog — older v4.2.1 build shown here; the app has moved on to v8.x. Reads 'Your canvas. Your references. Made by Atharva Patil, Northbyte Studios. Built for VFX artists, 3D artists, and the people who teach them.'"
+        caption="About · older v4.2.1 build"
         aspect="4 / 3"
         span="third"
       />
@@ -92,8 +108,24 @@ const breadcrumbJsonLd = {
     </div>
   </Section>
 
-  <Section eyebrow="What's inside" heading="Plugin system, safer container, real CI.">
+  <Section eyebrow="What's inside" heading="3D preview, connections, plugins, and a lot of releases.">
     <div class="feature-grid">
+      <article class="feature-card">
+        <h3 class="feature-name">Live 3D model cards (v7.4–v8.4)</h3>
+        <p class="feature-desc">Drop a <code>.glb</code>, <code>.obj</code>, <code>.fbx</code>, <code>.stl</code>, <code>.ply</code>, <code>.vox</code> or <code>.usd</code>/<code>.usdz</code> and orbit it on the board with Normal, Wireframe and Matcap shading, animation playback and a remembered camera. <code>.blend</code> files preview too if Blender is installed.</p>
+      </article>
+      <article class="feature-card">
+        <h3 class="feature-name">Shared cards + Layers panel (v6.4, v7.20+)</h3>
+        <p class="feature-desc">The same card can sit on several boards with no duplication, so an edit shows up everywhere it is used. A Layers panel lists every card in z-order with hide, lock, highlight and grouping.</p>
+      </article>
+      <article class="feature-card">
+        <h3 class="feature-name">Smart Search + Smart Folders (v6.2–6.3)</h3>
+        <p class="feature-desc">On-device fuzzy search that finds &quot;car&quot; when you type &quot;cars&quot;, plus saved searches that re-run themselves as new references land. Pure JS, off by default, no native dependencies.</p>
+      </article>
+      <article class="feature-card">
+        <h3 class="feature-name">14 templates + profiles (v7.8–v8.9)</h3>
+        <p class="feature-desc">Board templates for VFX, game dev, filmmaking, architecture and more, most of them shipping with real typed connections already wired. Offline multi-profile support, exportable as a portable file.</p>
+      </article>
       <article class="feature-card">
         <h3 class="feature-name">Plugin system (v4.2)</h3>
         <p class="feature-desc"><code>window.KanvazPluginAPI</code>: plugins register new card types, ship full alternate themes, add their own Settings panels. Every install goes through a main-process consent dialog; plugins can't self-approve.</p>
@@ -121,11 +153,11 @@ const breadcrumbJsonLd = {
     </div>
   </Section>
 
-  <Section heading="Kanvaz is at v5.3.0. Development is done.">
+  <Section heading="Kanvaz is at v8.8.5, and still shipping.">
     <div class="body-copy">
-      <p>v5.3.0 closed out the development arc that began after v4.6.1: four feature releases (template gallery, text cards, broader .pur import, Map View and annotation fixes), then a dedicated bug-bounty pass across the whole v4.7.0–v5.2.0 diff before shipping the final version.</p>
-      <p>That's the last actively-developed version for the foreseeable future. Real bugs still get fixed if someone reports one; new features aren't on a continued release cadence.</p>
-      <p>No subscription, no feature paywall, no telemetry, no internet connection required. Your files never leave your machine, and it stays free forever.</p>
+      <p>Kanvaz went through a v5.3.0 bug-bounty pass that I once treated as the end of development. It wasn't. Since then there have been 39 published releases across the v6, v7 and v8 lines: Smart Search, shared cards, real 3D model preview, a Layers panel, profiles, and a lot of templates.</p>
+      <p>The latest published release is v8.8.5, with Windows, macOS (arm64) and Linux builds. There's no fixed roadmap; updates land most weeks depending on what people report. The main branch is already ahead of the last release.</p>
+      <p>No subscription, no feature paywall, no telemetry. The only network calls are buttons you click yourself, like Check for Updates. Your files stay on your machine, and it stays free.</p>
     </div>
   </Section>
 

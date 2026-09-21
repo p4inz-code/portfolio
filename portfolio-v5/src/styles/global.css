@@ -17,9 +17,14 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Room for the sticky nav so in-page anchors don't land underneath it. */
+  scroll-padding-top: 88px;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
 }
 
 body {

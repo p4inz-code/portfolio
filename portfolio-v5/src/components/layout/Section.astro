@@ -50,7 +50,7 @@ const HeadingTag = headingLevel;
      viewport on load, the timeline resolves at full opacity immediately. */
   @supports (animation-timeline: view()) {
     .section {
-      animation: section-reveal linear both;
+      animation: section-reveal linear backwards;
       animation-timeline: view();
       animation-range: entry 0% entry 35%;
     }
