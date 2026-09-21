@@ -25,6 +25,24 @@ const nativeView = typeof CSS !== 'undefined' && CSS.supports('animation-timelin
 const nativeScroll = typeof CSS !== 'undefined' && CSS.supports('animation-timeline: scroll()');
 
 let els: HTMLElement[] = [];
+
+// ---- ambient motion: pause / resume (WCAG 2.2.2) ----
+const STILL_KEY = 'nb-still';
+function isStill() { return root.hasAttribute('data-still'); }
+function setStill(on: boolean, persist = true) {
+  root.toggleAttribute('data-still', on);
+  if (persist) { try { on ? localStorage.setItem(STILL_KEY, '1') : localStorage.removeItem(STILL_KEY); } catch { /* storage blocked */ } }
+  document.querySelectorAll<HTMLElement>('.motion-toggle').forEach((b) => {
+    b.setAttribute('aria-pressed', String(on));
+    const label = on ? 'Resume ambient motion' : 'Pause ambient motion';
+    b.setAttribute('aria-label', label);
+    b.setAttribute('title', label);
+    const t = b.querySelector('.mt-label');
+    if (t) t.textContent = on ? 'Motion: off' : 'Motion: on';
+  });
+  window.dispatchEvent(new CustomEvent('nb-still', { detail: { on } }));
+  queue();
+}
 let queued = false;
 
 const clamp = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
@@ -43,7 +61,7 @@ function update() {
   queued = false;
   const vh = window.innerHeight || root.clientHeight;
   const max = Math.max(1, root.scrollHeight - vh);
-  root.style.setProperty('--sp', reduce.matches ? '0' : clamp(window.scrollY / max).toFixed(4));
+  root.style.setProperty('--sp', reduce.matches || isStill() ? '0' : clamp(window.scrollY / max).toFixed(4));
   if (!root.hasAttribute('data-jsp')) return;
   for (const el of els) {
     const r = el.getBoundingClientRect();
@@ -64,6 +82,12 @@ function queue() {
 }
 
 function init() {
+  try { if (localStorage.getItem(STILL_KEY) === '1') setStill(true, false); } catch { /* storage blocked */ }
+  document.addEventListener('click', (e) => {
+    const b = (e.target as Element | null)?.closest('.motion-toggle');
+    if (b) setStill(!isStill());
+  });
+  document.querySelectorAll<HTMLElement>('.motion-toggle').forEach((b) => b.setAttribute('aria-pressed', String(isStill())));
   setMode();
   collect();
   update();

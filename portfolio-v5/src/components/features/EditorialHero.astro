@@ -195,7 +195,7 @@ const CREW = 7;
       }
       /* Words light up, front to back, while the hero is pinned (32%..68%). */
       .w {
-        opacity: 0.16;
+        color: var(--muted);
         animation: w-on var(--ease-out) both;
         animation-timeline: --hero;
         animation-range: cover calc(33% + var(--w) * 24%) cover calc(37.5% + var(--w) * 24%);
@@ -210,8 +210,11 @@ const CREW = 7;
         animation-timeline: --hero;
         animation-range: cover 40% cover 62%;
       }
+      .w.em {
+        color: color-mix(in oklab, var(--purple-bright) 55%, var(--muted));
+        animation-name: w-on-em;
+      }
       .scrub-sub {
-        opacity: 0.3;
         animation: sub-on var(--ease-out) both;
         animation-timeline: --hero;
         animation-range: cover 40% cover 58%;
@@ -224,8 +227,9 @@ const CREW = 7;
       }
     }
   }
-  @keyframes w-on    { from { opacity: 0.16; } to { opacity: 1; } }
-  @keyframes sub-on  { from { opacity: 0.3; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes w-on    { from { color: var(--muted); } to { color: var(--text); } }
+  @keyframes w-on-em { from { color: color-mix(in oklab, var(--purple-bright) 55%, var(--muted)); } to { color: var(--purple-bright); } }
+  @keyframes sub-on  { from { transform: translateY(12px); } to { transform: none; } }
   @keyframes crew-out { from { transform: scale(1); opacity: 1; } to { transform: scale(0.2) translateX(40px); opacity: 0; width: 0; margin-right: -10px; border-width: 0; } }
   @keyframes crew-me {
     0%   { transform: scale(1); box-shadow: 0 0 0 0 color-mix(in oklab, var(--purple-bright) 50%, transparent); }
@@ -233,6 +237,12 @@ const CREW = 7;
     100% { transform: scale(1.2); box-shadow: 0 0 0 0 transparent; }
   }
   @keyframes cue-out { to { opacity: 0; } }
+  /* People who ask for more contrast get the finished sentence at once. */
+  @media (prefers-contrast: more) {
+    .w { color: var(--text) !important; animation: none !important; }
+    .w.em { color: var(--purple-bright) !important; }
+    .scrub-sub { animation: none !important; transform: none !important; }
+  }
 
   /* ---- JS progress mode: phones, Firefox, iOS without scroll timelines ----
      --p is 0 at rest and reaches 1 after 80% of the hero has scrolled away, so
@@ -240,7 +250,10 @@ const CREW = 7;
   :global(html[data-jsp]) .hero-scrub { --p: 0; }
   :global(html[data-jsp]) .w {
     --wt: clamp(0, calc((var(--p) - var(--w) * 0.62 + 0.16) / 0.1), 1);
-    opacity: calc(0.16 + var(--wt) * 0.84);
+    color: color-mix(in oklab, var(--text) calc(var(--wt) * 100%), var(--muted));
+  }
+  :global(html[data-jsp]) .w.em {
+    color: color-mix(in oklab, var(--purple-bright) calc(55% + var(--wt) * 45%), var(--muted));
   }
   :global(html[data-jsp]) .crew i {
     --ct: clamp(0, calc((var(--p) - 0.22 - var(--c) * 0.035) / 0.12), 1);
@@ -252,7 +265,7 @@ const CREW = 7;
     transform: scale(calc(1 + clamp(0, calc((var(--p) - 0.45) / 0.2), 1) * 0.2));
   }
   :global(html[data-jsp]) .scrub-sub {
-    opacity: calc(0.3 + clamp(0, calc((var(--p) - 0.3) / 0.25), 1) * 0.7);
+    transform: translateY(calc((1 - clamp(0, calc((var(--p) - 0.3) / 0.25), 1)) * 12px));
   }
   :global(html[data-jsp]) .scroll-cue {
     display: flex;

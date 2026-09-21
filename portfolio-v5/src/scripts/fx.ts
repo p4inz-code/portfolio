@@ -90,3 +90,23 @@ function init() {
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
 else init();
+
+// ---- gameplay loops: play only while on screen, never in still mode or reduced motion ----
+function videos() {
+  const vids = Array.from(document.querySelectorAll<HTMLVideoElement>('video[data-showcase-video]'));
+  if (!vids.length) return;
+  const canPlay = () => !reduce.matches && !document.documentElement.hasAttribute('data-still');
+  const visible = new WeakMap<Element, boolean>();
+  const sync = (v: HTMLVideoElement) => {
+    if (visible.get(v) && canPlay()) v.play().catch(() => {}); else v.pause();
+  };
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { visible.set(e.target, e.isIntersecting); sync(e.target as HTMLVideoElement); });
+    }, { threshold: 0.35 });
+    vids.forEach((v) => io.observe(v));
+  }
+  window.addEventListener('nb-still', () => vids.forEach(sync));
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', videos);
+else videos();

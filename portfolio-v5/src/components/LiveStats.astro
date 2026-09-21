@@ -428,7 +428,8 @@
       justify-content: center;
       border-radius: 50%;
     }
-    .live-stats-toggle #liveStatsSummary { display: none; }
+    /* visually hidden, not display:none, so the button keeps its accessible name */
+    .live-stats-toggle #liveStatsSummary { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
     .live-stats-detail { width: calc(100vw - 40px); max-width: 300px; }
   }
   @media print {

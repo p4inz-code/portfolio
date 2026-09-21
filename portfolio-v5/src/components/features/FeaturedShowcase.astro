@@ -142,25 +142,6 @@ const defaultLabel = (kind: string) =>
   })}
 </section>
 
-<script>
-  // Play the Ascent loop only while it is on screen; honour reduced motion.
-  const vids = document.querySelectorAll<HTMLVideoElement>('video[data-showcase-video]');
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (vids.length && !reduce && 'IntersectionObserver' in window) {
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          const v = e.target as HTMLVideoElement;
-          if (e.isIntersecting) v.play().catch(() => {});
-          else v.pause();
-        });
-      },
-      { threshold: 0.35 },
-    );
-    vids.forEach((v) => io.observe(v));
-  }
-</script>
-
 <style>
   /* ---------------------------------------------------------------
      Base (static) layout: stacked, everything visible.

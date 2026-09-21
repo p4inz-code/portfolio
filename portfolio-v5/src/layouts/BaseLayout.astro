@@ -5,6 +5,7 @@ import ThemeToggle from '../components/ThemeToggle.astro';
 import CommandPalette from '../components/features/CommandPalette.astro';
 import APMark from '../components/APMark.astro';
 import SideRail from '../components/SideRail.astro';
+import MotionToggle from '../components/MotionToggle.astro';
 import SceneBackdrop from '../components/SceneBackdrop.astro';
 import SceneFx from '../components/SceneFx.astro';
 import LiveStats from '../components/LiveStats.astro';
@@ -323,6 +324,7 @@ const jsonLd = {
               <line x1="21" y1="21" x2="16.65" y2="16.65"/>
             </svg>
           </button>
+          <MotionToggle />
           <ThemeToggle />
         </nav>
 
@@ -373,7 +375,7 @@ const jsonLd = {
               <span>Search &amp; jump</span>
               <span class="nmu-kbd">⌘K</span>
             </button>
-            <div class="nmu-theme"><ThemeToggle /></div>
+            <div class="nmu-theme"><MotionToggle withLabel /><ThemeToggle /></div>
           </div>
         </nav>
       </div>
