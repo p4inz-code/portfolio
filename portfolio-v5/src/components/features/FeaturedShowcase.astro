@@ -3,102 +3,163 @@ import type { Project } from '../../data/projects';
 import StatusPill from '../ui/StatusPill.astro';
 
 /**
- * Featured works showcase — the main-hero replacement for the compact
- * "Four things I'm shipping right now" grid. Each featured project gets
- * a full-width hero-scale card, and each card's position is scroll-linked
- * via CSS animation-timeline: view() — cards rise + settle as they enter
- * viewport, then quietly release as they exit. No JS.
+ * Featured work, one pinned chapter per project.
  *
- * Fallback for browsers without animation-timeline: cards render in their
- * final state, no motion. Reduced-motion: same as fallback.
+ * Each chapter is a tall wrapper with a sticky 100svh stage inside. A named
+ * view-timeline on the chapter drives two moments while the stage is pinned:
+ *   1. the words arrive (status, name, tagline, description, meta, link);
+ *   2. one more scroll later, the media is revealed.
+ * The reveal is different per scene (nexus wipe, kanvaz drop, ascent
+ * letterbox); projects with no scene use a plain fade-up.
+ *
+ * Range maths (so the numbers below are not magic): for a chapter of height
+ * H and viewport height V, the `cover` range is V + H long and the stage is
+ * pinned from V/(V+H) to H/(V+H).
+ *   media chapter    H = 240vh  ->  pinned 29.4% .. 70.6%
+ *   no-media chapter H = 170vh  ->  pinned 37.0% .. 63.0%
+ *
+ * Static fallback (no animation-timeline, reduced motion, or < 900px):
+ * normal stacked cards, everything visible, no pinning.
  */
 interface Props {
   projects: Project[];
-  headingLevel?: 'h2' | 'h3'; // v5.17.3 fix — heading-order needs this to
-                              // match context: h3 when nested under a
-                              // Section's own h2 (homepage), h2 when it
-                              // sits directly under a page's h1 (/work).
+  headingLevel?: 'h2' | 'h3'; // h3 under a Section's own h2 (home), h2 under a page h1 (/work)
 }
 const { projects, headingLevel = 'h3' } = Astro.props;
 const NameTag = headingLevel;
+const defaultLabel = (kind: string) =>
+  kind === 'banner' ? 'Banner art from the project README' : '';
 ---
 <section class="showcase" aria-label="Featured projects showcase">
-  {projects.map((p, i) => (
-    <article
-      class="show-card"
-      style={`--i:${i};--total:${projects.length};`}
-      data-slug={p.slug}
-    >
-      <a class="show-body" href={p.href}>
-        <StatusPill status={p.status} size="sm" />
+  {projects.map((p) => {
+    const m = p.media;
+    return (
+      <article
+        class:list={['chapter', m ? 'has-media' : 'no-media']}
+        data-scene={p.scene}
+        data-slug={p.slug}
+      >
+        <div class="stage">
+          <div class="scene-bg" aria-hidden="true"></div>
+          <div class="stage-inner">
+            <a class="show-body" href={p.href}>
+              <StatusPill status={p.status} size="sm" />
+              <NameTag class="show-name">{p.name}</NameTag>
+              <p class="show-tag"><em>{p.tagline}</em></p>
+              <p class="show-desc">{p.description}</p>
+              <ul class="show-meta" role="list">
+                {p.metaTags.slice(0, 4).map((t) => <li>{t}</li>)}
+              </ul>
+              <span class="show-cta">
+                Open case study
+                <span aria-hidden="true" class="show-cta-arrow">→</span>
+              </span>
+            </a>
 
-        <NameTag class="show-name">{p.name}</NameTag>
-        <p class="show-tag"><em>{p.tagline}</em></p>
-        <p class="show-desc">{p.description}</p>
+            {p.scene === 'kanvaz' && (
+              <svg class="cable" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M4 24 C 45 24, 55 14, 96 14" pathLength="1" />
+                <circle cx="4" cy="24" r="3" />
+                <circle cx="96" cy="14" r="3" />
+              </svg>
+            )}
 
-        <ul class="show-meta" role="list">
-          {p.metaTags.slice(0, 4).map((t) => <li>{t}</li>)}
-        </ul>
-
-        <span class="show-cta">
-          Open case study
-          <span aria-hidden="true" class="show-cta-arrow">→</span>
-        </span>
-      </a>
-
-      <!-- Visual side — real media from the project's own README/release
-           assets when it has any; otherwise the labelled placeholder frame. -->
-      {p.media ? (
-        <figure class="show-visual has-media">
-          <img
-            class="show-img"
-            src={p.media.src}
-            alt={p.media.alt}
-            style={`aspect-ratio:${p.media.ratio};`}
-            width="1600"
-            height="900"
-            loading="lazy"
-            decoding="async"
-          />
-          {p.media.kind === 'banner' && <figcaption class="show-media-tag">Banner art from the project README</figcaption>}
-        </figure>
-      ) : (
-        <aside class="show-visual" aria-hidden="true">
-          <div class="show-visual-frame">
-            <span class="show-visual-slug">{p.slug}</span>
-            <span class="show-visual-name">{p.name}</span>
-            <span class="show-visual-role">{p.license || 'proprietary'}</span>
+            {m ? (
+              <figure class="show-visual has-media" data-kind={m.kind}>
+                <div class="media-frame" style={`aspect-ratio:${m.ratio};`}>
+                  {m.video ? (
+                    <video
+                      class="show-img"
+                      muted
+                      loop
+                      playsinline
+                      preload="none"
+                      poster={m.src}
+                      role="img"
+                      aria-label={m.alt}
+                      data-showcase-video
+                    >
+                      <source src={m.video.webm} type="video/webm" />
+                      <source src={m.video.mp4} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <img
+                      class="show-img"
+                      src={m.src}
+                      alt={m.alt}
+                      width="1600"
+                      height="900"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
+                  {p.scene === 'kanvaz' && <span class="pin" aria-hidden="true"></span>}
+                </div>
+                {(m.label || defaultLabel(m.kind)) && (
+                  <figcaption class="show-media-tag">{m.label ?? defaultLabel(m.kind)}</figcaption>
+                )}
+              </figure>
+            ) : (
+              <aside class="show-visual" aria-hidden="true">
+                <div class="show-visual-frame">
+                  <span class="show-visual-slug">{p.slug}</span>
+                  <span class="show-visual-name">{p.name}</span>
+                  <span class="show-visual-role">{p.license || 'proprietary'}</span>
+                </div>
+              </aside>
+            )}
           </div>
-        </aside>
-      )}
-    </article>
-  ))}
+        </div>
+      </article>
+    );
+  })}
 </section>
 
-<style>
-  .showcase {
-    display: flex; flex-direction: column;
-    gap: var(--sp-9);
-    /* Adds room at top so the first card can rise into place without
-       fighting the manifest bridge above. */
-    padding-top: var(--sp-6);
+<script>
+  // Play the Ascent loop only while it is on screen; honour reduced motion.
+  const vids = document.querySelectorAll<HTMLVideoElement>('video[data-showcase-video]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (vids.length && !reduce && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          const v = e.target as HTMLVideoElement;
+          if (e.isIntersecting) v.play().catch(() => {});
+          else v.pause();
+        });
+      },
+      { threshold: 0.35 },
+    );
+    vids.forEach((v) => io.observe(v));
   }
-  .show-card {
+</script>
+
+<style>
+  /* ---------------------------------------------------------------
+     Base (static) layout: stacked, everything visible.
+     --------------------------------------------------------------- */
+  .showcase { display: flex; flex-direction: column; padding-top: var(--sp-6); }
+  .chapter { position: relative; border-top: 1px solid var(--line); }
+  .chapter:first-child { border-top: none; }
+  .stage { position: relative; }
+  .stage-inner {
+    position: relative;
     display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
     gap: var(--sp-7);
-    align-items: stretch;
-    min-height: 60vh;
+    align-items: center;
     padding: var(--sp-8) 0;
-    border-top: 1px solid var(--line);
-    position: relative;
   }
-  .show-card:first-child { border-top: none; padding-top: 0; }
+  .chapter:first-child .stage-inner { padding-top: 0; }
   @media (max-width: 900px) {
-    .show-card { grid-template-columns: 1fr; min-height: 0; gap: var(--sp-5); padding: var(--sp-6) 0; }
+    .stage-inner { grid-template-columns: 1fr; gap: var(--sp-5); padding: var(--sp-6) 0; }
   }
 
-  /* Middle column: content */
+  .scene-bg { display: none; }
+  .cable { display: none; }
+  .pin { display: none; }
+
+  /* Text */
   .show-body {
     display: flex; flex-direction: column;
     gap: var(--sp-4);
@@ -158,52 +219,44 @@ const NameTag = headingLevel;
   .show-body:hover .show-cta-arrow { transform: translateX(4px); }
   .show-body:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 8px; border-radius: 2px; }
 
-  /* Right column: visual (placeholder frame) */
-  .show-visual {
-    display: flex; align-items: center; justify-content: center;
-    background:
-      linear-gradient(135deg, color-mix(in oklab, var(--purple-deep) 45%, transparent), color-mix(in oklab, var(--surface-2) 90%, transparent));
-    border: 1px solid var(--line-strong);
-    border-radius: 4px;
-    min-height: 360px;
-    position: relative;
-    overflow: hidden;
-  }
-  .show-visual::before {
-    content: '';
-    position: absolute; inset: 0;
-    background-image:
-      radial-gradient(circle at 20% 30%, color-mix(in oklab, var(--purple-bright) 20%, transparent), transparent 50%),
-      radial-gradient(circle at 80% 70%, color-mix(in oklab, var(--purple) 15%, transparent), transparent 55%);
-    pointer-events: none;
-  }
-  .show-visual.has-media {
-    margin: 0;
-    min-height: 0;
-    display: block;
-    align-self: center;
-    background: none;
-    border: none;
-    border-radius: 0;
-    overflow: visible;
-  }
-  .show-visual.has-media::before { display: none; }
+  /* Media */
+  .show-visual.has-media { margin: 0; min-width: 0; }
+  .media-frame { position: relative; width: 100%; }
   .show-img {
     display: block;
-    width: 100%;
-    height: auto;
+    width: 100%; height: 100%;
     object-fit: cover;
     border: 1px solid var(--line-strong);
     border-radius: 4px;
     background: var(--surface-2);
   }
   .show-media-tag {
-    margin-top: var(--sp-2);
+    margin-top: var(--sp-3);
     font-family: var(--font-mono);
     font-size: var(--text-xxs);
     letter-spacing: var(--tracking-eyebrow);
     text-transform: uppercase;
     color: var(--muted);
+  }
+
+  /* Placeholder frame (Mission OS, Pursue OS: no media yet) */
+  .show-visual:not(.has-media) {
+    display: flex; align-items: center; justify-content: center;
+    background:
+      linear-gradient(135deg, color-mix(in oklab, var(--purple-deep) 45%, transparent), color-mix(in oklab, var(--surface-2) 90%, transparent));
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    min-height: 320px;
+    position: relative;
+    overflow: hidden;
+  }
+  .show-visual:not(.has-media)::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 30%, color-mix(in oklab, var(--purple-bright) 20%, transparent), transparent 50%),
+      radial-gradient(circle at 80% 70%, color-mix(in oklab, var(--purple) 15%, transparent), transparent 55%);
+    pointer-events: none;
   }
   .show-visual-frame {
     display: flex; flex-direction: column; align-items: center; gap: 12px;
@@ -238,65 +291,313 @@ const NameTag = headingLevel;
     margin-top: 4px;
   }
   @media (max-width: 900px) {
-    .show-visual { min-height: 200px; }
+    .show-visual:not(.has-media) { min-height: 200px; }
     .show-visual-name { font-size: clamp(24px, 5vw, 36px); }
   }
 
-  /* v5.10.3 "merry-go-round" scroll animation. Each card rotates around
-     the Y axis as it moves through the viewport — enters facing slightly
-     away from the viewer, rotates to face-on at center, rotates away
-     again as it exits. Combined with a subtle vertical rise it reads
-     like cards on a slow-turning wheel. Uses animation-timeline: view()
-     — zero JS, GPU-only transforms. Falls back to static end-state on
-     unsupported browsers and prefers-reduced-motion. */
-  /* Each card carries its own perspective() in the keyframes, so the
-     vanishing point stays centred on the card. A second perspective on
-     .showcase shifted it to the stack's centre and skewed the edges. */
-  .show-card { transform-style: preserve-3d; }
+  /* ---------------------------------------------------------------
+     Scenes: static look (no scroll needed). These are what you see on
+     phones, with reduced motion, and in browsers without scroll timelines.
+     --------------------------------------------------------------- */
+  .chapter[data-scene='nexus'] .show-img { border-radius: 2px; border-color: color-mix(in oklab, var(--purple-bright) 35%, var(--line-strong)); }
+  .chapter[data-scene='kanvaz'] .show-img {
+    border-radius: 6px;
+    box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.55);
+  }
+  .chapter[data-scene='ascent'] .show-img { border-radius: 2px; }
 
-  @supports (animation-timeline: view()) {
-    .show-card {
-      opacity: 0;
-      animation: show-wheel linear both;
-      animation-timeline: view();
-      animation-range: cover 0% cover 100%;
-    }
-    /* Even-index cards rotate one way, odd rotate the other — the wheel
-       is "shared" by both sides of the showcase so it doesn't just look
-       like the same motion N times. */
-    .show-card:nth-child(2n) {
-      animation-name: show-wheel-alt;
-    }
-  }
-  @keyframes show-wheel {
-    0%   { opacity: 0.15; transform: perspective(1600px) rotateY(-22deg) translateY(80px) scale(0.94); }
-    28%  { opacity: 1;    transform: perspective(1600px) rotateY(0deg)   translateY(0)    scale(1); }
-    72%  { opacity: 1;    transform: perspective(1600px) rotateY(0deg)   translateY(0)    scale(1); }
-    100% { opacity: 0.35; transform: perspective(1600px) rotateY(22deg)  translateY(-40px) scale(0.97); }
-  }
-  @keyframes show-wheel-alt {
-    0%   { opacity: 0.15; transform: perspective(1600px) rotateY(22deg)  translateY(80px) scale(0.94); }
-    28%  { opacity: 1;    transform: perspective(1600px) rotateY(0deg)   translateY(0)    scale(1); }
-    72%  { opacity: 1;    transform: perspective(1600px) rotateY(0deg)   translateY(0)    scale(1); }
-    100% { opacity: 0.35; transform: perspective(1600px) rotateY(-22deg) translateY(-40px) scale(0.97); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .show-card { animation: none; opacity: 1; transform: none; }
-  }
-  /* v5.16.0 mobile fix — the merry-go-round 3D rotation is disorienting
-     on phones (small viewport + tall stack = every card wheeling as you
-     scroll). Kill the rotation below 760px; keep the opacity fade. */
-  @media (max-width: 760px) {
+  /* ---------------------------------------------------------------
+     Pinned mode: desktop, motion allowed, scroll timelines supported.
+     --------------------------------------------------------------- */
+  @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
-      .show-card {
-        animation-name: show-mobile-in;
+      .chapter {
+        view-timeline: --ch block;
+        border-top: none;
       }
-      .show-card:nth-child(2n) { animation-name: show-mobile-in; }
+      .chapter.has-media { height: 240vh; }
+      .chapter.no-media  { height: 170vh; }
+
+      .stage {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        height: 100svh;
+        display: flex;
+        align-items: center;
+        padding-top: 88px; /* sticky nav */
+        box-sizing: border-box;
+      }
+      .stage-inner { width: 100%; padding: 0; }
+      /* Media gets the wider column: the picture is the payoff. */
+      .chapter.has-media .stage-inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: var(--sp-8); }
+      .chapter[data-scene='kanvaz'] .cable { left: 42.5%; }
+      .chapter:first-child .stage-inner { padding-top: 0; }
+
+      /* Leave: the whole stage lifts and dims as the next chapter arrives. */
+      .chapter.has-media .stage-inner {
+        animation: ch-leave linear both;
+        animation-timeline: --ch;
+        animation-range: cover 72% cover 94%;
+      }
+      .chapter.no-media .stage-inner {
+        animation: ch-leave linear both;
+        animation-timeline: --ch;
+        animation-range: cover 66% cover 92%;
+      }
+
+      /* Arrive: words rise in, staggered along the scroll. */
+      .show-body > * {
+        animation: ch-rise linear both;
+        animation-timeline: --ch;
+        --k: 0;
+        --t0: 27%;
+        animation-range: cover calc(var(--t0) + var(--k) * 1.4%) cover calc(var(--t0) + 9% + var(--k) * 1.4%);
+      }
+      .chapter.no-media .show-body > * { --t0: 34%; }
+      .show-body > *:nth-child(2) { --k: 1; }
+      .show-body > *:nth-child(3) { --k: 2; }
+      .show-body > *:nth-child(4) { --k: 3; }
+      .show-body > *:nth-child(5) { --k: 4; }
+      .show-body > *:nth-child(6) { --k: 5; }
+
+      /* Reveal: the media, one scroll after the words. */
+      .chapter.has-media .show-img {
+        animation: reveal-default linear both;
+        animation-timeline: --ch;
+        animation-range: cover 41% cover 57%;
+      }
+      .chapter.has-media .show-media-tag {
+        animation: ch-fade linear both;
+        animation-timeline: --ch;
+        animation-range: cover 52% cover 60%;
+      }
+      .chapter.no-media .show-visual {
+        animation: reveal-default linear both;
+        animation-timeline: --ch;
+        animation-range: cover 41% cover 57%;
+      }
+      .chapter.no-media .show-visual { animation-range: cover 40% cover 54%; }
+
+      /* Backdrop fades in with the words. */
+      .scene-bg {
+        display: block;
+        position: absolute;
+        top: 0; bottom: 0;
+        left: 50%;
+        width: 100vw;
+        margin-left: -50vw;
+        pointer-events: none;
+        z-index: -1;
+        animation: ch-fade linear both;
+        animation-timeline: --ch;
+        animation-range: cover 20% cover 38%;
+      }
+
+      /* Scene backdrops (only drawn while pinned). */
+      .chapter[data-scene='nexus'] .scene-bg {
+        background-image:
+          linear-gradient(color-mix(in oklab, var(--purple-bright) 9%, transparent) 1px, transparent 1px),
+          linear-gradient(90deg, color-mix(in oklab, var(--purple-bright) 9%, transparent) 1px, transparent 1px);
+        background-size: 72px 72px;
+        -webkit-mask-image: radial-gradient(ellipse 60% 55% at 72% 50%, #000 0%, transparent 100%);
+                mask-image: radial-gradient(ellipse 60% 55% at 72% 50%, #000 0%, transparent 100%);
+      }
+      .chapter[data-scene='kanvaz'] .scene-bg {
+        background-image: radial-gradient(color-mix(in oklab, var(--text) 22%, transparent) 1.1px, transparent 1.4px);
+        background-size: 28px 28px;
+        -webkit-mask-image: radial-gradient(ellipse 75% 65% at 55% 50%, #000 0%, transparent 100%);
+                mask-image: radial-gradient(ellipse 75% 65% at 55% 50%, #000 0%, transparent 100%);
+      }
+      .chapter[data-scene='ascent'] .scene-bg {
+        background:
+          radial-gradient(circle 16vmin at 82% 26%, color-mix(in oklab, var(--text) 16%, transparent), transparent 70%),
+          linear-gradient(to top, color-mix(in oklab, var(--purple-deep) 55%, transparent), transparent 55%);
+      }
+      :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .scene-bg {
+        background:
+          radial-gradient(circle 16vmin at 82% 26%, color-mix(in oklab, var(--purple-bright) 16%, transparent), transparent 70%),
+          linear-gradient(to top, color-mix(in oklab, var(--purple) 22%, transparent), transparent 55%);
+      }
+      .chapter[data-scene='ascent'] .scene-bg::after {
+        /* ridge line along the bottom */
+        content: '';
+        position: absolute;
+        left: 0; right: 0; bottom: 0;
+        height: 22vh;
+        background: color-mix(in oklab, var(--purple-deep) 70%, var(--bg));
+        clip-path: polygon(0 62%, 9% 38%, 17% 55%, 27% 24%, 38% 52%, 49% 30%, 60% 58%, 71% 20%, 82% 50%, 91% 34%, 100% 56%, 100% 100%, 0 100%);
+        opacity: 0.65;
+      }
+
+      /* -------- nexus: clean wipe with a scan line -------- */
+      .chapter[data-scene='nexus'] .media-frame::before {
+        /* corner brackets, drawn outside the frame */
+        content: '';
+        position: absolute;
+        inset: -9px;
+        pointer-events: none;
+        --b: color-mix(in oklab, var(--purple-bright) 75%, transparent);
+        background:
+          linear-gradient(var(--b), var(--b)) top left / 14px 1px no-repeat,
+          linear-gradient(var(--b), var(--b)) top left / 1px 14px no-repeat,
+          linear-gradient(var(--b), var(--b)) top right / 14px 1px no-repeat,
+          linear-gradient(var(--b), var(--b)) top right / 1px 14px no-repeat,
+          linear-gradient(var(--b), var(--b)) bottom left / 14px 1px no-repeat,
+          linear-gradient(var(--b), var(--b)) bottom left / 1px 14px no-repeat,
+          linear-gradient(var(--b), var(--b)) bottom right / 14px 1px no-repeat,
+          linear-gradient(var(--b), var(--b)) bottom right / 1px 14px no-repeat;
+        animation: ch-fade linear both;
+        animation-timeline: --ch;
+        animation-range: cover 52% cover 60%;
+      }
+      .chapter[data-scene='nexus'] .media-frame::after {
+        /* scan line that travels with the wipe */
+        content: '';
+        position: absolute;
+        top: 0; bottom: 0;
+        width: 1px;
+        left: 0;
+        background: var(--purple-bright);
+        box-shadow: 0 0 12px 1px color-mix(in oklab, var(--purple-bright) 70%, transparent);
+        pointer-events: none;
+        animation: nexus-scan linear both;
+        animation-timeline: --ch;
+        animation-range: cover 41% cover 57%;
+      }
+      .chapter[data-scene='nexus'] .show-img {
+        animation-name: reveal-nexus;
+      }
+
+      /* -------- kanvaz: card dropped onto the board -------- */
+      .chapter[data-scene='kanvaz'] .media-frame { transform: rotate(-1.2deg); }
+      .chapter[data-scene='kanvaz'] .show-img {
+        animation-name: reveal-kanvaz;
+        animation-range: cover 41% cover 56%;
+      }
+      .chapter[data-scene='kanvaz'] .pin {
+        display: block;
+        position: absolute;
+        top: -7px; left: 50%;
+        width: 13px; height: 13px;
+        margin-left: -6px;
+        border-radius: 50%;
+        background: var(--purple-bright);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+        animation: ch-pop linear both;
+        animation-timeline: --ch;
+        animation-range: cover 53% cover 58%;
+      }
+      .chapter[data-scene='kanvaz'] .cable {
+        display: block;
+        position: absolute;
+        left: 46%; top: 50%;
+        width: 8%; min-width: 56px; height: 40px;
+        margin-top: -20px;
+        overflow: visible;
+        pointer-events: none;
+        fill: var(--purple-bright);
+      }
+      .chapter[data-scene='kanvaz'] .cable path {
+        fill: none;
+        stroke: var(--purple-bright);
+        stroke-width: 1.5;
+        stroke-dasharray: 1;
+        animation: cable-draw linear both;
+        animation-timeline: --ch;
+        animation-range: cover 44% cover 56%;
+      }
+      .chapter[data-scene='kanvaz'] .cable circle {
+        animation: ch-fade linear both;
+        animation-timeline: --ch;
+        animation-range: cover 44% cover 50%;
+      }
+
+      /* -------- ascent: letterbox opens -------- */
+      .chapter[data-scene='ascent'] .show-img {
+        animation-name: reveal-ascent;
+      }
+      .chapter[data-scene='ascent'] .media-frame::before {
+        /* HUD corner marks */
+        content: '';
+        position: absolute;
+        inset: -7px;
+        pointer-events: none;
+        --b: color-mix(in oklab, var(--text) 85%, transparent);
+        background:
+          linear-gradient(var(--b), var(--b)) top left / 18px 2px no-repeat,
+          linear-gradient(var(--b), var(--b)) top left / 2px 18px no-repeat,
+          linear-gradient(var(--b), var(--b)) top right / 18px 2px no-repeat,
+          linear-gradient(var(--b), var(--b)) top right / 2px 18px no-repeat,
+          linear-gradient(var(--b), var(--b)) bottom left / 18px 2px no-repeat,
+          linear-gradient(var(--b), var(--b)) bottom left / 2px 18px no-repeat,
+          linear-gradient(var(--b), var(--b)) bottom right / 18px 2px no-repeat,
+          linear-gradient(var(--b), var(--b)) bottom right / 2px 18px no-repeat;
+        animation: ch-fade linear both;
+        animation-timeline: --ch;
+        animation-range: cover 52% cover 60%;
+      }
     }
-    @keyframes show-mobile-in {
-      0%   { opacity: 0; transform: translateY(30px); }
-      35%  { opacity: 1; transform: translateY(0); }
-      100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Phones: pinned mode is off, so give each card a light fade-up as it
+     scrolls in (same technique, much smaller). */
+  @media (max-width: 899px) and (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .stage-inner {
+        animation: m-in linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 45%;
+      }
     }
+  }
+
+  /* -------- keyframes -------- */
+  @keyframes ch-rise {
+    from { opacity: 0; transform: translateY(26px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes ch-leave {
+    from { opacity: 1; transform: none; }
+    to   { opacity: 0.12; transform: translateY(-5vh) scale(0.98); }
+  }
+  @keyframes ch-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes ch-pop {
+    from { opacity: 0; transform: scale(0.2); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes reveal-default {
+    from { opacity: 0; transform: translateY(34px); clip-path: inset(0 0 40% 0); }
+    to   { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
+  }
+  @keyframes reveal-nexus {
+    from { clip-path: inset(0 100% 0 0); }
+    to   { clip-path: inset(0 0 0 0); }
+  }
+  @keyframes nexus-scan {
+    0%   { left: 0;    opacity: 0; }
+    6%   { opacity: 1; }
+    94%  { opacity: 1; }
+    100% { left: 100%; opacity: 0; }
+  }
+  @keyframes reveal-kanvaz {
+    from { opacity: 0; transform: translateY(-70px) rotate(-5deg) scale(1.04); }
+    70%  { opacity: 1; transform: translateY(6px) rotate(0.6deg) scale(1); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes cable-draw {
+    from { stroke-dashoffset: 1; }
+    to   { stroke-dashoffset: 0; }
+  }
+  @keyframes reveal-ascent {
+    from { clip-path: inset(47% 0 47% 0); opacity: 0.4; }
+    to   { clip-path: inset(0 0 0 0);     opacity: 1; }
+  }
+  @keyframes m-in {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: none; }
   }
 </style>

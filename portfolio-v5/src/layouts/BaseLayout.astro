@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/scenes.css';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import CommandPalette from '../components/features/CommandPalette.astro';
 import APMark from '../components/APMark.astro';
@@ -10,6 +11,7 @@ import { PROJECTS } from '../data/projects';
 
 interface Props {
   title: string;
+  scene?: 'nexus' | 'kanvaz' | 'ascent'; // per-project sub-theme, see styles/scenes.css
   description?: string;
   keywords?: string; // v5.21.0 — per-page override of SITE.keywords, for
                       // project pages that want their own name + handle
@@ -26,6 +28,7 @@ const {
   description = SITE.description,
   keywords = SITE.keywords,
   extraJsonLd = [],
+  scene,
   // v5.12.0 fix: og.png was 404-ing (Cloudflare fell back to the homepage
   // HTML). Now points at /og.svg — a real designed 1200x630 card. Discord,
   // Slack, iMessage, Signal, Telegram accept SVG og:image. LinkedIn + X
@@ -278,7 +281,7 @@ const jsonLd = {
       })();
     </script>
   </head>
-  <body>
+  <body data-scene={scene}>
     <!-- Scroll progress bar — hairline at very top of viewport, fills as
          the page scrolls. Zero-JS: powered by CSS animation-timeline: scroll().
          Falls back to nothing (element stays at scaleX 0) on browsers without

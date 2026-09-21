@@ -1,0 +1,131 @@
+/*
+ * Scenes: per-project sub-themes for the pages that have a strong identity.
+ * Set with the `scene` prop on BaseLayout, which puts data-scene on <body>.
+ *
+ * A scene only adds atmosphere on top of the base dark/light tokens. It
+ * never changes text or surface colours outright, so both themes keep
+ * their contrast. Everything is drawn from tokens (color-mix on
+ * --purple-bright / --text / --line), so light and dark both work.
+ *
+ *   nexus  : futuristic, clean. Measured grid, hairline corner brackets.
+ *   kanvaz : an infinite canvas. Dot grid, pinned board cards.
+ *   ascent : game. Dusk sky, moon glow, HUD corner marks.
+ */
+
+body[data-scene] { position: relative; }
+body[data-scene]::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------- nexus */
+body[data-scene='nexus']::before {
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--purple-bright) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--purple-bright) 7%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse 85% 70% at 80% 0%, #000 0%, transparent 75%);
+          mask-image: radial-gradient(ellipse 85% 70% at 80% 0%, #000 0%, transparent 75%);
+}
+body[data-scene='nexus'] .feature-card,
+body[data-scene='nexus'] .stat-cell {
+  border-radius: 2px;
+  border-color: color-mix(in oklab, var(--purple-bright) 22%, var(--line));
+  --nb: color-mix(in oklab, var(--purple-bright) 70%, transparent);
+  background-image:
+    linear-gradient(var(--nb), var(--nb)) top left / 12px 1px no-repeat,
+    linear-gradient(var(--nb), var(--nb)) top left / 1px 12px no-repeat,
+    linear-gradient(var(--nb), var(--nb)) bottom right / 12px 1px no-repeat,
+    linear-gradient(var(--nb), var(--nb)) bottom right / 1px 12px no-repeat;
+}
+body[data-scene='nexus'] .shot .frame {
+  border-radius: 2px;
+  border-color: color-mix(in oklab, var(--purple-bright) 28%, var(--line));
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--purple-bright) 8%, transparent);
+}
+body[data-scene='nexus'] .section-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 18px; height: 1px;
+  margin-right: 10px;
+  vertical-align: middle;
+  background: var(--purple-bright);
+}
+
+/* --------------------------------------------------------------- kanvaz */
+body[data-scene='kanvaz']::before {
+  background-image: radial-gradient(color-mix(in oklab, var(--text) 20%, transparent) 1.1px, transparent 1.4px);
+  background-size: 28px 28px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.35) 70%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.35) 70%, transparent 100%);
+}
+body[data-scene='kanvaz'] .feature-card {
+  position: relative;
+  border-radius: 6px;
+  box-shadow: 0 14px 30px -20px rgba(0, 0, 0, 0.5);
+  rotate: -0.4deg;
+  transition: rotate var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
+}
+body[data-scene='kanvaz'] .feature-card:nth-child(even) { rotate: 0.35deg; }
+body[data-scene='kanvaz'] .feature-card::before {
+  content: '';
+  position: absolute;
+  top: -5px; left: 50%;
+  width: 9px; height: 9px;
+  margin-left: -4px;
+  border-radius: 50%;
+  background: var(--purple-bright);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+body[data-scene='kanvaz'] .feature-card:hover { rotate: 0deg; transform: translateY(-3px); }
+body[data-scene='kanvaz'] .shot .frame {
+  border-radius: 6px;
+  box-shadow: 0 18px 36px -22px rgba(0, 0, 0, 0.55);
+}
+body[data-scene='kanvaz'] .shot:nth-child(odd) .frame { rotate: -0.3deg; }
+body[data-scene='kanvaz'] .shot:nth-child(even) .frame { rotate: 0.3deg; }
+
+/* --------------------------------------------------------------- ascent */
+body[data-scene='ascent']::before {
+  background:
+    radial-gradient(circle 18vmin at 88% 14%, color-mix(in oklab, var(--text) 13%, transparent), transparent 72%),
+    linear-gradient(to bottom, transparent 40%, color-mix(in oklab, var(--purple-deep) 40%, transparent) 100%);
+}
+[data-theme='light'] body[data-scene='ascent']::before,
+:root[data-theme='light'] body[data-scene='ascent']::before {
+  background:
+    radial-gradient(circle 18vmin at 88% 14%, color-mix(in oklab, var(--purple-bright) 14%, transparent), transparent 72%),
+    linear-gradient(to bottom, transparent 45%, color-mix(in oklab, var(--purple) 12%, transparent) 100%);
+}
+body[data-scene='ascent'] .stat-cell,
+body[data-scene='ascent'] .feature-card,
+body[data-scene='ascent'] .act-row {
+  position: relative;
+  --hb: color-mix(in oklab, var(--text) 70%, transparent);
+  background-image:
+    linear-gradient(var(--hb), var(--hb)) top left / 14px 2px no-repeat,
+    linear-gradient(var(--hb), var(--hb)) top left / 2px 14px no-repeat,
+    linear-gradient(var(--hb), var(--hb)) bottom right / 14px 2px no-repeat,
+    linear-gradient(var(--hb), var(--hb)) bottom right / 2px 14px no-repeat;
+}
+body[data-scene='ascent'] .shot .frame {
+  border-radius: 2px;
+  border-color: color-mix(in oklab, var(--text) 30%, var(--line));
+}
+body[data-scene='ascent'] .section-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 7px; height: 7px;
+  margin-right: 10px;
+  vertical-align: middle;
+  background: var(--purple-bright);
+  transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-scene='kanvaz'] .feature-card,
+  body[data-scene='kanvaz'] .feature-card:hover { transition: none; }
+}

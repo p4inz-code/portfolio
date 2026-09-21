@@ -43,9 +43,19 @@ export interface Project {
   currentVersion?: string;
   nextMilestone?: string;
   notes?: string;
-  /** Real media taken from the project's own README or release assets.
-   *  'banner' = brand art, not a product capture; 'screenshot' = real UI. */
-  media?: { src: string; alt: string; kind: 'banner' | 'screenshot'; ratio: string };
+  /** Real media for the showcase. 'banner' = brand art from the project README,
+   *  'mockup' = design-deck slide, 'screenshot' = real UI capture,
+   *  'video' = real screen recording (src is the poster frame). */
+  media?: {
+    src: string;
+    alt: string;
+    kind: 'banner' | 'mockup' | 'screenshot' | 'video';
+    ratio: string;
+    label?: string;
+    video?: { mp4: string; webm: string };
+  };
+  /** Sub-theme applied on the showcase chapter and on the project's own page. */
+  scene?: 'nexus' | 'kanvaz' | 'ascent';
 }
 
 export const PROJECTS: Project[] = [
@@ -60,7 +70,6 @@ export const PROJECTS: Project[] = [
     metaTags: ['Debian Stable', 'KDE Plasma', 'Rust', 'GPLv3'],
     featured: true,
     order: 3,
-    media: { src: '/assets/banners/mission-os.webp', alt: 'Mission OS banner art: a dark desk with a monitor showing a lavender mountain-lake wallpaper and a System Overview panel, with the title Mission OS, Privacy-first Desktop Operating System.', kind: 'banner', ratio: '16 / 9' },
     href: '/mission-os',
     isExternal: false,
     links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/mission-os', external: true }],
@@ -83,7 +92,8 @@ export const PROJECTS: Project[] = [
     metaTags: ['Windows Desktop', 'AES-256-GCM', 'Fully Offline'],
     featured: true,
     order: 0,
-    media: { src: '/assets/banners/nexus-desktop.webp', alt: 'Nexus banner art: a violet isometric cube on a deep purple background with the wordmark Nexus and the line Secure Environment.', kind: 'banner', ratio: '5 / 2' },
+    media: { src: '/assets/nexus/nexus-v11-01-card.webp', alt: 'Nexus v11 lock screen mockup: a split window with the Nexus brand and four trust pillars on the left, and an Unlock your vault form with Windows Hello on the right.', kind: 'mockup', ratio: '1400 / 883', label: 'v11 design mockup' },
+    scene: 'nexus',
     href: '/nexus',
     isExternal: false,
     links: [
@@ -109,7 +119,8 @@ export const PROJECTS: Project[] = [
     metaTags: ['Electron', 'MIT', 'Open Source'],
     featured: true,
     order: 1,
-    media: { src: '/assets/kanvaz/kanvaz-showcase-dark.webp', alt: 'Kanvaz reference board in the dark theme: image, note, color and URL cards joined by a Related To connection.', kind: 'screenshot', ratio: '1960 / 1224' },
+    media: { src: '/assets/kanvaz/kanvaz-showcase-dark.webp', alt: 'Kanvaz reference board in the dark theme: image, note, color and URL cards joined by a Related To connection.', kind: 'screenshot', ratio: '1960 / 1224', label: 'Real capture · v7.26.0' },
+    scene: 'kanvaz',
     href: '/kanvaz',
     isExternal: false,
     links: [
@@ -179,7 +190,8 @@ export const PROJECTS: Project[] = [
     metaTags: ['Godot 4', 'GDScript', 'Cross-Platform'],
     featured: true,
     order: 2,
-    media: { src: '/assets/ascent/ascent-01-level1-card.webp', alt: 'Project Ascent gameplay: the first level of the precision platformer.', kind: 'screenshot', ratio: '1400 / 874' },
+    media: { src: '/assets/ascent/ascent-loop-poster.webp', alt: 'Project Ascent gameplay, Level 10 Master Escape: a small blue runner leaping up a staircase of platforms under a full moon while red creatures chase from below.', kind: 'video', ratio: '1600 / 646', label: 'Real gameplay · Level 10', video: { mp4: '/assets/ascent/ascent-loop.mp4', webm: '/assets/ascent/ascent-loop.webm' } },
+    scene: 'ascent',
     href: '/ascent',
     isExternal: false,
     links: [
