@@ -1,0 +1,446 @@
+---
+/**
+ * Full-page fixed backdrop for the pages that have a scene (nexus, kanvaz,
+ * ascent). Sits behind everything (z-index -1) and reacts to page scroll
+ * through the root scroll timeline, plus a little ambient motion that only
+ * runs when the visitor has not asked for reduced motion.
+ *
+ *   nexus  : perspective floor grid moving toward you, data packets on the
+ *            grid lines, a scan beam, a slow wireframe cube.
+ *   kanvaz : a board that pans as you scroll: dot grid, ghost reference
+ *            cards joined by flowing cables, a marquee selection.
+ *   ascent : deep space. Nebula, three star depths, shooting stars, a phased
+ *            moon that rises and fills out, ridges falling away.
+ */
+interface Props {
+  scene?: 'nexus' | 'kanvaz' | 'ascent';
+}
+const { scene } = Astro.props;
+---
+{scene && (
+  <div class="sb" data-scene={scene} aria-hidden="true">
+    {scene === 'nexus' && (
+      <>
+        <span class="nx-glow"></span>
+        <span class="nx-lines"></span>
+        <span class="nx-cube"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+        <span class="nx-beam"></span>
+        <span class="nx-floor"><span class="nx-plane"><span class="nx-grid"></span></span></span>
+        <span class="nx-packet p1"></span>
+        <span class="nx-packet p2"></span>
+        <span class="nx-packet p3"></span>
+        <span class="nx-packet p4"></span>
+      </>
+    )}
+
+    {scene === 'kanvaz' && (
+      <>
+        <span class="kz-dots far"></span>
+        <span class="kz-dots near"></span>
+        <span class="kz-board">
+          <svg class="kz-cables" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M 22 20 C 34 20, 30 34, 44 34" />
+            <path d="M 60 24 C 70 24, 68 12, 80 12" />
+            <path d="M 44 38 C 44 50, 30 48, 26 60" />
+            <path d="M 66 46 C 66 58, 82 52, 82 64" />
+            <path d="M 30 68 C 44 68, 48 80, 62 80" />
+            <path d="M 70 70 C 74 84, 60 86, 56 92" />
+          </svg>
+          <span class="kz-card c1"><b></b><em></em></span>
+          <span class="kz-card c2"><b></b><em></em></span>
+          <span class="kz-card c3"><b></b><em></em></span>
+          <span class="kz-card c4"><b></b><em></em></span>
+          <span class="kz-card c5"><b></b><em></em></span>
+          <span class="kz-card c6"><b></b><em></em></span>
+          <span class="kz-card c7"><b></b><em></em></span>
+          <span class="kz-marquee"></span>
+        </span>
+      </>
+    )}
+
+    {scene === 'ascent' && (
+      <>
+        <span class="as-sky"></span>
+        <span class="as-nebula"></span>
+        <span class="as-stars s1"></span>
+        <span class="as-stars s2"></span>
+        <span class="as-stars s3"></span>
+        <span class="as-shoot a"></span>
+        <span class="as-shoot b"></span>
+        <span class="as-shoot c"></span>
+        <span class="as-moon">
+          <span class="halo"></span>
+          <span class="earthshine"></span>
+          <span class="moon-orb phased"></span>
+        </span>
+        <span class="as-ridge far"></span>
+        <span class="as-ridge mid"></span>
+        <span class="as-ridge near"></span>
+      </>
+    )}
+  </div>
+)}
+
+<style>
+  @property --cx {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 190%;
+  }
+
+  .sb {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    contain: strict;
+  }
+  .sb > * { position: absolute; display: block; }
+
+  /* ================================================================== NEXUS */
+  .nx-glow {
+    inset: 0;
+    background:
+      radial-gradient(60vmax 40vmax at 88% 6%, color-mix(in oklab, var(--purple-bright) 18%, transparent), transparent 70%),
+      radial-gradient(50vmax 36vmax at 6% 96%, color-mix(in oklab, var(--purple) 16%, transparent), transparent 70%);
+  }
+  .nx-lines {
+    inset: -20vh 0 0 0;
+    background-image:
+      linear-gradient(color-mix(in oklab, var(--purple-bright) 8%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in oklab, var(--purple-bright) 8%, transparent) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 78% 0%, #000 0%, transparent 78%);
+            mask-image: radial-gradient(ellipse 90% 70% at 78% 0%, #000 0%, transparent 78%);
+  }
+  .nx-beam {
+    left: 0; right: 0; top: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--purple-bright) 70%, transparent) 30%, color-mix(in oklab, var(--purple-bright) 70%, transparent) 70%, transparent);
+    box-shadow: 0 0 18px 2px color-mix(in oklab, var(--purple-bright) 40%, transparent);
+    opacity: 0;
+  }
+  .nx-floor {
+    left: -20%; right: -20%; bottom: 0;
+    height: 58vh;
+    perspective: 520px;
+    perspective-origin: 50% 0%;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 74%);
+            mask-image: linear-gradient(to top, #000 0%, transparent 74%);
+  }
+  .nx-plane {
+    inset: 0;
+    position: absolute;
+    transform-origin: 50% 0%;
+    transform: rotateX(64deg);
+  }
+  .nx-grid {
+    position: absolute; display: block;
+    left: 0; right: 0; top: -60px; bottom: 0;
+    background-image:
+      linear-gradient(color-mix(in oklab, var(--purple-bright) 34%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in oklab, var(--purple-bright) 34%, transparent) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .nx-cube {
+    top: 16vh; right: 9vw;
+    width: 15vmin; height: 15vmin;
+    transform-style: preserve-3d;
+    transform: rotateX(-24deg) rotateY(30deg);
+    perspective: 900px;
+  }
+  .nx-cube i {
+    position: absolute; inset: 0;
+    border: 1px solid color-mix(in oklab, var(--purple-bright) 55%, transparent);
+    background: linear-gradient(135deg, color-mix(in oklab, var(--purple-bright) 9%, transparent), transparent 60%);
+    backface-visibility: visible;
+  }
+  .nx-cube i:nth-child(1) { transform: translateZ(7.5vmin); }
+  .nx-cube i:nth-child(2) { transform: rotateY(180deg) translateZ(7.5vmin); }
+  .nx-cube i:nth-child(3) { transform: rotateY(90deg) translateZ(7.5vmin); }
+  .nx-cube i:nth-child(4) { transform: rotateY(-90deg) translateZ(7.5vmin); }
+  .nx-cube i:nth-child(5) { transform: rotateX(90deg) translateZ(7.5vmin); }
+  .nx-cube i:nth-child(6) { transform: rotateX(-90deg) translateZ(7.5vmin); }
+
+  .nx-packet {
+    width: 1px; height: 64px;
+    top: 0;
+    background: linear-gradient(to bottom, transparent, color-mix(in oklab, var(--purple-bright) 90%, #fff));
+    box-shadow: 0 0 8px 1px color-mix(in oklab, var(--purple-bright) 55%, transparent);
+    opacity: 0;
+  }
+  .nx-packet.p1 { left: 320px; }
+  .nx-packet.p2 { left: 704px; }
+  .nx-packet.p3 { left: 1088px; }
+  .nx-packet.p4 { left: 1472px; }
+
+  /* ================================================================= KANVAZ */
+  .kz-dots { inset: -30vh 0 -30vh 0; }
+  .kz-dots.far {
+    background-image: radial-gradient(color-mix(in oklab, var(--text) 16%, transparent) 1px, transparent 1.3px);
+    background-size: 24px 24px;
+  }
+  .kz-dots.near {
+    background-image: radial-gradient(color-mix(in oklab, var(--purple-bright) 34%, transparent) 1.6px, transparent 2px);
+    background-size: 120px 120px;
+  }
+  .kz-board {
+    left: 0; right: 0; top: 0;
+    height: 190vh;
+  }
+  .kz-cables {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    overflow: visible;
+  }
+  .kz-cables path {
+    fill: none;
+    stroke: color-mix(in oklab, var(--purple-bright) 55%, transparent);
+    stroke-width: 1.4;
+    vector-effect: non-scaling-stroke;
+    stroke-dasharray: 5 7;
+  }
+  .kz-card {
+    position: absolute;
+    width: 15vw; min-width: 150px; max-width: 250px;
+    aspect-ratio: 4 / 3;
+    border-radius: 8px;
+    border: 1px solid color-mix(in oklab, var(--text) 12%, transparent);
+    background: var(--cg, linear-gradient(135deg, #6D4AFF, #B49CFF));
+    opacity: 0.27;
+    box-shadow: 0 22px 40px -24px rgba(0, 0, 0, 0.6);
+  }
+  .kz-card b {
+    position: absolute; left: 10%; right: 34%; bottom: 14%;
+    height: 5px; border-radius: 3px;
+    background: color-mix(in oklab, var(--text) 45%, transparent);
+  }
+  .kz-card em {
+    position: absolute; left: 10%; right: 58%; bottom: 7%;
+    height: 4px; border-radius: 3px;
+    background: color-mix(in oklab, var(--text) 26%, transparent);
+  }
+  .kz-card.c1 { left: 8%;  top: 12%; rotate: -3deg; --cg: linear-gradient(135deg, #5B3DF5, #A996FF); }
+  .kz-card.c2 { left: 40%; top: 27%; rotate: 2deg;  --cg: linear-gradient(135deg, #14B8A6, #7FE9D8); }
+  .kz-card.c3 { left: 72%; top: 6%;  rotate: -2deg; --cg: linear-gradient(135deg, #E23E6A, #FF9BB4); }
+  .kz-card.c4 { left: 14%; top: 56%; rotate: 3deg;  --cg: linear-gradient(135deg, #F59E0B, #FCD98A); }
+  .kz-card.c5 { left: 62%; top: 44%; rotate: -4deg; --cg: linear-gradient(135deg, #5B3DF5, #A996FF); }
+  .kz-card.c6 { left: 48%; top: 74%; rotate: 2deg;  --cg: linear-gradient(135deg, #14B8A6, #7FE9D8); }
+  .kz-card.c7 { left: 80%; top: 66%; rotate: -2deg; --cg: linear-gradient(135deg, #E23E6A, #FF9BB4); }
+  .kz-marquee {
+    left: 34%; top: 20%;
+    width: 34vw; height: 20vh;
+    border: 1px dashed color-mix(in oklab, var(--purple-bright) 70%, transparent);
+    background: color-mix(in oklab, var(--purple-bright) 6%, transparent);
+    border-radius: 3px;
+    opacity: 0;
+  }
+
+  /* ================================================================= ASCENT */
+  .as-sky {
+    inset: 0;
+    background: linear-gradient(to bottom, #04020c 0%, #0b0620 46%, color-mix(in oklab, var(--purple-deep) 62%, #04020c) 100%);
+  }
+  .as-nebula {
+    inset: -10% -10% 10% -10%;
+    background:
+      radial-gradient(38vmax 26vmax at 16% 30%, rgba(124, 58, 237, 0.30), transparent 70%),
+      radial-gradient(34vmax 22vmax at 84% 16%, rgba(59, 130, 246, 0.20), transparent 70%),
+      radial-gradient(30vmax 20vmax at 60% 60%, rgba(236, 72, 153, 0.13), transparent 70%);
+    filter: blur(6px);
+  }
+  .as-stars { inset: 0 0 24% 0; background-repeat: repeat; }
+  .as-stars.s1 {
+    background-image:
+      radial-gradient(1px 1px at 12px 18px, #EDE8FF, transparent 60%),
+      radial-gradient(1px 1px at 47px 63px, #EDE8FF, transparent 60%),
+      radial-gradient(1px 1px at 83px 29px, #EDE8FF, transparent 60%),
+      radial-gradient(1px 1px at 29px 91px, #EDE8FF, transparent 60%),
+      radial-gradient(1px 1px at 71px 77px, #EDE8FF, transparent 60%);
+    background-size: 100px 100px;
+    opacity: 0.55;
+  }
+  .as-stars.s2 {
+    background-image:
+      radial-gradient(1.5px 1.5px at 30px 40px, #fff, transparent 65%),
+      radial-gradient(1.5px 1.5px at 120px 90px, #fff, transparent 65%),
+      radial-gradient(1.5px 1.5px at 75px 150px, #fff, transparent 65%),
+      radial-gradient(1.5px 1.5px at 160px 20px, #fff, transparent 65%);
+    background-size: 190px 190px;
+    opacity: 0.8;
+  }
+  .as-stars.s3 {
+    background-image:
+      radial-gradient(2.2px 2.2px at 60px 70px, #fff, rgba(190, 170, 255, 0.5) 55%, transparent 75%),
+      radial-gradient(2px 2px at 210px 30px, #fff, rgba(170, 200, 255, 0.5) 55%, transparent 75%),
+      radial-gradient(2.4px 2.4px at 150px 190px, #fff, rgba(255, 190, 220, 0.5) 55%, transparent 75%);
+    background-size: 300px 260px;
+  }
+  .as-shoot {
+    width: 150px; height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, transparent, #fff);
+    box-shadow: 0 0 8px 1px rgba(200, 190, 255, 0.6);
+    opacity: 0;
+  }
+  .as-shoot.a { top: 12%; left: 18%; rotate: 28deg; }
+  .as-shoot.b { top: 26%; left: 56%; rotate: 32deg; }
+  .as-shoot.c { top: 8%;  left: 70%; rotate: 24deg; }
+
+  .as-moon {
+    top: 18vh; right: 11vw;
+    width: 16vmin; height: 16vmin;
+  }
+  .as-moon .halo {
+    position: absolute; inset: -60%;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle, rgba(241, 234, 217, 0.26) 0%, rgba(241, 234, 217, 0.10) 32%, transparent 64%);
+  }
+  .as-moon .moon-orb {
+    position: absolute; inset: 0;
+  }
+  /* The unlit part of the disc: faint earthshine, so the crescent reads as a
+     moon and not as a hole cut in the sky. */
+  .as-moon .earthshine {
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 42% 40%, rgba(150, 140, 200, 0.22), rgba(52, 40, 96, 0.55) 70%, rgba(30, 22, 62, 0.7));
+    box-shadow: inset 0 0 1.6vmin rgba(0, 0, 0, 0.45);
+  }
+  .as-ridge { left: -8%; right: -8%; bottom: 0; }
+  .as-ridge.far {
+    height: 34vh;
+    background: color-mix(in oklab, var(--purple-deep) 40%, #05030d);
+    opacity: 0.7;
+    clip-path: polygon(0 58%, 8% 40%, 15% 52%, 24% 26%, 33% 46%, 43% 20%, 52% 44%, 62% 24%, 72% 48%, 81% 30%, 90% 50%, 100% 36%, 100% 100%, 0 100%);
+  }
+  .as-ridge.mid {
+    height: 26vh;
+    background: color-mix(in oklab, var(--purple-deep) 58%, #05030d);
+    opacity: 0.85;
+    clip-path: polygon(0 60%, 10% 34%, 19% 54%, 29% 22%, 40% 50%, 50% 28%, 59% 58%, 69% 20%, 79% 52%, 89% 30%, 100% 56%, 100% 100%, 0 100%);
+  }
+  .as-ridge.near {
+    height: 17vh;
+    background: color-mix(in oklab, var(--purple-deep) 76%, #05030d);
+    clip-path: polygon(0 50%, 7% 30%, 16% 58%, 27% 24%, 36% 52%, 47% 18%, 57% 56%, 68% 26%, 78% 58%, 88% 22%, 100% 54%, 100% 100%, 0 100%);
+  }
+
+  /* Light theme: lavender dusk instead of deep space. */
+  :global(:root[data-theme='light']) .as-sky {
+    background: linear-gradient(to bottom, color-mix(in oklab, var(--purple) 7%, var(--bg)), color-mix(in oklab, var(--purple) 24%, var(--bg)));
+  }
+  :global(:root[data-theme='light']) .as-stars,
+  :global(:root[data-theme='light']) .as-shoot { display: none; }
+  :global(:root[data-theme='light']) .as-nebula { opacity: 0.32; }
+  :global(:root[data-theme='light']) .as-moon .halo {
+    background: radial-gradient(circle, color-mix(in oklab, var(--purple-bright) 26%, transparent) 0%, transparent 62%);
+  }
+  :global(:root[data-theme='light']) .as-ridge.far  { background: color-mix(in oklab, var(--purple) 30%, var(--bg)); opacity: 0.8; }
+  :global(:root[data-theme='light']) .as-ridge.mid  { background: color-mix(in oklab, var(--purple) 48%, var(--bg)); opacity: 0.9; }
+  :global(:root[data-theme='light']) .as-ridge.near { background: color-mix(in oklab, var(--purple) 66%, var(--bg)); }
+  :global(:root[data-theme='light']) .nx-cube i { border-color: color-mix(in oklab, var(--purple) 60%, transparent); }
+  :global(:root[data-theme='light']) .kz-card { opacity: 0.32; }
+
+  /* ---------------------------------------------------------------- phones */
+  @media (max-width: 760px) {
+    .nx-cube, .nx-packet, .as-shoot, .kz-card.c6, .kz-card.c7, .kz-marquee { display: none; }
+    .nx-floor { height: 34vh; }
+    .as-moon { width: 22vmin; height: 22vmin; right: 8vw; }
+    .kz-card { width: 34vw; min-width: 0; }
+  }
+
+  /* ---------------------------------------------------- scroll + ambient motion */
+  @media (prefers-reduced-motion: no-preference) {
+    /* Ambient (time based) */
+    .nx-grid { animation: nx-flow 3.2s linear infinite; }
+    .nx-beam { animation: nx-beam 9s cubic-bezier(0.4, 0, 0.2, 1) 1.5s infinite; }
+    .nx-glow { animation: nx-breathe 8s ease-in-out infinite alternate; }
+    .nx-cube { animation: nx-spin 46s linear infinite; }
+    .nx-packet { animation: nx-packet 5.5s cubic-bezier(0.5, 0, 0.5, 1) infinite; }
+    .nx-packet.p1 { animation-delay: 0.4s; }
+    .nx-packet.p2 { animation-delay: 2.1s; animation-duration: 7s; }
+    .nx-packet.p3 { animation-delay: 3.6s; animation-duration: 6s; }
+    .nx-packet.p4 { animation-delay: 1.2s; animation-duration: 8s; }
+
+    .kz-cables path { animation: kz-flow 2.4s linear infinite; }
+    .kz-card { animation: kz-float 9s ease-in-out infinite alternate; }
+    .kz-card.c2 { animation-duration: 11s; animation-delay: -3s; }
+    .kz-card.c3 { animation-duration: 10s; animation-delay: -6s; }
+    .kz-card.c4 { animation-duration: 12s; animation-delay: -2s; }
+    .kz-card.c5 { animation-duration: 8s;  animation-delay: -5s; }
+    .kz-card.c6 { animation-duration: 13s; animation-delay: -8s; }
+    .kz-card.c7 { animation-duration: 10s; animation-delay: -1s; }
+    .kz-marquee { animation: kz-marquee 11s ease-in-out 2s infinite; }
+
+    .as-stars.s3 { animation: as-twinkle 3.4s ease-in-out infinite alternate; }
+    .as-shoot.a { animation: as-shoot 9s ease-out 1s infinite; }
+    .as-shoot.b { animation: as-shoot 13s ease-out 5s infinite; }
+    .as-shoot.c { animation: as-shoot 17s ease-out 9s infinite; }
+
+    /* Scroll linked (root scroller) */
+    @supports (animation-timeline: scroll()) {
+      .nx-lines { animation: nx-lines-pan linear both; animation-timeline: scroll(root block); }
+      .nx-cube { animation: nx-spin 46s linear infinite, nx-cube-lift linear both; animation-timeline: auto, scroll(root block); }
+
+      .kz-dots.far  { animation: kz-pan-far linear both;  animation-timeline: scroll(root block); }
+      .kz-dots.near { animation: kz-pan-near linear both; animation-timeline: scroll(root block); }
+      .kz-board     { animation: kz-pan-board linear both; animation-timeline: scroll(root block); }
+
+      .as-nebula   { animation: as-nebula linear both; animation-timeline: scroll(root block); }
+      .as-stars.s1 { animation: as-stars-far linear both;  animation-timeline: scroll(root block); }
+      .as-stars.s2 { animation: as-stars-mid linear both;  animation-timeline: scroll(root block); }
+      .as-stars.s3 { animation: as-stars-near linear both, as-twinkle 3.4s ease-in-out infinite alternate; animation-timeline: scroll(root block), auto; }
+      .as-moon     { animation: as-moon-rise linear both; animation-timeline: scroll(root block); }
+      .as-moon .moon-orb { animation: as-phase linear both; animation-timeline: scroll(root block); }
+      .as-moon .halo     { animation: as-halo linear both;  animation-timeline: scroll(root block); }
+      .as-ridge.far  { animation: as-ridge-far linear both;  animation-timeline: scroll(root block); }
+      .as-ridge.mid  { animation: as-ridge-mid linear both;  animation-timeline: scroll(root block); }
+      .as-ridge.near { animation: as-ridge-near linear both; animation-timeline: scroll(root block); }
+    }
+  }
+
+  @keyframes nx-flow    { from { transform: translateY(0); } to { transform: translateY(60px); } }
+  @keyframes nx-beam    { 0% { transform: translateY(-2vh); opacity: 0; } 8% { opacity: 1; } 60% { opacity: 0.9; } 100% { transform: translateY(102vh); opacity: 0; } }
+  @keyframes nx-breathe { from { opacity: 0.7; } to { opacity: 1; } }
+  @keyframes nx-spin    { from { transform: rotateX(-24deg) rotateY(30deg); } to { transform: rotateX(-24deg) rotateY(390deg); } }
+  @keyframes nx-packet  { 0% { transform: translateY(-80px); opacity: 0; } 10% { opacity: 1; } 70% { opacity: 1; } 100% { transform: translateY(70vh); opacity: 0; } }
+  @keyframes nx-lines-pan { from { transform: translateY(0); } to { transform: translateY(-18vh); } }
+  @keyframes nx-cube-lift { from { translate: 0 0; } to { translate: 0 -22vh; } }
+
+  @keyframes kz-flow   { to { stroke-dashoffset: -24; } }
+  @keyframes kz-float  { from { translate: 0 -6px; } to { translate: 0 8px; } }
+  @keyframes kz-marquee {
+    0%, 100% { opacity: 0; transform: scale(0.94); }
+    18%, 46% { opacity: 1; transform: scale(1); }
+    62% { opacity: 0; transform: scale(1.02); }
+  }
+  @keyframes kz-pan-far   { from { transform: translateY(0); } to { transform: translateY(-9vh); } }
+  @keyframes kz-pan-near  { from { transform: translateY(0); } to { transform: translateY(-22vh); } }
+  @keyframes kz-pan-board { from { transform: translateY(0); } to { transform: translateY(-70vh); } }
+
+  @keyframes as-twinkle { from { opacity: 0.35; } to { opacity: 1; } }
+  @keyframes as-shoot {
+    0%   { opacity: 0; transform: translate(0, 0); }
+    2%   { opacity: 1; }
+    9%   { opacity: 0; transform: translate(34vw, 19vw); }
+    100% { opacity: 0; transform: translate(34vw, 19vw); }
+  }
+  @keyframes as-nebula     { from { transform: translate(-3vw, 3vh) scale(1.02); } to { transform: translate(3vw, -6vh) scale(1.12); } }
+  @keyframes as-stars-far  { from { transform: translateY(0); } to { transform: translateY(6vh); } }
+  @keyframes as-stars-mid  { from { transform: translateY(0); } to { transform: translateY(14vh); } }
+  @keyframes as-stars-near { from { transform: translateY(0); } to { transform: translateY(26vh); } }
+  /* The moon climbs and fills out as you scroll: crescent at the top of the page, full by the bottom. */
+  @keyframes as-moon-rise {
+    from { transform: translate(4vw, 26vh) scale(1.12); }
+    35%  { transform: translate(0, 4vh) scale(1); }
+    to   { transform: translate(-6vw, -14vh) scale(0.94); }
+  }
+  @keyframes as-phase { from { --cx: 64%; } to { --cx: 158%; } }
+  @keyframes as-halo  { from { opacity: 0.35; } to { opacity: 1; } }
+  @keyframes as-ridge-far  { from { transform: translate(-3vw, 0); } to { transform: translate(3vw, 8vh); } }
+  @keyframes as-ridge-mid  { from { transform: translate(5vw, 0);  } to { transform: translate(-5vw, 14vh); } }
+  @keyframes as-ridge-near { from { transform: translate(-8vw, 0); } to { transform: translate(8vw, 20vh); } }
+</style>

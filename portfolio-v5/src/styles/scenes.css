@@ -31,24 +31,8 @@
   --font-scene-ascent: 'Pixelify Sans', var(--font-display);
 }
 
-body[data-scene] { position: relative; }
-body[data-scene]::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-}
 
 /* ---------------------------------------------------------------- nexus */
-body[data-scene='nexus']::before {
-  background-image:
-    linear-gradient(color-mix(in oklab, var(--purple-bright) 7%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in oklab, var(--purple-bright) 7%, transparent) 1px, transparent 1px);
-  background-size: 64px 64px;
-  -webkit-mask-image: radial-gradient(ellipse 85% 70% at 80% 0%, #000 0%, transparent 75%);
-          mask-image: radial-gradient(ellipse 85% 70% at 80% 0%, #000 0%, transparent 75%);
-}
 body[data-scene='nexus'] .feature-card,
 body[data-scene='nexus'] .stat-cell {
   border-radius: 2px;
@@ -69,12 +53,6 @@ body[data-scene='nexus'] .section-eyebrow::before {
 }
 
 /* --------------------------------------------------------------- kanvaz */
-body[data-scene='kanvaz']::before {
-  background-image: radial-gradient(color-mix(in oklab, var(--text) 20%, transparent) 1.1px, transparent 1.4px);
-  background-size: 28px 28px;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.35) 70%, transparent 100%);
-          mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.35) 70%, transparent 100%);
-}
 body[data-scene='kanvaz'] .feature-card {
   position: relative;
   border-radius: 6px;
@@ -102,18 +80,8 @@ body[data-scene='kanvaz'] .shot:nth-child(odd) .frame { rotate: -0.3deg; }
 body[data-scene='kanvaz'] .shot:nth-child(even) .frame { rotate: 0.3deg; }
 
 /* --------------------------------------------------------------- ascent */
-body[data-scene='ascent']::before {
-  background:
-    radial-gradient(circle 18vmin at 88% 14%, color-mix(in oklab, var(--text) 13%, transparent), transparent 72%),
-    linear-gradient(to bottom, transparent 40%, color-mix(in oklab, var(--purple-deep) 40%, transparent) 100%);
-}
 [data-theme='light'] body[data-scene='ascent']::before,
-:root[data-theme='light'] body[data-scene='ascent']::before {
-  background:
-    radial-gradient(circle 18vmin at 88% 14%, color-mix(in oklab, var(--purple-bright) 14%, transparent), transparent 72%),
-    linear-gradient(to bottom, transparent 45%, color-mix(in oklab, var(--purple) 12%, transparent) 100%);
-}
-body[data-scene='ascent'] .stat-cell,
+:root[data-theme='light'] body[data-scene='ascent'] .stat-cell,
 body[data-scene='ascent'] .feature-card,
 body[data-scene='ascent'] .act-row {
   position: relative;
@@ -143,3 +111,32 @@ body[data-scene='nexus'] .case-title  { font-family: var(--font-scene-nexus);  f
 body[data-scene='kanvaz'] .case-title { font-family: var(--font-scene-kanvaz); font-style: normal; font-weight: 700; letter-spacing: 0; }
 body[data-scene='ascent'] .case-title { font-family: var(--font-scene-ascent); font-style: normal; font-weight: 600; letter-spacing: 0; font-size: calc(var(--text-h1) * 0.78); line-height: 1.12; }
 body[data-scene='ascent'] .stat-cell dd { font-family: var(--font-scene-ascent); font-weight: 600; }
+
+/* ------------------------------------------------------------------ moon */
+/* A moon with maria and craters, a terminator shadow and a soft highlight.
+   `.phased` adds a waxing crescent-to-full mask driven by --cx (registered in
+   SceneBackdrop.astro). Without @property support the mask is dropped and the
+   moon is simply full. */
+.moon-orb {
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 27% 23%, rgba(255, 255, 255, 0.6), transparent 40%),
+    radial-gradient(ellipse 17% 14% at 60% 33%, rgba(140, 128, 108, 0.50), transparent 72%),
+    radial-gradient(ellipse 22% 17% at 33% 60%, rgba(140, 128, 108, 0.42), transparent 72%),
+    radial-gradient(ellipse 11% 10% at 69% 64%, rgba(130, 118, 100, 0.55), transparent 72%),
+    radial-gradient(ellipse 8% 7% at 47% 20%, rgba(140, 128, 108, 0.45), transparent 72%),
+    radial-gradient(ellipse 7% 6% at 21% 44%, rgba(140, 128, 108, 0.40), transparent 72%),
+    radial-gradient(ellipse 9% 8% at 55% 80%, rgba(130, 118, 100, 0.42), transparent 72%),
+    radial-gradient(circle at 34% 30%, #FBF6E8 0%, #EBE1CA 50%, #BBAE96 100%);
+  box-shadow:
+    inset -2.4vmin -1.8vmin 3.2vmin rgba(46, 28, 88, 0.46),
+    inset 0.5vmin 0.5vmin 1.2vmin rgba(255, 255, 255, 0.30);
+}
+.moon-orb.phased {
+  -webkit-mask-image: radial-gradient(circle closest-side at var(--cx) 50%, transparent 98%, #000 100%);
+          mask-image: radial-gradient(circle closest-side at var(--cx) 50%, transparent 98%, #000 100%);
+}
+:root[data-theme='light'] .as-moon .moon-orb,
+:root[data-theme='light'] .chapter[data-scene='ascent'] .moon-orb {
+  filter: hue-rotate(-30deg) saturate(1.2) brightness(0.96);
+}

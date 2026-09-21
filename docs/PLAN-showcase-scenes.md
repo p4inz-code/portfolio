@@ -104,3 +104,11 @@ feature cards and screenshot frames pick up the scene. Set through a `scene` pro
 - Project names start as an outline and fill with the accent as you scroll (a clipped copy of the text swept by the scroll timeline, the same idea as the AniFX outline-fill, but pure CSS). Ascent fills in 16 pixel-sized steps.
 - All corner-bracket motifs removed: Nexus thumbnail, Nexus/Ascent page cards.
 - Ascent sky rebuilt as a climb: deep-space gradient, nebula, three star layers (far/mid/near, the near one twinkles), two shooting stars at fixed scroll points, a moon that rises fast from behind the ridges, and three ridges that fall away at different speeds. Light theme keeps a lavender dusk without stars.
+
+## Pass 6 (page backdrops + moon)
+
+- New `SceneBackdrop.astro`, rendered by BaseLayout on scene pages: fixed, behind content, scroll-linked through the root timeline, with ambient motion only when reduced motion is not requested.
+  - /nexus: perspective floor grid flowing toward you, data packets on the grid lines, a scan beam, a slow wireframe cube.
+  - /kanvaz: a board that pans as you scroll (dot grid, ghost reference cards, flowing cables, a marquee selection).
+  - /ascent: deep space (nebula, three star depths, shooting stars), ridges falling away, and the moon.
+- Moon: craters and maria, terminator shadow, halo, and a scroll-driven phase (crescent at the top of the page, full by the bottom) with faint earthshine on the unlit side. Same orb used in the /work Ascent chapter.
