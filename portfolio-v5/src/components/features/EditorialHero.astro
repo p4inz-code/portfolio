@@ -36,6 +36,7 @@ if (scrub) {
 }
 ---
 {scrub ? (
+  <>
   <section class="hero hero-scrub" aria-labelledby="hero-title" data-progress="hero">
     <div class="hero-pin wrap">
       {eyebrow && <p class="hero-eyebrow">{eyebrow}</p>}
@@ -50,7 +51,7 @@ if (scrub) {
         <ol class="pipe" aria-label="How I work" style={`--n:${steps.length}`}>
           <li class="pipe-track" aria-hidden="true"><i></i><img src="/ap-mark.png" width="34" height="34" alt="" decoding="async" /></li>
           {steps.map((st, i) => (
-            <li class="pipe-step" style={`--s:${(steps.length > 1 ? i / (steps.length - 1) : 0).toFixed(3)}`}>
+            <li class="pipe-step" style={`--s:${(i / steps.length).toFixed(3)}`}>
               <span class="pipe-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
               <b>{st.label}</b>
               <span>{st.sub}</span>
@@ -63,6 +64,21 @@ if (scrub) {
       <p class="scroll-cue" aria-hidden="true"><span>scroll</span><i></i></p>
     </div>
   </section>
+  <script>
+    // Measures the pipe track's real pixel width so the traveling logo can
+    // move with translateX (see .pipe-track img). Runs on layout changes
+    // only (load, resize, font swap) — never on scroll, so it adds nothing
+    // to the per-frame cost the scroll animation itself already pays.
+    (() => {
+      const track = document.querySelector<HTMLElement>('.pipe-track');
+      if (!track) return;
+      const set = () => track.style.setProperty('--track-w', track.clientWidth + 'px');
+      set();
+      new ResizeObserver(set).observe(track);
+      document.fonts?.ready.then(set).catch(() => {});
+    })();
+  </script>
+  </>
 ) : (
   <section class="hero wrap" aria-labelledby="hero-title">
     {eyebrow && <p class="hero-eyebrow">{eyebrow}</p>}
@@ -161,7 +177,14 @@ if (scrub) {
   }
   /* three glass cards that light up in turn, and a bar under them with the logo riding it */
   .pipe-step {
-    --nt: clamp(0, calc((var(--fill) - var(--s) + 0.1) / 0.1), 1);
+    /* v5.28.0 fix — the old window was (fill - s + 0.1) / 0.1, which for
+       step 1 (s=0) reaches 1 at fill=0: the first card was fully lit
+       before any scrolling happened at all, on every device. Thresholds
+       now sit at 0, 1/n, 2/n ... and each step's own window is exactly
+       one slot wide (multiplying by --n turns "one slot" into a 0..1
+       ramp), so nt is 0 at rest and the last step reaches 1 exactly
+       when --fill reaches 1. */
+    --nt: clamp(0, calc((var(--fill) - var(--s)) * var(--n)), 1);
     display: flex; flex-direction: column; gap: 6px;
     padding: 14px 16px 16px;
     border-radius: 14px;
@@ -201,16 +224,29 @@ if (scrub) {
     transform: scaleX(var(--fill));
   }
   .pipe-track img {
-    position: absolute; top: 50%; left: calc(var(--fill) * 100%);
+    /* v5.28.0 fix — this used to move by animating `left`, which is a layout
+       property: the browser had to re-run layout on every scroll frame just
+       to slide a circle, the exact thing scroll-driven animations exist to
+       avoid, and it read as stutter on lower-end phones. --track-w (the
+       track's real pixel width, measured once below, not per frame) lets
+       the same motion run as a single translateX, which the compositor can
+       do off the main thread. */
+    position: absolute; top: 50%; left: 0;
     width: 34px; height: 34px;
     margin: -17px 0 0 -17px;
     padding: 4px; box-sizing: border-box;
     border-radius: 50%;
     background: color-mix(in oklab, var(--bg) 60%, transparent);
-    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
     box-shadow: 0 0 0 1px var(--line-strong), 0 0 22px color-mix(in oklab, var(--purple-bright) 45%, transparent);
-    transform: rotate(calc(var(--fill) * 360deg));
+    transform: translateX(calc(var(--fill) * var(--track-w, 300px))) rotate(calc(var(--fill) * 360deg));
+    will-change: transform;
     max-width: none;
+  }
+  /* the blur is a nice-to-have on a fast desktop GPU; it is one more thing
+     to recomposite on every one of those frames, so mobile skips it and
+     gets a plain, still-legible token instead */
+  @media (min-width: 900px) {
+    .pipe-track img { -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
   }
   .scrub-sub { margin-top: var(--sp-5); }
   .scrub-slot { margin-top: var(--sp-1); }

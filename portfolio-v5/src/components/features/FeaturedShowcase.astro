@@ -391,15 +391,13 @@ const defaultLabel = (kind: string) =>
   /* Ascent: a bigger frame with a colour grade (violet shadows, more punch), one recipe per theme */
   .chapter[data-scene='ascent'] { --grade: saturate(1.2) contrast(1.06); }
   :global(:root[data-theme='light']) .chapter[data-scene='ascent'] { --grade: saturate(1.08) brightness(1.08) contrast(1.02); }
+  /* v5.28.0 fix — this used to add a second gradient layer on top of the
+     video with mix-blend-mode: soft-light for extra punch. Some GPUs fail
+     to composite a hardware-decoded <video> under a blended sibling layer
+     and render it blank instead — reported as "the Ascent video doesn't
+     show up." The filter alone gets most of the same grade with none of
+     that risk, so the blended overlay is gone. */
   .chapter[data-scene='ascent'] .show-img { filter: var(--grade); border-radius: 5px; box-shadow: 0 24px 60px -28px color-mix(in oklab, var(--purple-bright) 70%, transparent); }
-  .chapter[data-scene='ascent'] .media-frame::after {
-    content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; border-radius: 5px;
-    background: radial-gradient(120% 100% at 50% 40%, transparent 55%, rgba(12, 4, 40, 0.42)), linear-gradient(180deg, rgba(139, 92, 246, 0.2), rgba(20, 8, 60, 0.26));
-    mix-blend-mode: soft-light;
-  }
-  :global(:root[data-theme='light']) .chapter[data-scene='ascent'] .media-frame::after {
-    background: radial-gradient(120% 100% at 50% 40%, transparent 60%, rgba(91, 33, 182, 0.26)), linear-gradient(180deg, rgba(196, 181, 253, 0.4), rgba(255, 255, 255, 0.14));
-  }
   .show-media-tag {
     margin-top: var(--sp-3);
     font-family: var(--font-mono);

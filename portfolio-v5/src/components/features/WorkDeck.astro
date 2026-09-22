@@ -228,17 +228,14 @@ const num = (r: string) => { const [a, b] = r.split('/').map(Number); return a /
   .dcard[data-scene='kanvaz'] .dframe { border-radius: 8px; box-shadow: 0 18px 36px -22px rgba(0, 0, 0, 0.6); rotate: -1deg; }
   .dcard[data-scene='ascent'] { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr); }
   .dcard[data-scene='ascent'] .dframe { border-radius: 5px; box-shadow: 0 24px 60px -28px color-mix(in oklab, var(--purple-bright) 70%, transparent); }
-  /* colour grade: violet shadows, a little more punch, one recipe per theme */
+  /* colour grade: violet shadows, a little more punch, one recipe per theme.
+     v5.28.0 fix — this used to layer a second gradient on top with
+     mix-blend-mode: soft-light. Some GPUs fail to composite a hardware-
+     decoded <video> under a blended sibling and render it blank instead —
+     reported as "the Ascent video doesn't show up." The filter alone gets
+     most of the same look with none of that risk. */
   .dcard[data-scene='ascent'] .dimg { filter: saturate(1.2) contrast(1.06); }
-  .dcard[data-scene='ascent'] .dframe::after {
-    content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
-    background: radial-gradient(120% 100% at 50% 40%, transparent 55%, rgba(12, 4, 40, 0.42)), linear-gradient(180deg, rgba(139, 92, 246, 0.2), rgba(20, 8, 60, 0.26));
-    mix-blend-mode: soft-light;
-  }
   :global(:root[data-theme='light']) .dcard[data-scene='ascent'] .dimg { filter: saturate(1.08) brightness(1.08) contrast(1.02); }
-  :global(:root[data-theme='light']) .dcard[data-scene='ascent'] .dframe::after {
-    background: radial-gradient(120% 100% at 50% 40%, transparent 60%, rgba(91, 33, 182, 0.26)), linear-gradient(180deg, rgba(196, 181, 253, 0.4), rgba(255, 255, 255, 0.14));
-  }
   /* nexus: a scan line that travels with the wipe */
   .dcard[data-scene='nexus'] .dframe::after {
     content: ''; position: absolute; top: 0; bottom: 0; left: 100%; width: 1px; z-index: 1; pointer-events: none;

@@ -15,7 +15,7 @@ export const SITE = {
   location: 'Navi Mumbai, India',
   studio: 'Northbyte Studios',
   studioFounded: '2026',
-  currentVersion: 'v5.27.0',
+  currentVersion: 'v5.28.0',
   domain: 'atharvapatil.tech',
   // Sitewide meta-keywords fallback — covers name/handle variants people
   // actually type (including the retired "painz" spelling) so search

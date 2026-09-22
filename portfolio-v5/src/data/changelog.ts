@@ -20,6 +20,17 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.28.0',
+    kind: 'released',
+    summary: "Real fixes: the home hero's three-step pipeline no longer starts with the first card already lit, the logo on it no longer causes layout jank, and a risky blend-mode layer behind the Ascent video is gone.",
+    body: [
+      "Home hero: the pipeline math had an off-by-value bug. The first card's own lit window ended exactly at rest (0% scrolled), so 'Spot the gap' showed fully lit before any scrolling happened, on every device. Thresholds are now evenly spaced and each card's window starts at rest and ends exactly where the next one begins, so all three start dim and light up in turn as you scroll, matching what the pinned desktop version already did.",
+      "The logo riding the pipeline's line used to move by animating the CSS left property, which forces the browser to recompute layout on every scroll frame -- the exact cost scroll-driven animations exist to avoid, and it read as stutter, worse on phones. It now moves with a single transform against a width measured once (on load and resize, never on scroll), and the small blur on the logo is now desktop-only.",
+      "Ascent: removed a second gradient layer on the video frame that used mix-blend-mode for extra punch. Some GPUs fail to composite a hardware-decoded video under a blended sibling layer and render it blank -- reported as the Ascent clip not showing up, on the home chapter and in /work. The color filter alone keeps most of the same grade without that risk.",
+      "Contact: the two underline-style fields (name, email) get a bigger tap area on phones (44px+), unchanged on desktop.",
+    ],
+  },
+  {
     version: 'v5.27.0',
     kind: 'released',
     summary: "Real fonts, finally: Clash Display, General Sans and Azeret Mono replace a broken Fontshare request that had been silently rendering the whole site in system Arial. Plus a 404 game, Signal Runner.",

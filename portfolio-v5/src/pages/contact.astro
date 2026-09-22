@@ -901,6 +901,10 @@ import { CONTACT, SITE } from '../data/site';
       .term-form { padding: var(--sp-5) var(--sp-5) var(--sp-6); }
       .term-line, .term-line-block { grid-template-columns: 1fr; gap: 4px; }
       .term-input, .term-textarea, .term-select-trigger { font-size: 16px; } /* iOS zoom prevention */
+      /* touch: the underline fields read fine on a mouse at 15px + 6px padding,
+         but that's under a comfortable thumb target — give the tap area more
+         room on phones without changing the desktop look. */
+      .term-input, .term-select-trigger { padding-top: 12px; padding-bottom: 12px; }
       .term-actions { gap: var(--sp-3); }
     }
   </style>
