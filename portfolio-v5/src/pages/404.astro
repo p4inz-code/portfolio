@@ -85,7 +85,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       const GROUND = 168;
       const GRAV = 0.62, JUMP_V = -11.2;
       const STAND_H = 18, DUCK_H = 11;
-      let speed = 5.2, running = false, over = false, started = false;
+      // the Google dino's own curve: start slow, add a small constant amount
+      // of speed every frame, cap it. It only reads as "progressive" if the
+      // start is genuinely slow and the ceiling is genuinely fast — split
+      // enough that the difference is obvious inside one run, not just over
+      // several.
+      const START_SPEED = 3.6, MAX_SPEED = 14, ACCEL = 0.0034;
+      let speed = START_SPEED, running = false, over = false, started = false;
       let t = 0, dist = 0, best = Number(localStorage.getItem('nb-404-best') || 0);
       let shake = 0, milestoneFlash = 0, lastMilestone = 0;
       const player = { x: 50, y: GROUND, vy: 0, jumping: false, ducking: false, w: 13, h: STAND_H };
@@ -103,7 +109,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       }
 
       function reset() {
-        speed = 5.2; t = 0; dist = 0; obstacles = []; particles = []; nextSpawn = 60; lastMilestone = 0;
+        speed = START_SPEED; t = 0; dist = 0; obstacles = []; particles = []; nextSpawn = 60; lastMilestone = 0;
         player.y = GROUND; player.vy = 0; player.jumping = false; player.ducking = false; player.h = STAND_H;
         over = false; running = true; started = true;
         hint.textContent = 'Space / tap to jump · hold ↓ to duck';
@@ -163,7 +169,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         if (!running) { if (shake > 0) shake *= 0.86; return; }
         t++;
         dist += speed;
-        if (speed < 12.5) speed += 0.0026;
+        if (speed < MAX_SPEED) speed += ACCEL;
         if (shake > 0) shake *= 0.86;
         if (milestoneFlash > 0) milestoneFlash -= 0.02;
 

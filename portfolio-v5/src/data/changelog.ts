@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.28.1',
+    kind: 'released',
+    summary: "404 game speed now ramps the way the offline dino's does: a slow, honest start and a noticeably faster ceiling. Verified the contact form's mailto flow end to end.",
+    body: [
+      "Signal Runner: starts slower (was 5.2, now 3.6) and climbs further (was capped at 12.5, now 14), so the difference between the first few seconds and thirty seconds in is obvious, not just a slightly quicker version of the same speed.",
+      "Contact: re-verified the mailto flow end to end (validation, message composition, the transmit beat, and the copyable-text fallback for when no mail client answers). No changes needed -- it already handles the failure case.",
+    ],
+  },
+  {
     version: 'v5.28.0',
     kind: 'released',
     summary: "Real fixes: the home hero's three-step pipeline no longer starts with the first card already lit, the logo on it no longer causes layout jank, and a risky blend-mode layer behind the Ascent video is gone.",
