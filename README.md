@@ -58,12 +58,13 @@ portfolio/
   purples for AA contrast). Text and background pairs were checked for
   WCAG AA. Toggle with the button or the `T` key; the choice is kept in
   `localStorage['nb-theme']`.
-- **Type** — the intended stack is `Neue Machina` (display), `Neue
-  Montreal` (body) and `Supply Mono` (mono), set as `--font-display`,
-  `--font-body` and `--font-mono`. Those are Pangram Pangram families and
-  are **not on Fontshare**, so the current Fontshare request returns
-  nothing and the site renders the fallback stack (Helvetica Neue / Arial /
-  system mono) until they are licensed and self-hosted or replaced.
+- **Type** — `Clash Display` (display), `General Sans` (body) and `Azeret
+  Mono` (mono), set as `--font-display`, `--font-body` and `--font-mono`,
+  all served from Fontshare, free. (v5.27.0: the original picks here,
+  Neue Machina / Neue Montreal / Supply Mono, are Pangram Pangram
+  families that turned out not to actually be on Fontshare — the request
+  returned empty CSS and the site had been silently rendering system
+  Helvetica/Arial. Replaced with real, free families in the same role.)
   Scene titles use their own faces: Technor and Kalam (Fontshare, one
   request each) and Jersey 10 (SIL OFL, self-hosted in `public/fonts/`).
 - **Motion** — scroll-linked effects use CSS scroll-driven animations

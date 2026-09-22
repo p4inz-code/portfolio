@@ -15,7 +15,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="nf-diag" role="group" aria-label="Route diagnostic">
         <div class="nf-diag-row"><span>route requested</span><strong id="nfPath">—</strong></div>
         <div class="nf-diag-row"><span>status</span><strong class="nf-diag-bad">404 not found</strong></div>
-        <div class="nf-diag-row"><span>checked against</span><strong>/sitemap.xml · 17 known routes</strong></div>
+        <div class="nf-diag-row"><span>checked against</span><strong>/sitemap.xml · 19 known routes</strong></div>
         <div class="nf-diag-row"><span>likely cause</span><strong>typo, stale link, or removed page</strong></div>
       </div>
 
@@ -23,8 +23,267 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <a href="/" class="nf-btn nf-btn-primary">← Back to home</a>
         <button type="button" class="nf-btn nf-btn-ghost" id="nf404Cmdk">Search &amp; jump <span class="nf-kbd">⌘K</span></button>
       </div>
+
+      <div class="nf-game-wrap">
+        <p class="nf-game-label">While you're here <span>— keep the connection alive</span></p>
+        <div class="nf-game-stage">
+          <canvas id="nfGame" class="nf-game" width="640" height="220" role="img" aria-label="Signal Runner: a small game. Space or tap to jump packets, hold down or swipe down to duck under drones."></canvas>
+          <button type="button" class="nf-game-duck" id="nfGameDuck" aria-label="Duck">▾</button>
+        </div>
+        <p class="nf-game-hint" id="nfGameHint">Space / tap to jump · hold ↓ to duck</p>
+      </div>
     </div>
   </section>
+
+  <script>
+    /**
+     * Signal Runner — the 404 game.
+     *
+     * Same genre as the offline dino (an endless side-scroller you can't
+     * pause, timing is everything), built independently from it: a second
+     * mechanic (duck under low drones, not just jump low walls), a
+     * milestone badge that spins in the AP mark every 100m, a screen-shake
+     * + particle burst on both jump and crash, and a day/night sky that
+     * sweeps as your uptime climbs. Colors are read live from the page's
+     * own CSS variables, so dark and light both work with one palette.
+     * The loop only starts on input (space, tap, hold ↓) — nothing moves
+     * on its own, so this is never "ambient motion" under WCAG 2.2.2.
+     */
+    (function () {
+      const canvas = document.getElementById('nfGame');
+      const hint = document.getElementById('nfGameHint');
+      const duckBtn = document.getElementById('nfGameDuck');
+      if (!(canvas instanceof HTMLCanvasElement) || !hint) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      const DPR = Math.min(window.devicePixelRatio || 1, 2);
+      const CSS_W = 640, CSS_H = 220;
+      canvas.width = CSS_W * DPR;
+      canvas.height = CSS_H * DPR;
+      ctx.scale(DPR, DPR);
+
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const mark = new Image();
+      mark.src = '/ap-mark.png';
+
+      const cvar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      let colors = {};
+      const readColors = () => {
+        colors = {
+          text: cvar('--text') || '#E8E1D0',
+          muted: cvar('--muted') || '#9B95B0',
+          line: cvar('--line-strong') || 'rgba(184,157,255,0.28)',
+          bright: cvar('--purple-bright') || '#B993FF',
+          bg: cvar('--bg') || '#0A0517',
+          warn: cvar('--warn-text') || '#E2726A',
+        };
+      };
+      readColors();
+      new MutationObserver(readColors).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+      const GROUND = 168;
+      const GRAV = 0.62, JUMP_V = -11.2;
+      const STAND_H = 18, DUCK_H = 11;
+      let speed = 5.2, running = false, over = false, started = false;
+      let t = 0, dist = 0, best = Number(localStorage.getItem('nb-404-best') || 0);
+      let shake = 0, milestoneFlash = 0, lastMilestone = 0;
+      const player = { x: 50, y: GROUND, vy: 0, jumping: false, ducking: false, w: 13, h: STAND_H };
+      let obstacles = [];
+      let particles = [];
+      let nextSpawn = 0;
+      let raf = 0;
+      let duckHeld = false;
+
+      function burst(x, y, color, n) {
+        if (reduceMotion) return;
+        for (let i = 0; i < n; i++) {
+          particles.push({ x, y, vx: (Math.random() - 0.5) * 3.4, vy: -Math.random() * 3 - 0.5, life: 18 + Math.random() * 10, color });
+        }
+      }
+
+      function reset() {
+        speed = 5.2; t = 0; dist = 0; obstacles = []; particles = []; nextSpawn = 60; lastMilestone = 0;
+        player.y = GROUND; player.vy = 0; player.jumping = false; player.ducking = false; player.h = STAND_H;
+        over = false; running = true; started = true;
+        hint.textContent = 'Space / tap to jump · hold ↓ to duck';
+      }
+
+      function jump() {
+        if (over) { reset(); return; }
+        if (!started) { reset(); return; }
+        if (!player.jumping && !player.ducking) {
+          player.vy = JUMP_V; player.jumping = true;
+          burst(player.x + player.w / 2, player.y, colors.bright, 5);
+        }
+      }
+      function setDuck(v) {
+        duckHeld = v;
+        if (!started || over) return;
+        player.ducking = v && !player.jumping;
+        player.h = player.ducking ? DUCK_H : STAND_H;
+      }
+
+      canvas.addEventListener('pointerdown', (e) => { e.preventDefault(); jump(); });
+      duckBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); setDuck(true); });
+      duckBtn.addEventListener('pointerup', () => setDuck(false));
+      duckBtn.addEventListener('pointerleave', () => setDuck(false));
+      // swipe down anywhere on the stage also ducks, so touch play never needs to find the small button
+      let touchY0 = 0;
+      canvas.addEventListener('touchstart', (e) => { touchY0 = e.touches[0].clientY; }, { passive: true });
+      canvas.addEventListener('touchmove', (e) => { if (e.touches[0].clientY - touchY0 > 24) setDuck(true); }, { passive: true });
+      canvas.addEventListener('touchend', () => setDuck(false));
+
+      window.addEventListener('keydown', (e) => {
+        const active = document.activeElement;
+        const typing = active && ['INPUT', 'TEXTAREA'].includes(active.tagName);
+        if (typing) return;
+        if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); jump(); }
+        if (e.code === 'ArrowDown') { e.preventDefault(); setDuck(true); }
+      });
+      window.addEventListener('keyup', (e) => { if (e.code === 'ArrowDown') setDuck(false); });
+      canvas.tabIndex = 0;
+
+      function spawn() {
+        // two obstacle kinds so jump alone is not enough: a packet on the ground (jump it),
+        // or a drone at head height (duck it) — the split is what makes this a different game, not a reskin
+        const kind = Math.random() < 0.62 ? 'packet' : 'drone';
+        if (kind === 'packet') {
+          obstacles.push({ kind, x: CSS_W + 10, w: 9 + Math.random() * 8, h: 13 + Math.random() * 11 });
+        } else {
+          obstacles.push({ kind, x: CSS_W + 10, w: 20, h: 11, fy: GROUND - STAND_H - 9 + Math.random() * 5, ph: Math.random() * 10 });
+        }
+        const gap = 2.4 + Math.random() * 4.4;
+        nextSpawn = t + 40 - Math.min(speed * 2.4, 22) + gap * 7;
+      }
+
+      function step() {
+        raf = requestAnimationFrame(step);
+        draw();
+        if (!running) { if (shake > 0) shake *= 0.86; return; }
+        t++;
+        dist += speed;
+        if (speed < 12.5) speed += 0.0026;
+        if (shake > 0) shake *= 0.86;
+        if (milestoneFlash > 0) milestoneFlash -= 0.02;
+
+        const m = Math.floor(dist / 10);
+        if (m > 0 && m % 100 === 0 && m !== lastMilestone) { lastMilestone = m; milestoneFlash = 1; }
+
+        if (!player.ducking) {
+          player.vy += GRAV;
+          player.y += player.vy;
+          if (player.y >= GROUND) { player.y = GROUND; player.vy = 0; player.jumping = false; }
+        }
+        if (duckHeld && !player.jumping) { player.ducking = true; player.h = DUCK_H; }
+        else if (!duckHeld) { player.ducking = false; player.h = STAND_H; }
+
+        if (t >= nextSpawn) spawn();
+        for (const o of obstacles) o.x -= speed;
+        obstacles = obstacles.filter((o) => o.x > -30);
+        for (const p of particles) { p.x += p.vx; p.y += p.vy; p.vy += 0.15; p.life--; }
+        particles = particles.filter((p) => p.life > 0);
+
+        for (const o of obstacles) {
+          const px = player.x + 2, pw = player.w - 4;
+          const py = player.y - player.h, ph = player.h;
+          let ox, oy, ow, oh;
+          if (o.kind === 'packet') { ox = o.x; ow = o.w; oh = o.h; oy = GROUND - oh; }
+          else { ox = o.x; ow = o.w; oh = o.h; oy = o.fy; }
+          if (px < ox + ow - 2 && px + pw - 2 > ox && py < oy + oh - 2 && py + ph - 2 > oy) {
+            running = false; over = true; shake = 6;
+            burst(player.x + player.w / 2, player.y - player.h / 2, colors.warn, 14);
+            if (Math.floor(dist / 10) > best) { best = Math.floor(dist / 10); localStorage.setItem('nb-404-best', String(best)); }
+            hint.textContent = 'Connection lost at ' + Math.floor(dist / 10) + 'm — space / tap to retry';
+          }
+        }
+      }
+
+      function draw() {
+        ctx.save();
+        if (shake > 0.4) ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
+        ctx.clearRect(-10, -10, CSS_W + 20, CSS_H + 20);
+
+        // day/night sweep tied to uptime: a slow hue drift, not a static backdrop
+        const cyc = started ? (dist * 0.0006) % 1 : 0;
+        const skyA = `color-mix(in oklab, ${colors.bright} ${6 + Math.sin(cyc * Math.PI * 2) * 4}%, transparent)`;
+        const g = ctx.createLinearGradient(0, 0, 0, GROUND + 30);
+        g.addColorStop(0, skyA);
+        g.addColorStop(1, 'transparent');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, CSS_W, GROUND + 30);
+
+        // signal trace: a faint graph line instead of desert scenery
+        ctx.strokeStyle = colors.line;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let x = 0; x <= CSS_W; x += 4) {
+          const yy = GROUND + 20 + Math.sin((x + (started ? dist : 0)) * 0.05) * 2.4;
+          x === 0 ? ctx.moveTo(x, yy) : ctx.lineTo(x, yy);
+        }
+        ctx.stroke();
+        ctx.strokeStyle = colors.muted;
+        ctx.beginPath(); ctx.moveTo(0, GROUND + 2); ctx.lineTo(CSS_W, GROUND + 2); ctx.stroke();
+
+        // player: a flat silhouette (no extra image request), squashes on landing, shrinks when ducking
+        ctx.fillStyle = over ? colors.warn : colors.text;
+        ctx.fillRect(player.x, player.y - player.h, player.w, player.h - 3);
+        ctx.fillStyle = colors.bright;
+        ctx.fillRect(player.x + 1, player.y - 3, 3, 3);
+        ctx.fillRect(player.x + player.w - 4, player.y - 3, 3, 3);
+
+        // obstacles: packets on the ground, drones at head height — distinct shapes, distinct colors
+        for (const o of obstacles) {
+          if (o.kind === 'packet') {
+            ctx.fillStyle = colors.bright;
+            const oy = GROUND - o.h;
+            ctx.fillRect(o.x, oy, o.w, o.h);
+          } else {
+            const bob = Math.sin((t + o.ph * 10) * 0.15) * 2;
+            ctx.fillStyle = colors.warn;
+            ctx.beginPath();
+            ctx.ellipse(o.x + o.w / 2, o.fy + o.h / 2 + bob, o.w / 2, o.h / 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = colors.muted;
+            ctx.beginPath(); ctx.moveTo(o.x, o.fy + o.h / 2 + bob); ctx.lineTo(o.x + o.w, o.fy + o.h / 2 + bob); ctx.stroke();
+          }
+        }
+
+        for (const p of particles) {
+          ctx.globalAlpha = Math.max(0, p.life / 24);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(p.x, p.y, 2.4, 2.4);
+        }
+        ctx.globalAlpha = 1;
+
+        // milestone badge: the AP mark spins in every 100m, the one flourish that ties this back to the site
+        if (milestoneFlash > 0 && mark.complete) {
+          const s = 30 * Math.min(1, milestoneFlash * 2.4);
+          ctx.save();
+          ctx.globalAlpha = Math.min(1, milestoneFlash * 2);
+          ctx.translate(CSS_W / 2, 46);
+          ctx.rotate((1 - milestoneFlash) * Math.PI * 2);
+          ctx.drawImage(mark, -s / 2, -s / 2, s, s);
+          ctx.restore();
+          ctx.globalAlpha = 1;
+        }
+
+        if (started) {
+          ctx.fillStyle = colors.muted;
+          ctx.font = '11px var(--font-mono, monospace)';
+          ctx.textAlign = 'right';
+          ctx.fillText('UPTIME ' + String(Math.floor(dist / 10)).padStart(4, '0') + 'm', CSS_W - 6, 20);
+          ctx.fillText('BEST ' + String(best).padStart(4, '0') + 'm', CSS_W - 6, 34);
+        }
+        ctx.restore();
+      }
+
+      readColors();
+      draw();
+      raf = requestAnimationFrame(step);
+      window.addEventListener('beforeunload', () => cancelAnimationFrame(raf));
+    })();
+  </script>
 
   <script is:inline>
     (function () {
@@ -45,10 +304,55 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   <style>
     .nf-section {
-      padding: clamp(80px, 18vh, 160px) 0 var(--sp-11);
+      padding: clamp(80px, 18vh, 160px) 0 var(--sp-9);
       min-height: 60vh;
       display: flex;
       align-items: center;
+    }
+    .nf-game-wrap { margin-top: var(--sp-9); max-width: 640px; }
+    .nf-game-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xxs);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: var(--sp-3);
+    }
+    .nf-game-label span { color: var(--muted); text-transform: none; letter-spacing: normal; }
+    .nf-game-stage { position: relative; }
+    .nf-game {
+      display: block;
+      width: 100%;
+      max-width: 640px;
+      aspect-ratio: 640 / 220;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-lg);
+      background: var(--surface-1);
+      cursor: pointer;
+      touch-action: none;
+    }
+    .nf-game:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 3px; }
+    .nf-game-duck {
+      display: none;
+      position: absolute;
+      right: 14px; bottom: 14px;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--line-strong);
+      background: color-mix(in oklab, var(--bg) 60%, transparent);
+      -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+      color: var(--text);
+      font-size: 18px;
+      align-items: center; justify-content: center;
+    }
+    .nf-game-hint {
+      margin-top: var(--sp-3);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--muted-2);
+    }
+    @media (pointer: coarse) {
+      .nf-game-duck { display: flex; }
     }
     .nf-eyebrow {
       font-family: var(--font-mono);

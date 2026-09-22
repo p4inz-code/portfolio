@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.27.0',
+    kind: 'released',
+    summary: "Real fonts, finally: Clash Display, General Sans and Azeret Mono replace a broken Fontshare request that had been silently rendering the whole site in system Arial. Plus a 404 game, Signal Runner.",
+    body: [
+      "Fonts: the base stack was PP Neue Machina, PP Neue Montreal and PP Supply Mono, which are Pangram Pangram families never actually hosted on Fontshare. The request returned empty CSS on every visit and the whole site fell back to system Helvetica/Arial without any error. Replaced with Clash Display, General Sans and Azeret Mono, close matches in the same roles, real, free, and confirmed live on Fontshare.",
+      "404: a new game, Signal Runner, replaces the empty space under the route diagnostics. Same genre as the offline dino (an endless runner you can't pause), built as its own thing: two obstacle types, ground packets to jump and drones to duck, a spinning AP-mark badge every 100 metres, particle bursts and screen shake, and a slow day/night sweep. Colors are read live from the page's own theme variables, so it is correct in both themes with one palette. It only moves after you press space, tap, or hold duck, so it is not ambient motion under WCAG 2.2.2. Works with keyboard, mouse and touch (a duck button appears on touch devices, and swiping down on the game also ducks).",
+    ],
+  },
+  {
     version: 'v5.26.0',
     kind: 'released',
     summary: "Work deck rebuilt: pictures are never cropped and each product's arrives its own way. Ascent gets a bigger, colour-graded frame and a level counter with a runner that hops obstacles. The home hero steps are now cards.",

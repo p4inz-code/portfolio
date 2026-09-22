@@ -212,16 +212,22 @@ const jsonLd = {
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
     <!-- v5.12.0 fix: dropped the two Google Fonts preconnects — the site
-         no longer loads any Google Fonts (Neue Machina / Neue Montreal /
-         Supply Mono are all Fontshare). Dead connections cost DNS+TLS
+         no longer loads any Google Fonts. Dead connections cost DNS+TLS
          handshakes for nothing.
          Also v5.12.0 fix: font stylesheet moved from a CSS @import (which
          was render-blocking and hidden from the preloader) to a real
          <link rel=stylesheet> here so the browser can discover + fetch
-         it in parallel with the page HTML. FCP/LCP win on the hero. -->
+         it in parallel with the page HTML. FCP/LCP win on the hero.
+         v5.27.0: the base stack was PP Neue Machina / PP Neue Montreal /
+         PP Supply Mono, which are Pangram Pangram fonts, not actually on
+         Fontshare — that request returned empty CSS and the site was
+         silently rendering system Helvetica/Arial everywhere. Replaced
+         with three real, free Fontshare families in the same register:
+         Clash Display (display), General Sans (body) and Azeret Mono
+         (mono). Licensed for this use under Fontshare's free license. -->
     <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
     <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
-    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=neue-machina@400,500,700,800&f[]=neue-montreal@400,500,italic&f[]=supply-mono@400,500&display=swap" />
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=general-sans@400,500,italic&f[]=azeret-mono@400,500&display=swap" />
     <!-- Scene title fonts, one request per family: Fontshare drops families
          when several are combined in one URL. -->
     <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=technor@500&display=swap" />

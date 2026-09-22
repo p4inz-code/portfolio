@@ -20,7 +20,7 @@
   Framework:                       Astro 5.18 (static output)
   Styling:                         Design tokens + component-scoped CSS
   Type checking:                   TypeScript (astro/tsconfigs/strict)
-  Fonts:                           Neue Machina, Neue Montreal, Supply Mono
+  Fonts:                           Clash Display, General Sans, Azeret Mono
                                    (all Fontshare)
   Hosting:                         Cloudflare Pages
   Node:                            v20 (pinned via .nvmrc)
