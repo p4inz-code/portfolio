@@ -154,7 +154,7 @@ export const PROJECTS: Project[] = [
     role: 'Creator and sole developer',
     started: '2026',
     currentVersion: 'Pre-release',
-    nextMilestone: 'Core implementation resumed in September 2026 after a pause. No public release or ISO yet.',
+    nextMilestone: 'Core implementation resumed in September 2026 after a pause. As of Sept 27, work in progress locally, not yet committed or pushed; expected to take about a week.',
     notes: 'Not ready for production use. Case-store layer (traits, in-memory and file-backed) was the most recent work before the pause; the repo\'s own commit history doesn\'t yet show new feature work past that, but development is confirmed active again.',
   },
   {
@@ -355,7 +355,7 @@ export const PROJECTS: Project[] = [
     role: 'Sole engineer',
     started: '2026',
     currentVersion: 'v0.1.0-foundation',
-    nextMilestone: 'Foundation stage, development active again as of September 2026. No public release yet.',
+    nextMilestone: 'Foundation stage, development active again as of September 2026. As of Sept 27, work in progress locally, not yet committed or pushed; expected to wrap within a day or two.',
   },
   {
     slug: 'draft',

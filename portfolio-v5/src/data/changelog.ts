@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.29.2',
+    kind: 'released',
+    summary: 'Confirmed directly: neither Crossport nor Pursue OS has anything committed or pushed yet for the resumed work. Recorded real ETAs -- Crossport by tomorrow, Pursue OS about a week -- dated so they don\'t read as still-current months later.',
+    body: [
+      'Crossport and Pursue OS\'s nextMilestone fields now say plainly that the current work is local-only as of Sept 27, 2026, with a rough finish estimate attached to that date rather than a bare "tomorrow" or "a week" that would go stale and misleading the moment someone reads this later.',
+      'Pursue OS\'s on-site development notice gets the same as-of-date treatment, so a visitor reading the live page sees the same honest "not yet pushed" status the data layer has.',
+    ],
+  },
+  {
     version: 'v5.29.1',
     kind: 'released',
     summary: 'Pursue OS and Crossport are back in active development after a pause; both were still marked stalled from the last check. Reported directly by the person who\'d know, since GitHub commit history alone hadn\'t caught up yet.',

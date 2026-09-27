@@ -18,7 +18,7 @@ export const SITE = {
   // see about.astro's timeline/identity sections for the full history.
   studio: 'P4inz Interactive Labs',
   studioFounded: '2026',
-  currentVersion: 'v5.29.1',
+  currentVersion: 'v5.29.2',
   domain: 'atharvapatil.tech',
   // Sitewide meta-keywords fallback — covers name/handle variants people
   // actually type (including the retired "painz" spelling and the
