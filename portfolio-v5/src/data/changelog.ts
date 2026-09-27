@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.30.0',
+    kind: 'released',
+    summary: 'Dark/light theme swap wipes across the screen from the click point now, instead of snapping instantly. Same effect in both directions.',
+    body: [
+      'Uses the View Transitions API: the browser snapshots the page before and after the swap, and ThemeToggle.astro\'s script animates only the new theme\'s clip-path as an expanding circle from wherever the toggle was clicked, over 700ms with the site\'s existing --ease-out curve. The old theme just sits underneath and gets covered, so it reads as a wipe/reveal rather than a cross-fade. Verified in-browser with a slow-motion (5s) version of the exact same code path before shipping the real 700ms one, since a screenshot at normal speed can\'t catch a sub-second animation.',
+      'Symmetric both ways (dark to light and light to dark) since it\'s the same code regardless of direction, and works from all three trigger points on the page: the desktop nav button, the mobile drawer\'s copy, and the "T" keyboard shortcut (which has no click point, so it wipes from the center of the screen instead).',
+      'Falls back to the old instant swap -- no error, no missing feature -- when the browser doesn\'t support startViewTransition (Firefox, as of this check), when prefers-reduced-motion is set, or if a wipe is already mid-flight from a rapid double-toggle. This is a short, click-triggered transition rather than the site\'s own definition of "ambient motion" (5+ seconds, unprompted, governed by the separate Motion toggle), so prefers-reduced-motion is the right thing to gate on here, not html[data-still].',
+    ],
+  },
+  {
     version: 'v5.29.2',
     kind: 'released',
     summary: 'Confirmed directly: neither Crossport nor Pursue OS has anything committed or pushed yet for the resumed work. Recorded real ETAs -- Crossport by tomorrow, Pursue OS about a week -- dated so they don\'t read as still-current months later.',
