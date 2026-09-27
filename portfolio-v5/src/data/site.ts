@@ -5,25 +5,29 @@
 
 export const SITE = {
   title: 'Atharva Patil',
-  role: 'Software engineer, founder of Northbyte Studios',
+  role: 'Software engineer, founder of P4inz Interactive Labs',
   tagline: 'Software during the day, 3D and VFX on the side',
   // Meta description — includes "p4inz" (the actual search handle) once,
   // naturally, not stuffed. Homepage <title> stays clean/short on purpose;
   // this is the room to state the alias.
   description:
-    'Atharva Patil (p4inz) — solo founder of Northbyte Studios. Privacy-first software, two Linux OSes, encrypted vault, dev tools, 3D/VFX.',
+    'Atharva Patil (p4inz) — solo founder of P4inz Interactive Labs. Privacy-first software, two Linux OSes, encrypted vault, dev tools, 3D/VFX.',
   location: 'Navi Mumbai, India',
-  studio: 'Northbyte Studios',
+  // v5.29.0: renamed from Northbyte Studios. Third studio name overall
+  // (Obsidian Labs 2025 -> Northbyte Studios mid-2026 -> this, Sept 2026) —
+  // see about.astro's timeline/identity sections for the full history.
+  studio: 'P4inz Interactive Labs',
   studioFounded: '2026',
-  currentVersion: 'v5.28.1',
+  currentVersion: 'v5.29.0',
   domain: 'atharvapatil.tech',
   // Sitewide meta-keywords fallback — covers name/handle variants people
-  // actually type (including the retired "painz" spelling) so search
+  // actually type (including the retired "painz" spelling and the
+  // previous studio name, since people may still search it) so search
   // engines have a baseline signal on every page even without a
   // per-page override. Individual pages pass a more specific list via
   // BaseLayout's `keywords` prop.
   keywords:
-    'Atharva Patil, p4inz, P4INZ, painz, Northbyte Studios, software engineer, web developer, app developer, CLI developer, game developer, 3D artist, VFX artist',
+    'Atharva Patil, p4inz, P4INZ, painz, P4inz Interactive Labs, Northbyte Studios, software engineer, web developer, app developer, CLI developer, game developer, 3D artist, VFX artist',
 } as const;
 
 export const CONTACT = {

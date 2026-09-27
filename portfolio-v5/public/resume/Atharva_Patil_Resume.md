@@ -9,13 +9,13 @@ GitHub: [github.com/p4inz-code](https://github.com/p4inz-code) &nbsp;|&nbsp; Por
 
 ## SUMMARY
 
-Software engineer and product builder focused on desktop applications, developer tools, and systems programming. Founder of Northbyte Studios, where I independently design, build, test, and ship privacy-first software: currently an encrypted vault, two Linux distributions, and a compiled programming language.
+Software engineer and product builder focused on desktop applications, developer tools, and systems programming. Founder of P4inz Interactive Labs, where I independently design, build, test, and ship privacy-first software: currently an encrypted vault, two Linux distributions, and a compiled programming language.
 
 ---
 
 ## EXPERIENCE
 
-### Northbyte Studios — Founder & Independent Software Studio
+### P4inz Interactive Labs — Founder & Independent Software Studio
 *2026 – Present · Navi Mumbai, India (remote-friendly)*
 
 - Own the full product cycle myself on every product below: direction, architecture, engineering, UI/UX, testing, and release.

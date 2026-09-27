@@ -1,7 +1,8 @@
 # Atharva Patil
 
-> Solo founder of Northbyte Studios, based in Navi Mumbai, India. Also
-> known online as **p4inz** (`github.com/p4inz-code`, Discord `p4inz`).
+> Solo founder of P4inz Interactive Labs (formerly Northbyte Studios,
+> renamed September 2026), based in Navi Mumbai, India. Also known online
+> as **p4inz** (`github.com/p4inz-code`, Discord `p4inz`).
 > Builds Windows desktop security/privacy/utility software, an
 > open-source privacy-first Linux OS, an investigation-focused Linux OS,
 > developer tools, and freelance web development. Second-year VFX and 3D
@@ -9,7 +10,7 @@
 >
 > Runs the whole studio solo: design, code, testing, and shipping, one person.
 
-Site is a static Astro build (18 real routes, real URLs, not a
+Site is a static Astro build (19 real routes, real URLs, not a
 single-page-app with `#` fragments). Every route below is directly
 crawlable and canonical.
 
@@ -47,9 +48,11 @@ crawlable and canonical.
   letting an AI agent read and edit the active board, a command palette,
   a safer `.kanvaz` zip container with per-asset SHA-256 integrity hashes,
   live 3D model preview (glTF, OBJ, FBX, STL, PLY, USD), shared cards
-  across boards, a Layers panel, 14 board templates, and broader .pur
-  (PureRef) import. Windows, macOS and Linux builds. Shipping most weeks
-  with no fixed roadmap. Status: **Active · v8.8.5**.
+  across boards, a Layers panel, 14 board templates, broader .pur
+  (PureRef) import, and a third board type (Scratch Board) with
+  board-wide annotations and Illustrator-style tools. Windows, macOS and
+  Linux builds. Shipping most weeks with no fixed roadmap.
+  Status: **Active · v9.5.0**.
 - [Pursue OS](https://atharvapatil.tech/pursue-os/): Investigation-focused
   Linux OS for OSINT, DFIR, secure research, intelligence gathering /
   evidence-driven workflows. Two flagship interfaces: Investigation
@@ -57,24 +60,31 @@ crawlable and canonical.
   assistant-not-authority. **Apache 2.0**, at `github.com/p4inz-code/pursue-os`.
   On hold mid-implementation while other products take priority; no
   ISO yet. Status: **On Hold · Pre-release**.
-- [Veris](https://github.com/p4inz-code/veris): Offline-first, explainable
-  security investigation platform for Windows. TypeScript, Node.js /
-  SQLite, 3,100+ automated tests. Deterministic analysis engine: no
-  black-box AI scoring; AI is intentionally limited to a read-only
-  explanation layer, never performs detection. Stable v1.0.0 shipped,
-  then paused. Status: **On Hold · Released v1.0.0**. External repo
-  (case study on-site is pending real production screenshots).
+- [Veris](https://github.com/p4inz-code/veris): Deterministic, offline-first
+  CLI security scanner, published as `veris-cli` on npm. 100% reproducible
+  scans (no network calls, no telemetry), an interactive terminal session,
+  a browser-based investigation dashboard, CI security gates, AI-assisted
+  rule authoring, and a sandboxed plugin ecosystem. TypeScript, Node.js.
+  Shipped v1.1.0 and v1.2.0 after the site had it marked at v1.0.0; the
+  repo's own README now calls it "production hold / maintenance only."
+  Status: **Maintenance Mode · v1.2.1**. External repo (case study on-site
+  still describes the pre-v1.2 shape and needs a rewrite).
 - [Obscura](https://github.com/p4inz-code/obscura): Luau AST toolkit for
   Roblox developers. **MIT** licensed, open source. Status: Released,
   v1.0.0, 340/340 tests passing.
 - [MINK](https://github.com/p4inz-code/mink): A compiled, general-purpose
   programming language built from the ground up: own lexer, parser, type
   system, HIR/MIR, optimizer, and native code generator. Compiles to a
-  standalone x86_64 Windows executable with no external toolchain,
-  statically linked. **Apache 2.0**, open source. Rust, 1928 compiler
-  tests. v1.0.1 added a `mink run` command and completed the
-  environment, process, and filesystem standard-library coverage.
-  Status: **Released · v1.0.1**.
+  standalone native executable with no external toolchain, on both
+  Windows (PE) and, as of this check, Linux too (ELF, x86_64,
+  execution-verified via WSL). Real OS threads, an async task loop with
+  genuine `async`/`await`, TLS-verified networking, a package manager
+  (manifest, resolver, lockfile), a test runner (`mink test`) and a REPL
+  (`mink repl`). **Apache 2.0**, open source. Rust, just under 3,000
+  native-execution regression tests (up from 1928 at v1.0.0). Note: the
+  published npm package still serves the older v1.0.1 build as of this
+  check; install from a tagged GitHub release for the current version.
+  Status: **Released · v1.0.3**.
 - [Project Ascent](https://atharvapatil.tech/ascent/): 25-level, 5-act 2D
   precision platformer built in Godot 4. Full moveset from the start
   (run, jump, wall-jump, dash, slide, ground pound, wall run, ledge
@@ -96,6 +106,28 @@ crawlable and canonical.
   Nine AI skills for the reference stage of 3D & VFX work (silhouette,
   ortho, materials, scale briefs). Works with Claude, Cursor, Codex and
   Gemini. MIT. Status: **v3.0.0**, maintained.
+- [Reference Engineering](https://github.com/p4inz-code/reference-engineering):
+  The methodology library behind 3D Ref Skills, written for any field
+  with a production phase, not just 3D. Defines the discipline, proves
+  it with worked examples. Open source, unversioned/living document.
+- [Crossport](https://github.com/p4inz-code/Crossport): Free cross-platform
+  file transfer utility for Windows, macOS, and Linux. Early foundation
+  stage, no formal release yet.
+- [DRAFT](https://github.com/p4inz-code/Draft): Cross-platform visual
+  workspace that hands structured canvas context to MCP-compatible AI
+  agents as live data, not a screenshot. Especially suited to game/level
+  design; also works for UI mockups and diagrams. Status: **v0.1.0**,
+  the repo's own README calls this "active foundation development,
+  pre-v1."
+- [Docflow](https://github.com/p4inz-code/docflow): Offline PDF editor,
+  React/TypeScript/pdf.js/pdf-lib, Electron desktop shell. MIT licensed.
+  Status: **Release Candidate · v1.0.0-rc.1**, not yet formally tagged
+  v1.0.0.
+- [P4inz (Discord Bot)](https://github.com/p4inz-code/p4inz): Open-source
+  Discord bot and community knowledge platform for this studio's server.
+  Rust workspace, PostgreSQL. Early development, no public release or
+  version tag yet; repo predates the studio rename to P4inz Interactive
+  Labs, so don't confuse the bot name with the studio name.
 
 ## Site sections (real routes)
 
@@ -115,6 +147,9 @@ crawlable and canonical.
   page and full version history. See the live page for the current
   entry count and version; this file is not kept in sync with every
   patch release. No fabricated uptime figures.
+- [Support](https://atharvapatil.tech/support/): Ways to support the
+  work directly (UPI, Buy Me a Coffee). No paywalled content anywhere
+  on the site; this is optional.
 - [Accessibility](https://atharvapatil.tech/accessibility/):
   Accessibility statement.
 
@@ -152,8 +187,8 @@ Parchment Manuscript, both WCAG-AA verified. Command palette
   the same handle and should resolve to the same person.
 - GitHub: `github.com/p4inz-code`
 - Discord: `p4inz`. Nexus beta community invite: `discord.gg/XFF5nV53ZJ`
-- Studio: **Northbyte Studios** (2026-present). Previous studio names:
-  Obsidian Labs (2025), P4inz, both retired.
+- Studio: **P4inz Interactive Labs** (Sept 2026-present). Previous studio
+  names: Northbyte Studios (2026), Obsidian Labs (2025), both retired.
 - Location: Navi Mumbai, India
 - Email: `atharva.patil.cg@gmail.com`
 - No LinkedIn.

@@ -2,7 +2,7 @@
 
   Founder, Developer, Designer:  Atharva Patil
   Handle:                          p4inz  (github.com/p4inz-code)
-  Studio:                          Northbyte Studios
+  Studio:                          P4inz Interactive Labs (formerly Northbyte Studios)
   Location:                        Navi Mumbai, India
   Contact:                         atharva.patil.cg@gmail.com
   Discord:                         p4inz

@@ -7,7 +7,7 @@
 User-agent: *
 Allow: /
 
-# Sitemap: 18 real routes, generated at build time by Astro.
+# Sitemap: 19 real routes, generated at build time by Astro.
 Sitemap: https://atharvapatil.tech/sitemap.xml
 
 # IndexNow key (Bing, Yandex, Seznam.cz, Naver) — proves this host controls

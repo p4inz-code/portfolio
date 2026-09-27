@@ -71,7 +71,7 @@ const principles = [
   },
   {
     title: 'Free when I can make it free',
-    body: 'Kanvaz, Obscura, Glint, repo-map, 3D Ref Skills, Mission OS, and Pursue OS are all free, most of them open-source. Nexus and Veris are paid because running a one-person studio costs money, but they don\'t get a telemetry exception either.',
+    body: 'Kanvaz, Obscura, Glint, repo-map, 3D Ref Skills, Mission OS, Pursue OS, and Veris (published free on npm as veris-cli) are all free, most of them open-source. Nexus is the one paid product, because running a one-person studio costs money, but it doesn\'t get a telemetry exception either.',
   },
 ];
 
@@ -80,8 +80,9 @@ const timeline = [
   { year: 'Early 2026', event: 'Kanvaz released open source (MIT) as a reference workspace for the VFX community I\'m part of.' },
   { year: 'Mar 2026', event: 'Started building Nexus. It went public around a month later, once there was enough to actually show.' },
   { year: 'Jun 2026', event: 'Kanvaz and Veris both in active development alongside Nexus: one open-source workspace, one investigation platform.' },
-  { year: 'Mid 2026', event: 'Northbyte Studios founded as the second (and current) studio name. Mission OS work begins.' },
+  { year: 'Mid 2026', event: 'Northbyte Studios founded as the second studio name. Mission OS work begins.' },
   { year: 'Aug 2026', event: 'Second year of the animation program. Portfolio migrated to Astro (v5.0). Pursue OS repository foundation goes public. Mission OS ISO enters internal testing.' },
+  { year: 'Sept 2026', event: 'Renamed again, to P4inz Interactive Labs, the third and current studio name: folds the studio brand into the same handle everything already ships under.' },
 ];
 
 // Real, verifiable numbers only — for anyone deciding whether to work with
@@ -100,7 +101,7 @@ const activeCount = PROJECTS.filter(
   (p) => !['onHold'].includes(p.status.kind)
 ).length;
 ---
-<BaseLayout title="About — Atharva Patil" description="Atharva Patil — solo founder of Northbyte Studios, Navi Mumbai. Software engineer and second-year VFX/3D animation student." keywords="who is p4inz, who is painz, p4inz real name, Atharva Patil p4inz, P4INZ developer">
+<BaseLayout title="About — Atharva Patil" description="Atharva Patil — solo founder of P4inz Interactive Labs, Navi Mumbai. Software engineer and second-year VFX/3D animation student." keywords="who is p4inz, who is painz, p4inz real name, Atharva Patil p4inz, P4INZ developer, P4inz Interactive Labs, Northbyte Studios">
 
   <!-- HERO — v5.16.0: portrait photo added, split with lede text.
        v5.17.3: rewritten off the "Developer by discipline / 3D artist by
@@ -139,8 +140,9 @@ const activeCount = PROJECTS.filter(
         Software came first, and it started the usual way: taking apart things I owned until I
         understood them, then trying to fix or replace what annoyed me. Windows tools first, then
         small utilities, then products with actual users. That grew into a studio in 2025
-        ({SITE.studio.replace('Northbyte Studios', 'Obsidian Labs')}, at the time), and I renamed it
-        <em>{SITE.studio}</em> in 2026 once it felt like something worth naming properly.
+        (<em>Obsidian Labs</em>, at the time), renamed <em>Northbyte Studios</em> in mid-2026, and
+        renamed again to <em>{SITE.studio}</em> that September once it settled into a name worth
+        keeping: the same handle everything already ships under.
       </p>
       <p>
         3D came in because software alone wasn't covering everything I wanted to make. I started a
@@ -228,7 +230,7 @@ const activeCount = PROJECTS.filter(
       <div class="id-row"><span class="id-key">Current handle</span><span class="id-val">p4inz, everywhere (GitHub, Discord, this site's byline)</span></div>
       <div class="id-row"><span class="id-key">Retired handles</span><span class="id-val">PainZ, Grim: do not use, they don't map to me anymore</span></div>
       <div class="id-row"><span class="id-key">Current studio</span><span class="id-val">{SITE.studio} · founded {SITE.studioFounded}</span></div>
-      <div class="id-row"><span class="id-key">Previous studio</span><span class="id-val">Obsidian Labs, 2025, retired when the current studio was named</span></div>
+      <div class="id-row"><span class="id-key">Previous studios</span><span class="id-val">Northbyte Studios (2026), Obsidian Labs (2025): both retired, both map to the same person and work</span></div>
       <div class="id-row"><span class="id-key">Location</span><span class="id-val">{SITE.location}</span></div>
       <div class="id-row"><span class="id-key">Canonical source</span><span class="id-val">This site: <a href="https://atharvapatil.tech">atharvapatil.tech</a></span></div>
     </div>
