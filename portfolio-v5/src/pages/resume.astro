@@ -144,7 +144,51 @@ const additionalProjects = [
   </div>
 
   <style>
-    .resume-wrap { padding-top: var(--sp-9); }
+    /* v5.32.0 — the on-site resume reads as a field notebook: ruled lines,
+       a margin rule, binding holes down the left edge. This is presentation
+       for this page only, applied here rather than in Section.astro so it
+       can't leak onto any other page. The actual downloads (PDF/MD) stay
+       exactly as plain and ATS-safe as before — a hiring manager's parser
+       never sees any of this, it's only for someone reading the page. */
+    .resume-wrap {
+      position: relative;
+      padding-top: var(--sp-9);
+      padding-left: calc(var(--sp-9) + 28px);
+      background-image:
+        repeating-linear-gradient(
+          to bottom,
+          transparent, transparent 34px,
+          color-mix(in oklab, var(--line) 70%, transparent) 34px,
+          color-mix(in oklab, var(--line) 70%, transparent) 35px
+        );
+      background-position: 0 calc(var(--sp-9) + 6px);
+    }
+    @media (max-width: 640px) {
+      .resume-wrap { padding-left: var(--sp-4); background-image: none; }
+      .resume-wrap::before, .resume-wrap::after { display: none; }
+    }
+    /* Margin rule, notebook-style, offset from the ruled lines. */
+    .resume-wrap::before {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      left: calc(var(--sp-9) - 4px);
+      width: 1px;
+      background: color-mix(in oklab, var(--purple-bright) 45%, transparent);
+    }
+    /* Binding holes down the far left edge. */
+    .resume-wrap::after {
+      content: '';
+      position: absolute;
+      top: var(--sp-9); bottom: var(--sp-9);
+      left: 10px;
+      width: 8px;
+      background-image: radial-gradient(circle, var(--surface-1) 3.5px, transparent 3.6px);
+      background-size: 8px 56px;
+      background-repeat: repeat-y;
+      border-radius: 4px;
+      box-shadow: inset 0 0 0 1px var(--line);
+    }
     .resume-header {
       display: grid; grid-template-columns: 1fr auto; gap: var(--sp-8); align-items: end;
       padding-bottom: var(--sp-8); border-bottom: 1px solid var(--line);
@@ -198,6 +242,10 @@ const additionalProjects = [
       font-family: var(--font-mono); font-size: var(--text-xxs);
       letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
       color: var(--muted-2);
+      padding: 3px 8px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      transform: rotate(-1.2deg);
     }
     .resume-summary {
       max-width: var(--wrap-narrow);

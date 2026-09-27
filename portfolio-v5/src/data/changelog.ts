@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.32.0',
+    kind: 'released',
+    summary: 'Full site audit (865 internal link/asset references, every external link, zero broken), a humanizer pass on the About page copy that had drifted into pitch-deck language, and the on-site resume redesigned as a field notebook: ruled lines, a margin rule, binding holes down the left edge.',
+    body: [
+      'Audit: crawled all 20 built pages for every internal link and asset reference (865 total) against the actual dist/ output -- zero broken. Checked all 28 external links (GitHub repos, itch.io, Discord, socials, font CDN, the client sites) for a real 200 -- all clean. Checked for duplicate element IDs across every page -- none.',
+      'About page: the "For investors + collaborators" section had drifted into startup-pitch-deck register for what is, factually, a solo student\'s portfolio -- "My bet is that...", "proof the studio actually ships rather than just talking about shipping", "I\'m not looking for growth marketing..." Rewrote those three paragraphs to state the same facts plainly instead of defending against objections nobody raised. Also cut "actually" from 7 uses down to 2 (the two that were doing real work), and removed a "not a boast, just—" aside that was answering a doubt the page never raised in the first place. No fact, number, or claim changed -- only how it\'s said.',
+      'Resume page (on-site only -- the downloadable PDF and Markdown stay exactly as plain and ATS-parseable as before, this is presentation for a human reading the page, not the file a hiring system ingests): ruled horizontal lines behind the content, a vertical margin rule, small binding holes down the far left edge, and the "Updated" tag now reads like a small stamped label instead of plain text. Off entirely below 640px so it can\'t clutter a small screen -- the mobile layout stays the plain version it already was.',
+    ],
+  },
+  {
     version: 'v5.31.0',
     kind: 'released',
     summary: 'AniFX Fest gets its real domain and co-credit; a new Web/App/CLI/OS index at the bottom of /work with real GitHub-sourced previews; Docflow and the P4inz Discord bot come off the site (one discontinued, one postponed to 2027); header, footer, and mobile theme-toggle polish; Pursue OS moves ahead of Mission OS and gets a scroll-built investigation graph; the theme wipe gets a real fix, not just a tweak.',

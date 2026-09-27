@@ -67,7 +67,7 @@ const principles = [
   },
   {
     title: 'I build all of it myself',
-    body: 'The products, the case studies, this site\'s design system, the Mission OS demo, the résumé. One person, start to finish. Not a boast, just how the timeline works out.',
+    body: 'The products, the case studies, this site\'s design system, the Mission OS demo, the résumé. One person, start to finish, because that\'s just how the timeline worked out.',
   },
   {
     title: 'Free when I can make it free',
@@ -121,8 +121,8 @@ const activeCount = PROJECTS.filter(
         <p class="about-lede">
           I run <em>{SITE.studio}</em> on my own, based in {SITE.location}. I used to go by
           <em>PainZ</em> and <em>Grim</em>, both retired now. Everything ships under <strong>p4inz</strong>
-          or my real name. {shippedCount} products shipped or in progress, {activeCount} of them
-          actively worked on, and no marketing team behind any of it. Just me.
+          or my real name. Right now that's {shippedCount} products shipped or in progress,
+          {activeCount} of them actively worked on.
         </p>
         <p class="about-lede-secondary">
           For a while I thought I'd eventually have to pick one: software or 3D. I've stopped
@@ -180,7 +180,7 @@ const activeCount = PROJECTS.filter(
   </Section>
 
   <!-- PRINCIPLES -->
-  <Section eyebrow="What I actually believe" heading="Things you can go check, not a values statement." intro="Every line here holds up if you actually read the installer copy, the ship notes, or the source for any product on this site.">
+  <Section eyebrow="What I believe" heading="Things you can go check, not a values statement." intro="Every line here holds up if you read the installer copy, the ship notes, or the source for any product on this site.">
     <div class="pr-grid">
       {principles.map((p) => (
         <article class="pr-card">
@@ -192,7 +192,7 @@ const activeCount = PROJECTS.filter(
   </Section>
 
   <!-- INVESTOR / COLLABORATOR READ -->
-  <Section eyebrow="For investors + collaborators" heading="What this studio actually looks like from the outside." intro="Every number below is checkable, against the repos, or against the changelog on /status.">
+  <Section eyebrow="For investors + collaborators" heading="What this studio looks like from the outside." intro="Every number below is checkable, against the repos, or against the changelog on /status.">
     <dl class="tr-grid">
       {traction.map((t) => (
         <div class="tr-cell">
@@ -202,9 +202,9 @@ const activeCount = PROJECTS.filter(
       ))}
     </dl>
     <div class="tr-thesis">
-      <p>My bet is that a small number of privacy-first products, each finished properly, beats a bigger catalogue of half-finished ones. Most "growth" advice assumes ads and telemetry are free to add, and I'd rather not build on that assumption.</p>
-      <p>Nexus is the main commercial product, an encrypted vault for Windows. Mission OS is the bigger, slower bet: a privacy-first Linux distro built at OS scale. Kanvaz and Obscura are free and open-source on purpose, proof the studio actually ships rather than just talking about shipping. Everything else supports one of those three.</p>
-      <p>I'm not looking for growth marketing, an agency handoff, or a full team right now. What's actually useful: introductions to other founders, investors, or open-source maintainers who care more about the product being right than the product growing fast.</p>
+      <p>I'd rather ship a few privacy-first products properly than a bigger pile of half-finished ones. A lot of "growth" advice assumes ads and telemetry are free to add. I don't want to build on that.</p>
+      <p>Nexus is the main commercial product, an encrypted vault for Windows. Mission OS is the bigger, slower one: a privacy-first Linux distro built at OS scale. Kanvaz and Obscura are free and open source on purpose. Everything else supports one of those three.</p>
+      <p>Right now, the most useful thing is introductions: to other founders, investors, or open-source maintainers who care more about the product being right than about growing fast. I'm not chasing growth marketing, an agency handoff, or a full team.</p>
     </div>
   </Section>
 
