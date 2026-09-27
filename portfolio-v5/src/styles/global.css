@@ -239,10 +239,22 @@ html {
 @media (prefers-reduced-motion: no-preference) {
   @view-transition { navigation: auto; }
   .nav { view-transition-name: site-nav; }
-  ::view-transition-old(root) {
+  /* v5.32.0 fix — real bug, not just a feel/timing complaint: this page-nav
+     cross-fade and ThemeToggle.astro's own document.startViewTransition()
+     call both target the exact same browser-native ::view-transition-*(root)
+     pseudo-elements (there's no way to tell "this transition came from a
+     link click" from "this transition came from the theme button" other
+     than tagging it ourselves). The two were fighting over the same
+     properties every time the theme changed, and this one was winning
+     often enough to explain "it drops like a balloon" -- that's this
+     rule's own 0.42s opacity+translateY(14px) settle, not the wipe.
+     ThemeToggle sets html[data-wipe] for exactly the duration of its own
+     transition; suppressed here so only the wipe animates during that
+     window. */
+  :root:not([data-wipe]) ::view-transition-old(root) {
     animation: vt-out 0.28s cubic-bezier(0.4, 0, 1, 1) both;
   }
-  ::view-transition-new(root) {
+  :root:not([data-wipe]) ::view-transition-new(root) {
     animation: vt-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
   ::view-transition-group(site-nav) { animation-duration: 0s; }

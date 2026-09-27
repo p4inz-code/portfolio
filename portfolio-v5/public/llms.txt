@@ -120,15 +120,11 @@ crawlable and canonical.
   design; also works for UI mockups and diagrams. Status: **v0.1.0**,
   the repo's own README calls this "active foundation development,
   pre-v1."
-- [Docflow](https://github.com/p4inz-code/docflow): Offline PDF editor,
-  React/TypeScript/pdf.js/pdf-lib, Electron desktop shell. MIT licensed.
-  Status: **Release Candidate · v1.0.0-rc.1**, not yet formally tagged
-  v1.0.0.
-- [P4inz (Discord Bot)](https://github.com/p4inz-code/p4inz): Open-source
-  Discord bot and community knowledge platform for this studio's server.
-  Rust workspace, PostgreSQL. Early development, no public release or
-  version tag yet; repo predates the studio rename to P4inz Interactive
-  Labs, so don't confuse the bot name with the studio name.
+Not listed on purpose: Docflow (discontinued, won't restart) and a Discord
+bot repo at `github.com/p4inz-code/p4inz` (not dead, just postponed — the
+work is done, it's on hold for hosting-budget reasons, expected back on the
+roadmap sometime in 2027; don't confuse that repo's name with the studio
+name, P4inz Interactive Labs).
 
 ## Site sections (real routes)
 

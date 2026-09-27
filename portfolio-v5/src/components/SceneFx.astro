@@ -290,6 +290,16 @@ const edges: Array<[number, number]> = [
   .pu-graph { inset: 0; width: 100%; height: 100%; overflow: visible; opacity: 0.6; }
   .pu-graph .edge { stroke: color-mix(in oklab, #5EEAD4 55%, transparent); stroke-width: 1px; vector-effect: non-scaling-stroke; stroke-dasharray: 5 6; }
   .pu-graph .node { fill: #0b1220; stroke: #5EEAD4; stroke-width: 1.4px; vector-effect: non-scaling-stroke; transform-box: fill-box; transform-origin: center; }
+  /* v5.31.0 — the graph now builds itself as you scroll (each node/edge
+     fades in in sequence, keyed off --sp and its own index) instead of
+     sitting fully drawn from the first frame: reads as a case board being
+     assembled rather than decoration. Opacity only, so it doesn't fight
+     the ambient dash-march / pulse animations below, which own transform
+     and stroke-dashoffset. Scroll-driven, so — same as the rest of the
+     site's scroll effects — this isn't gated behind prefers-reduced-motion:
+     the visitor is the one driving it by scrolling, it doesn't run on its own. */
+  .pu-graph .node { opacity: clamp(0, calc((var(--sp, 0) - (var(--n) * 0.05)) / 0.12), 1); }
+  .pu-graph .edge { opacity: clamp(0, calc((var(--sp, 0) - (var(--e) * 0.045)) / 0.12), 1); }
   .pu-lens {
     left: 0; top: 0;
     width: 22vmin; height: 22vmin;

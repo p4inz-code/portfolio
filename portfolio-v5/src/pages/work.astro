@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
 import WorkDeck from '../components/features/WorkDeck.astro';
 import WorkIndex from '../components/features/WorkIndex.astro';
+import WorkByCategory from '../components/features/WorkByCategory.astro';
 import { FEATURED_PROJECTS, SUPPORTING_PROJECTS } from '../data/projects';
 ---
 <BaseLayout title="Selected Work — Atharva Patil" description="Selected case studies: two Linux OSes, an encrypted vault, developer tools. Every project links to a real repository or download." keywords="p4inz projects, painz projects, p4inz portfolio, software portfolio p4inz, p4inz web dev, p4inz app dev, p4inz game dev, p4inz cli dev">
@@ -19,5 +20,9 @@ import { FEATURED_PROJECTS, SUPPORTING_PROJECTS } from '../data/projects';
 
   <Section eyebrow="The whole roster" heading="Everything, in one list." intro="The cards above are the big projects. This list has everything, including the smaller tools and older work. Each row opens a case study or the repository.">
     <WorkIndex projects={[...FEATURED_PROJECTS, ...SUPPORTING_PROJECTS]} />
+  </Section>
+
+  <Section eyebrow="Same work, sorted differently" heading="By what it actually is." intro="Web, app, CLI, OS. A few things above don't fit one of those four cleanly and aren't repeated here.">
+    <WorkByCategory projects={[...FEATURED_PROJECTS, ...SUPPORTING_PROJECTS]} />
   </Section>
 </BaseLayout>

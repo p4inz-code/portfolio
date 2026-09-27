@@ -1,0 +1,110 @@
+---
+import type { Project } from '../../data/projects';
+
+/**
+ * /work, bottom section: the same projects the deck and index already show,
+ * regrouped by what they actually are (Web / App / CLI / OS) instead of by
+ * featured-or-not. A few projects don't fit any of the four cleanly (the
+ * game, the AI-skill packs, the methodology library) and are left out of
+ * this view on purpose -- they're already covered above.
+ *
+ * Preview images here are either the same real media used elsewhere on the
+ * site, or -- for repos that never got a dedicated screenshot -- GitHub's
+ * own auto-generated repository card, saved locally rather than hotlinked
+ * (avoids depending on a live third-party fetch, and its rate limit, at
+ * runtime). Where neither exists, the row just runs text-only: no
+ * placeholder, no mockup standing in for a real screenshot.
+ */
+interface Props {
+  projects: Project[];
+}
+const { projects } = Astro.props;
+
+const GROUPS: { key: NonNullable<Project['category']>; label: string; blurb: string }[] = [
+  { key: 'web', label: 'Web', blurb: 'Marketing and event sites, built and launched for real clients.' },
+  { key: 'app', label: 'App', blurb: 'Desktop software people install and run.' },
+  { key: 'cli', label: 'CLI', blurb: 'Command-line tools, some published to npm.' },
+  { key: 'os', label: 'OS', blurb: 'Full Linux operating systems, built from a base distro up.' },
+];
+
+const grouped = GROUPS.map((g) => ({
+  ...g,
+  items: projects.filter((p) => p.category === g.key).sort((a, b) => a.order - b.order),
+})).filter((g) => g.items.length > 0);
+---
+<div class="by-cat">
+  {grouped.map((g) => (
+    <div class="cat-group">
+      <div class="cat-head">
+        <h3 class="cat-label">{g.label}</h3>
+        <p class="cat-blurb">{g.blurb}</p>
+      </div>
+      <ul class="cat-list" role="list">
+        {g.items.map((p) => (
+          <li class="cat-item">
+            {p.media && p.media.kind !== 'video' && (
+              <img class="cat-thumb" src={p.media.src} alt={p.media.alt} width="320" height="160" loading="lazy" decoding="async" />
+            )}
+            <div class="cat-body">
+              <a class="cat-name" href={p.href} {...(p.isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+                {p.name}<span class="cat-arrow" aria-hidden="true">{p.isExternal ? ' ↗' : ' →'}</span>
+              </a>
+              <p class="cat-desc">{p.tagline}</p>
+              <p class="cat-status">{p.status.label}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</div>
+
+<style>
+  .by-cat { display: flex; flex-direction: column; gap: var(--sp-8); }
+  .cat-group { border-top: 1px solid var(--line); padding-top: var(--sp-5); }
+  .cat-head { display: flex; align-items: baseline; gap: var(--sp-4); margin-bottom: var(--sp-5); flex-wrap: wrap; }
+  .cat-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--purple-bright);
+  }
+  .cat-blurb { color: var(--muted); font-size: var(--text-sm); }
+  .cat-list {
+    list-style: none; margin: 0; padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: var(--sp-6) var(--sp-5);
+  }
+  /* v5.31.0 — every item is a real bordered card now, image or not.
+     Text-only rows (no git-sourced preview available) used to look like
+     bare floating text next to items that had one; a consistent card
+     shell puts them on equal visual footing. */
+  .cat-item {
+    display: flex; flex-direction: column; gap: var(--sp-4);
+    padding: var(--sp-5);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: color-mix(in oklab, var(--surface-1) 45%, transparent);
+    transition: border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+  }
+  .cat-item:has(.cat-name:hover), .cat-item:has(.cat-name:focus-visible) {
+    border-color: var(--line-strong);
+    background: color-mix(in oklab, var(--surface-1) 70%, transparent);
+  }
+  .cat-thumb {
+    width: 100%; aspect-ratio: 1200 / 600; object-fit: cover;
+    border-radius: 6px; border: 1px solid var(--line);
+    background: var(--surface-1);
+  }
+  .cat-body { display: flex; flex-direction: column; gap: 6px; }
+  .cat-name {
+    font-family: var(--font-display); font-size: var(--text-md); font-weight: 500;
+    color: var(--text); text-decoration: none; width: fit-content;
+  }
+  .cat-name:hover, .cat-name:focus-visible { color: var(--purple-bright); }
+  .cat-arrow { color: var(--purple-bright); }
+  .cat-desc { color: var(--muted); font-size: var(--text-sm); line-height: 1.45; }
+  .cat-status { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.04em; color: var(--muted); }
+</style>

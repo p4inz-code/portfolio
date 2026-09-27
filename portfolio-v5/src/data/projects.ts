@@ -56,6 +56,10 @@ export interface Project {
   };
   /** Sub-theme applied on the showcase chapter and on the project's own page. */
   scene?: 'nexus' | 'kanvaz' | 'ascent';
+  /** Which bucket this shows up in on /work's "Web / App / CLI / OS" index.
+   *  Left unset for things that don't fit one of those four cleanly
+   *  (the game, the AI-skill packs, the methodology library). */
+  category?: 'web' | 'app' | 'cli' | 'os';
 }
 
 export const PROJECTS: Project[] = [
@@ -68,8 +72,10 @@ export const PROJECTS: Project[] = [
     status: { kind: 'onHold', label: 'On Hold · Open Beta' },
     tags: ['Linux', 'GPLv3', 'Privacy'],
     metaTags: ['Debian Stable', 'KDE Plasma', 'Rust', 'GPLv3'],
+    media: { src: '/assets/banners/mission-os.webp', alt: 'GitHub repository card for p4inz-code/mission-os.', kind: 'banner', ratio: '1200 / 600' },
+    category: 'os',
     featured: true,
-    order: 3,
+    order: 4,
     href: '/mission-os',
     isExternal: false,
     links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/mission-os', external: true }],
@@ -88,6 +94,7 @@ export const PROJECTS: Project[] = [
     description:
       'Encrypted personal vault for Windows. AES-256-GCM authenticated encryption with Argon2id key derivation. Windows Hello unlock, in-app SHA-256-verified updater, portable mode. Fully offline, zero telemetry. Source is proprietary; public repo hosts releases and Discord community only.',
     status: { kind: 'beta', label: 'Public Beta · v10.12.5' },
+    category: 'app',
     tags: ['WPF', 'AES-256-GCM'],
     metaTags: ['Windows Desktop', 'AES-256-GCM', 'Fully Offline'],
     featured: true,
@@ -115,6 +122,7 @@ export const PROJECTS: Project[] = [
     description:
       'Visual reference workspace for VFX and 3D artists. Live 3D model preview (glTF, OBJ, FBX, STL, USD, and more), typed connections with a Map View, shared cards across boards, a Layers panel, and 14 board templates. Plugin system with a local-only MCP Bridge: an AI agent can read and edit the active board, off by default and undo-reversible. Windows, macOS and Linux builds. Free forever, MIT-licensed.',
     status: { kind: 'active', label: 'Active · v9.5.0' },
+    category: 'app',
     tags: ['Electron', 'MIT'],
     metaTags: ['Electron', 'MIT', 'Open Source'],
     featured: true,
@@ -144,13 +152,15 @@ export const PROJECTS: Project[] = [
     status: { kind: 'active', label: 'Active · Pre-release' },
     tags: ['Linux', 'OSINT', 'Apache 2.0'],
     metaTags: ['Linux', 'OSINT & DFIR', 'Apache 2.0'],
+    media: { src: '/assets/banners/pursue-os.webp', alt: 'GitHub repository card for p4inz-code/pursue-os.', kind: 'banner', ratio: '1200 / 600' },
+    category: 'os',
     featured: true,
-    order: 4,
+    order: 3,
     href: '/pursue-os',
     isExternal: false,
     links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/pursue-os', external: true }],
     license: 'Apache 2.0',
-    stack: ['Linux', 'Terminal-focused', 'Tor', 'Local AI (optional)'],
+    stack: ['Rust', 'Linux', 'Terminal-focused', 'Tor', 'Local AI (optional)'],
     role: 'Creator and sole developer',
     started: '2026',
     currentVersion: 'Pre-release',
@@ -164,6 +174,7 @@ export const PROJECTS: Project[] = [
     description:
       'Deterministic, offline-first CLI security scanner published as veris-cli on npm (`npx veris-cli scan`). 100% reproducible: identical inputs always produce identical findings, evidence, and risk scores, no network calls, no telemetry. Interactive terminal scan session, a browser-based investigation dashboard with zero-dependency HTML export, CI security gates with configurable policy thresholds, AI-assisted rule authoring with deterministic validation, and a sandboxed plugin ecosystem with Merkle SHA-256 integrity verification.',
     status: { kind: 'onHold', label: 'Maintenance Mode · v1.2.1' },
+    category: 'cli',
     tags: ['TypeScript', 'Offline-First'],
     metaTags: ['TypeScript', 'Node.js', 'npm', 'CLI'],
     featured: false,
@@ -176,7 +187,7 @@ export const PROJECTS: Project[] = [
       { label: 'Package on npm', href: 'https://www.npmjs.com/package/veris-cli', external: true },
     ],
     license: 'Proprietary',
-    stack: ['TypeScript', 'Node.js', 'SQLite'],
+    stack: ['TypeScript', 'Node.js', 'SQLite', 'Handlebars'],
     role: 'Sole engineer',
     started: '29 June 2026',
     currentVersion: 'v1.2.1',
@@ -217,6 +228,7 @@ export const PROJECTS: Project[] = [
     description:
       'Open-source Luau code protection toolkit for Roblox developers. AST-based transformations, free forever, no telemetry, no vendor lock-in. MIT licensed. Shipped v1.0.0 with the full test suite green — 340/340 passing.',
     status: { kind: 'released', label: 'Released · v1.0.0' },
+    category: 'cli',
     tags: ['Luau', 'MIT'],
     metaTags: ['Luau', 'MIT', 'Roblox'],
     featured: false,
@@ -226,7 +238,7 @@ export const PROJECTS: Project[] = [
     isExternal: true,
     links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/obscura', external: true }],
     license: 'MIT',
-    stack: ['Luau', 'AST transformations'],
+    stack: ['Luau', 'AST transformations', 'TypeScript', 'C++'],
     role: 'Sole engineer',
     started: '2026',
     currentVersion: 'v1.0.0',
@@ -240,8 +252,10 @@ export const PROJECTS: Project[] = [
     description:
       'Native brightness and volume tray utility for Windows, no Electron, sub-second cold start. Per-monitor brightness over DDC/CI and WMI with automatic hot-plug detection, a master and per-app volume mixer, global hotkeys, and automatic recovery when a monitor drops out. Free forever, zero telemetry.',
     status: { kind: 'released', label: 'Released · v1.1.0' },
+    category: 'app',
     tags: ['.NET 8', 'Windows', 'Utility'],
     metaTags: ['.NET 8', 'Avalonia', 'Windows'],
+    media: { src: '/assets/banners/glint.webp', alt: 'GitHub repository card for p4inz-code/glint.', kind: 'banner', ratio: '1200 / 600' },
     featured: false,
     order: 7,
     href: 'https://github.com/p4inz-code/glint',
@@ -261,6 +275,7 @@ export const PROJECTS: Project[] = [
     description:
       'A compiled, general-purpose programming language built from the ground up: its own lexer, parser, type system, HIR/MIR, optimizer, and native code generator. Compiles to a standalone native executable with no external toolchain (no C compiler, assembler, or linker) on both Windows (PE) and Linux (ELF, x86_64). Real OS threads, an async task loop with genuine `async`/`await` concurrency, TLS-verified networking, a package manager (manifest, resolver, lockfile), and a built-in test runner (`mink test`) and REPL (`mink repl`). Rust, Apache 2.0.',
     status: { kind: 'released', label: 'Released · v1.0.3' },
+    category: 'cli',
     tags: ['Rust', 'Compilers', 'Systems'],
     metaTags: ['Rust', 'Compiler', 'Apache 2.0'],
     featured: false,
@@ -305,17 +320,18 @@ export const PROJECTS: Project[] = [
     name: 'AniFX Fest 2026',
     tagline: 'Festival site for a two-day creative competition.',
     description:
-      'The website for AniFX 2026, a creative festival run by the School of Creative Studies at DY Patil Deemed to be University, Navi Mumbai (23 to 24 October 2026). One site for five competitions (film festival, a 100-hour game jam, VALORANT, FC26 and character design) with per-event pages, registration, FAQs and contact channels grouped by event. Designed, built and deployed by me.',
+      'The website for AniFX 2026, a creative festival run by the School of Creative Studies at DY Patil Deemed to be University, Navi Mumbai (23 to 24 October 2026). One site for five competitions (film festival, a 100-hour game jam, VALORANT, FC26 and character design) with per-event pages, registration, FAQs and contact channels grouped by event. Designed and built with one of my teachers/seniors from the program.',
     status: { kind: 'released', label: 'Live · Event site' },
     tags: ['Web', 'Event site', 'Firebase'],
     metaTags: ['Web', 'Event site', 'Client work'],
+    category: 'web',
     featured: false,
     order: 10,
-    href: 'https://anifx-fest.web.app/',
+    href: 'https://anifx-fest.com/',
     isExternal: true,
-    links: [{ label: 'Visit the site', href: 'https://anifx-fest.web.app/', external: true }],
+    links: [{ label: 'Visit the site', href: 'https://anifx-fest.com/', external: true }],
     stack: ['Web', 'Firebase Hosting'],
-    role: 'Designer and developer',
+    role: 'Designer and developer (with a teacher/senior from the program)',
     started: '2026',
     nextMilestone: 'Live for the festival on 23 to 24 October 2026.',
   },
@@ -328,6 +344,7 @@ export const PROJECTS: Project[] = [
     status: { kind: 'released', label: 'Live · Client site' },
     tags: ['Web', 'Client work'],
     metaTags: ['Web', 'Client work', 'Live'],
+    category: 'web',
     featured: false,
     order: 11,
     href: 'https://kalasadhana-navimumbai.in/',
@@ -345,13 +362,19 @@ export const PROJECTS: Project[] = [
     description:
       'Free cross-platform file transfer utility for Windows, macOS, and Linux. No GitHub Release published yet; the repo is tagged at an early foundation build. Paused after the initial foundation work, development resumed in September 2026.',
     status: { kind: 'active', label: 'Active · Foundation' },
+    category: 'app',
     tags: ['Utility', 'Cross-Platform'],
     metaTags: ['Windows', 'macOS', 'Linux'],
+    media: { src: '/assets/banners/crossport.webp', alt: 'GitHub repository card for p4inz-code/Crossport.', kind: 'banner', ratio: '1200 / 600' },
     featured: false,
     order: 12,
     href: 'https://github.com/p4inz-code/Crossport',
     isExternal: true,
     links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/Crossport', external: true }],
+    // Rust + TypeScript/HTML/CSS is what the repo's own language breakdown
+    // shows; not naming a specific framework (Tauri looks likely from that
+    // combination, but "looks likely" isn't a real confirmation).
+    stack: ['Rust', 'TypeScript'],
     role: 'Sole engineer',
     started: '2026',
     currentVersion: 'v0.1.0-foundation',
@@ -364,6 +387,7 @@ export const PROJECTS: Project[] = [
     description:
       'A cross-platform visual workspace built to hand structured canvas context to MCP-compatible AI agents as live data, not a screenshot or a typed-out description after the fact. Especially suited to game and level design, but works the same way for UI mockups, software architecture diagrams, and storyboards. Not a drawing app, an image generator, or a whiteboard clone.',
     status: { kind: 'active', label: 'Active · Foundation (Pre-v1)' },
+    category: 'app',
     tags: ['MCP', 'Desktop'],
     metaTags: ['Cross-Platform', 'MCP', 'Pre-v1'],
     featured: false,
@@ -371,31 +395,11 @@ export const PROJECTS: Project[] = [
     href: 'https://github.com/p4inz-code/Draft',
     isExternal: true,
     links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/Draft', external: true }],
+    stack: ['Rust', 'TypeScript'],
     role: 'Sole engineer',
     started: '2026',
     currentVersion: 'v0.1.0',
     nextMilestone: 'Repo\'s own README calls this "active foundation development (pre-v1)": real and working, not yet feature-complete.',
-  },
-  {
-    slug: 'docflow',
-    name: 'Docflow',
-    tagline: 'A professional PDF editing workspace, fully offline.',
-    description:
-      'Offline PDF editor built with React, TypeScript, pdf.js, pdf-lib, and Zustand (Electron desktop shell, also runs on the web). Privacy-first: no upload, no account, edits happen entirely on-device.',
-    status: { kind: 'testing', label: 'Release Candidate · v1.0.0-rc.1' },
-    tags: ['Electron', 'MIT'],
-    metaTags: ['React', 'TypeScript', 'MIT'],
-    featured: false,
-    order: 14,
-    href: 'https://github.com/p4inz-code/docflow',
-    isExternal: true,
-    links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/docflow', external: true }],
-    license: 'MIT',
-    stack: ['React', 'TypeScript', 'Electron', 'pdf.js', 'pdf-lib'],
-    role: 'Sole engineer',
-    started: '2026',
-    currentVersion: 'v1.0.0-rc.1',
-    nextMilestone: 'Release candidate; v1.0.0 not yet formally tagged.',
   },
   {
     slug: 'reference-engineering',
@@ -416,25 +420,16 @@ export const PROJECTS: Project[] = [
     started: '2026',
     nextMilestone: 'Ongoing documentation and worked-example expansion.',
   },
-  {
-    slug: 'p4inz-bot',
-    name: 'P4inz (Discord Bot)',
-    tagline: 'A Discord intelligence and community platform for this studio\'s server.',
-    description:
-      'Open-source Discord bot and knowledge platform: a structured way for community members to find accurate information about this studio\'s projects, releases, and docs directly in Discord. Rust workspace with PostgreSQL and background workers. Repo README currently describes this in terms of goals (accurate/source-aware information, permission-aware access, self-hostable) rather than a shipped feature list, and predates the studio rename to P4inz Interactive Labs.',
-    status: { kind: 'testing', label: 'Early Development' },
-    tags: ['Rust', 'Discord'],
-    metaTags: ['Rust', 'PostgreSQL', 'Discord'],
-    featured: false,
-    order: 16,
-    href: 'https://github.com/p4inz-code/p4inz',
-    isExternal: true,
-    links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/p4inz', external: true }],
-    role: 'Sole engineer',
-    started: '2026',
-    nextMilestone: 'No public release yet. No formal version tag in the repo.',
-  },
 ];
+
+// Removed from the site (kept here as a record of why, not as dead weight
+// in the array):
+//
+// - Docflow: discontinued. Won't be restarted.
+// - P4inz (Discord Bot, github.com/p4inz-code/p4inz): not dead, postponed.
+//   The work itself is done; it's on hold purely because there's no hosting
+//   budget for it right now. Expected to resume being worked on/relisted
+//   sometime next year (2027).
 
 export const FEATURED_PROJECTS = PROJECTS.filter((p) => p.featured).sort((a, b) => a.order - b.order);
 export const SUPPORTING_PROJECTS = PROJECTS.filter((p) => !p.featured).sort((a, b) => a.order - b.order);

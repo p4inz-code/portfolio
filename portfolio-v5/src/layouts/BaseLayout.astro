@@ -475,7 +475,13 @@ import '../scripts/fx';</script>
         <div class="footer-meta">
           <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
           <a href={CONTACT.github} target="_blank" rel="noopener noreferrer">{CONTACT.githubHandle}</a>
-          <span class="mono">© 2026 · {SITE.currentVersion}</span>
+          <p class="footer-copyright">© 2026 Atharva Patil · p4inz · {SITE.studio}</p>
+          <nav class="footer-legal" aria-label="Legal">
+            <a href="/privacy/">Privacy</a><span aria-hidden="true">·</span>
+            <a href="/terms/">Terms</a><span aria-hidden="true">·</span>
+            <a href="/editorial/">Editorial policy</a>
+          </nav>
+          <span class="mono">{SITE.currentVersion}</span>
         </div>
       </div>
     </footer>
@@ -512,7 +518,13 @@ import '../scripts/fx';</script>
         padding: var(--sp-5) 0;
         position: sticky; top: 0; z-index: 100;
         backdrop-filter: blur(12px);
-        background: color-mix(in oklab, var(--bg) 78%, transparent);
+        /* v5.31.0 — was tinted with --bg itself, which in dark theme (--bg
+           #0A0517, --surface-1 #150B25 -- much closer together than the
+           light-theme pair) made the header nearly indistinguishable from
+           the page underneath. --surface-1 is the same "one step up from
+           the page" token cards already use, so this reads as a header on
+           both themes instead of blending into one of them. */
+        background: color-mix(in oklab, var(--surface-1) 78%, transparent);
         border-bottom: 1px solid var(--line);
       }
       .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-6); }
@@ -628,6 +640,15 @@ import '../scripts/fx';</script>
       .footer-nav a:hover { color: var(--purple-bright); }
       .footer-meta { display: flex; flex-direction: column; gap: var(--sp-3); font-size: var(--text-sm); color: var(--muted); }
       .footer-meta a:hover { color: var(--purple-bright); }
+      /* v5.31.0 — full identity chain (real name, handle, studio), plus the
+         legal pages repeated here in a dedicated line rather than only in
+         the main footer-nav list, since a copyright/legal line is where
+         people expect to find them regardless of what else the footer has. */
+      .footer-copyright { font-size: var(--text-xs); color: var(--muted); margin-top: var(--sp-2); }
+      .footer-legal { display: flex; gap: 6px; font-size: var(--text-xs); }
+      .footer-legal a { color: var(--muted); }
+      .footer-legal a:hover { color: var(--purple-bright); }
+      .footer-legal span { color: var(--line-strong); }
       .footer-meta .mono {
         font-family: var(--font-mono); font-size: var(--text-xs);
         /* --muted (not --muted-2) so this small mono line passes WCAG AA on --bg. */
@@ -727,7 +748,12 @@ import '../scripts/fx';</script>
         padding: var(--sp-5);
         border: 1px solid var(--line);
         border-radius: 4px;
-        display: flex; align-items: center; justify-content: space-between;
+        /* v5.31.0 — was one cramped row (search bar + motion + theme all
+           squeezed together); the theme toggle now gets its own row below
+           the search bar, so it's a bigger, easier tap target on mobile
+           and tablet instead of fighting for space next to two other
+           controls. */
+        display: flex; flex-direction: column;
         gap: var(--sp-4);
       }
       .nmu-cmdk {
@@ -747,7 +773,7 @@ import '../scripts/fx';</script>
         font-family: var(--font-mono);
         font-size: 11px;
       }
-      .nmu-theme { display: flex; align-items: center; }
+      .nmu-theme { display: flex; align-items: center; justify-content: space-between; }
 
       /* The desktop nav needs about 900px to sit on one line, so the drawer
          takes over at 900px and below (it used to wait until 760px, which
