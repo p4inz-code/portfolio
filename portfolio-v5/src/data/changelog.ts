@@ -20,6 +20,20 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.33.0',
+    kind: 'released',
+    summary: 'Kanvaz promoted to flagship and moved first in the work order (Nexus, MINK, Pursue OS, Mission OS follow; Project Ascent moves to supporting); resume and About reorder to match; 3D page stack corrected to real software; Pursue OS scene rebuilt from a glowing crosshair into a real terminal log; theme wipe gets an actual 3D/parallax layer.',
+    body: [
+      'Reorder, sitewide: Kanvaz is the flagship free product and now leads the work deck, resume, and Markdown/PDF downloads. New order is Kanvaz, Nexus, MINK (newly promoted to featured), Pursue OS, Mission OS. Project Ascent moves to supporting/additional rather than staying in the main deck. Kanvaz\'s status label now reads "Flagship" everywhere it renders.',
+      'Resume content itself changed, not just its order: added a real 3-bullet Kanvaz entry (MCP Bridge, live 3D preview, six releases in about a week), trimmed Project Ascent to a one-line additional-projects mention, and corrected MINK\'s version and test count (v1.0.1 to v1.0.3, 1928 to just under 3,000 tests) that had gone stale since the last audit. Same changes made in the on-site page, the Markdown download, and the PDF source, then the PDF was regenerated and reconfirmed as one page.',
+      'Resume notebook styling: the ruled lines shipped last time were built on --line, a token that\'s already only 10-12% opacity on its own -- at 70% of that they were correctly called out as basically invisible. Switched to --line-strong (the same token the margin rule already used) and pushed the intensity further specifically for the lines, since they need to read at a glance.',
+      '3D & VFX page stack corrected against what\'s actually used: added Maya and ZBrush, added Adobe Creative Cloud apps by name (Premiere Pro, After Effects, Photoshop, Lightroom) instead of leaving them off the list, removed DaVinci Resolve (not used), and relabeled Blender as backup/basic-level rather than listing it as an equal primary tool.',
+      'Pursue OS scene: replaced the glowing crosshair "lens" element (a movie-hacker-style prop, not a real tool) with a scrolling terminal log in the same pattern Mission OS\'s boot log already uses -- real, plausible OSINT/DFIR output (case store, Tor circuit, evidence hash, chain of custody) instead of a special effect. The investigation graph stays, since that part is real signal, just no longer paired with a decorative prop.',
+      'Theme wipe: added an actual 3D/parallax layer on top of the existing clip-path reveal -- a perspective + rotateY + scale tilt animated via plain `transform`, the one property that\'s been reliable on these pseudo-elements every time it\'s been tried this session (the earlier mask/custom-property attempt was not, and was reverted rather than shipped half-working). Verified mid-animation via direct animation-state inspection, not just a screenshot: both clip-path and the 3D transform are confirmed live and interpolating together. Also confirmed the toggle fires correctly from a real touch tap on an emulated mobile viewport, not just desktop clicks.',
+      'Re-audited after all of the above: 860 internal link/asset references across all 20 pages, still zero broken.',
+    ],
+  },
+  {
     version: 'v5.32.0',
     kind: 'released',
     summary: 'Full site audit (865 internal link/asset references, every external link, zero broken), a humanizer pass on the About page copy that had drifted into pitch-deck language, and the on-site resume redesigned as a field notebook: ruled lines, a margin rule, binding holes down the left edge.',

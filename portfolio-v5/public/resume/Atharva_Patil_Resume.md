@@ -30,6 +30,13 @@ Software engineer and product builder focused on desktop applications, developer
 
 ## SELECTED PROJECTS
 
+### Kanvaz &nbsp;·&nbsp; Visual Reference Workspace (Flagship, Free)
+*[github.com/p4inz-code/kanvaz](https://github.com/p4inz-code/kanvaz)* &nbsp;·&nbsp; Jun 2026 – Present &nbsp;·&nbsp; Electron, MIT
+
+- Built and maintain a free, MIT-licensed reference workspace for VFX and 3D artists: live 3D model preview (glTF, OBJ, FBX, STL, USD), a typed connection graph, a Layers panel, and board templates, shipped for Windows, macOS, and Linux.
+- Designed a local-only MCP Bridge that lets an AI agent read and edit the active board through a scoped tool set, off by default and fully undo-reversible.
+- Shipped six releases in about a week during the most recent update cycle (v9.5.0), all backward-compatible with the free, open-source core.
+
 ### Nexus &nbsp;·&nbsp; Encrypted Personal Vault
 *[github.com/p4inz-code/nexus-desktop](https://github.com/p4inz-code/nexus-desktop)* &nbsp;·&nbsp; Mar 2026 – Present &nbsp;·&nbsp; Windows Desktop
 
@@ -37,33 +44,26 @@ Software engineer and product builder focused on desktop applications, developer
 - Zero telemetry, zero cloud: content stays encrypted at rest and exists decrypted only in memory while the vault is unlocked.
 - Rebuilt the entire v11 interface (lock screen, media browser, credentials, notes, settings, updater) without touching the cryptographic core underneath it.
 
-### Mission OS &nbsp;·&nbsp; Privacy-First Linux Distribution
-*[github.com/p4inz-code/mission-os](https://github.com/p4inz-code/mission-os)* &nbsp;·&nbsp; 2026 – Present &nbsp;·&nbsp; Linux, GPLv3
-
-- Building a privacy-first Linux distribution on Debian Stable and KDE Plasma, hardened automatically at install with no manual post-install script needed.
-- Shipped an Open Beta using a customized Calamares installer with Rust-based system services applied automatically after install.
-
 ### MINK &nbsp;·&nbsp; Programming Language
-*[github.com/p4inz-code/mink](https://github.com/p4inz-code/mink)* &nbsp;·&nbsp; 2026 – Released v1.0.1 &nbsp;·&nbsp; Rust, Apache 2.0
+*[github.com/p4inz-code/mink](https://github.com/p4inz-code/mink)* &nbsp;·&nbsp; 2026 – Released v1.0.3 &nbsp;·&nbsp; Rust, Apache 2.0
 
 - Designed and built a compiler from scratch: lexer, parser, type system, optimizer, and native code generator, producing standalone executables with no external toolchain.
-- 1928 compiler tests passing.
+- Added a second native backend (Linux ELF, alongside Windows PE) plus real threads, an async runtime, a package manager, and a test runner, growing the regression suite to just under 3,000 native-execution tests.
 
 ### Pursue OS &nbsp;·&nbsp; Investigation-Focused Linux OS
 *[github.com/p4inz-code/pursue-os](https://github.com/p4inz-code/pursue-os)* &nbsp;·&nbsp; 2026 – Present &nbsp;·&nbsp; Linux, Apache 2.0
 
 - Building a Linux OS for OSINT, DFIR, and evidence-driven investigation work, centered on two flagship surfaces: an Investigation Terminal and an Investigation Browser with integrated Tor.
 
-### Project Ascent &nbsp;·&nbsp; 2D Precision Platformer
-*[github.com/p4inz-code/project-ascent](https://github.com/p4inz-code/project-ascent)* &nbsp;·&nbsp; Aug 2026 – Present &nbsp;·&nbsp; Godot 4
+### Mission OS &nbsp;·&nbsp; Privacy-First Linux Distribution
+*[github.com/p4inz-code/mission-os](https://github.com/p4inz-code/mission-os)* &nbsp;·&nbsp; 2026 – Present &nbsp;·&nbsp; Linux, GPLv3
 
-- Directed a 25-level, 5-act platformer from first playable to a full campaign with cross-platform exports (Windows, macOS, Linux, Web) in about a week.
-- Built an 18-suite automated test process, including a reachability sweep that measures the player's actual jump envelope instead of trusting the configured jump height.
-- Shipped to itch.io with Xbox and PlayStation controller support.
+- Building a privacy-first Linux distribution on Debian Stable and KDE Plasma, hardened automatically at install with no manual post-install script needed.
+- Shipped an Open Beta using a customized Calamares installer with Rust-based system services applied automatically after install.
 
 ### Additional Projects
 
-- **Kanvaz** — Electron visual reference workspace for VFX artists · MIT · v8.8.5, Windows/macOS/Linux
+- **Project Ascent** — 25-level 2D precision platformer, Godot 4 · shipped to itch.io with an 18-suite automated test process
 - **Obscura** — Luau AST toolkit for Roblox developers · MIT · v1.0.0, 340/340 tests passing
 
 ---

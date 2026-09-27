@@ -39,6 +39,21 @@ const bootLog = [
   'Started Calamares installer',
 ];
 
+// v5.33.0 — replaces the old glowing crosshair "lens" (read as a movie
+// hacker prop, not a real tool) with a scrolling terminal log in the same
+// pattern Mission OS's boot log already uses. Lines describe real,
+// plausible OSINT/DFIR terminal output, not a special-effect.
+const investigationLog = [
+  'Case store initialized (file-backed)',
+  'Tor circuit established',
+  'Evidence hash verified: sha256',
+  'Investigation Browser: sandboxed session',
+  'No network egress outside Tor',
+  'Metadata scrub complete',
+  'Case index rebuilt',
+  'Chain of custody logged',
+];
+
 // investigation graph, in a 100 x 60 box
 const nodes: Array<[number, number, 'c' | 's' | 'd']> = [
   [10, 14, 'c'], [24, 26, 's'], [18, 44, 'd'], [38, 12, 'd'], [44, 34, 'c'], [32, 52, 's'],
@@ -135,7 +150,7 @@ const edges: Array<[number, number]> = [
         <path class="node" style={`--n:${i}`} d={`M${x} ${y - 0.85} L${x + 0.85} ${y} L${x} ${y + 0.85} L${x - 0.85} ${y} Z`} />
       ))}
     </svg>
-    <span class="pu-lens"><i></i><i></i><em>tracing</em></span>
+    <span class="pu-log"><span class="in">{[...investigationLog, ...investigationLog, ...investigationLog].map((l) => <b><i>[TRACE]</i> {l}</b>)}</span></span>
   </div>
 )}
 
@@ -300,18 +315,25 @@ const edges: Array<[number, number]> = [
      the visitor is the one driving it by scrolling, it doesn't run on its own. */
   .pu-graph .node { opacity: clamp(0, calc((var(--sp, 0) - (var(--n) * 0.05)) / 0.12), 1); }
   .pu-graph .edge { opacity: clamp(0, calc((var(--sp, 0) - (var(--e) * 0.045)) / 0.12), 1); }
-  .pu-lens {
-    left: 0; top: 0;
-    width: 22vmin; height: 22vmin;
-    border-radius: 50%;
-    border: 1px solid rgba(94, 234, 212, 0.75);
-    box-shadow: 0 0 40px rgba(94, 234, 212, 0.18), inset 0 0 30px rgba(94, 234, 212, 0.08);
-    translate: calc(8vw + var(--sp, 0) * 60vw) calc(70vh - var(--sp, 0) * 46vh);
+  /* v5.33.0 — same scrolling-terminal-log pattern as Mission OS's .ms-boot,
+     retextured for Pursue OS (right side, teal accent instead of green).
+     Replaces a glowing crosshair "lens" prop that read as a movie-hacker
+     effect rather than an actual tool. */
+  .pu-log {
+    right: 1.6vw; top: 0; bottom: 0;
+    width: 40ch;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 11px; line-height: 1.9;
+    white-space: nowrap;
+    color: color-mix(in oklab, #5EEAD4 55%, transparent);
+    opacity: 0.4;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 16%, #000 70%, transparent);
+            mask-image: linear-gradient(to bottom, transparent, #000 16%, #000 70%, transparent);
   }
-  .pu-lens i { position: absolute; background: rgba(94, 234, 212, 0.55); }
-  .pu-lens i:nth-child(1) { left: 50%; top: -8px; bottom: -8px; width: 1px; }
-  .pu-lens i:nth-child(2) { top: 50%; left: -8px; right: -8px; height: 1px; }
-  .pu-lens em { position: absolute; left: 50%; top: 100%; transform: translateX(-50%); margin-top: 10px; font-family: var(--font-mono); font-style: normal; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #5EEAD4; }
+  .pu-log .in { display: flex; flex-direction: column; }
+  .pu-log b { font-weight: 400; }
+  .pu-log i { font-style: normal; color: #5EEAD4; }
 
   /* ================================================================== LIGHT THEME */
   :global(:root[data-theme='light']) .dial circle { stroke: color-mix(in oklab, var(--purple) 55%, transparent); }
@@ -332,9 +354,8 @@ const edges: Array<[number, number]> = [
   :global(:root[data-theme='light']) .pu-bg { background: radial-gradient(90vmax 60vmax at 70% 30%, color-mix(in oklab, #14B8A6 10%, var(--bg)) 0%, var(--bg) 70%); }
   :global(:root[data-theme='light']) .pu-graph .edge { stroke: #0F766E; }
   :global(:root[data-theme='light']) .pu-graph .node { fill: var(--bg); stroke: #0F766E; }
-  :global(:root[data-theme='light']) .pu-lens { border-color: #0F766E; box-shadow: none; }
-  :global(:root[data-theme='light']) .pu-lens i { background: #0F766E; }
-  :global(:root[data-theme='light']) .pu-lens em { color: #0F766E; }
+  :global(:root[data-theme='light']) .pu-log { color: var(--purple-deep); opacity: 0.32; }
+  :global(:root[data-theme='light']) .pu-log i { color: #0F766E; }
 
   /* ================================================================== PHONES */
   @media (max-width: 760px) {
@@ -344,7 +365,7 @@ const edges: Array<[number, number]> = [
     .cur.c1 { translate: 8vw 24vh; } .cur.c2 { translate: 52vw 44vh; } .cur.c3 { translate: 22vw 70vh; }
     .ms-boot { width: 34ch; opacity: 0.28; font-size: 10px; }
     .ms-radar { right: 4vw; top: 14vh; width: 30vmin; height: 30vmin; }
-    .pu-lens { width: 30vmin; height: 30vmin; }
+    .pu-log { width: 30ch; opacity: 0.28; font-size: 10px; }
   }
 
   /* no room in the side gutter: a slim game-style strip along the bottom edge, above the page */
@@ -378,14 +399,13 @@ const edges: Array<[number, number]> = [
     .ms-lake { animation: fx-lake 6s linear infinite; }
     .pu-graph .edge { animation: fx-edge 2.4s linear infinite; animation-delay: calc(var(--e) * -0.3s); }
     .pu-graph .node { animation: fx-node 3s ease-in-out infinite alternate; animation-delay: calc(var(--n) * -0.4s); }
-    .pu-lens em { animation: fx-blink 1.2s steps(2, start) infinite; }
+    .pu-log .in { animation: fx-boot 80s linear infinite; }
 
     /* scroll linked, native */
     @supports (animation-timeline: scroll()) {
       .dial { animation: fx-dial linear both; animation-timeline: scroll(root block); }
       .hud-num { animation: fx-lvl linear both; animation-timeline: scroll(root block); }
       .hud-bar b { animation: fx-bar linear both; animation-timeline: scroll(root block); }
-      .pu-lens { animation: fx-lens linear both; animation-timeline: scroll(root block); }
     }
   }
 
@@ -414,5 +434,4 @@ const edges: Array<[number, number]> = [
   }
   @keyframes fx-lvl { from { --lvl: 1; } to { --lvl: 25; } }
   @keyframes fx-bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-  @keyframes fx-lens { from { translate: 8vw 70vh; } to { translate: 68vw 24vh; } }
 </style>

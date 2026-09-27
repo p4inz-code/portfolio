@@ -143,21 +143,38 @@
       // (fast start, quick stop), which read as a snap on something this
       // size regardless of duration.
       const easing = 'cubic-bezier(0.22, 1, 0.36, 1)';
+      // v5.33.0 — the parallax/3D layer. clip-path alone reads as a flat
+      // graphic wipe; a real tilt on top of it (perspective + rotateY +
+      // a touch of scale, all plain `transform`, the one property that's
+      // been reliable on these pseudo-elements every time it's been tried
+      // this session) makes the reveal read as something moving through
+      // depth, not a shape growing in place. Same clip-path mechanism as
+      // before, so this doesn't reintroduce the reliability problem the
+      // mask/custom-property version had.
       transition.ready
         .then(() => {
           if (toLight) {
-            // New (light) layer grows outward from the click point.
+            // New (light) layer grows outward from the click point while
+            // tilting in from an angle and settling flat -- reads as
+            // swooping into place, not just expanding.
             root.animate(
-              { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`] },
+              {
+                clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`],
+                transform: ['perspective(1400px) rotateY(-8deg) scale(0.94)', 'perspective(1400px) rotateY(0deg) scale(1)'],
+              },
               { duration: 900, easing, pseudoElement: '::view-transition-new(root)' }
             );
           } else {
-            // Old (light) layer shrinks inward onto the click point,
-            // uncovering dark from underneath as it closes -- same
-            // mechanism, opposite element and direction, so this reads as
-            // a different gesture rather than the same wipe recolored.
+            // Old (light) layer shrinks inward onto the click point while
+            // tilting away and receding -- same mechanism, opposite
+            // element, direction, and tilt, so it reads as a different
+            // gesture (closing/receding) rather than the same wipe
+            // recolored.
             root.animate(
-              { clipPath: [`circle(${endRadius}px at ${x}px ${y}px)`, `circle(0px at ${x}px ${y}px)`] },
+              {
+                clipPath: [`circle(${endRadius}px at ${x}px ${y}px)`, `circle(0px at ${x}px ${y}px)`],
+                transform: ['perspective(1400px) rotateY(0deg) scale(1)', 'perspective(1400px) rotateY(8deg) scale(0.94)'],
+              },
               { duration: 900, easing, pseudoElement: '::view-transition-old(root)' }
             );
           }

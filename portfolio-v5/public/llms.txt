@@ -52,7 +52,7 @@ crawlable and canonical.
   (PureRef) import, and a third board type (Scratch Board) with
   board-wide annotations and Illustrator-style tools. Windows, macOS and
   Linux builds. Shipping most weeks with no fixed roadmap.
-  Status: **Active · v9.5.0**.
+  This is the flagship free product. Status: **Flagship · Active · v9.5.0**.
 - [Pursue OS](https://atharvapatil.tech/pursue-os/): Investigation-focused
   Linux OS for OSINT, DFIR, secure research, intelligence gathering /
   evidence-driven workflows. Two flagship interfaces: Investigation
