@@ -140,8 +140,8 @@ export const PROJECTS: Project[] = [
     name: 'Pursue OS',
     tagline: 'One operating system for the investigation workflow.',
     description:
-      'Investigation-focused Linux OS for OSINT, DFIR, secure research, intelligence gathering, and evidence-driven workflows. Two flagship interfaces: Investigation Terminal + Investigation Browser with integrated Tor. Apache 2.0. Built by P4inz. On hold mid-implementation, no ISO yet.',
-    status: { kind: 'onHold', label: 'On Hold · Pre-release' },
+      'Investigation-focused Linux OS for OSINT, DFIR, secure research, intelligence gathering, and evidence-driven workflows. Two flagship interfaces: Investigation Terminal + Investigation Browser with integrated Tor. Apache 2.0. Built by P4inz. Development paused mid-implementation, then resumed in September 2026; no ISO yet.',
+    status: { kind: 'active', label: 'Active · Pre-release' },
     tags: ['Linux', 'OSINT', 'Apache 2.0'],
     metaTags: ['Linux', 'OSINT & DFIR', 'Apache 2.0'],
     featured: true,
@@ -154,8 +154,8 @@ export const PROJECTS: Project[] = [
     role: 'Creator and sole developer',
     started: '2026',
     currentVersion: 'Pre-release',
-    nextMilestone: 'On hold while other products take priority. Core implementation resumes before a first public release.',
-    notes: 'Not ready for production use. Case-store layer (traits, in-memory and file-backed) is the most recent work before development paused.',
+    nextMilestone: 'Core implementation resumed in September 2026 after a pause. No public release or ISO yet.',
+    notes: 'Not ready for production use. Case-store layer (traits, in-memory and file-backed) was the most recent work before the pause; the repo\'s own commit history doesn\'t yet show new feature work past that, but development is confirmed active again.',
   },
   {
     slug: 'veris',
@@ -343,8 +343,8 @@ export const PROJECTS: Project[] = [
     name: 'Crossport',
     tagline: 'Send a file to any of your devices, no account, no cloud.',
     description:
-      'Free cross-platform file transfer utility for Windows, macOS, and Linux. No GitHub Release published yet; the repo is tagged at an early foundation build.',
-    status: { kind: 'testing', label: 'Early Development · Foundation' },
+      'Free cross-platform file transfer utility for Windows, macOS, and Linux. No GitHub Release published yet; the repo is tagged at an early foundation build. Paused after the initial foundation work, development resumed in September 2026.',
+    status: { kind: 'active', label: 'Active · Foundation' },
     tags: ['Utility', 'Cross-Platform'],
     metaTags: ['Windows', 'macOS', 'Linux'],
     featured: false,
@@ -355,7 +355,7 @@ export const PROJECTS: Project[] = [
     role: 'Sole engineer',
     started: '2026',
     currentVersion: 'v0.1.0-foundation',
-    nextMilestone: 'Foundation stage. No public release yet.',
+    nextMilestone: 'Foundation stage, development active again as of September 2026. No public release yet.',
   },
   {
     slug: 'draft',

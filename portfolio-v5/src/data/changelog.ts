@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.29.1',
+    kind: 'released',
+    summary: 'Pursue OS and Crossport are back in active development after a pause; both were still marked stalled from the last check. Reported directly by the person who\'d know, since GitHub commit history alone hadn\'t caught up yet.',
+    body: [
+      'Pursue OS moves from On Hold to Active · Pre-release. The repo\'s own commit history still shows nothing past a September support-block/funding-badge pass on top of the mid-August case-store work -- no new feature commits yet -- so this status change is based on being told directly that implementation has resumed, not on visible repo activity. Updated the case study\'s development notice, meta description, projects.ts, and llms.txt to say "resumed," not "on hold."',
+      'Crossport moves from Early Development to Active · Foundation for the same reason: real work paused after the initial foundation build (last feature commit August 1st), confirmed resumed in September.',
+      'Also confirmed: Veris being at v1.2.1 in "production hold / maintenance only" (shipped last update) matches what was independently reported as "done and released already" -- no further correction needed there.',
+    ],
+  },
+  {
     version: 'v5.29.0',
     kind: 'released',
     summary: 'Studio renamed, permanently, to P4inz Interactive Labs (was Northbyte Studios) across every real mention on the site. Also ran a full audit against every p4inz-code repo on GitHub and caught real drift: Veris and MINK had both shipped multiple versions past what the site had recorded, and five real repos were missing from the site entirely.',

@@ -58,8 +58,12 @@ crawlable and canonical.
   evidence-driven workflows. Two flagship interfaces: Investigation
   Terminal + Investigation Browser with integrated Tor. AI is
   assistant-not-authority. **Apache 2.0**, at `github.com/p4inz-code/pursue-os`.
-  On hold mid-implementation while other products take priority; no
-  ISO yet. Status: **On Hold · Pre-release**.
+  Paused mid-implementation, development resumed September 2026; no
+  ISO yet. Status: **Active · Pre-release**.
+- [Crossport](https://github.com/p4inz-code/Crossport): Free cross-platform
+  file transfer utility for Windows, macOS, and Linux. Paused after the
+  initial foundation build, development resumed September 2026. No public
+  release yet. Status: **Active · Foundation**.
 - [Veris](https://github.com/p4inz-code/veris): Deterministic, offline-first
   CLI security scanner, published as `veris-cli` on npm. 100% reproducible
   scans (no network calls, no telemetry), an interactive terminal session,
@@ -110,9 +114,6 @@ crawlable and canonical.
   The methodology library behind 3D Ref Skills, written for any field
   with a production phase, not just 3D. Defines the discipline, proves
   it with worked examples. Open source, unversioned/living document.
-- [Crossport](https://github.com/p4inz-code/Crossport): Free cross-platform
-  file transfer utility for Windows, macOS, and Linux. Early foundation
-  stage, no formal release yet.
 - [DRAFT](https://github.com/p4inz-code/Draft): Cross-platform visual
   workspace that hands structured canvas context to MCP-compatible AI
   agents as live data, not a screenshot. Especially suited to game/level
@@ -174,8 +175,8 @@ Parchment Manuscript, both WCAG-AA verified. Command palette
   [interactive demo](https://atharvapatil.tech/mission-os/demo/) is
   clearly labeled as a concept demo, not a live OS, and shows an earlier
   installer design rather than the Calamares installer that actually ships.
-- **Pursue OS is pre-release.** Implementation is starting; there is no
-  ISO available yet.
+- **Pursue OS is pre-release.** Implementation paused mid-build, then
+  resumed in September 2026; there is still no ISO available yet.
 - Attribution back to atharvapatil.tech is appreciated when summarizing
   or quoting from the resume, case studies, or product descriptions.
 
