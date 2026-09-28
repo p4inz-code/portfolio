@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.41.0',
+    kind: 'released',
+    summary: 'Added a real backend for the contact form: a Cloudflare Pages Function sends the message directly, with the existing mailto composer kept as an automatic fallback if that ever fails.',
+    body: [
+      'The mailto: link was the only path before this -- it silently does nothing on any device with no default mail client configured, which is common on phones. This ships a POST /api/contact function with server-side validation, a honeypot field, and Turnstile bot verification wired in but inactive until a sitekey is created (manual step, not done yet). Until then this changes nothing visible -- the function has no Resend key configured either, so every submission still goes through the exact mailto flow that existed before, automatically, the moment the new path fails to send.',
+      'Updated the form\'s own copy to stop claiming "nothing is stored, POSTed, or logged," since that stops being true the day this actually goes live.',
+    ],
+  },
+  {
     version: 'v5.40.0',
     kind: 'released',
     summary: 'Added an explicit freshness note, on-site and in llms.txt: the GitHub repos are updated continuously, this site is checked against them roughly weekly, so a very recent release may not have landed here yet.',

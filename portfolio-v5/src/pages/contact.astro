@@ -2,6 +2,11 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
 import { CONTACT, SITE } from '../data/site';
+
+// Empty until the Turnstile sitekey is created (Cloudflare dashboard, manual
+// step) and set as PUBLIC_TURNSTILE_SITE_KEY in the Pages build env — until
+// then the widget and its script simply don't render.
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
 ---
 <BaseLayout title="Get in Touch — Atharva Patil" description="Get in touch with Atharva Patil: freelance web development, UI/UX, branding, and 3D/VFX work. Real inbox, no contact-form middleman.">
   <Section
@@ -78,6 +83,12 @@ import { CONTACT, SITE } from '../data/site';
         </div>
 
         <form class="term-form" id="contactForm" novalidate>
+          <!-- honeypot: hidden from real visitors, catches bots that autofill every field -->
+          <div class="term-hp" aria-hidden="true">
+            <label for="c-website">Website</label>
+            <input type="text" id="c-website" name="website" tabindex="-1" autocomplete="off" />
+          </div>
+
           <div class="term-line term-line-field">
             <label for="c-name" class="term-prompt"><span class="term-caret">›</span> name</label>
             <div class="term-field">
@@ -138,14 +149,18 @@ import { CONTACT, SITE } from '../data/site';
             </div>
           </div>
 
+          {turnstileSiteKey && (
+            <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-size="invisible" data-callback="onTurnstileToken" id="c-turnstile"></div>
+          )}
+
           <div class="term-actions">
             <button type="submit" class="term-submit">
               <span class="term-caret" aria-hidden="true">›</span> <span class="term-label">send message</span>
               <span class="term-arrow" aria-hidden="true">→</span>
             </button>
             <p class="term-hint">
-              Opens your mail client with everything pre-filled to <span>{CONTACT.email}</span>.
-              Nothing is stored, POSTed, or logged. <kbd>Ctrl</kbd> + <kbd>Enter</kbd> sends from anywhere in the form.
+              Sent straight to my inbox at <span>{CONTACT.email}</span>. If that ever fails,
+              your mail client opens instead as a backup. <kbd>Ctrl</kbd> + <kbd>Enter</kbd> sends from anywhere in the form.
             </p>
           </div>
 
@@ -169,6 +184,10 @@ import { CONTACT, SITE } from '../data/site';
 
     </div>
   </Section>
+
+  {turnstileSiteKey && (
+    <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  )}
 
   <script is:inline>
     (function () {
@@ -313,9 +332,15 @@ import { CONTACT, SITE } from '../data/site';
         onDone();
       }
 
+      // v5.41.0 — Turnstile invisible-mode token, populated by the widget's
+      // own callback once a sitekey is configured; stays '' (and the backend
+      // skips its check to match) until that manual setup step is done.
+      let turnstileToken = '';
+      window.onTurnstileToken = function (token) { turnstileToken = token; };
+
       form.addEventListener('submit', function (e) {
         e.preventDefault();
-        // Ctrl/Cmd+Enter can re-submit while the transmit beat is playing
+        // Ctrl/Cmd+Enter can re-submit while a send is already in flight
         const busyCard = document.getElementById('termCard');
         if (busyCard && busyCard.classList.contains('is-sending')) return;
         const nameInput = /** @type {HTMLInputElement} */ (document.getElementById('c-name'));
@@ -395,13 +420,58 @@ import { CONTACT, SITE } from '../data/site';
           }, 1400);
         }
 
-        if (reducedMotion || !card) { launch(); return; }
-        // A short "transmit" beat: a packet runs along the top of the card
-        // and the button says so, then the mail client opens.
-        card.classList.add('is-sending');
-        if (submitBtn) { submitBtn.disabled = true; submitBtn.querySelector('.term-label').textContent = 'transmitting'; }
-        if (status) { status.hidden = false; status.textContent = 'transmitting…'; }
-        setTimeout(launch, 950);
+        function runMailtoFallback() {
+          if (reducedMotion || !card) { launch(); return; }
+          // A short "transmit" beat: a packet runs along the top of the card
+          // and the button says so, then the mail client opens.
+          card.classList.add('is-sending');
+          if (submitBtn) { submitBtn.disabled = true; submitBtn.querySelector('.term-label').textContent = 'transmitting'; }
+          if (status) { status.hidden = false; status.textContent = 'transmitting…'; }
+          setTimeout(launch, 950);
+        }
+
+        function showSent() {
+          if (card) card.classList.remove('is-sending');
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.querySelector('.term-label').textContent = 'send message'; }
+          if (status) {
+            status.hidden = false;
+            status.textContent = 'sent — I read every message myself, I\'ll reply within 1–2 days.';
+          }
+          form.reset();
+          updateSignal();
+        }
+
+        // v5.41.0 — try a real server-side send first (functions/api/contact.ts).
+        // Any failure — network error, not yet configured, rate-limited, bot
+        // check — falls straight into the mailto composer that already
+        // existed, so a message is never lost either way.
+        if (card) card.classList.add('is-sending');
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.querySelector('.term-label').textContent = 'sending'; }
+        if (status) { status.hidden = false; status.textContent = 'sending…'; }
+
+        const hpInput = /** @type {HTMLInputElement} */ (document.getElementById('c-website'));
+
+        fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            name: name,
+            email: email,
+            service: service || '',
+            budget: budget || '',
+            message: message,
+            turnstileToken: turnstileToken,
+            hp: hpInput ? hpInput.value : '',
+          }),
+        })
+          .then(function (res) {
+            return res.json().catch(function () { return { ok: false }; });
+          })
+          .then(function (data) {
+            if (data && data.ok) showSent();
+            else runMailtoFallback();
+          })
+          .catch(function () { runMailtoFallback(); });
       });
 
       const copyMsgBtn = document.getElementById('c-copy-message');
@@ -679,6 +749,17 @@ import { CONTACT, SITE } from '../data/site';
       color: var(--muted);
     }
     .term-title-secondary { color: var(--muted); opacity: 0.75; }
+
+    /* honeypot: off-screen, not display:none (some bots skip those), real
+       visitors never see or reach it; a filled value flags the submission
+       as a bot server-side without ever telling the bot it was caught */
+    .term-hp {
+      position: absolute;
+      width: 1px; height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
 
     /* ============ Form ============ */
     .term-form {
