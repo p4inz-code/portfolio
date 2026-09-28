@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.42.0',
+    kind: 'released',
+    summary: 'Hardened the contact backend: per-IP and sitewide rate limiting, stricter email validation, Turnstile hostname verification, and an origin check -- all still inert until the manual setup steps are done.',
+    body: [
+      'Self-audit of v5.41.0 found a real gap: nothing capped how many times the endpoint could be called once it goes live, which could either flood the inbox or burn through the email provider\'s daily quota and start silently dropping real messages. Fixed with a KV-backed limiter -- 5 attempts per 10 minutes and 8 per day per visitor, plus a sitewide daily ceiling held well under the provider\'s own cap.',
+      'Also tightened the email regex (the old one would accept something like "a@b.com,evil@x.com" as valid), strip control characters out of the name before it reaches the subject line, verify the bot-check\'s reported hostname matches this domain, and reject requests whose Origin header points somewhere else. None of this changes anything visible today -- it only starts mattering once Resend and Turnstile are actually configured.',
+    ],
+  },
+  {
     version: 'v5.41.1',
     kind: 'released',
     summary: 'Fixed the contact backend\'s fallback recipient address -- it had my personal Gmail hardcoded instead of the business one every other page on this site already uses.',
