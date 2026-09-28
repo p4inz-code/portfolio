@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.39.0',
+    kind: 'released',
+    summary: 'MINK and DRAFT get real preview images on /work -- the last two open item from the search-discoverability pass, left text-only earlier because GitHub\'s repo-card endpoint was rate-limited at the time.',
+    body: [
+      'Same source as the other four (Crossport, Glint, Mission OS, Pursue OS): GitHub\'s own auto-generated repository card, saved locally rather than hotlinked so the site doesn\'t depend on a live third-party fetch (or its rate limit) at runtime. The rate limit that blocked these two specifically had reset since the last attempt.',
+      'Verified both load as real, complete images (naturalWidth 1200, not broken) directly in-browser rather than trusting a screenshot, since scroll-triggered reveal animations on this page have made screenshots at an arbitrary scroll position unreliable earlier this session.',
+    ],
+  },
+  {
     version: 'v5.38.0',
     kind: 'released',
     summary: 'The identical-reveal complaint was about the homepage\'s scroll-driven showcase, not the case-study banner already fixed in v5.37.0 -- Mission OS and Pursue OS were falling through to the same generic reveal there too, for the same root cause (no override exists for a scene that isn\'t nexus/kanvaz/ascent). Added two real, different ones and verified the actual computed clip-path values in-browser, not just the CSS source.',
