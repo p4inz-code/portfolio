@@ -96,24 +96,22 @@ const { project } = Astro.props;
   /* v5.36.0 — banner reveal, per scene. Every case study with a banner
      image used the exact same static, unanimated frame; Mission OS and
      Pursue OS specifically got called out for looking identical here even
-     after their backdrops (scenes) were made to differ. Real DOM element,
-     not a ::view-transition pseudo-element, so this uses the plain native
-     scroll-timeline pattern already proven sitewide (WorkIndex's row-in),
-     not the more fragile mechanisms tried elsewhere this session. No JS
-     fallback: worst case on an unsupporting browser is the same static
-     image that shipped before, never a missing image. */
+     after their backdrops (scenes) were made to differ.
+     v5.37.0 fix — the v5.36.0 version tied this to animation-timeline:
+     view(), the exact mechanism just found and removed from Section.astro
+     for the same reason: this banner sits right under the hero text, so
+     on most screens it's already inside (or nearly inside) the viewport
+     at load, meaning the "entry" scroll range is already spent before the
+     visitor ever sees it -- both animations were snapping straight to
+     their end state with nothing visibly different playing. Switched to a
+     plain animation that plays once on load regardless of scroll
+     position, so the two are actually, visibly different every time. */
   @media (prefers-reduced-motion: no-preference) {
-    @supports (animation-timeline: view()) {
-      [data-scene='mission'] img {
-        animation: mission-banner-in 1s var(--ease-out) both;
-        animation-timeline: view();
-        animation-range: entry 0% entry 60%;
-      }
-      [data-scene='pursue'] img {
-        animation: pursue-banner-in 1.1s linear both;
-        animation-timeline: view();
-        animation-range: entry 0% entry 60%;
-      }
+    [data-scene='mission'] img {
+      animation: mission-banner-in 1s var(--ease-out) both;
+    }
+    [data-scene='pursue'] img {
+      animation: pursue-banner-in 1.1s linear both;
     }
   }
   /* Mission OS: settles downward into place, like the boot sequence its

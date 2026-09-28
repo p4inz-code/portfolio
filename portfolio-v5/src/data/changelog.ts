@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.37.0',
+    kind: 'released',
+    summary: 'The v5.36.0 fix for Mission OS and Pursue OS\'s case-study banners looking identical didn\'t actually work -- reported back immediately as still the same. Real cause found and fixed: it used the same scroll-timeline mechanism just removed from Section.astro for the identical reason.',
+    body: [
+      'The banner sits directly under the hero text on both case studies, which means on most screens it\'s already inside (or almost inside) the viewport the moment the page loads -- so the scroll range the reveal was tied to (animation-timeline: view()) was already spent before either animation had anything left to play, and both just snapped straight to their finished state. They looked the same because neither was actually visibly running, not because the two keyframe definitions were the same.',
+      'Switched to a plain animation that plays once on load, independent of scroll position. Verified directly this time (not just by eye): both banners now show a real, running animation in getAnimations(), with two different names -- mission-banner-in and pursue-banner-in -- confirming they\'re actually distinct in the browser, not just in the CSS source.',
+    ],
+  },
+  {
     version: 'v5.36.0',
     kind: 'released',
     summary: 'Quick bug bounty: found and fixed a real sitewide bug where a page\'s first section (hero heading, intro, and any content in it) could render as invisible empty space, an About-page stat that quietly contradicted itself, barely-visible separators on Services, and gave Mission OS and Pursue OS\'s case-study banners genuinely different reveal animations instead of the identical static frame both had.',
