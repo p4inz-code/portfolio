@@ -749,6 +749,27 @@ const defaultLabel = (kind: string) =>
         animation-name: reveal-ascent;
         animation-timing-function: var(--ease-io);
       }
+
+      /* v5.38.0 — mission and pursue never got their own reveal here: both
+         fell through to reveal-default, and got reported (correctly) as
+         looking the same on the main-page scroll deck, same as the
+         case-study banner bug just fixed for the same underlying reason
+         (a scene that isn't nexus/kanvaz/ascent has no override, so it's
+         silently identical to every other unscened project). Two new,
+         real, different wipes -- not the extra decorative sub-elements
+         (scan line, cable, pin) the other three scenes have, since there's
+         no matching markup for those here, just a different clip-path
+         shape on the same .show-img the base rule already animates. */
+      /* -------- mission: climbs into place bottom-to-top, like a status readout coming online -------- */
+      .chapter[data-scene='mission'] .show-img {
+        animation-name: reveal-mission;
+        animation-timing-function: var(--ease-io);
+      }
+      /* -------- pursue: opens from a point, like a spotlight finding what it's looking for -------- */
+      .chapter[data-scene='pursue'] .show-img {
+        animation-name: reveal-pursue;
+        animation-timing-function: var(--ease-out);
+      }
     }
   }
 
@@ -846,6 +867,18 @@ const defaultLabel = (kind: string) =>
     transform: scale(calc(1 + var(--mi) * 0.07));
   }
 
+  /* mission: climbs into place bottom-to-top, matching the native version */
+  :global(html[data-jsp]) .chapter[data-scene='mission'] .show-img {
+    opacity: 1;
+    clip-path: inset(calc(var(--mi) * 100%) 0 0 0);
+    transform: scale(calc(1 + var(--mi) * 0.02));
+  }
+  /* pursue: opens from a point, matching the native version */
+  :global(html[data-jsp]) .chapter[data-scene='pursue'] .show-img {
+    opacity: 1;
+    clip-path: circle(calc(var(--m) * 150%) at 50% 50%);
+  }
+
   /* scene cards: on phones each scene chapter is a card with its backdrop inside */
   :global(html[data-jsp]) .chapter[data-scene] .stage {
     position: relative;
@@ -937,6 +970,14 @@ const defaultLabel = (kind: string) =>
   @keyframes reveal-ascent {
     from { clip-path: inset(46% 0 46% 0); transform: scale(1.07); filter: brightness(0.3) var(--grade, none); }
     to   { clip-path: inset(0 0 0 0);     transform: none;        filter: var(--grade, none); }
+  }
+  @keyframes reveal-mission {
+    from { clip-path: inset(100% 0 0 0); transform: scale(1.02); }
+    to   { clip-path: inset(0 0 0 0);    transform: none; }
+  }
+  @keyframes reveal-pursue {
+    from { clip-path: circle(0% at 50% 50%); }
+    to   { clip-path: circle(150% at 50% 50%); }
   }
   @keyframes push-in {
     from { scale: 0.985; }

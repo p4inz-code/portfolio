@@ -20,6 +20,17 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.38.0',
+    kind: 'released',
+    summary: 'The identical-reveal complaint was about the homepage\'s scroll-driven showcase, not the case-study banner already fixed in v5.37.0 -- Mission OS and Pursue OS were falling through to the same generic reveal there too, for the same root cause (no override exists for a scene that isn\'t nexus/kanvaz/ascent). Added two real, different ones and verified the actual computed clip-path values in-browser, not just the CSS source.',
+    body: [
+      'FeaturedShowcase.astro (the homepage\'s pinned-scroll showcase) has always given nexus, kanvaz, and ascent their own reveal treatment and let everything else fall back to one shared default -- which is exactly why Mission OS and Pursue OS, both given a `scene` value recently for the case-study banner fix, looked the same as each other: neither name matched an existing override, so both silently got the shared fallback.',
+      'Mission OS now climbs into view bottom-to-top (clip-path inset shrinking from the top down), matching the "coming online" feel its own boot-log backdrop already has. Pursue OS now opens from a point outward (a circular clip-path), reading as a spotlight finding something rather than a wipe -- deliberately not reusing nexus\'s left-to-right wipe or ascent\'s letterbox, so it doesn\'t just trade one shared animation for another.',
+      'Added the same two overrides to both code paths this component maintains: the native scroll-timeline version for browsers that support it, and the JS-driven `--m`/`--mi` fallback for phones and browsers that don\'t (Firefox, older iOS) -- checked directly in-browser this time rather than assumed, since a fix that only landed in the native path was exactly how the v5.36.0 attempt at this same thing failed silently.',
+      'Verified via getComputedStyle rather than a screenshot: Pursue OS resolves to a real, live circle(80.7%) clip-path and Mission OS to a real inset(46.1% 0 0) clip-path at the same scroll position, both distinct from nexus, kanvaz, and ascent\'s own values and from each other.',
+    ],
+  },
+  {
     version: 'v5.37.0',
     kind: 'released',
     summary: 'The v5.36.0 fix for Mission OS and Pursue OS\'s case-study banners looking identical didn\'t actually work -- reported back immediately as still the same. Real cause found and fixed: it used the same scroll-timeline mechanism just removed from Section.astro for the identical reason.',
