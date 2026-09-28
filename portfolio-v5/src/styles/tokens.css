@@ -210,8 +210,15 @@
  * (dense horizontal text right next to huge vertical whitespace). Scaling
  * the large end of the ramp down ~40% on narrow viewports fixes this
  * everywhere at once, since every component reads from the same tokens.
+ *
+ * v5.35.0: the breakpoint was 640px, but the nav itself switches to the
+ * mobile drawer at 900px (see BaseLayout.astro) — so anything from 641px to
+ * 900px got the mobile nav with full desktop spacing underneath it, the
+ * exact "stuffed" complaint this block exists to fix, just in a width band
+ * this threshold didn't cover. Widened to match the nav's own breakpoint so
+ * the two agree on what counts as "mobile."
  * ========================================================================== */
-@media (max-width: 640px) {
+@media (max-width: 900px) {
   :root {
     --sp-9: 36px;
     --sp-10: 48px;

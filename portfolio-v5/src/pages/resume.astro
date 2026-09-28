@@ -178,25 +178,41 @@ const additionalProjects = [
        each <li> (and each plain paragraph of body copy) individually means
        every rule is locked to that specific element's own text, gap or no
        gap. */
+    /* v5.35.0 — these were turned off below 640px in the previous pass,
+       carried over from when the ruled background was one fixed pattern
+       painted across the whole page (genuinely too much on a small screen).
+       Now that it's a thin, per-block background locked to each block's
+       own line-height, there's no real reason to hide it on a phone --
+       doing so is very likely why it was reported as "not even visible":
+       most phones are under this exact width. Kept everywhere. */
     .resume-summary,
     .experience-bullets li,
     .proj-item-bullets li,
     .additional-row,
     .skill-value {
+      /* Fallback for browsers without the `1lh` unit: --leading-body (1.6)
+         as a plain em multiple, close enough to real for older engines.
+         Overridden by the exact, truly-synced version below wherever
+         `1lh` itself is supported. */
       background-image: linear-gradient(
         to bottom,
-        transparent calc(1lh - 1px),
-        color-mix(in oklab, var(--line-strong) 85%, transparent) calc(1lh - 1px)
+        transparent calc(1.6em - 1px),
+        color-mix(in oklab, var(--line-strong) 85%, transparent) calc(1.6em - 1px)
       );
-      background-size: 100% 1lh;
+      background-size: 100% 1.6em;
     }
-    @media (max-width: 640px) {
+    @supports (background-size: 1lh) {
       .resume-summary,
       .experience-bullets li,
       .proj-item-bullets li,
       .additional-row,
       .skill-value {
-        background-image: none;
+        background-image: linear-gradient(
+          to bottom,
+          transparent calc(1lh - 1px),
+          color-mix(in oklab, var(--line-strong) 85%, transparent) calc(1lh - 1px)
+        );
+        background-size: 100% 1lh;
       }
     }
     /* Margin rule, notebook-style, offset from the ruled lines. */

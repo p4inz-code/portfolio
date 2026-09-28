@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.35.0',
+    kind: 'released',
+    summary: 'Found the real cause of "unnecessary gaps" between sections on narrower screens: the nav switches to its mobile drawer at 900px, but the spacing tokens only scaled down at 640px, so a 260px-wide band in between got the mobile nav with full desktop-scale padding underneath it. Also made sure the resume\'s ruled lines can\'t be silently switched off by a screen width or a missing CSS feature.',
+    body: [
+      'Site-wide: the --sp-9..12 spacing tokens (they drive the gap between every Section on every page) scaled down for narrow screens at 640px, but the nav itself has switched to the mobile hamburger drawer at 900px since an earlier ship. Anything between 641px and 900px -- a real, common width for a phone in landscape, a small tablet, or a narrower desktop window -- got the mobile nav paired with full desktop spacing, which is exactly the "dense text next to huge empty gaps" look that got reported. Widened the token breakpoint to 900px to match the nav\'s own, so the two agree on what counts as mobile.',
+      'Resume ruled lines: the previous pass added `background-image: none` below 640px, carried over from when the ruled background was one pattern painted across the whole page and genuinely was too much for a small screen. That reasoning didn\'t apply anymore once the lines became a thin, per-block background locked to each block\'s own line-height -- but the disable rule stayed anyway, which is very likely the real reason they were reported as "not even visible": most phones fall under that exact width. Removed it. Also added a plain fallback (a fixed 1.6em spacing) for browsers without the `1lh` CSS unit the sync depends on, so the lines can\'t disappear entirely on an older engine either -- `1lh`-supporting browsers still get the exact, truly-synced version.',
+      'Verified both fixes on an emulated 375px phone width: the two gaps that were circled are now proportionate, and the ruled lines are visible and synced under the summary paragraph and every bullet. Spot-checked the homepage at the same width afterward since the spacing-token change is site-wide, not resume-only -- no console errors, no layout regression.',
+    ],
+  },
+  {
     version: 'v5.34.0',
     kind: 'released',
     summary: 'Reverted the v5.33.0 project reorder on the main site -- that instruction was about the resume page specifically, not the homepage/work deck, and got misapplied sitewide. Also fixed the resume\'s ruled lines properly: they now lock to each block\'s real line-height instead of a guessed fixed spacing, so text actually sits on its own rule.',
