@@ -46,10 +46,20 @@ const HeadingTag = headingLevel;
   /* v5.17.0 — restrained scroll reveal, zero JS, same mechanism already
      used by the scroll-progress hairline and featured showcase
      (animation-timeline). Settles quickly (35% of entry) so it reads as
-     polish, not a slideshow effect — and if a section is already in the
-     viewport on load, the timeline resolves at full opacity immediately. */
+     polish, not a slideshow effect.
+     v5.36.0 fix — real bug, not a style nitpick: this claimed "if a
+     section is already in the viewport on load, the timeline resolves at
+     full opacity immediately," but that's not reliable in practice for
+     the very first section on a page (always in view at load, before any
+     scroll has happened to give the browser a scroll position to compute
+     the view-timeline from). Reported live: an entire hero section --
+     heading, intro paragraph, a 3-column meta grid -- rendering as
+     invisible empty space until the visitor scrolled. Excluded the first
+     section on each page from the reveal entirely: it has no meaningful
+     scroll distance before it appears anyway, so there was nothing worth
+     animating there, only a real risk of content going invisible. */
   @supports (animation-timeline: view()) {
-    .section {
+    .section:not(:first-of-type) {
       animation: section-reveal linear backwards;
       animation-timeline: view();
       animation-range: entry 0% entry 35%;

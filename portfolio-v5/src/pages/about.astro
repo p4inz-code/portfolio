@@ -97,8 +97,14 @@ const traction = [
 ];
 
 const shippedCount = PRODUCT_COUNT;
+// v5.36.0 fix — real bug: this filtered the whole PROJECTS array (client
+// sites and event sites included) while shippedCount filters those out.
+// The two miscounts happened to cancel out to the same number (13 and 13),
+// which read as "every product is actively worked on, none on hold" --
+// false, two of the thirteen real products are on hold. Scoped to the same
+// population shippedCount already uses.
 const activeCount = PROJECTS.filter(
-  (p) => !['onHold'].includes(p.status.kind)
+  (p) => !p.tags.includes('Client work') && !p.tags.includes('Event site') && p.status.kind !== 'onHold'
 ).length;
 ---
 <BaseLayout title="About — Atharva Patil" description="Atharva Patil — solo founder of P4inz Interactive Labs, Navi Mumbai. Software engineer and second-year VFX/3D animation student." keywords="who is p4inz, who is painz, p4inz real name, Atharva Patil p4inz, P4INZ developer, P4inz Interactive Labs, Northbyte Studios">

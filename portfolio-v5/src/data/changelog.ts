@@ -20,6 +20,18 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.36.0',
+    kind: 'released',
+    summary: 'Quick bug bounty: found and fixed a real sitewide bug where a page\'s first section (hero heading, intro, and any content in it) could render as invisible empty space, an About-page stat that quietly contradicted itself, barely-visible separators on Services, and gave Mission OS and Pursue OS\'s case-study banners genuinely different reveal animations instead of the identical static frame both had.',
+    body: [
+      'Real bug, sitewide: every page\'s scroll-reveal on its <Section> component assumed "a section already in view on load resolves to full opacity immediately," but that\'s not reliable for the very first section on a page in practice -- reported live as an entire hero (heading, intro paragraph, a 3-column meta grid) rendering as blank space until the visitor scrolled. Excluded the first section on every page from the reveal: it has no real scroll distance before it appears anyway, so there was nothing worth animating there, only risk.',
+      'About page: found a real inconsistency while checking the fix above. The hero said "13 products shipped or in progress, 13 of them actively worked on" -- both numbers equal, reading as "every product is active, none on hold." False: two of the thirteen are on hold (Mission OS, Veris). The bug was real -- activeCount was filtered from the whole 15-entry project list (client sites and event sites included) while the 13 came from a narrower, correctly-scoped list -- and the two separate miscounts happened to cancel out to the same number, hiding it. Now reads 13 shipped, 11 active.',
+      'Services page: the divider under each discipline row used the same low-contrast token already fixed on the resume and the header, reported as barely visible. Same fix, same reason: --line-strong instead of --line for anything meant to be seen at a glance rather than discovered on close inspection.',
+      'Case study banners: Mission OS and Pursue OS both used the exact same static, unanimated image frame, reported (again) as looking identical even after their backdrop scenes were already made to differ. Added a real per-scene reveal: Mission OS\'s banner settles downward into place, Pursue OS\'s does a left-to-right scan/reveal instead of a fade -- same underlying mechanism (a plain scroll-linked CSS animation on a real DOM element, not a fragile pseudo-element trick), genuinely different motion.',
+      'Spot-checked About, Services, and Contact after the Section fix -- no console errors, no other above-the-fold content missing.',
+    ],
+  },
+  {
     version: 'v5.35.0',
     kind: 'released',
     summary: 'Found the real cause of "unnecessary gaps" between sections on narrower screens: the nav switches to its mobile drawer at 900px, but the spacing tokens only scaled down at 640px, so a 260px-wide band in between got the mobile nav with full desktop-scale padding underneath it. Also made sure the resume\'s ruled lines can\'t be silently switched off by a screen width or a missing CSS feature.',

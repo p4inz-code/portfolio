@@ -55,7 +55,7 @@ export interface Project {
     video?: { mp4: string; webm: string };
   };
   /** Sub-theme applied on the showcase chapter and on the project's own page. */
-  scene?: 'nexus' | 'kanvaz' | 'ascent';
+  scene?: 'nexus' | 'kanvaz' | 'ascent' | 'mission' | 'pursue';
   /** Which bucket this shows up in on /work's "Web / App / CLI / OS" index.
    *  Left unset for things that don't fit one of those four cleanly
    *  (the game, the AI-skill packs, the methodology library). */
@@ -73,6 +73,7 @@ export const PROJECTS: Project[] = [
     tags: ['Linux', 'GPLv3', 'Privacy'],
     metaTags: ['Debian Stable', 'KDE Plasma', 'Rust', 'GPLv3'],
     media: { src: '/assets/banners/mission-os.webp', alt: 'GitHub repository card for p4inz-code/mission-os.', kind: 'banner', ratio: '1200 / 600' },
+    scene: 'mission',
     category: 'os',
     featured: true,
     order: 4,
@@ -153,6 +154,7 @@ export const PROJECTS: Project[] = [
     tags: ['Linux', 'OSINT', 'Apache 2.0'],
     metaTags: ['Linux', 'OSINT & DFIR', 'Apache 2.0'],
     media: { src: '/assets/banners/pursue-os.webp', alt: 'GitHub repository card for p4inz-code/pursue-os.', kind: 'banner', ratio: '1200 / 600' },
+    scene: 'pursue',
     category: 'os',
     featured: true,
     order: 3,

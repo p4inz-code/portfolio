@@ -150,10 +150,16 @@ const faqJsonLd = {
     .s-lede-val a { color: var(--purple-bright); border-bottom: 1px solid currentColor; }
 
     /* ============ Editorial rows ============ */
-    .s-rows { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+    /* v5.36.0 — --line is a ~10-12%-opacity token built for subtle card
+       borders, not a divider meant to be seen at a glance between full
+       sections of body copy; reported as barely visible, same root cause
+       as the resume's ruled lines and the header contrast fix earlier.
+       --line-strong here and on the FAQ dividers below, for the same
+       reason in both places. */
+    .s-rows { display: flex; flex-direction: column; border-top: 1px solid var(--line-strong); }
     .s-row {
       padding: var(--sp-8) 0;
-      border-bottom: 1px solid var(--line);
+      border-bottom: 1px solid var(--line-strong);
     }
     .s-row-body { display: flex; flex-direction: column; gap: var(--sp-4); }
     .s-row-name {
