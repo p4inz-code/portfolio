@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.44.1',
+    kind: 'released',
+    summary: 'The contact form\'s backend is confirmed live: a real submission now sends straight to my inbox, verified end to end.',
+    body: [
+      'Last real bug in the way: Cloudflare Pages was never finding functions/api/contact.ts in the first place. This repo\'s Pages project has its Root directory set to the outer repo root, not portfolio-v5/ -- the build command cds into portfolio-v5 to build the site, but Cloudflare only auto-detects a functions/ folder sitting AT Root directory. So the function was invisible the entire time; every POST hit the platform\'s own generic 405, no matter what got fixed inside the function itself (CSP, Turnstile, rate limiting, the recipient address). Moved functions/ to the true repo root rather than touch the working build configuration.',
+      'With that fixed, a real submission through the live form was verified landing in the inbox with the right sender, service, budget, and message fields intact, and the correct visitor address in Reply-To. mailto: remains the automatic fallback if this path ever fails.',
+    ],
+  },
+  {
     version: 'v5.44.0',
     kind: 'released',
     summary: 'Real AP mark on the OG social-share card (replacing a hand-drawn placeholder left over since v5.20.0), fixed three overflowing chip labels on it, and reworked the 404 page: closed a large empty gap on mobile, and rebuilt its game\'s coin so it\'s a pickup instead of a thing that kills the player on touch.',
