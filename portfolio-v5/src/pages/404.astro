@@ -27,10 +27,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="nf-game-wrap">
         <p class="nf-game-label">While you're here <span>— keep the connection alive</span></p>
         <div class="nf-game-stage">
-          <canvas id="nfGame" class="nf-game" width="640" height="220" role="img" aria-label="Signal Runner: a small game. Space or tap to jump packets, hold down or swipe down to duck under drones."></canvas>
+          <canvas id="nfGame" class="nf-game" width="640" height="220" role="img" aria-label="Signal Runner: a small game. Space or tap to jump packets, which end the run. Hold down or swipe down to duck under coins and collect them."></canvas>
           <button type="button" class="nf-game-duck" id="nfGameDuck" aria-label="Duck">▾</button>
         </div>
-        <p class="nf-game-hint" id="nfGameHint">Space / tap to jump · hold ↓ to duck</p>
+        <p class="nf-game-hint" id="nfGameHint">Space / tap to jump · hold ↓ or swipe down to duck</p>
       </div>
     </div>
   </section>
@@ -41,7 +41,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
      *
      * Same genre as the offline dino (an endless side-scroller you can't
      * pause, timing is everything), built independently from it: a second
-     * mechanic (duck under low drones, not just jump low walls), a
+     * mechanic (duck under low coins, not just jump low walls), a
      * milestone badge that spins in the AP mark every 100m, a screen-shake
      * + particle burst on both jump and crash, and a day/night sky that
      * sweeps as your uptime climbs. Colors are read live from the page's
@@ -92,7 +92,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       // several.
       const START_SPEED = 3.6, MAX_SPEED = 14, ACCEL = 0.0034;
       let speed = START_SPEED, running = false, over = false, started = false;
-      let t = 0, dist = 0, best = Number(localStorage.getItem('nb-404-best') || 0);
+      let t = 0, dist = 0, coins = 0, best = Number(localStorage.getItem('nb-404-best') || 0);
       let shake = 0, milestoneFlash = 0, lastMilestone = 0;
       const player = { x: 50, y: GROUND, vy: 0, jumping: false, ducking: false, w: 13, h: STAND_H };
       let obstacles = [];
@@ -109,10 +109,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       }
 
       function reset() {
-        speed = START_SPEED; t = 0; dist = 0; obstacles = []; particles = []; nextSpawn = 60; lastMilestone = 0;
+        speed = START_SPEED; t = 0; dist = 0; coins = 0; obstacles = []; particles = []; nextSpawn = 60; lastMilestone = 0;
         player.y = GROUND; player.vy = 0; player.jumping = false; player.ducking = false; player.h = STAND_H;
         over = false; running = true; started = true;
-        hint.textContent = 'Space / tap to jump · hold ↓ to duck';
+        hint.textContent = 'Space / tap to jump · hold ↓ or swipe down to duck';
       }
 
       function jump() {
@@ -152,15 +152,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       function spawn() {
         // two obstacle kinds so jump alone is not enough: a packet on the ground (jump it),
-        // or a drone at head height (duck it) — the split is what makes this a different game, not a reskin
-        const kind = Math.random() < 0.62 ? 'packet' : 'drone';
+        // or a coin at head height (duck it) — the split is what makes this a different game, not a reskin
+        const kind = Math.random() < 0.62 ? 'packet' : 'coin';
         if (kind === 'packet') {
           obstacles.push({ kind, x: CSS_W + 10, w: 9 + Math.random() * 8, h: 13 + Math.random() * 11 });
         } else {
-          obstacles.push({ kind, x: CSS_W + 10, w: 20, h: 11, fy: GROUND - STAND_H - 9 + Math.random() * 5, ph: Math.random() * 10 });
+          obstacles.push({ kind, x: CSS_W + 10, w: 18, h: 18, fy: GROUND - STAND_H - 9 + Math.random() * 5, ph: Math.random() * 10 });
         }
-        const gap = 2.4 + Math.random() * 4.4;
-        nextSpawn = t + 40 - Math.min(speed * 2.4, 22) + gap * 7;
+        // v5.44.0 — genuinely easy-to-hard, not hard-to-hardest: the start
+        // interval is close to the old game's, so early obstacles still
+        // feel spaced out. What changes is how far it can compress once
+        // speed builds (30 vs the old 22), so a long run gets meaningfully
+        // denser than before instead of just uniformly busier throughout.
+        const gap = 2.0 + Math.random() * 4.0;
+        nextSpawn = t + 46 - Math.min(speed * 2.6, 30) + gap * 6.5;
       }
 
       function step() {
@@ -186,23 +191,34 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
         if (t >= nextSpawn) spawn();
         for (const o of obstacles) o.x -= speed;
-        obstacles = obstacles.filter((o) => o.x > -30);
         for (const p of particles) { p.x += p.vx; p.y += p.vy; p.vy += 0.15; p.life--; }
         particles = particles.filter((p) => p.life > 0);
 
+        // v5.44.0 fix — a coin killing the player on touch made no sense
+        // the moment it looked like a coin instead of a drone. Packets
+        // stay the real hazard (jump them); coins are now a pickup (duck
+        // under one to collect it, or just miss it — never fatal either way).
         for (const o of obstacles) {
           const px = player.x + 2, pw = player.w - 4;
           const py = player.y - player.h, ph = player.h;
           let ox, oy, ow, oh;
           if (o.kind === 'packet') { ox = o.x; ow = o.w; oh = o.h; oy = GROUND - oh; }
           else { ox = o.x; ow = o.w; oh = o.h; oy = o.fy; }
-          if (px < ox + ow - 2 && px + pw - 2 > ox && py < oy + oh - 2 && py + ph - 2 > oy) {
+          const hit = px < ox + ow - 2 && px + pw - 2 > ox && py < oy + oh - 2 && py + ph - 2 > oy;
+          if (!hit) continue;
+
+          if (o.kind === 'packet') {
             running = false; over = true; shake = 6;
             burst(player.x + player.w / 2, player.y - player.h / 2, colors.warn, 14);
             if (Math.floor(dist / 10) > best) { best = Math.floor(dist / 10); localStorage.setItem('nb-404-best', String(best)); }
             hint.textContent = 'Connection lost at ' + Math.floor(dist / 10) + 'm — space / tap to retry';
+          } else {
+            o.collected = true;
+            coins++;
+            burst(ox + ow / 2, oy + oh / 2, colors.warn, 8);
           }
         }
+        obstacles = obstacles.filter((o) => o.x > -30 && !o.collected);
       }
 
       function draw() {
@@ -238,20 +254,29 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         ctx.fillRect(player.x + 1, player.y - 3, 3, 3);
         ctx.fillRect(player.x + player.w - 4, player.y - 3, 3, 3);
 
-        // obstacles: packets on the ground, drones at head height — distinct shapes, distinct colors
+        // obstacles: packets on the ground, coins at head height — distinct shapes, distinct colors
         for (const o of obstacles) {
           if (o.kind === 'packet') {
             ctx.fillStyle = colors.bright;
             const oy = GROUND - o.h;
             ctx.fillRect(o.x, oy, o.w, o.h);
           } else {
+            // coin: bobs like before, and spins on its vertical axis (the
+            // horizontal radius pulses independently of the vertical one)
+            // so it actually reads as a coin instead of a flat dot.
             const bob = Math.sin((t + o.ph * 10) * 0.15) * 2;
+            const spin = Math.abs(Math.sin((t + o.ph * 10) * 0.08));
+            const cx = o.x + o.w / 2, cy = o.fy + o.h / 2 + bob;
+            const rx = (o.w / 2) * (0.35 + spin * 0.65), ry = o.h / 2;
             ctx.fillStyle = colors.warn;
             ctx.beginPath();
-            ctx.ellipse(o.x + o.w / 2, o.fy + o.h / 2 + bob, o.w / 2, o.h / 2, 0, 0, Math.PI * 2);
+            ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
             ctx.fill();
-            ctx.strokeStyle = colors.muted;
-            ctx.beginPath(); ctx.moveTo(o.x, o.fy + o.h / 2 + bob); ctx.lineTo(o.x + o.w, o.fy + o.h / 2 + bob); ctx.stroke();
+            ctx.strokeStyle = colors.bg;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.ellipse(cx, cy, rx * 0.55, ry * 0.55, 0, 0, Math.PI * 2);
+            ctx.stroke();
           }
         }
 
@@ -275,11 +300,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         }
 
         if (started) {
-          ctx.fillStyle = colors.muted;
           ctx.font = '11px var(--font-mono, monospace)';
           ctx.textAlign = 'right';
+          ctx.fillStyle = colors.muted;
           ctx.fillText('UPTIME ' + String(Math.floor(dist / 10)).padStart(4, '0') + 'm', CSS_W - 6, 20);
           ctx.fillText('BEST ' + String(best).padStart(4, '0') + 'm', CSS_W - 6, 34);
+          ctx.fillStyle = colors.warn;
+          ctx.fillText('COINS ' + String(coins).padStart(3, '0'), CSS_W - 6, 48);
         }
         ctx.restore();
       }
@@ -310,10 +337,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   <style>
     .nf-section {
-      padding: clamp(80px, 18vh, 160px) 0 var(--sp-9);
-      min-height: 60vh;
-      display: flex;
-      align-items: center;
+      /* v5.44.0 fix — the old clamp(80px, 18vh, 160px) top padding plus
+         min-height: 60vh + align-items: center read fine on a tall desktop
+         viewport, but on a short mobile screen 18vh alone is ~140px, and
+         stacked under the nav that reads as a dead gap before any content.
+         Same fixed-token padding every other Section.astro hero already
+         uses, no viewport-relative sizing or vertical-centering needed. */
+      padding: var(--sp-11) 0 var(--sp-9);
     }
     .nf-game-wrap { margin-top: var(--sp-9); max-width: 640px; }
     .nf-game-label {

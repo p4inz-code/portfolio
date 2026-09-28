@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.44.0',
+    kind: 'released',
+    summary: 'Real AP mark on the OG social-share card (replacing a hand-drawn placeholder left over since v5.20.0), fixed three overflowing chip labels on it, and reworked the 404 page: closed a large empty gap on mobile, and rebuilt its game\'s coin so it\'s a pickup instead of a thing that kills the player on touch.',
+    body: [
+      'og.svg audit: the real AP mark (same artwork used everywhere else on the site) had never actually made it into this one asset -- v5.20.0\'s mark rollout explicitly deferred it as "a fully composed design, worth redoing properly separately," and nothing circled back until now. Swapped in the real mark, and while in the file, measured the four pillar chips directly: three of four text labels were overflowing their boxes by 8-27px. Resized and re-verified by measurement, not by eye.',
+      '404 page: the hero section used a viewport-height-based top padding (clamp(80px, 18vh, 160px)) plus a 60vh min-height with vertical centering -- fine on a tall desktop screen, but on a short mobile viewport that reads as a dead ~200px gap under the nav before any content. Replaced with the same fixed-token padding every other page\'s Section.astro hero already uses.',
+      'Signal Runner (the 404 game): reskinned the head-height obstacle from a drone into a coin per request, then caught that it still killed the player on contact, which stopped making sense the moment it looked like a coin. Packets remain the real hazard; coins are now a pickup -- duck under one to collect it, tracked in a new on-canvas counter, never fatal. Also fixed the difficulty curve: an earlier pass at "more obstacles" made the very start of a run denser than the old game\'s hardest late-game moment. Rebalanced so the start is genuinely easy again and the compression toward "hard" only shows up as a run goes on, capped higher than before so a long run does get harder than it used to.',
+    ],
+  },
+  {
     version: 'v5.43.0',
     kind: 'released',
     summary: 'Fixed the contact backend actually going live -- the site\'s own Content-Security-Policy was silently blocking the Turnstile script the whole time, and the widget had an invalid size attribute underneath that.',
