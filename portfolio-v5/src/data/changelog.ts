@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.34.0',
+    kind: 'released',
+    summary: 'Reverted the v5.33.0 project reorder on the main site -- that instruction was about the resume page specifically, not the homepage/work deck, and got misapplied sitewide. Also fixed the resume\'s ruled lines properly: they now lock to each block\'s real line-height instead of a guessed fixed spacing, so text actually sits on its own rule.',
+    body: [
+      'Main site: restored the original work deck order (Nexus, Kanvaz, Project Ascent, Pursue OS, Mission OS) and restored MINK and Project Ascent to their original featured/supporting status. The "put Kanvaz first" instruction was scoped to the resume page\'s own project list, not the site-wide deck -- that scope should have been confirmed instead of assumed. Kanvaz keeps its "Flagship" status label, since that\'s additive and doesn\'t touch the sequence anyone asked to have left alone. The resume itself keeps its own reorder (Kanvaz first, MINK included, Ascent trimmed to an additional-projects line), since that part was correctly scoped from the start.',
+      'Resume notebook lines: the previous two passes painted one fixed-height ruled pattern (first ~7% opacity, then a visible one) across the whole page, but a single fixed spacing can\'t actually sync to real text when the hero name, headings, and body copy all use different font sizes and line-heights -- it was always going to cut through some of them at the wrong height. Fixed by removing the page-wide ruled background entirely (headings and the hero don\'t sit on rules now, same as a real notebook\'s title area usually isn\'t part of the ruled body) and painting the rule pattern directly onto each actual text block instead, sized with the CSS `1lh` unit -- "this element\'s own line-height" -- so the spacing is mathematically locked to what\'s actually there, not a guessed pixel value. Applied to the summary paragraph and, individually, to each bullet line and skill row rather than to the list containers, since those are flex columns with a gap between items that would have thrown a container-level background out of sync anyway. Verified in-browser: text now sits directly on its own rule in both the paragraph and the bulleted sections.',
+    ],
+  },
+  {
     version: 'v5.33.0',
     kind: 'released',
     summary: 'Kanvaz promoted to flagship and moved first in the work order (Nexus, MINK, Pursue OS, Mission OS follow; Project Ascent moves to supporting); resume and About reorder to match; 3D page stack corrected to real software; Pursue OS scene rebuilt from a glowing crosshair into a real terminal log; theme wipe gets an actual 3D/parallax layer.',

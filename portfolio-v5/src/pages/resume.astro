@@ -144,36 +144,60 @@ const additionalProjects = [
   </div>
 
   <style>
-    /* v5.33.0 — the on-site resume reads as a field notebook: ruled lines,
+    /* v5.34.0 — the on-site resume reads as a field notebook: ruled lines,
        a margin rule, binding holes down the left edge. This is presentation
        for this page only, applied here rather than in Section.astro so it
        can't leak onto any other page. The actual downloads (PDF/MD) stay
        exactly as plain and ATS-safe as before, since that's the file a
        hiring system parses, not this page.
-       v5.32.0 first pass used --line for the ruled lines, which is already
-       a near-invisible 10-12% opacity token on its own (built for subtle
-       card borders, not something meant to be looked at directly) — at
-       70% of that it came out around 7% and was correctly called out as
-       basically invisible. Switched to --line-strong, the same
-       purple-tinted token the margin rule already used, boosted a bit
-       further for the lines specifically since they need to read at a
-       glance, not just be discoverable on close inspection. */
+       v5.32.0/v5.33.0 painted one fixed-height ruled pattern across the
+       whole page. That can't actually sync to the text: the hero name,
+       section headings, and body copy all use different font sizes and
+       line-heights, so a single fixed rule spacing was always going to cut
+       through some of them at the wrong height. Fixed properly this time:
+       the ruled background is removed from the page wrapper (headings and
+       the hero don't get rules behind them at all now, the same way a real
+       notebook's title area usually isn't part of the ruled body) and
+       applied instead directly to each actual body-text block, sized with
+       the CSS `1lh` unit -- which literally means "this element's own
+       line-height" -- so the rule spacing is mathematically locked to that
+       block's real line height, not a guessed pixel value. */
     .resume-wrap {
       position: relative;
       padding-top: var(--sp-9);
       padding-left: calc(var(--sp-9) + 28px);
-      background-image:
-        repeating-linear-gradient(
-          to bottom,
-          transparent, transparent 33px,
-          color-mix(in oklab, var(--line-strong) 85%, transparent) 33px,
-          color-mix(in oklab, var(--line-strong) 85%, transparent) 34px
-        );
-      background-position: 0 calc(var(--sp-9) + 6px);
     }
     @media (max-width: 640px) {
-      .resume-wrap { padding-left: var(--sp-4); background-image: none; }
+      .resume-wrap { padding-left: var(--sp-4); }
       .resume-wrap::before, .resume-wrap::after { display: none; }
+    }
+    /* Applied straight to the real text blocks, not a wrapper, and not to
+       the bulleted lists as a whole -- those are flex columns with a gap
+       between items, so a background painted on the list container would
+       drift out of sync with each item's actual position. Painting it on
+       each <li> (and each plain paragraph of body copy) individually means
+       every rule is locked to that specific element's own text, gap or no
+       gap. */
+    .resume-summary,
+    .experience-bullets li,
+    .proj-item-bullets li,
+    .additional-row,
+    .skill-value {
+      background-image: linear-gradient(
+        to bottom,
+        transparent calc(1lh - 1px),
+        color-mix(in oklab, var(--line-strong) 85%, transparent) calc(1lh - 1px)
+      );
+      background-size: 100% 1lh;
+    }
+    @media (max-width: 640px) {
+      .resume-summary,
+      .experience-bullets li,
+      .proj-item-bullets li,
+      .additional-row,
+      .skill-value {
+        background-image: none;
+      }
     }
     /* Margin rule, notebook-style, offset from the ruled lines. */
     .resume-wrap::before {
