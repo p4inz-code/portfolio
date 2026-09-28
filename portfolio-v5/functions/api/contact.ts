@@ -83,7 +83,7 @@ export async function onRequestPost(context: { request: Request; env: Env }): Pr
     return json({ ok: false, reason: 'not_configured' }, 503);
   }
 
-  const to = env.CONTACT_TO_EMAIL || 'masteratharva9@gmail.com';
+  const to = env.CONTACT_TO_EMAIL || 'atharva.patil.cg@gmail.com';
   const subject = `Project inquiry — ${name}`;
   const plainBody = [
     `from:     ${name} <${email}>`,

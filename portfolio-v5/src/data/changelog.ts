@@ -20,6 +20,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.41.1',
+    kind: 'released',
+    summary: 'Fixed the contact backend\'s fallback recipient address -- it had my personal Gmail hardcoded instead of the business one every other page on this site already uses.',
+    body: [
+      'atharva.patil.cg@gmail.com is the real contact address, the same one in site.ts, llms.txt, ai.txt, security.txt, humans.txt, the resume, and the mailto composer itself. The new Pages Function shipped in v5.41.0 had a different, wrong default. Caught before Resend was even configured, so no message was ever misrouted -- fixed at the source before it could be.',
+    ],
+  },
+  {
     version: 'v5.41.0',
     kind: 'released',
     summary: 'Added a real backend for the contact form: a Cloudflare Pages Function sends the message directly, with the existing mailto composer kept as an automatic fallback if that ever fails.',
