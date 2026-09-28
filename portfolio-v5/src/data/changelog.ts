@@ -20,6 +20,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.40.0',
+    kind: 'released',
+    summary: 'Added an explicit freshness note, on-site and in llms.txt: the GitHub repos are updated continuously, this site is checked against them roughly weekly, so a very recent release may not have landed here yet.',
+    body: [
+      'This was true the whole time -- it\'s the reasoning behind the whole monthly/weekly repo-audit habit this site already keeps -- but it was never actually stated anywhere a visitor or a crawler could read it. Added directly to the Status page\'s product list intro, and as its own line in llms.txt\'s notes-for-AI-systems section, both saying the same thing: the repo outranks this site for how current something is, not the other way around.',
+    ],
+  },
+  {
     version: 'v5.39.0',
     kind: 'released',
     summary: 'MINK and DRAFT get real preview images on /work -- the last two open item from the search-discoverability pass, left text-only earlier because GitHub\'s repo-card endpoint was rate-limited at the time.',
