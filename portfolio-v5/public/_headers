@@ -19,16 +19,25 @@
 #     cdn.fontshare.com (Fontshare binary files).
 #   - img-src allows data: for the inline SVG favicon and any inline
 #     data-uri images.
-#   - connect-src is 'self' + cloudflareinsights.com for the beacon.
-#     No first-party fetch/XHR calls in runtime code.
-#   - form-action 'none' — the contact form defers to a mailto: link,
-#     no real HTTP form submission.
+#   - connect-src is 'self' + cloudflareinsights.com for the beacon, plus
+#     challenges.cloudflare.com for the Turnstile widget's own network
+#     calls (separate from our own fetch('/api/contact'), which is 'self').
+#   - script-src / frame-src / connect-src all allow challenges.cloudflare.com
+#     — Cloudflare's own documented requirement for embedding Turnstile:
+#     the api.js script, its challenge iframe, and its internal requests
+#     each need their own allowlist entry or the widget silently never
+#     renders and no token is ever produced (v5.42.0 shipped without this,
+#     which is why the contact backend never actually fired until v5.43.0).
+#   - form-action stays 'none' — the form is submitted via fetch() from JS
+#     (preventDefault(), never a native <form action> submission), so this
+#     doesn't block the real POST to /api/contact; it only blocks the kind
+#     of submission this site was never going to do anyway.
 #   - frame-ancestors 'self' — clickjacking protection; the site itself
 #     can still frame its own routes.
 #   - object-src 'none' + base-uri 'none' — modern hardening defaults.
 
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://api.fontshare.com; font-src 'self' https://cdn.fontshare.com; img-src 'self' data:; connect-src 'self' https://cloudflareinsights.com; frame-ancestors 'self'; base-uri 'none'; form-action 'none'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://api.fontshare.com; font-src 'self' https://cdn.fontshare.com; img-src 'self' data:; connect-src 'self' https://cloudflareinsights.com https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; frame-ancestors 'self'; base-uri 'none'; form-action 'none'; object-src 'none'
   X-Frame-Options: SAMEORIGIN
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

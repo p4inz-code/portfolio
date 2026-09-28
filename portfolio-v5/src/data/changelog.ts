@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.43.0',
+    kind: 'released',
+    summary: 'Fixed the contact backend actually going live -- the site\'s own Content-Security-Policy was silently blocking the Turnstile script the whole time, and the widget had an invalid size attribute underneath that.',
+    body: [
+      'First real end-to-end test after all four setup steps (Resend, Turnstile, rate-limit KV, DNS) came back clean caught it: the CSP\'s script-src never allowed challenges.cloudflare.com, so the browser blocked Turnstile\'s script outright, window.turnstile never existed, no token was ever produced, and every submission correctly fell back to mailto -- correctly, since the code is built to never lose a message, but silently, since nothing surfaced that the primary path was dead on arrival.',
+      'Fixed by adding challenges.cloudflare.com to script-src, frame-src, and connect-src in public/_headers, matching Cloudflare\'s own documented CSP requirements for embedding Turnstile. Also found the widget\'s data-size="invisible" was never a valid value in the first place -- only normal, flexible, and compact are -- which could have kept it broken even after the CSP fix. Changed to "flexible"; the actual near-invisible behavior for real visitors comes from the widget\'s Managed mode, not this attribute.',
+    ],
+  },
+  {
     version: 'v5.42.0',
     kind: 'released',
     summary: 'Hardened the contact backend: per-IP and sitewide rate limiting, stricter email validation, Turnstile hostname verification, and an origin check -- all still inert until the manual setup steps are done.',

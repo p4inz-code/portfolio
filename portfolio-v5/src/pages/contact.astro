@@ -150,7 +150,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
           </div>
 
           {turnstileSiteKey && (
-            <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-size="invisible" data-callback="onTurnstileToken" id="c-turnstile"></div>
+            <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-size="flexible" data-callback="onTurnstileToken" id="c-turnstile"></div>
           )}
 
           <div class="term-actions">
