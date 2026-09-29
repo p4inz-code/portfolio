@@ -203,7 +203,7 @@ export const PROJECTS: Project[] = [
     description:
       'A 25-level, 5-act 2D precision platformer built in Godot 4: full moveset from the start (run, jump, wall-jump, dash, slide, ground pound, wall run, ledge grab, grapple), five boss chases on a visible countdown, and a shared cyberpunk UI across every screen. Offline-first: no accounts, no backend, no ads, no network runtime beyond an optional signed update check. Ships for Windows, macOS, Linux, and browser (playable on itch.io) from one codebase.',
     status: { kind: 'polish', label: 'Visual Polish Phase · v0.14.1' },
-    tags: ['Godot 4', 'GDScript', 'Platformer'],
+    tags: ['Godot 4', 'GDScript', 'Platformer', 'Game'],
     metaTags: ['Godot 4', 'GDScript', 'Cross-Platform'],
     featured: true,
     order: 2,

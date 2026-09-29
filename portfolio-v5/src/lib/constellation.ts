@@ -26,6 +26,16 @@ interface InputNode {
   category?: string;
   stack?: string[];
   tags?: string[];
+  license?: string;
+}
+
+// "Open Source" only ever appeared as a literal tag on two entries
+// (3D Ref Skills, Reference Engineering) -- everything else tags with its
+// own specific license name (MIT, GPLv3, Apache 2.0...) instead of the
+// generic word, so plain tag-matching missed every real open-source
+// connection except those two. This checks the actual license field.
+function isOpenSource(license?: string): boolean {
+  return !!license && license !== 'Proprietary';
 }
 
 // mulberry32 -- tiny seeded PRNG, deterministic across runs
@@ -45,13 +55,20 @@ function buildEdges(nodes: InputNode[]): ConstellationEdge[] {
     for (let j = i + 1; j < nodes.length; j++) {
       const a = nodes[i];
       const b = nodes[j];
+      // most specific fact first: a shared exact technology beats a shared
+      // category, which beats the broader "both open source" fact, which
+      // beats a catch-all shared tag.
+      const sharedStack = (a.stack || []).find((s) => (b.stack || []).includes(s));
+      if (sharedStack) {
+        edges.push({ from: a.id, to: b.id, reason: `Both use ${sharedStack}` });
+        continue;
+      }
       if (a.category && b.category && a.category === b.category) {
         edges.push({ from: a.id, to: b.id, reason: `Both ${a.category}` });
         continue;
       }
-      const sharedStack = (a.stack || []).find((s) => (b.stack || []).includes(s));
-      if (sharedStack) {
-        edges.push({ from: a.id, to: b.id, reason: `Both use ${sharedStack}` });
+      if (isOpenSource(a.license) && isOpenSource(b.license)) {
+        edges.push({ from: a.id, to: b.id, reason: 'Both open source' });
         continue;
       }
       const sharedTag = (a.tags || []).find((t) => (b.tags || []).includes(t));
@@ -69,6 +86,18 @@ export function computeConstellation(
 ): { nodes: ConstellationNode[]; edges: ConstellationEdge[] } {
   const edges = buildEdges(inputNodes);
   const rand = mulberry32(20260929); // fixed seed -- deterministic between builds
+
+  // A node with no edges has nothing pulling it inward -- only repulsion
+  // and the base center pull -- so it settles wherever the crowd pushes it,
+  // almost always a far corner. Give degree-0 (and low-degree) nodes a
+  // stronger pull toward the middle so an outlier like a standalone game
+  // still reads as part of the piece instead of drifting off into a corner.
+  const simpleDegree = new Map<string, number>();
+  for (const n of inputNodes) simpleDegree.set(n.id, 0);
+  for (const e of edges) {
+    simpleDegree.set(e.from, (simpleDegree.get(e.from) || 0) + 1);
+    simpleDegree.set(e.to, (simpleDegree.get(e.to) || 0) + 1);
+  }
 
   const W = 1000;
   const H = 560;
@@ -131,8 +160,9 @@ export function computeConstellation(
     // gentle centering pull + integrate + damping
     for (const n of inputNodes) {
       const p = positions.get(n.id)!;
-      p.vx += (W / 2 - p.x) * CENTER_K;
-      p.vy += (H / 2 - p.y) * CENTER_K;
+      const isolationBoost = simpleDegree.get(n.id) === 0 ? 28 : 1;
+      p.vx += (W / 2 - p.x) * CENTER_K * isolationBoost;
+      p.vy += (H / 2 - p.y) * CENTER_K * isolationBoost;
       p.vx *= DAMPING;
       p.vy *= DAMPING;
       p.x += p.vx;

@@ -5,14 +5,19 @@
  * projects by what actually links them (shared category, shared stack,
  * shared tag) instead of a flat list order. Layout is computed once at
  * build time (see ../../lib/constellation.ts) -- no physics simulation
- * ships to the browser, only a small hover/focus highlight script.
+ * ships to the browser, only hover/focus highlight + drag-to-reposition.
  *
  * Deliberately the same idea as Kanvaz's own Map View feature (its README:
  * "visualize the whole web as a node-editor-style graph with bezier
- * cables"), aimed at this portfolio instead of a Kanvaz board -- edges
- * here are genuine bezier curves for the same reason Kanvaz's are: two
- * straight lines crossing read as a flowchart, two curved ones read as
- * cables.
+ * cables"), aimed at this portfolio instead of a Kanvaz board.
+ *
+ * Visual language is pulled from what this site already does elsewhere
+ * (the `>` caret used on every terminal-style label, flat --surface-2
+ * panels with no blur-for-its-own-sake, mono uppercase eyebrows) rather
+ * than the generic rounded-pill-plus-colored-dot chip that's the default
+ * output of basically every AI page builder. Featured projects get the
+ * same display-italic treatment their name gets everywhere else on the
+ * site, so hierarchy reads through type, not just size.
  */
 import type { Project } from '../../data/projects';
 import { computeConstellation } from '../../lib/constellation';
@@ -27,6 +32,7 @@ const inputNodes = projects.map((p) => ({
   category: p.category,
   stack: p.stack,
   tags: p.tags,
+  license: p.license,
 }));
 const labels = Object.fromEntries(projects.map((p) => [p.slug, p.name]));
 const { nodes, edges } = computeConstellation(inputNodes, labels);
@@ -64,66 +70,62 @@ const edgePaths = edges.map((e) => {
   const b = nodeBySlug.get(e.to)!;
   const x1 = a.x, y1 = (a.y / 100) * 56;
   const x2 = b.x, y2 = (b.y / 100) * 56;
-  const mx = (x1 + x2) / 2;
-  const my = (y1 + y2) / 2;
-  const dx = x2 - x1, dy = y2 - y1;
-  const len = Math.max(Math.hypot(dx, dy), 1);
-  // perpendicular unit vector, offset scaled to edge length so short/long
-  // cables curve proportionally instead of short ones looking overbent
-  const px = -dy / len, py = dx / len;
   const sign = hash(e.from + e.to) % 2 === 0 ? 1 : -1;
-  const bend = Math.min(len * 0.18, 10) * sign;
-  const cx = mx + px * bend;
-  const cy = my + py * bend;
-  return { ...e, x1, y1, x2, y2, cx, cy };
+  return { ...e, x1, y1, x2, y2, sign };
 });
 ---
 <div class="constellation" id="constellation">
-  <svg class="cx-edges" viewBox="0 0 100 56" preserveAspectRatio="none" aria-hidden="true">
-    {edgePaths.map((e) => (
-      <path
-        class="cx-edge"
-        data-from={e.from}
-        data-to={e.to}
-        d={`M ${e.x1} ${e.y1} Q ${e.cx} ${e.cy} ${e.x2} ${e.y2}`}
-        fill="none"
-      />
-    ))}
-  </svg>
-
-  <div class="cx-nodes">
-    {nodes.map((n, i) => {
-      const p = projectBySlug.get(n.id)!;
-      const cat = n.category && CATEGORY_LABEL[n.category] ? n.category : 'none';
-      const size = 6 + (degree[n.id] / maxDegree) * 6; // 6-12px dot
-      const info = {
-        label: n.label,
-        tagline: p.tagline,
-        connections: connectionDetail[n.id],
-      };
-      return (
-        <a
-          class="cx-node"
-          data-cat={cat}
-          href={p.href}
-          {...(p.isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-          style={`left:${n.x}%; top:${n.y}%; --i:${i}; --dot:${size}px;`}
-          data-node-id={n.id}
-          data-connects={adjacency[n.id].join(',')}
-          data-info={JSON.stringify(info)}
-        >
-          <span class="cx-dot" aria-hidden="true"></span>
-          <span class="cx-label">{n.label}</span>
-        </a>
-      );
-    })}
+  <div class="cx-toolbar">
+    <span class="cx-toolbar-eyebrow">Connected by</span>
+    <span class="cx-toolbar-item" data-cat="os"><b>&gt;</b>OS</span>
+    <span class="cx-toolbar-item" data-cat="app"><b>&gt;</b>App</span>
+    <span class="cx-toolbar-item" data-cat="cli"><b>&gt;</b>CLI</span>
+    <span class="cx-toolbar-item" data-cat="none"><b>&gt;</b>Other</span>
+    <span class="cx-toolbar-hint">drag to rearrange</span>
   </div>
 
-  <div class="cx-legend" aria-hidden="true">
-    <span class="cx-legend-item" data-cat="os"><i></i>OS</span>
-    <span class="cx-legend-item" data-cat="app"><i></i>App</span>
-    <span class="cx-legend-item" data-cat="cli"><i></i>CLI</span>
-    <span class="cx-legend-item" data-cat="none"><i></i>Other</span>
+  <div class="cx-canvas">
+    <svg class="cx-edges" viewBox="0 0 100 56" preserveAspectRatio="none" aria-hidden="true">
+      {edgePaths.map((e) => (
+        <path
+          class="cx-edge"
+          data-from={e.from}
+          data-to={e.to}
+          data-sign={e.sign}
+          d={`M ${e.x1} ${e.y1} Q ${e.x1} ${e.y1} ${e.x2} ${e.y2}`}
+          fill="none"
+        />
+      ))}
+    </svg>
+
+    <div class="cx-nodes">
+      {nodes.map((n, i) => {
+        const p = projectBySlug.get(n.id)!;
+        const cat = n.category && CATEGORY_LABEL[n.category] ? n.category : 'none';
+        const weight = degree[n.id] / maxDegree; // 0-1
+        const info = {
+          label: n.label,
+          tagline: p.tagline,
+          connections: connectionDetail[n.id],
+        };
+        return (
+          <a
+            class:list={['cx-node', { 'cx-node-featured': p.featured }]}
+            data-cat={cat}
+            href={p.href}
+            {...(p.isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            style={`left:${n.x}%; top:${n.y}%; --i:${i}; --weight:${weight.toFixed(2)};`}
+            data-node-id={n.id}
+            data-x={n.x.toFixed(3)}
+            data-y={n.y.toFixed(3)}
+            data-connects={adjacency[n.id].join(',')}
+            data-info={JSON.stringify(info)}
+          >
+            <b class="cx-caret" aria-hidden="true">&gt;</b><span class="cx-label">{n.label}</span>
+          </a>
+        );
+      })}
+    </div>
   </div>
 
   <div class="cx-panel" id="cxPanel" aria-live="polite">
@@ -135,10 +137,35 @@ const edgePaths = edges.map((e) => {
   (function () {
     const root = document.getElementById('constellation');
     const panel = document.getElementById('cxPanel');
-    if (!root || !panel) return;
+    const svg = root?.querySelector<SVGSVGElement>('.cx-edges');
+    if (!root || !panel || !svg) return;
     const nodeEls = Array.from(root.querySelectorAll<HTMLAnchorElement>('.cx-node'));
     const edgeEls = Array.from(root.querySelectorAll<SVGPathElement>('.cx-edge'));
     const defaultHint = panel.innerHTML;
+
+    // live position table, seeded from the build-time layout, kept in sync
+    // as nodes get dragged so cable redraws always read current state
+    const pos: Record<string, { x: number; y: number }> = {};
+    nodeEls.forEach((n) => {
+      pos[n.dataset.nodeId!] = { x: parseFloat(n.dataset.x!), y: parseFloat(n.dataset.y!) };
+    });
+
+    function redrawEdge(edge: SVGPathElement) {
+      const a = pos[edge.dataset.from!];
+      const b = pos[edge.dataset.to!];
+      if (!a || !b) return;
+      const x1 = a.x, y1 = (a.y / 100) * 56;
+      const x2 = b.x, y2 = (b.y / 100) * 56;
+      const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+      const dx = x2 - x1, dy = y2 - y1;
+      const len = Math.max(Math.hypot(dx, dy), 1);
+      const px = -dy / len, py = dx / len;
+      const sign = edge.dataset.sign === '1' ? 1 : -1;
+      const bend = Math.min(len * 0.18, 10) * sign;
+      const cx = mx + px * bend, cy = my + py * bend;
+      edge.setAttribute('d', `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`);
+    }
+    edgeEls.forEach(redrawEdge);
 
     function clear() {
       root!.classList.remove('cx-active');
@@ -178,7 +205,62 @@ const edgePaths = edges.map((e) => {
       `;
     }
 
+    // --- drag to reposition, with live cable redraw ---
     nodeEls.forEach((n) => {
+      let dragging = false;
+      let moved = false;
+      let startClientX = 0, startClientY = 0;
+
+      n.addEventListener('pointerdown', (e) => {
+        if (e.button !== undefined && e.button !== 0) return;
+        dragging = true;
+        moved = false;
+        startClientX = e.clientX;
+        startClientY = e.clientY;
+        n.setPointerCapture(e.pointerId);
+        n.classList.add('cx-dragging');
+      });
+
+      n.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const dxPx = e.clientX - startClientX;
+        const dyPx = e.clientY - startClientY;
+        if (Math.abs(dxPx) > 3 || Math.abs(dyPx) > 3) moved = true;
+        if (!moved) return;
+
+        const rect = root!.getBoundingClientRect();
+        let xPct = ((e.clientX - rect.left) / rect.width) * 100;
+        let yPct = ((e.clientY - rect.top) / rect.height) * 100;
+        xPct = Math.min(97, Math.max(3, xPct));
+        yPct = Math.min(95, Math.max(5, yPct));
+
+        n.style.left = xPct + '%';
+        n.style.top = yPct + '%';
+        pos[n.dataset.nodeId!] = { x: xPct, y: yPct };
+
+        const id = n.dataset.nodeId!;
+        edgeEls.forEach((edge) => {
+          if (edge.dataset.from === id || edge.dataset.to === id) redrawEdge(edge);
+        });
+      });
+
+      function endDrag(e: PointerEvent) {
+        if (!dragging) return;
+        dragging = false;
+        n.classList.remove('cx-dragging');
+        if (moved) {
+          // this was a drag, not a click -- swallow the click Astro/browser
+          // is about to fire so it doesn't navigate away mid-rearrange
+          const swallow = (ce: MouseEvent) => {
+            ce.preventDefault();
+            n.removeEventListener('click', swallow);
+          };
+          n.addEventListener('click', swallow, { once: true });
+        }
+      }
+      n.addEventListener('pointerup', endDrag);
+      n.addEventListener('pointercancel', endDrag);
+
       n.addEventListener('mouseenter', () => activate(n));
       n.addEventListener('focus', () => activate(n));
       n.addEventListener('mouseleave', clear);
@@ -209,14 +291,53 @@ const edgePaths = edges.map((e) => {
 <style>
   .constellation {
     position: relative;
-    width: 100%;
-    aspect-ratio: 100 / 56;
-    min-height: 420px;
+    display: flex;
+    flex-direction: column;
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
-    background:
-      radial-gradient(ellipse 70% 60% at 30% 20%, color-mix(in oklab, var(--purple-deep) 10%, transparent), transparent 60%),
-      var(--surface-1);
+    background: var(--surface-1);
+    overflow: hidden;
+  }
+
+  .cx-toolbar {
+    display: flex; align-items: center; gap: var(--sp-4);
+    padding: var(--sp-3) var(--sp-4);
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in oklab, var(--surface-2) 60%, transparent);
+    flex-wrap: wrap;
+  }
+  .cx-toolbar-eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-xxs);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-right: var(--sp-2);
+  }
+  .cx-toolbar-item {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .cx-toolbar-item b { font-weight: 500; }
+  .cx-toolbar-item[data-cat='os']   b { color: var(--purple-bright); }
+  .cx-toolbar-item[data-cat='app']  b { color: var(--green-live); }
+  .cx-toolbar-item[data-cat='cli']  b { color: var(--warn); }
+  .cx-toolbar-item[data-cat='none'] b { color: var(--muted); }
+  .cx-toolbar-hint {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted-2);
+    font-style: italic;
+  }
+
+  .cx-canvas {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 100 / 56;
+    min-height: 400px;
   }
   .cx-edges {
     position: absolute;
@@ -243,30 +364,34 @@ const edgePaths = edges.map((e) => {
     position: absolute;
     transform: translate(-50%, -50%);
     display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 6px 12px 6px 8px;
-    border-radius: var(--radius-pill);
+    align-items: baseline;
+    gap: 5px;
+    padding: 5px 9px;
+    border-radius: 3px;
     border: 1px solid var(--line-strong);
-    background: color-mix(in oklab, var(--surface-2) 90%, transparent);
-    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    border-left-width: 2px;
+    background: var(--surface-2);
     color: var(--text);
     font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.02em;
+    font-size: calc(10px + var(--weight, 0) * 2.5px);
+    letter-spacing: 0.01em;
     white-space: nowrap;
     text-decoration: none;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
     /* Always visible by default -- opacity never depends on JS running.
-       v5.44.0's Section.astro bug (content permanently hidden because a
-       scroll-timeline animation's *starting* state never resolved) was a
-       real lesson: an entrance effect must never be the only thing making
-       content visible. The stagger below only ever animates transform. */
+       An entrance effect must never be the only thing making content
+       visible; the stagger below only ever animates transform. */
     transition:
       border-color var(--dur-fast) var(--ease-out),
       box-shadow var(--dur-fast) var(--ease-out),
       transform var(--dur-fast) var(--ease-out);
     z-index: 1;
   }
+  .cx-node.cx-dragging { cursor: grabbing; z-index: 4; transition: none; }
+  .cx-node-featured .cx-label { font-family: var(--font-display); font-style: italic; }
+
   .constellation.cx-in .cx-node {
     animation: cx-node-in 0.4s var(--ease-out) backwards;
     animation-delay: calc(var(--i) * 45ms);
@@ -276,56 +401,31 @@ const edgePaths = edges.map((e) => {
     to   { transform: translate(-50%, -50%) scale(1); }
   }
 
-  .cx-dot {
-    width: var(--dot, 8px); height: var(--dot, 8px);
-    border-radius: 50%;
-    background: var(--purple-bright);
-    flex-shrink: 0;
-    transition: box-shadow var(--dur-fast) var(--ease-out);
-  }
-  .cx-node[data-cat='os']   .cx-dot { background: var(--purple-bright); }
-  .cx-node[data-cat='app']  .cx-dot { background: var(--green-live); }
-  .cx-node[data-cat='cli']  .cx-dot { background: var(--warn); }
-  .cx-node[data-cat='none'] .cx-dot { background: var(--muted); }
+  .cx-caret { color: var(--muted); font-weight: 500; }
+  .cx-node[data-cat='os']   { border-left-color: var(--purple-bright); }
+  .cx-node[data-cat='os']   .cx-caret { color: var(--purple-bright); }
+  .cx-node[data-cat='app']  { border-left-color: var(--green-live); }
+  .cx-node[data-cat='app']  .cx-caret { color: var(--green-live); }
+  .cx-node[data-cat='cli']  { border-left-color: var(--warn); }
+  .cx-node[data-cat='cli']  .cx-caret { color: var(--warn); }
+  .cx-node[data-cat='none'] { border-left-color: var(--muted); }
 
   .cx-node:hover, .cx-node:focus-visible {
     border-color: var(--purple-bright);
-    transform: translate(-50%, -50%) scale(1.08);
+    transform: translate(-50%, -50%) scale(1.06);
     outline: none;
   }
   .cx-node.cx-node-on {
     border-color: var(--purple-bright);
-    box-shadow: 0 0 0 1px color-mix(in oklab, var(--purple-bright) 40%, transparent), 0 0 24px -4px var(--purple-bright);
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--purple-bright) 35%, transparent);
     z-index: 2;
   }
-  .cx-node.cx-node-on .cx-dot {
-    box-shadow: 0 0 10px 2px currentColor;
-  }
-  .cx-node.cx-node-on[data-cat='os']   .cx-dot { box-shadow: 0 0 10px 2px var(--purple-bright); }
-  .cx-node.cx-node-on[data-cat='app']  .cx-dot { box-shadow: 0 0 10px 2px var(--green-live); }
-  .cx-node.cx-node-on[data-cat='cli']  .cx-dot { box-shadow: 0 0 10px 2px var(--warn); }
-  .cx-node.cx-node-dim { opacity: 0.32; }
-
-  .cx-legend {
-    position: absolute;
-    top: var(--sp-4); right: var(--sp-4);
-    display: flex; gap: var(--sp-4);
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--muted-2);
-  }
-  .cx-legend-item { display: inline-flex; align-items: center; gap: 5px; }
-  .cx-legend-item i { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
-  .cx-legend-item[data-cat='os']   i { background: var(--purple-bright); }
-  .cx-legend-item[data-cat='app']  i { background: var(--green-live); }
-  .cx-legend-item[data-cat='cli']  i { background: var(--warn); }
-  .cx-legend-item[data-cat='none'] i { background: var(--muted); }
+  .cx-node.cx-node-dim { opacity: 0.3; }
 
   .cx-panel {
-    position: absolute;
-    left: var(--sp-4); right: var(--sp-4); bottom: var(--sp-4);
+    position: relative;
+    margin: var(--sp-4);
+    margin-top: 0;
     padding: var(--sp-3) var(--sp-4);
     border: 1px solid var(--line);
     border-radius: var(--radius);
@@ -334,7 +434,6 @@ const edgePaths = edges.map((e) => {
     min-height: 44px;
     max-height: 130px;
     overflow-y: auto;
-    z-index: 3;
   }
   .cx-panel-hint {
     margin: 0;
@@ -344,17 +443,17 @@ const edgePaths = edges.map((e) => {
   }
 
   @media (max-width: 760px) {
-    .constellation { min-height: 560px; }
-    .cx-node { font-size: 10px; padding: 5px 10px 5px 7px; }
-    .cx-legend { position: static; margin: var(--sp-3) var(--sp-4) 0; flex-wrap: wrap; }
-    .cx-panel { position: static; margin: var(--sp-3) var(--sp-4) var(--sp-4); max-height: none; }
+    .cx-canvas { min-height: 520px; }
+    .cx-node { font-size: 10px; padding: 4px 8px; }
+    .cx-toolbar-hint { display: none; }
+    .cx-panel { max-height: none; }
   }
 </style>
 
 <style is:global>
   /* Astro's scoped-style attribute only applies to elements present in the
      static template at build time -- it never reaches markup injected via
-     innerHTML from the client script below, so the panel's dynamic content
+     innerHTML from the client script above, so the panel's dynamic content
      (title/tagline/connection list) has to live here instead, unscoped. */
   #cxPanel .cx-panel-title {
     margin: 0 0 2px;
