@@ -4,7 +4,14 @@ import Section from '../components/layout/Section.astro';
 import WorkDeck from '../components/features/WorkDeck.astro';
 import WorkIndex from '../components/features/WorkIndex.astro';
 import WorkByCategory from '../components/features/WorkByCategory.astro';
+import ProjectConstellation from '../components/features/ProjectConstellation.astro';
 import { FEATURED_PROJECTS, SUPPORTING_PROJECTS } from '../data/projects';
+
+// Client and event sites aren't part of the "how does my own work connect"
+// story the constellation is telling -- same population PRODUCT_COUNT uses.
+const constellationProjects = [...FEATURED_PROJECTS, ...SUPPORTING_PROJECTS].filter(
+  (p) => !p.tags.includes('Client work') && !p.tags.includes('Event site')
+);
 ---
 <BaseLayout title="Selected Work — Atharva Patil" description="Selected case studies: two Linux OSes, an encrypted vault, developer tools. Every project links to a real repository or download." keywords="p4inz projects, painz projects, p4inz portfolio, software portfolio p4inz, p4inz web dev, p4inz app dev, p4inz game dev, p4inz cli dev">
 
@@ -24,5 +31,9 @@ import { FEATURED_PROJECTS, SUPPORTING_PROJECTS } from '../data/projects';
 
   <Section eyebrow="Same work, sorted differently" heading="By what it actually is." intro="Web, app, CLI, OS. A few things above don't fit one of those four cleanly and aren't repeated here.">
     <WorkByCategory projects={[...FEATURED_PROJECTS, ...SUPPORTING_PROJECTS]} />
+  </Section>
+
+  <Section eyebrow="Same work, one more way" heading="How it all actually connects." intro="Every project here, linked by what genuinely ties it to another: same category, shared stack, a shared tag. Not a flat list -- the real shape of it.">
+    <ProjectConstellation projects={constellationProjects} />
   </Section>
 </BaseLayout>

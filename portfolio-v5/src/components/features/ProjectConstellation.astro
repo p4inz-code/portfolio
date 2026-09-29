@@ -1,0 +1,208 @@
+---
+/**
+ * Project constellation -- a node-graph view of the same work shown
+ * elsewhere on /work as a deck, an index, and a category list. Connects
+ * projects by what actually links them (shared category, shared stack,
+ * shared tag) instead of a flat list order. Layout is computed once at
+ * build time (see ../../lib/constellation.ts) -- no physics simulation
+ * ships to the browser, only a small hover/focus highlight script.
+ *
+ * Deliberately the same idea as Kanvaz's own Map View feature, aimed at
+ * this site instead of a Kanvaz board.
+ */
+import type { Project } from '../../data/projects';
+import { computeConstellation } from '../../lib/constellation';
+
+interface Props {
+  projects: Project[];
+}
+const { projects } = Astro.props;
+
+const inputNodes = projects.map((p) => ({
+  id: p.slug,
+  category: p.category,
+  stack: p.stack,
+  tags: p.tags,
+}));
+const labels = Object.fromEntries(projects.map((p) => [p.slug, p.name]));
+const { nodes, edges } = computeConstellation(inputNodes, labels);
+
+const projectBySlug = new Map(projects.map((p) => [p.slug, p]));
+
+// adjacency map for the client-side hover/focus highlight, keyed by node id
+const adjacency: Record<string, string[]> = {};
+for (const n of nodes) adjacency[n.id] = [];
+for (const e of edges) {
+  adjacency[e.from].push(e.to);
+  adjacency[e.to].push(e.from);
+}
+---
+<div class="constellation" id="constellation">
+  <svg class="cx-edges" viewBox="0 0 100 56" preserveAspectRatio="none" aria-hidden="true">
+    {edges.map((e) => {
+      const a = nodes.find((n) => n.id === e.from)!;
+      const b = nodes.find((n) => n.id === e.to)!;
+      return (
+        <line
+          class="cx-edge"
+          data-from={e.from}
+          data-to={e.to}
+          x1={(a.x / 100) * 100}
+          y1={(a.y / 100) * 56}
+          x2={(b.x / 100) * 100}
+          y2={(b.y / 100) * 56}
+        />
+      );
+    })}
+  </svg>
+
+  <div class="cx-nodes">
+    {nodes.map((n) => {
+      const p = projectBySlug.get(n.id)!;
+      return (
+        <a
+          class="cx-node"
+          href={p.href}
+          {...(p.isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+          style={`left:${n.x}%; top:${n.y}%;`}
+          data-node-id={n.id}
+          data-connects={adjacency[n.id].join(',')}
+        >
+          <span class="cx-dot" aria-hidden="true"></span>
+          <span class="cx-label">{n.label}</span>
+        </a>
+      );
+    })}
+  </div>
+
+  <p class="cx-hint">Hover or tab through a project to see what connects it to the rest.</p>
+</div>
+
+<script>
+  (function () {
+    const root = document.getElementById('constellation');
+    if (!root) return;
+    const nodeEls = Array.from(root.querySelectorAll<HTMLAnchorElement>('.cx-node'));
+    const edgeEls = Array.from(root.querySelectorAll<SVGLineElement>('.cx-edge'));
+
+    function clear() {
+      root!.classList.remove('cx-active');
+      nodeEls.forEach((n) => n.classList.remove('cx-node-on', 'cx-node-dim'));
+      edgeEls.forEach((e) => e.classList.remove('cx-edge-on'));
+    }
+
+    function activate(id: string) {
+      const connects = (
+        nodeEls.find((n) => n.dataset.nodeId === id)?.dataset.connects || ''
+      )
+        .split(',')
+        .filter(Boolean);
+      const connected = new Set([id, ...connects]);
+      root!.classList.add('cx-active');
+      nodeEls.forEach((n) => {
+        const on = connected.has(n.dataset.nodeId!);
+        n.classList.toggle('cx-node-on', on);
+        n.classList.toggle('cx-node-dim', !on);
+      });
+      edgeEls.forEach((e) => {
+        const on = e.dataset.from === id || e.dataset.to === id;
+        e.classList.toggle('cx-edge-on', on);
+      });
+    }
+
+    nodeEls.forEach((n) => {
+      const id = n.dataset.nodeId!;
+      n.addEventListener('mouseenter', () => activate(id));
+      n.addEventListener('focus', () => activate(id));
+      n.addEventListener('mouseleave', clear);
+      n.addEventListener('blur', clear);
+    });
+  })();
+</script>
+
+<style>
+  .constellation {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 100 / 56;
+    min-height: 420px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface-1);
+    /* no overflow:hidden -- a node pill near the edge should be free to sit
+       slightly past the rounded border rather than have its label clipped */
+  }
+  .cx-edges {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .cx-edge {
+    stroke: var(--line-strong);
+    stroke-width: 0.12;
+    transition: stroke var(--dur) var(--ease-out), stroke-width var(--dur) var(--ease-out), opacity var(--dur) var(--ease-out);
+  }
+  .constellation.cx-active .cx-edge {
+    opacity: 0.25;
+  }
+  .cx-edge.cx-edge-on {
+    stroke: var(--purple-bright);
+    stroke-width: 0.3;
+    opacity: 1;
+  }
+  .cx-nodes {
+    position: absolute;
+    inset: 0;
+  }
+  .cx-node {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px 6px 8px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--line-strong);
+    background: color-mix(in oklab, var(--surface-2) 92%, transparent);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out), opacity var(--dur) var(--ease-out);
+    z-index: 1;
+  }
+  .cx-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--purple-bright);
+    flex-shrink: 0;
+  }
+  .cx-node:hover, .cx-node:focus-visible {
+    border-color: var(--purple-bright);
+    transform: translate(-50%, -50%) scale(1.06);
+    outline: none;
+  }
+  .cx-node.cx-node-on {
+    border-color: var(--purple-bright);
+    z-index: 2;
+  }
+  .cx-node.cx-node-dim {
+    opacity: 0.35;
+  }
+  .cx-hint {
+    position: absolute;
+    left: var(--sp-4);
+    bottom: var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--muted-2);
+    letter-spacing: 0.02em;
+    margin: 0;
+  }
+  @media (max-width: 760px) {
+    .constellation { min-height: 520px; }
+    .cx-node { font-size: 10px; padding: 5px 10px 5px 7px; }
+  }
+</style>
