@@ -10,6 +10,7 @@
 export interface ConstellationNode {
   id: string;
   label: string;
+  category?: string;
   x: number; // 0-100, percentage of container
   y: number; // 0-100, percentage of container
 }
@@ -161,6 +162,7 @@ export function computeConstellation(
     return {
       id: n.id,
       label: labels[n.id] || n.id,
+      category: n.category,
       x: (x / W) * 100,
       y: (y / H) * 100,
     };

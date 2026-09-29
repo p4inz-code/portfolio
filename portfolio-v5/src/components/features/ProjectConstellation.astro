@@ -7,8 +7,12 @@
  * build time (see ../../lib/constellation.ts) -- no physics simulation
  * ships to the browser, only a small hover/focus highlight script.
  *
- * Deliberately the same idea as Kanvaz's own Map View feature, aimed at
- * this site instead of a Kanvaz board.
+ * Deliberately the same idea as Kanvaz's own Map View feature (its README:
+ * "visualize the whole web as a node-editor-style graph with bezier
+ * cables"), aimed at this portfolio instead of a Kanvaz board -- edges
+ * here are genuine bezier curves for the same reason Kanvaz's are: two
+ * straight lines crossing read as a flowchart, two curved ones read as
+ * cables.
  */
 import type { Project } from '../../data/projects';
 import { computeConstellation } from '../../lib/constellation';
@@ -28,45 +32,85 @@ const labels = Object.fromEntries(projects.map((p) => [p.slug, p.name]));
 const { nodes, edges } = computeConstellation(inputNodes, labels);
 
 const projectBySlug = new Map(projects.map((p) => [p.slug, p]));
+const nodeBySlug = new Map(nodes.map((n) => [n.id, n]));
 
-// adjacency map for the client-side hover/focus highlight, keyed by node id
+// adjacency + per-node connection detail (label + why), for the detail panel
 const adjacency: Record<string, string[]> = {};
-for (const n of nodes) adjacency[n.id] = [];
+const connectionDetail: Record<string, { id: string; label: string; reason: string }[]> = {};
+for (const n of nodes) {
+  adjacency[n.id] = [];
+  connectionDetail[n.id] = [];
+}
 for (const e of edges) {
   adjacency[e.from].push(e.to);
   adjacency[e.to].push(e.from);
+  connectionDetail[e.from].push({ id: e.to, label: labels[e.to], reason: e.reason });
+  connectionDetail[e.to].push({ id: e.from, label: labels[e.from], reason: e.reason });
 }
+const degree = Object.fromEntries(nodes.map((n) => [n.id, adjacency[n.id].length]));
+const maxDegree = Math.max(1, ...Object.values(degree));
+
+const CATEGORY_LABEL: Record<string, string> = { os: 'OS', app: 'App', cli: 'CLI', web: 'Web' };
+
+// deterministic string hash -> used only to vary edge curvature, not layout
+function hash(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return h;
+}
+
+const edgePaths = edges.map((e) => {
+  const a = nodeBySlug.get(e.from)!;
+  const b = nodeBySlug.get(e.to)!;
+  const x1 = a.x, y1 = (a.y / 100) * 56;
+  const x2 = b.x, y2 = (b.y / 100) * 56;
+  const mx = (x1 + x2) / 2;
+  const my = (y1 + y2) / 2;
+  const dx = x2 - x1, dy = y2 - y1;
+  const len = Math.max(Math.hypot(dx, dy), 1);
+  // perpendicular unit vector, offset scaled to edge length so short/long
+  // cables curve proportionally instead of short ones looking overbent
+  const px = -dy / len, py = dx / len;
+  const sign = hash(e.from + e.to) % 2 === 0 ? 1 : -1;
+  const bend = Math.min(len * 0.18, 10) * sign;
+  const cx = mx + px * bend;
+  const cy = my + py * bend;
+  return { ...e, x1, y1, x2, y2, cx, cy };
+});
 ---
 <div class="constellation" id="constellation">
   <svg class="cx-edges" viewBox="0 0 100 56" preserveAspectRatio="none" aria-hidden="true">
-    {edges.map((e) => {
-      const a = nodes.find((n) => n.id === e.from)!;
-      const b = nodes.find((n) => n.id === e.to)!;
-      return (
-        <line
-          class="cx-edge"
-          data-from={e.from}
-          data-to={e.to}
-          x1={(a.x / 100) * 100}
-          y1={(a.y / 100) * 56}
-          x2={(b.x / 100) * 100}
-          y2={(b.y / 100) * 56}
-        />
-      );
-    })}
+    {edgePaths.map((e) => (
+      <path
+        class="cx-edge"
+        data-from={e.from}
+        data-to={e.to}
+        d={`M ${e.x1} ${e.y1} Q ${e.cx} ${e.cy} ${e.x2} ${e.y2}`}
+        fill="none"
+      />
+    ))}
   </svg>
 
   <div class="cx-nodes">
-    {nodes.map((n) => {
+    {nodes.map((n, i) => {
       const p = projectBySlug.get(n.id)!;
+      const cat = n.category && CATEGORY_LABEL[n.category] ? n.category : 'none';
+      const size = 6 + (degree[n.id] / maxDegree) * 6; // 6-12px dot
+      const info = {
+        label: n.label,
+        tagline: p.tagline,
+        connections: connectionDetail[n.id],
+      };
       return (
         <a
           class="cx-node"
+          data-cat={cat}
           href={p.href}
           {...(p.isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-          style={`left:${n.x}%; top:${n.y}%;`}
+          style={`left:${n.x}%; top:${n.y}%; --i:${i}; --dot:${size}px;`}
           data-node-id={n.id}
           data-connects={adjacency[n.id].join(',')}
+          data-info={JSON.stringify(info)}
         >
           <span class="cx-dot" aria-hidden="true"></span>
           <span class="cx-label">{n.label}</span>
@@ -75,28 +119,37 @@ for (const e of edges) {
     })}
   </div>
 
-  <p class="cx-hint">Hover or tab through a project to see what connects it to the rest.</p>
+  <div class="cx-legend" aria-hidden="true">
+    <span class="cx-legend-item" data-cat="os"><i></i>OS</span>
+    <span class="cx-legend-item" data-cat="app"><i></i>App</span>
+    <span class="cx-legend-item" data-cat="cli"><i></i>CLI</span>
+    <span class="cx-legend-item" data-cat="none"><i></i>Other</span>
+  </div>
+
+  <div class="cx-panel" id="cxPanel" aria-live="polite">
+    <p class="cx-panel-hint">Hover or tab through a project to see what connects it to the rest.</p>
+  </div>
 </div>
 
 <script>
   (function () {
     const root = document.getElementById('constellation');
-    if (!root) return;
+    const panel = document.getElementById('cxPanel');
+    if (!root || !panel) return;
     const nodeEls = Array.from(root.querySelectorAll<HTMLAnchorElement>('.cx-node'));
-    const edgeEls = Array.from(root.querySelectorAll<SVGLineElement>('.cx-edge'));
+    const edgeEls = Array.from(root.querySelectorAll<SVGPathElement>('.cx-edge'));
+    const defaultHint = panel.innerHTML;
 
     function clear() {
       root!.classList.remove('cx-active');
       nodeEls.forEach((n) => n.classList.remove('cx-node-on', 'cx-node-dim'));
       edgeEls.forEach((e) => e.classList.remove('cx-edge-on'));
+      panel!.innerHTML = defaultHint;
     }
 
-    function activate(id: string) {
-      const connects = (
-        nodeEls.find((n) => n.dataset.nodeId === id)?.dataset.connects || ''
-      )
-        .split(',')
-        .filter(Boolean);
+    function activate(el: HTMLAnchorElement) {
+      const id = el.dataset.nodeId!;
+      const connects = (el.dataset.connects || '').split(',').filter(Boolean);
       const connected = new Set([id, ...connects]);
       root!.classList.add('cx-active');
       nodeEls.forEach((n) => {
@@ -108,15 +161,48 @@ for (const e of edges) {
         const on = e.dataset.from === id || e.dataset.to === id;
         e.classList.toggle('cx-edge-on', on);
       });
+
+      let info: { label: string; tagline: string; connections: { id: string; label: string; reason: string }[] };
+      try {
+        info = JSON.parse(el.dataset.info || '{}');
+      } catch {
+        return;
+      }
+      const rows = info.connections
+        .map((c) => `<li><span class="cx-panel-to">${c.label}</span><span class="cx-panel-why">${c.reason}</span></li>`)
+        .join('');
+      panel!.innerHTML = `
+        <p class="cx-panel-title">${info.label}</p>
+        <p class="cx-panel-tagline">${info.tagline}</p>
+        ${rows ? `<ul class="cx-panel-list">${rows}</ul>` : `<p class="cx-panel-tagline">No shared category, stack, or tag with the rest -- stands on its own.</p>`}
+      `;
     }
 
     nodeEls.forEach((n) => {
-      const id = n.dataset.nodeId!;
-      n.addEventListener('mouseenter', () => activate(id));
-      n.addEventListener('focus', () => activate(id));
+      n.addEventListener('mouseenter', () => activate(n));
+      n.addEventListener('focus', () => activate(n));
       n.addEventListener('mouseleave', clear);
       n.addEventListener('blur', clear);
     });
+
+    // staggered entrance -- only once, the first time it scrolls into view
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              root!.classList.add('cx-in');
+              io.disconnect();
+            }
+          }
+        },
+        { threshold: 0.15 }
+      );
+      io.observe(root!);
+    } else {
+      root!.classList.add('cx-in');
+    }
   })();
 </script>
 
@@ -128,9 +214,9 @@ for (const e of edges) {
     min-height: 420px;
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
-    background: var(--surface-1);
-    /* no overflow:hidden -- a node pill near the edge should be free to sit
-       slightly past the rounded border rather than have its label clipped */
+    background:
+      radial-gradient(ellipse 70% 60% at 30% 20%, color-mix(in oklab, var(--purple-deep) 10%, transparent), transparent 60%),
+      var(--surface-1);
   }
   .cx-edges {
     position: absolute;
@@ -141,68 +227,157 @@ for (const e of edges) {
   .cx-edge {
     stroke: var(--line-strong);
     stroke-width: 0.12;
+    stroke-linecap: round;
     transition: stroke var(--dur) var(--ease-out), stroke-width var(--dur) var(--ease-out), opacity var(--dur) var(--ease-out);
   }
-  .constellation.cx-active .cx-edge {
-    opacity: 0.25;
-  }
+  .constellation.cx-active .cx-edge { opacity: 0.2; }
   .cx-edge.cx-edge-on {
     stroke: var(--purple-bright);
-    stroke-width: 0.3;
+    stroke-width: 0.32;
     opacity: 1;
   }
-  .cx-nodes {
-    position: absolute;
-    inset: 0;
-  }
+
+  .cx-nodes { position: absolute; inset: 0; }
+
   .cx-node {
     position: absolute;
     transform: translate(-50%, -50%);
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
     padding: 6px 12px 6px 8px;
     border-radius: var(--radius-pill);
     border: 1px solid var(--line-strong);
-    background: color-mix(in oklab, var(--surface-2) 92%, transparent);
+    background: color-mix(in oklab, var(--surface-2) 90%, transparent);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
     color: var(--text);
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.02em;
     white-space: nowrap;
     text-decoration: none;
-    transition: border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out), opacity var(--dur) var(--ease-out);
+    /* Always visible by default -- opacity never depends on JS running.
+       v5.44.0's Section.astro bug (content permanently hidden because a
+       scroll-timeline animation's *starting* state never resolved) was a
+       real lesson: an entrance effect must never be the only thing making
+       content visible. The stagger below only ever animates transform. */
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
     z-index: 1;
   }
+  .constellation.cx-in .cx-node {
+    animation: cx-node-in 0.4s var(--ease-out) backwards;
+    animation-delay: calc(var(--i) * 45ms);
+  }
+  @keyframes cx-node-in {
+    from { transform: translate(-50%, -50%) scale(0.5); }
+    to   { transform: translate(-50%, -50%) scale(1); }
+  }
+
   .cx-dot {
-    width: 6px; height: 6px; border-radius: 50%;
+    width: var(--dot, 8px); height: var(--dot, 8px);
+    border-radius: 50%;
     background: var(--purple-bright);
     flex-shrink: 0;
+    transition: box-shadow var(--dur-fast) var(--ease-out);
   }
+  .cx-node[data-cat='os']   .cx-dot { background: var(--purple-bright); }
+  .cx-node[data-cat='app']  .cx-dot { background: var(--green-live); }
+  .cx-node[data-cat='cli']  .cx-dot { background: var(--warn); }
+  .cx-node[data-cat='none'] .cx-dot { background: var(--muted); }
+
   .cx-node:hover, .cx-node:focus-visible {
     border-color: var(--purple-bright);
-    transform: translate(-50%, -50%) scale(1.06);
+    transform: translate(-50%, -50%) scale(1.08);
     outline: none;
   }
   .cx-node.cx-node-on {
     border-color: var(--purple-bright);
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--purple-bright) 40%, transparent), 0 0 24px -4px var(--purple-bright);
     z-index: 2;
   }
-  .cx-node.cx-node-dim {
-    opacity: 0.35;
+  .cx-node.cx-node-on .cx-dot {
+    box-shadow: 0 0 10px 2px currentColor;
   }
-  .cx-hint {
+  .cx-node.cx-node-on[data-cat='os']   .cx-dot { box-shadow: 0 0 10px 2px var(--purple-bright); }
+  .cx-node.cx-node-on[data-cat='app']  .cx-dot { box-shadow: 0 0 10px 2px var(--green-live); }
+  .cx-node.cx-node-on[data-cat='cli']  .cx-dot { box-shadow: 0 0 10px 2px var(--warn); }
+  .cx-node.cx-node-dim { opacity: 0.32; }
+
+  .cx-legend {
     position: absolute;
-    left: var(--sp-4);
-    bottom: var(--sp-3);
+    top: var(--sp-4); right: var(--sp-4);
+    display: flex; gap: var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+  }
+  .cx-legend-item { display: inline-flex; align-items: center; gap: 5px; }
+  .cx-legend-item i { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+  .cx-legend-item[data-cat='os']   i { background: var(--purple-bright); }
+  .cx-legend-item[data-cat='app']  i { background: var(--green-live); }
+  .cx-legend-item[data-cat='cli']  i { background: var(--warn); }
+  .cx-legend-item[data-cat='none'] i { background: var(--muted); }
+
+  .cx-panel {
+    position: absolute;
+    left: var(--sp-4); right: var(--sp-4); bottom: var(--sp-4);
+    padding: var(--sp-3) var(--sp-4);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: color-mix(in oklab, var(--bg) 75%, transparent);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    min-height: 44px;
+    max-height: 130px;
+    overflow-y: auto;
+    z-index: 3;
+  }
+  .cx-panel-hint {
+    margin: 0;
     font-family: var(--font-mono);
     font-size: 10.5px;
     color: var(--muted-2);
-    letter-spacing: 0.02em;
-    margin: 0;
   }
+
   @media (max-width: 760px) {
-    .constellation { min-height: 520px; }
+    .constellation { min-height: 560px; }
     .cx-node { font-size: 10px; padding: 5px 10px 5px 7px; }
+    .cx-legend { position: static; margin: var(--sp-3) var(--sp-4) 0; flex-wrap: wrap; }
+    .cx-panel { position: static; margin: var(--sp-3) var(--sp-4) var(--sp-4); max-height: none; }
   }
+</style>
+
+<style is:global>
+  /* Astro's scoped-style attribute only applies to elements present in the
+     static template at build time -- it never reaches markup injected via
+     innerHTML from the client script below, so the panel's dynamic content
+     (title/tagline/connection list) has to live here instead, unscoped. */
+  #cxPanel .cx-panel-title {
+    margin: 0 0 2px;
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    color: var(--text);
+  }
+  #cxPanel .cx-panel-tagline {
+    margin: 0 0 var(--sp-2);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--muted);
+  }
+  #cxPanel .cx-panel-list {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4);
+  }
+  #cxPanel .cx-panel-list li {
+    display: flex; flex-direction: column;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+  }
+  #cxPanel .cx-panel-to { color: var(--purple-bright); }
+  #cxPanel .cx-panel-why { color: var(--muted-2); font-size: 9.5px; }
 </style>
