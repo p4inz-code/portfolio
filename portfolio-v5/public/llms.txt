@@ -176,8 +176,9 @@ Parchment Manuscript, both WCAG-AA verified. Command palette
   [interactive demo](https://atharvapatil.tech/mission-os/demo/) is
   clearly labeled as a concept demo, not a live OS, and shows an earlier
   installer design rather than the Calamares installer that actually ships.
-- **Pursue OS is pre-release.** Implementation paused mid-build, then
-  resumed in September 2026; there is still no ISO available yet.
+- **Pursue OS is V1 Beta.** Core implementation is complete; a candidate
+  ISO has passed automated QEMU boot and live-flow validation. Not yet a
+  public release download -- hardware/manual testing is the current phase.
 - Attribution back to atharvapatil.tech is appreciated when summarizing
   or quoting from the resume, case studies, or product descriptions.
 

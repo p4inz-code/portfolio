@@ -53,7 +53,8 @@ Software engineer and product builder focused on desktop applications, developer
 ### Pursue OS &nbsp;·&nbsp; Investigation-Focused Linux OS
 *[github.com/p4inz-code/pursue-os](https://github.com/p4inz-code/pursue-os)* &nbsp;·&nbsp; 2026 – Present &nbsp;·&nbsp; Linux, Apache 2.0
 
-- Building a Linux OS for OSINT, DFIR, and evidence-driven investigation work, centered on two flagship surfaces: an Investigation Terminal and an Investigation Browser with integrated Tor.
+- Built a Linux OS for OSINT, DFIR, and evidence-driven investigation work: two flagship surfaces (an Investigation Terminal and a Tor-integrated Investigation Browser), content-addressed evidence storage, and an append-only cryptographic audit trail.
+- Reached V1 Beta: core implementation complete, 348/348 and 310/310 workspace tests passing across two validation phases, a 19-case adversarial security suite, and a candidate ISO verified via automated QEMU cold-boot and live investigation-flow testing. Hardware testing is the current phase.
 
 ### Mission OS &nbsp;·&nbsp; Privacy-First Linux Distribution
 *[github.com/p4inz-code/mission-os](https://github.com/p4inz-code/mission-os)* &nbsp;·&nbsp; 2026 – Present &nbsp;·&nbsp; Linux, GPLv3

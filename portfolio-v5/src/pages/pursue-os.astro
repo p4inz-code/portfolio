@@ -27,13 +27,13 @@ const breadcrumbJsonLd = {
   ],
 };
 ---
-<BaseLayout scene="pursue" title="Pursue OS — Investigation Linux OS · Atharva Patil" description="Investigation-focused Linux OS for OSINT and DFIR work: Investigation Terminal, Investigation Browser with Tor. Apache 2.0. Development active again as of September 2026." keywords="Pursue OS, Pursue OS p4inz, p4inz OSINT tool, investigation Linux OS, painz DFIR tool" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
+<BaseLayout scene="pursue" title="Pursue OS — Investigation Linux OS · Atharva Patil" description="Investigation-focused Linux OS for OSINT and DFIR work: Investigation Terminal, Investigation Browser with Tor. Apache 2.0. V1 core implementation complete, hardware testing underway as of September 2026." keywords="Pursue OS, Pursue OS p4inz, p4inz OSINT tool, investigation Linux OS, painz DFIR tool" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
   <section class="notice-wrap">
     <div class="wrap">
       <p class="notice">
-        <strong>Development notice.</strong> PURSUE OS is not ready for production use and has no stable release or installation image. Development paused mid-implementation, then resumed in September 2026 — work in progress, not yet pushed to the repo as of Sept 27.
+        <strong>Development notice.</strong> PURSUE OS is V1 Beta: core implementation is complete and a candidate ISO has passed automated QEMU boot and live investigation-flow validation. It is not yet production-certified and has no public release download — hardware and manual testing on real devices is the current phase.
       </p>
     </div>
   </section>
@@ -71,13 +71,14 @@ const breadcrumbJsonLd = {
     </div>
   </Section>
 
-  <Section eyebrow="Development status" heading="The foundation is ready. The build begins now.">
+  <Section eyebrow="Development status" heading="V1 build complete. Hardware testing underway.">
     <div class="status-grid">
       <div class="status-cell"><span class="status-label">Planning</span><span class="status-value">Complete</span></div>
       <div class="status-cell"><span class="status-label">Repository foundation</span><span class="status-value">Complete</span></div>
-      <div class="status-cell"><span class="status-label">Architecture foundation</span><span class="status-value">Established</span></div>
-      <div class="status-cell"><span class="status-label">Implementation</span><span class="status-value warn">Starting</span></div>
-      <div class="status-cell"><span class="status-label">Stable release</span><span class="status-value">Not available</span></div>
+      <div class="status-cell"><span class="status-label">Core implementation</span><span class="status-value">Complete</span></div>
+      <div class="status-cell"><span class="status-label">Automated validation</span><span class="status-value">Passed · QEMU + full test suite</span></div>
+      <div class="status-cell"><span class="status-label">Hardware testing</span><span class="status-value warn">In progress</span></div>
+      <div class="status-cell"><span class="status-label">Public release download</span><span class="status-value">Not available yet</span></div>
     </div>
     <p class="body-copy" style="margin-top: var(--sp-6)">
       Apache 2.0. Third-party software distributed with future releases may use separate licenses.

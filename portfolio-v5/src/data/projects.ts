@@ -149,8 +149,8 @@ export const PROJECTS: Project[] = [
     name: 'Pursue OS',
     tagline: 'One operating system for the investigation workflow.',
     description:
-      'Investigation-focused Linux OS for OSINT, DFIR, secure research, intelligence gathering, and evidence-driven workflows. Two flagship interfaces: Investigation Terminal + Investigation Browser with integrated Tor. Apache 2.0. Built by P4inz. Development paused mid-implementation, then resumed in September 2026; no ISO yet.',
-    status: { kind: 'active', label: 'Active · Pre-release' },
+      'Investigation-focused Linux OS for OSINT, DFIR, secure research, intelligence gathering, and evidence-driven workflows. Two flagship interfaces: Investigation Terminal + Investigation Browser with integrated Tor. Case Vault uses content-addressed SHA-256 storage with an append-only, hash-chained audit trail. Apache 2.0. Built by P4inz. Core V1 implementation is complete: a candidate ISO exists and has passed automated QEMU boot and live-flow validation. Not yet a public download -- hardware and manual testing is the current phase.',
+    status: { kind: 'active', label: 'Active · V1 Beta (hardware testing)' },
     tags: ['Linux', 'OSINT', 'Apache 2.0'],
     metaTags: ['Linux', 'OSINT & DFIR', 'Apache 2.0'],
     media: { src: '/assets/banners/pursue-os.webp', alt: 'GitHub repository card for p4inz-code/pursue-os.', kind: 'banner', ratio: '1200 / 600' },
@@ -165,9 +165,9 @@ export const PROJECTS: Project[] = [
     stack: ['Rust', 'Linux', 'Terminal-focused', 'Tor', 'Local AI (optional)'],
     role: 'Creator and sole developer',
     started: '2026',
-    currentVersion: 'Pre-release',
-    nextMilestone: 'Core implementation resumed in September 2026 after a pause. As of Sept 27, work in progress locally, not yet committed or pushed; expected to take about a week.',
-    notes: 'Not ready for production use. Case-store layer (traits, in-memory and file-backed) was the most recent work before the pause; the repo\'s own commit history doesn\'t yet show new feature work past that, but development is confirmed active again.',
+    currentVersion: 'V1 Beta',
+    nextMilestone: 'Hardware and manual testing on real devices, following a clean automated QEMU cold-boot pass. Candidate ISO built directly from the verified source tree; not yet hosted as a GitHub release download.',
+    notes: 'Real jump since the site last checked: 348/348 (Phase 9) and 310/310 (Phase 10) workspace tests passing, a 19/19 adversarial security suite (path traversal, blob/manifest tampering, hash breaks, framing attacks all fail closed), clean clippy + cargo fmt, and a 7/7 live investigation flow (case creation through cryptographic case verification) passing inside QEMU. Desktop is Sway on Debian 13 Trixie. "No ISO yet" was true when last recorded and is no longer true.',
   },
   {
     slug: 'veris',

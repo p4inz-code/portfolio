@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.46.0',
+    kind: 'released',
+    summary: 'Pursue OS reaudited against the real repo and caught a major status change: V1 core implementation is now complete, with a candidate ISO passing automated QEMU and live-flow validation -- the site still said "paused mid-implementation, no ISO yet." Also removed the macOS-style window-chrome dots from every case study screenshot.',
+    body: [
+      'Full repo-vs-site pass across every product with a real GitHub repo (Kanvaz, Nexus, Mission OS, Pursue OS, Veris, Ascent, Obscura, Glint, MINK, Crossport, Draft, 3D Ref Skills). One real, significant finding: Pursue OS shipped a lot since the site last checked -- 348/348 and 310/310 workspace tests across two validation phases, a 19-case adversarial security suite, and a bootable candidate ISO verified via QEMU cold-boot and a 7-step live investigation flow. Status, description, and development-status table updated on the case study page, projects.ts, resume (page, Markdown, and regenerated PDF), and llms.txt. Everything else checked out accurate: MINK\'s v1.0.3 is confirmed real (matches Cargo.toml, just never got a formal GitHub Release page), and Nexus\'s v11 screenshots are correctly labeled as an unshipped design deck, not stale captures.',
+      'Screenshot.astro: removed the three-dot macOS-style window chrome from every case study screenshot frame (Kanvaz, Nexus, Ascent), replacing the hard border with a soft blurred shadow. Cleaner, and it stops implying these are all macOS captures when several are Windows or cross-platform apps.',
+    ],
+  },
+  {
     version: 'v5.45.0',
     kind: 'released',
     summary: 'Kanvaz repo sync: v9.5.0 -> v9.6.0, and every screenshot on the case study page replaced with the real current set (one had drifted as far back as v4.2.1).',
