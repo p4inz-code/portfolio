@@ -113,6 +113,7 @@ const edgePaths = edges.map((e) => {
             class:list={['cx-node', { 'cx-node-featured': p.featured }]}
             data-cat={cat}
             href={p.href}
+            draggable="false"
             {...(p.isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
             style={`left:${n.x}%; top:${n.y}%; --i:${i}; --weight:${weight.toFixed(2)};`}
             data-node-id={n.id}
@@ -210,6 +211,12 @@ const edgePaths = edges.map((e) => {
       let dragging = false;
       let moved = false;
       let startClientX = 0, startClientY = 0;
+
+      // draggable="false" on the element stops this in most browsers, but
+      // some still fire native dragstart for <a> after a held-then-moved
+      // press -- belt and suspenders, since that's exactly the "works if I
+      // flick it, not if I hold it" symptom a real hold-to-drag hijack has.
+      n.addEventListener('dragstart', (e) => e.preventDefault());
 
       n.addEventListener('pointerdown', (e) => {
         if (e.button !== undefined && e.button !== 0) return;
@@ -380,6 +387,8 @@ const edgePaths = edges.map((e) => {
     cursor: grab;
     touch-action: none;
     user-select: none;
+    -webkit-touch-callout: none; /* stops iOS's hold-on-a-link share sheet from hijacking the drag */
+    -webkit-user-drag: none;
     /* Always visible by default -- opacity never depends on JS running.
        An entrance effect must never be the only thing making content
        visible; the stagger below only ever animates transform. */
