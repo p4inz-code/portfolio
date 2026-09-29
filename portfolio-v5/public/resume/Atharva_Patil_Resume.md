@@ -33,9 +33,9 @@ Software engineer and product builder focused on desktop applications, developer
 ### Kanvaz &nbsp;·&nbsp; Visual Reference Workspace (Flagship, Free)
 *[github.com/p4inz-code/kanvaz](https://github.com/p4inz-code/kanvaz)* &nbsp;·&nbsp; Jun 2026 – Present &nbsp;·&nbsp; Electron, MIT
 
-- Built and maintain a free, MIT-licensed reference workspace for VFX and 3D artists: live 3D model preview (glTF, OBJ, FBX, STL, USD), a typed connection graph, a Layers panel, and board templates, shipped for Windows, macOS, and Linux.
+- Built and maintain a free, MIT-licensed reference workspace for VFX and 3D artists: live 3D model preview (glTF, OBJ, FBX, STL, USD), a typed connection graph with a node-editor Map View, a Scratch Board drawing layer, and board templates, shipped for Windows, macOS, and Linux.
 - Designed a local-only MCP Bridge that lets an AI agent read and edit the active board through a scoped tool set, off by default and fully undo-reversible.
-- Shipped six releases in about a week during the most recent update cycle (v9.5.0), all backward-compatible with the free, open-source core.
+- Shipped seven releases in about a week during the most recent update cycle (v9.0.0 to v9.6.0), all backward-compatible with the free, open-source core.
 
 ### Nexus &nbsp;·&nbsp; Encrypted Personal Vault
 *[github.com/p4inz-code/nexus-desktop](https://github.com/p4inz-code/nexus-desktop)* &nbsp;·&nbsp; Mar 2026 – Present &nbsp;·&nbsp; Windows Desktop

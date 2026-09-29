@@ -121,8 +121,8 @@ export const PROJECTS: Project[] = [
     name: 'Kanvaz',
     tagline: 'Your canvas. Your references.',
     description:
-      'Visual reference workspace for VFX and 3D artists. Live 3D model preview (glTF, OBJ, FBX, STL, USD, and more), typed connections with a Map View, shared cards across boards, a Layers panel, and 14 board templates. Plugin system with a local-only MCP Bridge: an AI agent can read and edit the active board, off by default and undo-reversible. Windows, macOS and Linux builds. Free forever, MIT-licensed.',
-    status: { kind: 'active', label: 'Flagship · Active · v9.5.0' },
+      'Visual reference workspace for VFX and 3D artists. Live 3D model preview (glTF, OBJ, FBX, STL, USD, and more), typed connections with a Map View, a Scratch Board drawing layer, a Task Tracker, shared cards across boards, and 14 board templates. Plugin system with a local-only MCP Bridge: an AI agent can read and edit the active board, off by default and undo-reversible. Windows, macOS and Linux builds. Free forever, MIT-licensed.',
+    status: { kind: 'active', label: 'Flagship · Active · v9.6.0' },
     category: 'app',
     tags: ['Electron', 'MIT'],
     metaTags: ['Electron', 'MIT', 'Open Source'],
@@ -140,9 +140,9 @@ export const PROJECTS: Project[] = [
     stack: ['Electron', 'vanilla JS'],
     role: 'Sole engineer + designer',
     started: 'June 2026',
-    currentVersion: 'v9.5.0',
+    currentVersion: 'v9.6.0',
     nextMilestone: 'Shipping most weeks, driven by user feedback. No fixed roadmap.',
-    notes: 'Nine releases since the site last checked (v8.8.5 -> v9.5.0, Sept 2026): security/platform hardening (v9.0.0), 13 render modes plus Kanvaz Link and Open With (v9.1.0), a Blender picker and preview quality gates (v9.2.0), OBJ material support and HDR/EXR previews (v9.3.0), Krita/Clip Studio/Procreate recognition (v9.4.0), and a third board type, Scratch Board, with board-wide annotations and Illustrator-style tools (v9.5.0). The About screenshot in the case study is from an older v4.2.1 build.',
+    notes: 'Ten releases since the site last checked (v8.8.5 -> v9.6.0, Sept 2026): security/platform hardening (v9.0.0), 13 render modes plus Kanvaz Link and Open With (v9.1.0), a Blender picker and preview quality gates (v9.2.0), OBJ material support and HDR/EXR previews (v9.3.0), Krita/Clip Studio/Procreate recognition (v9.4.0), a third board type -- Scratch Board, with board-wide annotations and Illustrator-style tools (v9.5.0) -- and a second pass fixing Map View overlap, a Windows dialog-freeze bug, and BMP export (v9.6.0). Screenshots on the case study page are now the real v9.6.0 set, replacing one that had drifted as far back as v4.2.1.',
   },
   {
     slug: 'pursue-os',

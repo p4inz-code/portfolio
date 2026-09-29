@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.45.0',
+    kind: 'released',
+    summary: 'Kanvaz repo sync: v9.5.0 -> v9.6.0, and every screenshot on the case study page replaced with the real current set (one had drifted as far back as v4.2.1).',
+    body: [
+      'Pulled directly from the live repo: 8 screenshots plus the README\'s own card-creation walkthrough GIF, all dated 2026-09-28. Out: the old Settings/Start/About/Shortcuts set, including a v4.2.1-era About dialog screenshot that had been sitting on the site for months after the app moved past it. In: Map View, Scratch Board, Task Tracker, per-card Annotate, the Home Screen, and the Export dialog, alongside a refreshed dark/light showcase pair.',
+      'Updated the version number, release count (46 across v6-v9, up from the 39 recorded before v9.x existed), and feature copy on the case study page, projects.ts, the resume page, and both resume export formats (Markdown + regenerated PDF, re-verified at 1 page).',
+    ],
+  },
+  {
     version: 'v5.44.1',
     kind: 'released',
     summary: 'The contact form\'s backend is confirmed live: a real submission now sends straight to my inbox, verified end to end.',

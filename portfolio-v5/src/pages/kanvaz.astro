@@ -28,18 +28,28 @@ const breadcrumbJsonLd = {
   ],
 };
 ---
-<BaseLayout scene={project.scene} title="Kanvaz — Visual Reference Workspace · Atharva Patil" description="Free, open-source visual reference workspace for VFX and 3D artists: live 3D model preview, typed connections, plugins. Windows, macOS, Linux. MIT, v8.8.5." keywords="Kanvaz, Kanvaz p4inz, Kanvaz painz, p4inz app dev, reference board app, VFX reference tool" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
+<BaseLayout scene={project.scene} title="Kanvaz — Visual Reference Workspace · Atharva Patil" description="Free, open-source visual reference workspace for VFX and 3D artists: live 3D model preview, typed connections, Map View, Scratch Board, plugins. Windows, macOS, Linux. MIT, v9.6.0." keywords="Kanvaz, Kanvaz p4inz, Kanvaz painz, p4inz app dev, reference board app, VFX reference tool" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
-  <!-- Screenshots first — visual hook before the wall of text. The Board view
-       is the product's whole thesis; put it front and center. -->
+  <!-- Screenshots first — visual hook before the wall of text. All pulled
+       directly from the real v9.6.0 repo (2026-09-28), replacing a set that
+       had drifted as far back as v4.2.1 on one dialog. -->
   <Section eyebrow="What Kanvaz looks like">
     <div class="shot-grid">
-      <!-- README showcase pair (v7.26.0): the same board in both themes. -->
+      <!-- Card-creation walkthrough GIF — the README's own opening shot -->
+      <Screenshot
+        src="/assets/kanvaz/kanvaz-card-creation.gif"
+        alt="Kanvaz walkthrough: home screen, starting a new board, and dropping in a card, live."
+        caption="Home screen to first card · v9.6.0"
+        aspect="16 / 10"
+        span="full"
+      />
+
+      <!-- README showcase pair: the same board in both themes. -->
       <Screenshot
         src="/assets/kanvaz/kanvaz-showcase-dark.webp"
         alt="Kanvaz reference board in the dark theme: image, note, color and URL cards with a Related To connection."
-        caption="Dark theme · v7.26.0"
+        caption="Dark theme · v9.6.0"
         aspect="16 / 10"
         span="half"
       />
@@ -51,52 +61,52 @@ const breadcrumbJsonLd = {
         span="half"
       />
 
-      <!-- HERO SHOT: full-width board view. Wide-screen source, 16:10 fits it -->
+      <!-- Map View + Scratch Board: the two headline v9.x features -->
       <Screenshot
-        src="/assets/kanvaz/kanvaz-02-board.png"
-        alt="Kanvaz board view — seven reference cards on an infinite grid canvas: character concept art, code excerpts, VFX shield artwork, glitch/matrix backgrounds, and typed connection lines between related items."
-        caption="Board view · typed connections between reference cards"
+        src="/assets/kanvaz/kanvaz-mapview.webp"
+        alt="Kanvaz Map View — node-editor-style graph of cards, color-coded by type, with connection ports."
+        caption="Map View · every card as a node"
         aspect="16 / 10"
-        span="full"
-      />
-
-      <!-- SETTINGS PAIR: two tall panels side-by-side. Portrait-ish aspect -->
-      <Screenshot
-        src="/assets/kanvaz/kanvaz-03-settings-appearance.png"
-        alt="Kanvaz Settings panel — Appearance section with theme, minimap, grid lines, card shadows, animations, snap-to-grid, and autosave toggles."
-        caption="Settings · appearance + behavior"
-        aspect="3 / 4"
         span="half"
       />
       <Screenshot
-        src="/assets/kanvaz/kanvaz-04-settings-developer.png"
-        alt="Kanvaz Settings panel — Developer section with FPS overlay, diagnostics, generate test cards, and the Theme Creator plugin (v1.0.0) enabled with color pickers for background, surface, accent, and text."
-        caption="Developer + Theme Creator plugin"
-        aspect="3 / 4"
+        src="/assets/kanvaz/kanvaz-scratchboard.webp"
+        alt="Kanvaz Scratch Board — an Illustrator-style drawing layer over the board, pen tool, custom toolbar."
+        caption="Scratch Board · draws over the whole board"
+        aspect="16 / 10"
         span="half"
       />
 
-      <!-- SMALLER DIALOGS: three across, 4:3 works for centered modals -->
+      <!-- Task Tracker + Annotate: side-panel features -->
       <Screenshot
-        src="/assets/kanvaz/kanvaz-01-start.png"
-        alt="Kanvaz start screen — Recent Boards dialog with 'latest board.kanvaz' listed and a 'Start with empty board' button on a dark grid canvas."
-        caption="Start screen · recent boards"
-        aspect="4 / 3"
-        span="third"
+        src="/assets/kanvaz/kanvaz-tasktracker.webp"
+        alt="Kanvaz Task Tracker side panel section — tasks with subtasks, progress, and a completion toast."
+        caption="Task Tracker · a to-do list next to your board"
+        aspect="16 / 10"
+        span="half"
       />
       <Screenshot
-        src="/assets/kanvaz/kanvaz-05-about.png"
-        alt="Kanvaz About dialog — older v4.2.1 build shown here; the app has moved on to v8.x. Reads 'Your canvas. Your references. Made by Atharva Patil, Northbyte Studios. Built for VFX artists, 3D artists, and the people who teach them.'"
-        caption="About · older v4.2.1 build"
-        aspect="4 / 3"
-        span="third"
+        src="/assets/kanvaz/kanvaz-annotate.webp"
+        alt="Kanvaz side panel Properties section with the Annotate toolbar open on an image card."
+        caption="Annotate · per-card brush right from Properties"
+        aspect="16 / 10"
+        span="half"
+      />
+
+      <!-- Home screen + Export dialog -->
+      <Screenshot
+        src="/assets/kanvaz/kanvaz-home.webp"
+        alt="Kanvaz Home Screen — first-launch welcome overlay with Drop any file, Right-click, and shortcuts pointers."
+        caption="First-launch home screen"
+        aspect="16 / 10"
+        span="half"
       />
       <Screenshot
-        src="/assets/kanvaz/kanvaz-06-shortcuts.png"
-        alt="Kanvaz keyboard shortcuts reference — sections for Canvas, Cards, View, and File. Shortcuts include Space+drag to pan, Ctrl+F to search, M to toggle Board/Map view, T for Always on Top."
-        caption="Keyboard shortcuts reference"
-        aspect="4 / 3"
-        span="third"
+        src="/assets/kanvaz/kanvaz-export.webp"
+        alt="Kanvaz Export as… dialog — format (PNG/JPEG/WEBP/BMP), quality, and size."
+        caption="Export as… · PNG, JPEG, WEBP, or BMP"
+        aspect="16 / 10"
+        span="half"
       />
     </div>
   </Section>
@@ -110,6 +120,14 @@ const breadcrumbJsonLd = {
 
   <Section eyebrow="What's inside" heading="3D preview, connections, plugins, and a lot of releases.">
     <div class="feature-grid">
+      <article class="feature-card">
+        <h3 class="feature-name">Map View + Scratch Board (v9.1–9.5)</h3>
+        <p class="feature-desc">Map View turns every card into a node-editor-style graph, color-coded by type and wired with the same typed connections as the board itself. Scratch Board adds a real Illustrator-style drawing layer over the whole board — pen, highlighter, shapes, eraser — sharing one undo history with everything else.</p>
+      </article>
+      <article class="feature-card">
+        <h3 class="feature-name">Task Tracker + per-card Annotate (v9.1–9.6)</h3>
+        <p class="feature-desc">A real to-do list lives in the side panel now, with subtasks and per-task card links. Annotation moved into Properties too: brush width and color adjustable per card, no separate tool to switch into.</p>
+      </article>
       <article class="feature-card">
         <h3 class="feature-name">Live 3D model cards (v7.4–v8.4)</h3>
         <p class="feature-desc">Drop a <code>.glb</code>, <code>.obj</code>, <code>.fbx</code>, <code>.stl</code>, <code>.ply</code>, <code>.vox</code> or <code>.usd</code> or <code>.usdz</code> and orbit it on the board with Normal, Wireframe and Matcap shading, animation playback and a remembered camera. <code>.blend</code> files preview too if Blender is installed.</p>
@@ -153,10 +171,10 @@ const breadcrumbJsonLd = {
     </div>
   </Section>
 
-  <Section heading="Kanvaz is at v8.8.5, and still shipping.">
+  <Section heading="Kanvaz is at v9.6.0, and still shipping.">
     <div class="body-copy">
-      <p>Kanvaz went through a v5.3.0 bug-bounty pass that I once treated as the end of development. It wasn't. Since then there have been 39 published releases across the v6, v7 and v8 lines: Smart Search, shared cards, real 3D model preview, a Layers panel, profiles, and a lot of templates.</p>
-      <p>The latest published release is v8.8.5, with Windows, macOS (arm64) and Linux builds. There's no fixed roadmap; updates land most weeks depending on what people report. The main branch is already ahead of the last release.</p>
+      <p>Kanvaz went through a v5.3.0 bug-bounty pass that I once treated as the end of development. It wasn't. Since then there have been 46 published releases across the v6, v7, v8 and v9 lines: Smart Search, shared cards, real 3D model preview, Map View, Scratch Board, a Task Tracker, and a lot of templates.</p>
+      <p>The latest published release is v9.6.0, with Windows, macOS (arm64) and Linux builds. There's no fixed roadmap; updates land most weeks depending on what people report. The main branch is already ahead of the last release.</p>
       <p>No subscription, no feature paywall, no telemetry. The only network calls are buttons you click yourself, like Check for Updates. Your files stay on your machine, and it stays free.</p>
     </div>
   </Section>
