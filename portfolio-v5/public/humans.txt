@@ -9,7 +9,7 @@
 
 /* SITE */
 
-  Last major update:               2026-08 (v5.17)
+  Last major update:               2026-09 (v5.46, see /status)
   Language:                        English
   Doctype:                         HTML5
   IDE:                             VS Code
@@ -23,6 +23,11 @@
   Fonts:                           Clash Display, General Sans, Azeret Mono
                                    (all Fontshare)
   Hosting:                         Cloudflare Pages
+  Server side:                     Two Pages Functions: contact form (Resend +
+                                   Turnstile) and chat assistant (knowledge
+                                   base generated from the project data, with
+                                   optional Cloudflare Workers AI). KV holds
+                                   only rate-limit counters and a short cache.
   Node:                            v20 (pinned via .nvmrc)
   Analytics:                       Cloudflare Web Analytics only, the
                                    privacy-preserving beacon bundled with

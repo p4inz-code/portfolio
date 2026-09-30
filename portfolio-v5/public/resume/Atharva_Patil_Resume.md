@@ -3,7 +3,7 @@
 **Software Engineer · Founder · Product Builder**
 
 Navi Mumbai, India &nbsp;|&nbsp; [atharva.patil.cg@gmail.com](mailto:atharva.patil.cg@gmail.com) &nbsp;|&nbsp; Discord: `p4inz`
-GitHub: [github.com/p4inz-code](https://github.com/p4inz-code) &nbsp;|&nbsp; Portfolio: [atharvapatil.tech](https://atharvapatil.tech)
+GitHub: [github.com/p4inz-code](https://github.com/p4inz-code) &nbsp;|&nbsp; LinkedIn: [linkedin.com/in/p4inz](https://www.linkedin.com/in/p4inz) &nbsp;|&nbsp; Portfolio: [atharvapatil.tech](https://atharvapatil.tech)
 
 ---
 
@@ -35,7 +35,7 @@ Software engineer and product builder focused on desktop applications, developer
 
 - Built and maintain a free, MIT-licensed reference workspace for VFX and 3D artists: live 3D model preview (glTF, OBJ, FBX, STL, USD), a typed connection graph with a node-editor Map View, a Scratch Board drawing layer, and board templates, shipped for Windows, macOS, and Linux.
 - Designed a local-only MCP Bridge that lets an AI agent read and edit the active board through a scoped tool set, off by default and fully undo-reversible.
-- Shipped seven releases in about a week during the most recent update cycle (v9.0.0 to v9.6.0), all backward-compatible with the free, open-source core.
+- Shipped seven releases in about a week during one update cycle in September 2026 (v9.0.0 to v9.6.0), all backward-compatible with the free, open-source core.
 
 ### Nexus &nbsp;·&nbsp; Encrypted Personal Vault
 *[github.com/p4inz-code/nexus-desktop](https://github.com/p4inz-code/nexus-desktop)* &nbsp;·&nbsp; Mar 2026 – Present &nbsp;·&nbsp; Windows Desktop
@@ -57,10 +57,10 @@ Software engineer and product builder focused on desktop applications, developer
 - Reached V1 Beta: core implementation complete, 348/348 and 310/310 workspace tests passing across two validation phases, a 19-case adversarial security suite, and a candidate ISO verified via automated QEMU cold-boot and live investigation-flow testing. Hardware testing is the current phase.
 
 ### Mission OS &nbsp;·&nbsp; Privacy-First Linux Distribution
-*[github.com/p4inz-code/mission-os](https://github.com/p4inz-code/mission-os)* &nbsp;·&nbsp; 2026 – Present &nbsp;·&nbsp; Linux, GPLv3
+*[github.com/p4inz-code/mission-os](https://github.com/p4inz-code/mission-os)* &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; Open Beta, on hold &nbsp;·&nbsp; Linux, GPLv3
 
-- Building a privacy-first Linux distribution on Debian Stable and KDE Plasma, hardened automatically at install with no manual post-install script needed.
-- Shipped an Open Beta using a customized Calamares installer with Rust-based system services applied automatically after install.
+- Designed a privacy-first Linux distribution on Debian Stable and KDE Plasma, hardened automatically at install with no manual post-install script needed.
+- Shipped an Open Beta in August 2026 using a customized Calamares installer with Rust-based system services applied automatically after install. Development is paused while other products take priority.
 
 ### Additional Projects
 

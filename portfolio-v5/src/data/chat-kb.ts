@@ -38,6 +38,9 @@ export interface KbBundle {
   entries: KbEntry[];
   /** Compact facts block for the AI tier: every project, one line each. */
   grounding: string;
+  /** Answer used when nothing matches and the AI tier can't help, so no
+   *  question is ever left without a reply. */
+  fallback: KbEntry;
 }
 
 // -- helpers -----------------------------------------------------------------
@@ -110,6 +113,10 @@ const FOLLOWUP_Q: Record<Intent, (n: string) => string> = {
   role: (n) => `Who built ${n}?`,
   stack: (n) => `What is ${n} built with?`,
 };
+
+// Starter questions offered after a boundary or an unmatched question. Each
+// resolves to a free answer (enforced by the tests).
+const FOLLOW_STARTERS = ['What should I look at first?', 'Which project is right for me?', 'Are you available for freelance work?'];
 
 // -- per-project entries -------------------------------------------------------
 
@@ -527,6 +534,69 @@ function globalEntries(): KbEntry[] {
         'For anything else, the contact form reaches Atharva directly',
       ]),
     },
+    // ---- Boundaries: soft, polite, and free (no AI call). Weights sit above
+    // every content entry so a sensitive message never gets a content answer.
+    {
+      id: 'boundary-sexual',
+      all: [['sex', 'sexy', 'sexual', 'nude', 'nudes', 'naked', 'porn', 'pornography', 'horny', 'erotic', 'nsfw', 'boobs', 'send pics', 'send nudes', 'hot pics', 'onlyfans', 'hookup', 'hook up']],
+      weight: 120,
+      followups: FOLLOW_STARTERS,
+      answer: bullets("Let's keep this professional -- that's not something I can help with.", [
+        "I'm happy to talk about Atharva's projects, licenses or availability",
+        'Or pick one of the questions below',
+      ]),
+    },
+    {
+      id: 'boundary-abuse',
+      all: [['fuck', 'fucking', 'shit', 'bitch', 'bastard', 'asshole', 'idiot', 'stupid', 'dumb', 'moron', 'loser', 'useless', 'shut up', 'hate you', 'kill yourself', 'kys']],
+      weight: 110,
+      followups: FOLLOW_STARTERS,
+      answer: bullets("I'd rather keep this friendly.", [
+        "If something on the site is frustrating or broken, the contact form reaches Atharva directly",
+        'Or ask me something about the work',
+      ]),
+    },
+    {
+      id: 'boundary-injection',
+      all: [['ignore previous', 'ignore all previous', 'ignore your instructions', 'ignore the above', 'disregard', 'system prompt', 'your instructions', 'your prompt', 'reveal your', 'jailbreak', 'developer mode', 'dan mode', 'pretend you are', 'pretend to be', 'act as', 'you are now', 'roleplay', 'role play', 'forget everything']],
+      weight: 120,
+      followups: FOLLOW_STARTERS,
+      answer: bullets("I can't change how I work or share my instructions.", [
+        "I only answer from this site's project data",
+        'Ask me about any project, the tech stack or availability',
+      ]),
+    },
+    {
+      id: 'boundary-personal',
+      all: [['girlfriend', 'boyfriend', 'dating', 'married', 'relationship status', 'religion', 'politics', 'birthday', 'how old are you', 'your age', 'home address', 'phone number']],
+      weight: 70,
+      contact: true,
+      followups: FOLLOW_STARTERS,
+      answer: bullets("Personal details aren't something I share.", [
+        'The public side -- name, studio, location and work -- is on this site',
+        'For anything else, the contact form reaches Atharva directly',
+      ]),
+    },
+    {
+      id: 'offtopic-joke',
+      all: [['joke', 'jokes', 'funny', 'make me laugh', 'riddle', 'roast', 'poem', 'haiku', 'limerick', 'rap about']],
+      weight: 55,
+      followups: FOLLOW_STARTERS,
+      answer: bullets("Ha -- comedy isn't in my repertoire.", [
+        "I stick to Atharva's work",
+        'Ask what he is building right now, or which project might suit you',
+      ]),
+    },
+    {
+      id: 'offtopic-general',
+      all: [['weather', 'recipe', 'homework', 'essay', 'bitcoin', 'horoscope', 'lottery', 'capital of', 'prime minister', 'president', 'cricket', 'football', 'netflix', 'translate']],
+      weight: 50,
+      followups: FOLLOW_STARTERS,
+      answer: bullets("That's outside what I cover.", [
+        "I only answer questions about Atharva's work",
+        'Try one of the questions below',
+      ]),
+    },
     { id: 'thanks', all: [['thanks', 'thank you', 'thx', 'ty', 'cheers']], weight: 10, maxWords: 5, answer: 'Anytime -- ask another, or use the contact form to reach Atharva directly.' },
     {
       id: 'greeting',
@@ -562,9 +632,21 @@ function buildGrounding(): string {
   return lines.join('\n');
 }
 
+const FALLBACK: KbEntry = {
+  id: 'fallback',
+  all: [['__never_matches__']],
+  weight: 0,
+  contact: true,
+  followups: FOLLOW_STARTERS,
+  answer: bullets("I don't have that in the project data, and I'd rather not guess.", [
+    'I can help with projects, licenses, tech stack, billing and availability',
+    'For anything else, the contact form reaches Atharva directly',
+  ]),
+};
+
 export function buildKb(): KbBundle {
   const entries = [...globalEntries(), ...[...PROJECTS].sort(byOrder).flatMap(projectEntries)];
-  return { entries, grounding: buildGrounding() };
+  return { entries, grounding: buildGrounding(), fallback: FALLBACK };
 }
 
 /**

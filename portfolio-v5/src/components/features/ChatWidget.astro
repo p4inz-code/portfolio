@@ -102,7 +102,9 @@ const suggest = JSON.stringify(SUGGESTIONS.map((s) => s.q));
     const sendBtn = document.getElementById('chatSend') as HTMLButtonElement | null;
     if (!widget || !trigger || !overlay || !panel || !closeBtn || !clearBtn || !thread || !form || !input || !sendBtn) return;
 
-    const FALLBACK = "That's outside what I can answer from the real project data right now.";
+    // Only shown when the server itself can't be reached; the server always
+    // answers otherwise, even with no AI configured.
+    const FALLBACK = "I couldn't reach the assistant just now -- try again in a moment.";
     const RATE_LIMITED = "That's a lot of questions in a short time -- give it a few minutes, or reach out through the contact form.";
     const OFFLINE = "You look offline right now -- reconnect and ask again, or use the contact form.";
     // Starter chips come from the knowledge base (src/data/chat-kb.ts); the

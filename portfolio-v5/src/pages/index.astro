@@ -25,7 +25,7 @@ const featuredWord = NUM[FEATURED_PROJECTS.length] ?? String(FEATURED_PROJECTS.l
       { label: 'Build it', sub: 'Alone, end to end' },
       { label: 'Ship it', sub: 'A real version, a real download' },
     ]}
-    intro={`I'm Atharva, a solo founder in Navi Mumbai, and a second-year 3D animation student on the side. ${projectCount} products so far, each one starting from something that annoyed me or someone I know. No marketing team, nothing phoning home. Every case study links to a real repository or a real download, and the version numbers stay honest even when that means saying something is still rough.`}
+    intro={`I'm Atharva, a solo founder in Navi Mumbai, and a second-year 3D animation student on the side. ${projectCount} products so far, each one starting from something that annoyed me or someone I know. No marketing team, nothing phoning home. Every case study links to a real repository or download, and the version numbers say so when something is still rough.`}
   >
     <div class="hero-actions">
       <Button href="/work" variant="primary">See selected work →</Button>
@@ -35,7 +35,7 @@ const featuredWord = NUM[FEATURED_PROJECTS.length] ?? String(FEATURED_PROJECTS.l
 
   <ProofStrip projectCount={projectCount} />
 
-  <Section heading={`${featuredWord} things I'm shipping right now.`}>
+  <Section eyebrow="Featured work" heading={`${featuredWord} projects to start with.`}>
     <FeaturedShowcase projects={FEATURED_PROJECTS} />
   </Section>
 

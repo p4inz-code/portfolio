@@ -28,7 +28,7 @@ const faqJsonLd = {
     <div class="s-lede-meta">
       <div class="s-lede-item">
         <span class="s-lede-key">How to start</span>
-        <span class="s-lede-val">Email <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> with the shape of what you want built. First response inside 24-48h.</span>
+        <span class="s-lede-val">Use the <a href="/contact/">contact form</a> or email <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> with the shape of what you want built. First response inside 24-48h.</span>
       </div>
       <div class="s-lede-item">
         <span class="s-lede-key">How I bill</span>
@@ -68,35 +68,21 @@ const faqJsonLd = {
   </Section>
 
   <!-- FAQ-style trust anchor — actual answers to actual client questions. -->
-  <Section eyebrow="Before you write" heading="Questions clients actually ask.">
+  <Section eyebrow="Before you write" heading="Questions clients ask.">
     <dl class="faq-list">
-      <div class="faq-item">
-        <dt>Do you sign NDAs?</dt>
-        <dd>Yes, for real client work. Not for portfolio reviews or evaluation calls: those aren't confidential.</dd>
-      </div>
-      <div class="faq-item">
-        <dt>Do you subcontract?</dt>
-        <dd>No. Everything I ship is me. If a project needs specialists I can't cover (native mobile, specific 3D shots), I recommend, not resell.</dd>
-      </div>
-      <div class="faq-item">
-        <dt>Who owns the code?</dt>
-        <dd>You do, on delivery. I keep the right to reference the work in this portfolio unless you specifically ask me not to.</dd>
-      </div>
-      <div class="faq-item">
-        <dt>What if something breaks after launch?</dt>
-        <dd>30 days of free bug-fixes on any build I ship. Beyond that, small retainer or per-fix.</dd>
-      </div>
-      <div class="faq-item">
-        <dt>Are you available right now?</dt>
-        <dd>Selective: taking one or two new projects at a time. If timing is tight, ask; I'll be honest about whether I can hit it.</dd>
-      </div>
+      {SERVICE_FAQ.map((f) => (
+        <div class="faq-item">
+          <dt>{f.q}</dt>
+          <dd>{f.a}</dd>
+        </div>
+      ))}
     </dl>
   </Section>
 
   <Section>
     <div class="s-final-cta">
       <Button href="/contact/" variant="primary">Start a project →</Button>
-      <p class="s-final-note">No form to fill out. Mailto composer + real inbox.</p>
+      <p class="s-final-note">A short form that goes straight to my inbox. No account, no sales funnel.</p>
     </div>
   </Section>
 

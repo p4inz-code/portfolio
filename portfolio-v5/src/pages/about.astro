@@ -1,119 +1,211 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
-import { SITE, CONTACT } from '../data/site';
+import { SITE, CONTACT, BILLING } from '../data/site';
 import { PROJECTS, PRODUCT_COUNT } from '../data/projects';
 
 /**
- * About page — v5.6.5 rewrite. Structured as identity → journey →
- * principles → stack → studio history → availability → contact.
- * Every claim on this page is either verifiable in projects.ts /
- * repo READMEs, or drawn from Atharva's own words in prior sessions.
- * No invented facts. Anywhere the truth needs a real anecdote to
- * land, the copy names that gap honestly so it can be filled in.
+ * About page -- v5.47 rewrite. Same rule as before: every claim is either
+ * verifiable in projects.ts / the repos, or is Atharva's own words. The
+ * ship log's dates are GitHub repo-creation dates and release dates
+ * (checked with `gh api`), not memory. Numbers and "used in" chips are
+ * computed from projects.ts so they can't go stale.
  */
 
-const stackReasons = [
+const bySlug = (slug: string) => PROJECTS.find((p) => p.slug === slug)!;
+const chip = (slug: string) => {
+  const p = bySlug(slug);
+  return { name: p.name, href: p.href, external: p.isExternal };
+};
+const isProduct = (p: (typeof PROJECTS)[number]) => !p.tags.includes('Client work') && !p.tags.includes('Event site');
+const usedIn = (term: string) =>
+  PROJECTS.filter((p) => (p.stack ?? []).some((s) => s.toLowerCase().includes(term.toLowerCase()))).map((p) => chip(p.slug));
+
+const activeNow = PROJECTS.filter((p) => isProduct(p) && (p.status.kind === 'active' || p.status.kind === 'beta'));
+const openSource = PROJECTS.filter((p) => isProduct(p) && p.license && p.license !== 'Proprietary');
+// Only the projects whose own description says so; not a blanket claim.
+const noTelemetry = PROJECTS.filter((p) => /(zero|no) telemetry/i.test(p.description));
+
+const nameList = (ps: typeof PROJECTS) => {
+  const names = ps.map((p) => p.name);
+  return names.length <= 1 ? names.join('') : names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
+};
+
+const idCard = [
+  { k: 'name', v: 'Atharva Patil' },
+  { k: 'handle', v: 'p4inz' },
+  { k: 'studio', v: `${SITE.studio}, solo, since ${SITE.studioFounded}` },
+  { k: 'base', v: SITE.location },
+  { k: 'studying', v: 'B.Sc. Animation (VFX + 3D), second year, D. Y. Patil University' },
+  { k: 'in progress', v: activeNow.map((p) => p.name).join(' · ') },
+  { k: 'latest', v: `Kanvaz ${bySlug('kanvaz').currentVersion} · CrossPort ${bySlug('crossport').currentVersion}` },
+];
+
+const names = [
+  { when: '2025', name: 'Obsidian Labs', note: 'the first studio' },
+  { when: 'mid 2026', name: 'Northbyte Studios', note: 'second name' },
+  { when: 'Sept 2026', name: SITE.studio, note: 'current, and staying', current: true },
+];
+
+const chapters = [
   {
-    slug: 'wpf',
-    label: 'C# · .NET 8 · WPF',
-    verdict: 'For Windows-native products',
-    reason: 'WPF is the least-glamorous choice a modern .NET dev can make, and the right one for Nexus. Native windowing, real ClearType, no Electron bloat, integrates with Windows Hello and the Credential Manager the way users expect. Chose WPF over Avalonia specifically because Nexus ships Windows-only for now and I wanted to lean into the platform, not abstract it.',
+    title: 'Software first',
+    body: [
+      'Software came first, and it started the usual way: taking apart things I owned until I understood them, then trying to fix or replace what annoyed me. Windows tools first, then small utilities, then products with actual users.',
+      'That became a studio in 2025. It has had three names since, and the current one is the same handle everything already ships under.',
+    ],
   },
   {
-    slug: 'avalonia',
-    label: 'C# · .NET 8 · Avalonia',
-    verdict: 'For cross-platform desktop tooling',
-    reason: 'When cross-platform matters (Glint, future Nexus port), Avalonia gets the exact same code running on Windows, macOS and Linux without hitting Electron. WPF muscle memory transfers over cleanly.',
+    title: 'Then 3D',
+    body: [
+      "3D came in because software alone wasn't covering everything I wanted to make. I started a B.Sc. Animation program at D. Y. Patil University in 2025, which mostly gave a name to something I was already doing on the side.",
+      "Kanvaz exists because of that overlap: a reference tool I built for VFX artists because I'm one of them, not something I built to look interesting from the outside.",
+    ],
   },
   {
-    slug: 'electron',
-    label: 'Electron + vanilla JS',
-    verdict: 'For Kanvaz',
-    reason: 'Kanvaz needed to run everywhere a VFX artist works, and its whole surface is a canvas full of references: HTML5 canvas + drag-and-drop APIs mapped to that better than any native alternative. Vanilla JS on purpose: no framework churn, easy for anyone to fork and extend.',
+    title: 'Privacy became a habit',
+    body: [
+      "Almost everything I build ends up privacy-first and offline-first, usually without me planning it that way going in. Nexus doesn't sync to a cloud. Mission OS doesn't phone home. Pursue OS is for investigators who can't afford to leak metadata about who they're researching.",
+      "Even this site runs on Cloudflare with nothing beyond Cloudflare's own privacy-preserving traffic beacon: no analytics script, no tracking pixel.",
+    ],
   },
   {
-    slug: 'linux-native',
-    label: 'Debian Stable + KDE Plasma + Qt/QML',
-    verdict: 'For Mission OS',
-    reason: 'Building an OS you want to trust means starting from something already trusted (Debian Stable) and building deliberately on top of the most polished free desktop environment (KDE Plasma). Installer + system apps in QML/Qt because they compile to native, look right at any DPI, and let the four-pillar ethos show up in the UI itself.',
+    title: 'Working alone',
+    body: [
+      "I do all of this alone, so there's no one to catch what I miss and no one to help me move faster either. Some things take longer because of that. Other things stay more consistent than they would with five people making five different calls on the same product. Most days I think that trade is worth it.",
+    ],
+  },
+];
+
+// Dates: GitHub repo-creation dates and release dates, checked with `gh api`.
+const shipLog = [
+  {
+    when: '2025',
+    title: 'First studio',
+    text: 'Obsidian Labs, early Windows tooling, and the start of a B.Sc. Animation degree at D. Y. Patil University.',
+    chips: [],
   },
   {
-    slug: 'astro',
-    label: 'Astro 5 (this site)',
-    verdict: 'For static content sites',
-    reason: 'This portfolio was a single 15.9MB HTML file through v4.7. It worked, but every edit meant scrolling through one enormous document. Astro gives me component-scoped CSS, real routes, and zero JS by default, and it deploys to Cloudflare Pages without any extra config.',
+    when: 'Mar 2026',
+    title: 'Nexus',
+    text: 'Started building Nexus, an encrypted vault for Windows.',
+    chips: [chip('nexus')],
   },
   {
-    slug: 'ts',
-    label: 'TypeScript · Node · SQLite',
-    verdict: 'For engineering-side tooling',
-    reason: 'Veris (3,100+ tests) and repo-map both live here. TS strict-mode, ESM-first, SQLite for anything that needs to be inspectable without a running server. Deterministic engines, not black boxes.',
+    when: 'Jun 2026',
+    title: 'Five projects begin',
+    text: 'Kanvaz opens its repository on the 13th, then 3D Ref Skills (20th), Reference Engineering (22nd), Glint (24th) and Veris (29th).',
+    chips: [chip('kanvaz'), chip('3d-ref-skills'), chip('reference-engineering'), chip('glint'), chip('veris')],
+  },
+  {
+    when: 'Jul 2026',
+    title: 'Four more begin',
+    text: "Nexus's public release repo opens on the 6th, Obscura on the 8th, Mission OS on the 21st and CrossPort on the 28th. Northbyte Studios becomes the studio's second name mid-year.",
+    chips: [chip('nexus'), chip('obscura'), chip('mission-os'), chip('crossport')],
+  },
+  {
+    when: 'Aug 2026',
+    title: 'MINK, Pursue OS and Project Ascent',
+    text: 'MINK opens on the 8th and ships v1.0.0 on the 24th; Pursue OS opens on the 9th; Mission OS ships an Open Beta, then pauses. Project Ascent goes from first playable to a full 25-level campaign in about a week. The second year of the degree starts, and this portfolio moves to Astro.',
+    chips: [chip('mink'), chip('pursue-os'), chip('mission-os'), chip('ascent')],
+  },
+  {
+    when: 'Sept 2026',
+    title: 'Renamed, and a lot of releases',
+    text: `The studio becomes ${SITE.studio}. DRAFT opens on the 5th. Veris jumps to v1.2, Pursue OS returns to active development with a candidate ISO passing automated boot validation, CrossPort ships v1.1.1 and v1.1.2 (29 and 30 Sept) and Kanvaz reaches ${bySlug('kanvaz').currentVersion}.`,
+    chips: [chip('draft'), chip('veris'), chip('pursue-os'), chip('crossport'), chip('kanvaz')],
   },
 ];
 
 const principles = [
   {
-    title: 'No telemetry, ever',
-    body: 'Nothing I ship phones home. Not "off by default," not compiled in at all. If a product wants to know something about you, it asks on-screen, and you can say no.',
+    title: 'No telemetry',
+    body: `${nameList(noTelemetry)} ship without telemetry, and each project's own page or README says so. Where a product touches the network at all, it's an update check or a download, not a report about you.`,
   },
   {
     title: 'Hardened by default',
-    body: 'Secure Boot, TPM-sealed unlock, disk encryption: applied automatically during install where the product supports it, not left as a manual checklist for afterward.',
+    body: 'Mission OS switches its sysctl hardening and Rust system services on during install, with no post-install script to remember. Nexus seals your files with AES-256-GCM and Argon2id. Security is applied automatically where the product supports it, not left as a manual checklist for afterward.',
   },
   {
-    title: 'Say what\'s actually true',
-    body: 'Before I ship an update to this site, I check the claim against the real README or release notes. If something\'s only a concept preview, it says so. I\'ve delayed a ship before because a status label on /status was already out of date.',
+    title: "Say what's true",
+    body: "Before I ship an update to this site, I check the claim against the real README or release notes. If something's only a concept preview, it says so. I've delayed a ship before because a status label on /status was already out of date.",
   },
   {
     title: 'I build all of it myself',
-    body: 'The products, the case studies, this site\'s design system, the Mission OS demo, the résumé. One person, start to finish, because that\'s just how the timeline worked out.',
+    body: "The products, the case studies, this site's design system, the Mission OS demo, the résumé. One person, start to finish, because that's just how the timeline worked out.",
   },
   {
     title: 'Free when I can make it free',
-    body: 'Kanvaz, Obscura, Glint, repo-map, 3D Ref Skills, Mission OS, Pursue OS, and Veris (published free on npm as veris-cli) are all free, most of them open-source. Nexus is the one paid product, because running a one-person studio costs money, but it doesn\'t get a telemetry exception either.',
+    body: `${nameList(openSource)} are open source. Veris is free on npm (veris-cli). Nexus is the one paid product, because running a one-person studio costs money, but it doesn't get a telemetry exception either.`,
   },
 ];
 
-const timeline = [
-  { year: '2025', event: 'First studio (Obsidian Labs). Early Windows tooling. B.Sc. Animation program begins at D. Y. Patil University.' },
-  { year: 'Early 2026', event: 'Kanvaz released open source (MIT) as a reference workspace for the VFX community I\'m part of.' },
-  { year: 'Mar 2026', event: 'Started building Nexus. It went public around a month later, once there was enough to actually show.' },
-  { year: 'Jun 2026', event: 'Kanvaz and Veris both in active development alongside Nexus: one open-source workspace, one investigation platform.' },
-  { year: 'Mid 2026', event: 'Northbyte Studios founded as the second studio name. Mission OS work begins.' },
-  { year: 'Aug 2026', event: 'Second year of the animation program. Portfolio migrated to Astro (v5.0). Pursue OS repository foundation goes public. Mission OS ISO enters internal testing.' },
-  { year: 'Sept 2026', event: 'Renamed again, to P4inz Interactive Labs, the third and current studio name: folds the studio brand into the same handle everything already ships under.' },
-];
-
-// Real, verifiable numbers only — for anyone deciding whether to work with
-// a one-person studio.
+// Real, verifiable numbers only, for anyone deciding whether to work with a
+// one-person studio.
 const traction = [
   { k: 'Products shipped or in flight', v: `${PRODUCT_COUNT}` },
-  { k: 'Open source (MIT, GPLv3, Apache 2.0)', v: `${PROJECTS.filter((p) => p.license && p.license !== 'Proprietary').length}` },
-  { k: 'Automated tests across products', v: '4,100+ (Veris 3,100 + repo-map 870 + others)' },
+  { k: 'Open source products', v: `${openSource.length}` },
+  { k: 'Tests you can check in the repos', v: 'MINK ~3,000 · Obscura 340/340 · Pursue OS 310/310' },
   { k: 'People between design and shipping', v: 'Just me' },
   { k: 'Third-party analytics on any product', v: '0' },
-  { k: 'External dependencies (this site)', v: '0 (no tracking, no fetch calls at runtime)' },
+  { k: 'Trackers or cookies on this site', v: '0 (fonts are the only third-party requests)' },
 ];
 
-const shippedCount = PRODUCT_COUNT;
-// v5.36.0 fix — real bug: this filtered the whole PROJECTS array (client
-// sites and event sites included) while shippedCount filters those out.
-// The two miscounts happened to cancel out to the same number (13 and 13),
-// which read as "every product is actively worked on, none on hold" --
-// false, two of the thirteen real products are on hold. Scoped to the same
-// population shippedCount already uses.
-const activeCount = PROJECTS.filter(
-  (p) => !p.tags.includes('Client work') && !p.tags.includes('Event site') && p.status.kind !== 'onHold'
-).length;
+const stackReasons = [
+  {
+    label: 'C# · .NET 8 · WPF',
+    verdict: 'For Windows-native products',
+    reason: 'WPF is the least-glamorous choice a modern .NET dev can make, and the right one for Nexus. Native windowing, real ClearType, no Electron bloat, integrates with Windows Hello and the Credential Manager the way users expect. Chose WPF over Avalonia specifically because Nexus ships Windows-only for now and I wanted to lean into the platform, not abstract it.',
+    used: usedIn('WPF'),
+  },
+  {
+    label: 'C# · .NET 8 · Avalonia',
+    verdict: 'For desktop tooling',
+    reason: 'Glint runs on Avalonia: native, no Electron, sub-second cold start. It ships for Windows, where the WMI and DDC/CI monitor control it depends on lives. WPF muscle memory transfers over cleanly.',
+    used: usedIn('Avalonia'),
+  },
+  {
+    label: 'Electron + vanilla JS',
+    verdict: 'For Kanvaz',
+    reason: 'Kanvaz needed to run everywhere a VFX artist works, and its whole surface is a canvas full of references: HTML5 canvas + drag-and-drop APIs mapped to that better than any native alternative. Vanilla JS on purpose: no framework churn, easy for anyone to fork and extend.',
+    used: usedIn('Electron'),
+  },
+  {
+    label: 'Rust',
+    verdict: 'For systems-level products',
+    reason: "Rust runs Mission OS's system services and is the language of Pursue OS, MINK (a compiler with its own native code generator, no external toolchain), CrossPort and DRAFT.",
+    used: usedIn('Rust'),
+  },
+  {
+    label: 'Debian Stable + KDE Plasma + Calamares',
+    verdict: 'For Mission OS',
+    reason: 'Building an OS you want to trust means starting from something already trusted (Debian Stable) and building deliberately on top of the most polished free desktop environment (KDE Plasma). The installer is Calamares, customised with Mission OS branding and a Python post-install module that applies the hardening automatically.',
+    used: usedIn('Debian Stable'),
+  },
+  {
+    label: 'Godot 4 · GDScript',
+    verdict: 'For Project Ascent',
+    reason: 'One codebase exporting to Windows, macOS, Linux and the browser (playable on itch.io), with 18 automated test suites including a full 25-level reachability sweep.',
+    used: usedIn('Godot'),
+  },
+  {
+    label: 'TypeScript · Node · SQLite',
+    verdict: 'For engineering-side tooling',
+    reason: 'Veris lives here: TS strict-mode, ESM-first, SQLite for anything that needs to be inspectable without a running server. Deterministic engines, not black boxes.',
+    used: usedIn('TypeScript'),
+  },
+  {
+    label: 'Astro 5 (this site)',
+    verdict: 'For static content sites',
+    reason: 'This portfolio was a single 15.9MB HTML file through v4.7. It worked, but every edit meant scrolling through one enormous document. Astro gives me component-scoped CSS, real routes, and zero JS by default, and it deploys to Cloudflare Pages without any extra config.',
+    used: [],
+  },
+];
 ---
 <BaseLayout title="About — Atharva Patil" description="Atharva Patil — solo founder of P4inz Interactive Labs, Navi Mumbai. Software engineer and second-year VFX/3D animation student." keywords="who is p4inz, who is painz, p4inz real name, Atharva Patil p4inz, P4INZ developer, P4inz Interactive Labs, Northbyte Studios">
 
-  <!-- HERO — v5.16.0: portrait photo added, split with lede text.
-       v5.17.3: rewritten off the "Developer by discipline / 3D artist by
-       training / Builder by default" triplet — flagged as sounding
-       generated. Plainer version below. -->
-  <Section wide headingLevel="h1" heading="Software engineer, and about two years into a 3D animation degree." headingEmphasis="Atharva Patil.">
+  <!-- HERO -->
+  <Section wide headingLevel="h1" heading="Software engineer, in the second year of a 3D animation degree." headingEmphasis="Atharva Patil.">
     <div class="about-hero">
       <div class="about-portrait">
         <img
@@ -125,61 +217,75 @@ const activeCount = PROJECTS.filter(
       </div>
       <div class="about-hero-text">
         <p class="about-lede">
-          I run <em>{SITE.studio}</em> on my own, based in {SITE.location}. I used to go by
-          <em>PainZ</em> and <em>Grim</em>, both retired now. Everything ships under <strong>p4inz</strong>
-          or my real name. Right now that's {shippedCount} products shipped or in progress,
-          {activeCount} of them actively worked on.
+          I run {SITE.studio} on my own from {SITE.location}. It makes desktop apps, two Linux
+          operating systems and developer tools, and I take on freelance web work alongside that.
         </p>
         <p class="about-lede-secondary">
-          For a while I thought I'd eventually have to pick one: software or 3D. I've stopped
-          expecting that to happen. A UI that feels right and a render that feels right come from the
-          same place: paying attention to the small stuff most people don't notice until it's wrong.
+          I used to think I'd have to choose between software and 3D. I don't anymore: noticing the
+          small things that are off is useful in both.
         </p>
+
+        <div class="idcard" role="group" aria-label="At a glance">
+          <p class="idcard-bar">At a glance</p>
+          <dl class="idcard-body">
+            {idCard.map((r) => (
+              <div class="idcard-row">
+                <dt>{r.k}</dt>
+                <dd>{r.v}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
       </div>
     </div>
   </Section>
 
-  <!-- SHORT STORY -->
+  <!-- CHAPTERS -->
   <Section eyebrow="The short version" heading="Why software and 3D, and why probably not stopping.">
-    <div class="story-block">
-      <p>
-        Software came first, and it started the usual way: taking apart things I owned until I
-        understood them, then trying to fix or replace what annoyed me. Windows tools first, then
-        small utilities, then products with actual users. That grew into a studio in 2025
-        (<em>Obsidian Labs</em>, at the time), renamed <em>Northbyte Studios</em> in mid-2026, and
-        renamed again to <em>{SITE.studio}</em> that September once it settled into a name worth
-        keeping: the same handle everything already ships under.
-      </p>
-      <p>
-        3D came in because software alone wasn't covering everything I wanted to make. I started a
-        B.Sc. Animation program at D. Y. Patil University this year, which mostly just gave a name to
-        something I was already doing on the side. <em>Kanvaz</em> exists because of that overlap:
-        it's a reference tool I built for VFX artists because I'm one of them, not something I built
-        to look interesting from the outside.
-      </p>
-      <p>
-        Almost everything I build ends up privacy-first and offline-first, usually without me
-        planning it that way going in. Nexus doesn't sync to a cloud. Mission OS doesn't phone home.
-        Pursue OS is for investigators who can't afford to leak metadata about who they're
-        researching. Even this site runs on Cloudflare with nothing beyond Cloudflare's own
-        privacy-preserving traffic beacon: no analytics script, no tracking pixel.
-      </p>
-      <p>
-        The part that's less fun to admit: I do all of this alone, so there's no one to catch what I
-        miss and no one to help me move faster either. Some things take longer because of that.
-        Other things stay more consistent than they would with five people making five different
-        calls on the same product. Most days I think that trade is worth it.
-      </p>
+    <div class="chapters">
+      {chapters.map((c) => (
+        <article class="chapter">
+          <div class="chapter-main">
+            <h3 class="chapter-title">{c.title}</h3>
+            {c.body.map((para) => <p>{para}</p>)}
+          </div>
+        </article>
+      ))}
     </div>
   </Section>
 
-  <!-- TIMELINE -->
-  <Section eyebrow="Timeline" heading="The last two years, compressed.">
-    <ol class="tl-list" role="list">
-      {timeline.map((t) => (
-        <li class="tl-row">
-          <span class="tl-year">{t.year}</span>
-          <span class="tl-event">{t.event}</span>
+  <!-- NAMES -->
+  <Section eyebrow="Studio names" heading="The studio has had three names.">
+    <ol class="names" role="list">
+      {names.map((n) => (
+        <li class:list={['name-node', n.current && 'is-current']}>
+          <span class="name-when">{n.when}</span>
+          <span class="name-name">{n.name}</span>
+          <span class="name-note">{n.note}</span>
+        </li>
+      ))}
+    </ol>
+  </Section>
+
+  <!-- SHIP LOG -->
+  <Section eyebrow="Ship log" heading="The last two years, one month at a time.">
+    <ol class="log" role="list">
+      {shipLog.map((m) => (
+        <li class="log-row">
+          <span class="log-when">{m.when}</span>
+          <div class="log-body">
+            <h3 class="log-title">{m.title}</h3>
+            <p class="log-text">{m.text}</p>
+            {m.chips.length > 0 && (
+              <ul class="chips" role="list">
+                {m.chips.map((c) => (
+                  <li>
+                    <a class="chip" href={c.href} {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{c.name}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </li>
       ))}
     </ol>
@@ -209,13 +315,13 @@ const activeCount = PROJECTS.filter(
     </dl>
     <div class="tr-thesis">
       <p>I'd rather ship a few privacy-first products properly than a bigger pile of half-finished ones. A lot of "growth" advice assumes ads and telemetry are free to add. I don't want to build on that.</p>
-      <p>Nexus is the main commercial product, an encrypted vault for Windows. Mission OS is the bigger, slower one: a privacy-first Linux distro built at OS scale. Kanvaz and Obscura are free and open source on purpose. Everything else supports one of those three.</p>
+      <p>Nexus is the main commercial product, an encrypted vault for Windows. Mission OS is the bigger, slower one: a privacy-first Linux distro built at OS scale, currently paused after its Open Beta. Kanvaz and Obscura are free and open source on purpose. Everything else supports one of those.</p>
       <p>Right now, the most useful thing is introductions: to other founders, investors, or open-source maintainers who care more about the product being right than about growing fast. I'm not chasing growth marketing, an agency handoff, or a full team.</p>
     </div>
   </Section>
 
   <!-- STACK -->
-  <Section eyebrow="Current stack" heading="What I reach for, and why." intro="I don't have one favourite language. I have projects that each demanded the right one and I picked deliberately.">
+  <Section eyebrow="Current stack" heading="What I reach for, and why." intro="I don't have one favourite language. I have projects that each demanded the right one and I picked deliberately. The chips are generated from the project data, so they always match what's really built with what.">
     <div class="stack-list">
       {stackReasons.map((s) => (
         <article class="stack-row">
@@ -223,7 +329,18 @@ const activeCount = PROJECTS.filter(
             <h3 class="stack-label">{s.label}</h3>
             <p class="stack-verdict">{s.verdict}</p>
           </header>
-          <p class="stack-reason">{s.reason}</p>
+          <div>
+            <p class="stack-reason">{s.reason}</p>
+            {s.used.length > 0 && (
+              <ul class="chips" role="list" aria-label={`Built with ${s.label}`}>
+                {s.used.map((c) => (
+                  <li>
+                    <a class="chip" href={c.href} {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{c.name}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </article>
       ))}
     </div>
@@ -238,6 +355,7 @@ const activeCount = PROJECTS.filter(
       <div class="id-row"><span class="id-key">Current studio</span><span class="id-val">{SITE.studio} · founded {SITE.studioFounded}</span></div>
       <div class="id-row"><span class="id-key">Previous studios</span><span class="id-val">Northbyte Studios (2026), Obsidian Labs (2025): both retired, both map to the same person and work</span></div>
       <div class="id-row"><span class="id-key">Location</span><span class="id-val">{SITE.location}</span></div>
+      <div class="id-row"><span class="id-key">Elsewhere</span><span class="id-val"><a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a> · <a href={CONTACT.github} target="_blank" rel="noopener noreferrer">GitHub</a> · <a href={CONTACT.instagram} target="_blank" rel="noopener noreferrer">Instagram</a></span></div>
       <div class="id-row"><span class="id-key">Canonical source</span><span class="id-val">This site: <a href="https://atharvapatil.tech">atharvapatil.tech</a></span></div>
     </div>
   </Section>
@@ -247,7 +365,7 @@ const activeCount = PROJECTS.filter(
     <div class="avail-block">
       <p class="avail-lede">
         I take on independent client work in web development, UI/UX, branding, and 3D/VFX
-        visualization. Scope tends to be one of three shapes:
+        visualization, one or two new projects at a time. Scope tends to be one of three shapes:
       </p>
       <ul class="avail-list" role="list">
         <li><strong>Short-loop.</strong> A landing page, a marketing site, a brand touch-up. 1–2 weeks. Fixed price. Direct.</li>
@@ -255,9 +373,9 @@ const activeCount = PROJECTS.filter(
         <li><strong>Studio work.</strong> A 3D render, a lighting study, a promo animation. Scope by shot.</li>
       </ul>
       <p class="avail-foot">
-        Everything I ship uses the same discipline you see across my own products: privacy-first,
-        no telemetry, honest about what a first-shipping-version can and can't do. If that fits
-        what you're trying to build, <a href="/contact/">start a conversation</a>.
+        {BILLING.model} Everything I ship uses the same discipline you see across my own products:
+        privacy-first, no telemetry, clear about what a first version can and can't do.
+        If that fits what you're trying to build, <a href="/contact/">start a conversation</a>.
       </p>
     </div>
   </Section>
@@ -266,6 +384,7 @@ const activeCount = PROJECTS.filter(
   <Section eyebrow="Contact" heading="Reach me directly.">
     <div class="contact-links">
       <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+      <a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer">{CONTACT.linkedinHandle}</a>
       <a href={CONTACT.github} target="_blank" rel="noopener noreferrer">{CONTACT.githubHandle}</a>
       <span>Discord · {CONTACT.discord}</span>
       <a href="/contact/">Full contact page →</a>
@@ -292,13 +411,8 @@ const activeCount = PROJECTS.filter(
       background: var(--surface-1);
       aspect-ratio: 1 / 1;
     }
-    .about-portrait img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      display: block;
-    }
+    .about-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    /* ============ Hero lede ============ */
     .about-lede {
       max-width: 780px;
       color: var(--text);
@@ -306,11 +420,7 @@ const activeCount = PROJECTS.filter(
       line-height: var(--leading-body);
       margin-top: var(--sp-4);
     }
-    .about-lede em {
-      color: var(--purple-bright);
-      font-style: italic;
-      font-weight: 500;
-    }
+    .about-lede em { color: var(--purple-bright); font-style: italic; font-weight: 500; }
     .about-lede strong { color: var(--text); font-weight: 600; }
     .about-lede-secondary {
       max-width: 780px;
@@ -319,82 +429,153 @@ const activeCount = PROJECTS.filter(
       line-height: var(--leading-body);
       margin-top: var(--sp-5);
     }
-    .about-lede-secondary em {
-      color: var(--purple-bright);
-      font-style: italic;
-      font-weight: 500;
-    }
 
-    /* ============ Story ============ */
-    .story-block {
-      max-width: var(--wrap-narrow);
+    /* ============ At-a-glance card ============ */
+    .idcard {
+      margin-top: var(--sp-6);
+      max-width: 780px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--surface-1);
+      overflow: hidden;
+    }
+    .idcard-bar {
+      margin: 0;
+      padding: var(--sp-2) var(--sp-4);
+      border-bottom: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: 0.04em;
       color: var(--muted);
-      font-size: var(--text-md);
-      line-height: var(--leading-body);
     }
-    .story-block p + p { margin-top: var(--sp-5); }
-    .story-block em { color: var(--purple-bright); font-style: italic; }
-    .story-block strong { color: var(--text); font-weight: 500; }
+    .idcard-body { margin: 0; padding: var(--sp-2) var(--sp-4) var(--sp-3); }
+    .idcard-row {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: var(--sp-4);
+      padding: 7px 0;
+      align-items: baseline;
+    }
+    .idcard-row + .idcard-row { border-top: 1px dashed var(--line); }
+    .idcard-row dt {
+      font-family: var(--font-mono);
+      font-size: var(--text-xxs);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .idcard-row dd { margin: 0; color: var(--text); font-size: var(--text-sm); line-height: 1.45; }
+    @media (max-width: 520px) { .idcard-row { grid-template-columns: 1fr; gap: 2px; } }
 
-    /* ============ Timeline ============ */
-    .tl-list {
+    /* ============ Chapters ============ */
+    .chapters { display: flex; flex-direction: column; max-width: var(--wrap-narrow); border-top: 1px solid var(--line); }
+    .chapter {
+      padding: var(--sp-6) 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .chapter-title {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: var(--sp-3);
+    }
+    .chapter-main { color: var(--muted); font-size: var(--text-md); line-height: var(--leading-body); }
+    .chapter-main p + p { margin-top: var(--sp-4); }
+
+    /* ============ Names strip ============ */
+    .names {
       list-style: none;
       padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
       max-width: var(--wrap-narrow);
-      border-top: 1px solid var(--line);
     }
-    .tl-row {
+    .name-node {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: var(--sp-5) var(--sp-4) 0 0;
+      border-top: 2px solid var(--line-strong);
+    }
+    .name-node::before {
+      content: '';
+      position: absolute;
+      top: -6px; left: 0;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--line-strong);
+    }
+    .name-node.is-current { border-top-color: var(--purple-bright); }
+    .name-node.is-current::before { background: var(--purple-bright); border-color: var(--purple-bright); box-shadow: 0 0 12px color-mix(in oklab, var(--purple-bright) 60%, transparent); }
+    .name-when {
+      font-family: var(--font-mono);
+      font-size: var(--text-xxs);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .name-name { font-family: var(--font-display); font-size: var(--text-lg); color: var(--text); letter-spacing: -0.01em; }
+    .name-node.is-current .name-name { color: var(--purple-bright); }
+    .name-note { color: var(--muted); font-size: var(--text-sm); }
+    @media (max-width: 640px) {
+      .names { grid-template-columns: 1fr; }
+      .name-node { border-top: none; border-left: 2px solid var(--line-strong); padding: 0 0 var(--sp-5) var(--sp-5); }
+      .name-node::before { top: 2px; left: -6px; }
+      .name-node.is-current { border-left-color: var(--purple-bright); }
+    }
+
+    /* ============ Ship log ============ */
+    .log { list-style: none; padding: 0; margin: 0; max-width: var(--wrap-narrow); border-top: 1px solid var(--line); }
+    .log-row {
       display: grid;
       grid-template-columns: 140px 1fr;
       gap: var(--sp-6);
       padding: var(--sp-5) 0;
-      align-items: baseline;
       border-bottom: 1px solid var(--line);
+      align-items: start;
     }
-    .tl-year {
+    .log-when {
       font-family: var(--font-mono);
       font-size: var(--text-xs);
       letter-spacing: var(--tracking-eyebrow);
       text-transform: uppercase;
       color: var(--purple-bright);
+      padding-top: 3px;
     }
-    .tl-event {
+    .log-title { font-family: var(--font-display); font-size: var(--text-md); font-weight: 500; color: var(--text); margin-bottom: var(--sp-2); }
+    .log-text { color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); }
+    @media (max-width: 640px) { .log-row { grid-template-columns: 1fr; gap: 6px; } }
+
+    /* project chips (ship log + stack) */
+    .chips { list-style: none; padding: 0; margin: var(--sp-3) 0 0; display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 3px 12px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-pill);
       color: var(--text);
-      font-size: var(--text-md);
-      line-height: 1.55;
+      font-size: var(--text-xs);
+      transition: border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
     }
-    @media (max-width: 640px) {
-      .tl-row { grid-template-columns: 1fr; gap: 6px; }
-    }
+    .chip:hover, .chip:focus-visible { border-color: var(--purple-bright); color: var(--purple-bright); background: color-mix(in oklab, var(--purple) 12%, transparent); outline: none; }
+    .chip:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
 
     /* ============ Principles ============ */
-    .pr-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--sp-4);
-    }
+    .pr-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-4); }
     @media (max-width: 760px) { .pr-grid { grid-template-columns: 1fr; } }
-    .pr-card {
-      padding: var(--sp-6);
-      border-top: 1px solid var(--purple-bright);
-      background: transparent;
-      position: relative;
-    }
-    .pr-title {
-      font-family: var(--font-display);
-      font-size: var(--text-lg);
-      font-weight: 500;
-      color: var(--text);
-      margin-bottom: var(--sp-3);
-      letter-spacing: -0.01em;
-    }
-    .pr-body {
-      color: var(--muted);
-      font-size: var(--text-sm);
-      line-height: var(--leading-body);
-    }
+    .pr-card { padding: var(--sp-6); border-top: 1px solid var(--purple-bright); background: transparent; position: relative; }
+    .pr-title { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 500; color: var(--text); margin-bottom: var(--sp-3); letter-spacing: -0.01em; }
+    .pr-body { color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); }
 
-    /* ============ Traction (investor-ready) ============ */
+    /* ============ Traction ============ */
     .tr-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -405,43 +586,14 @@ const activeCount = PROJECTS.filter(
       overflow: hidden;
     }
     @media (max-width: 640px) { .tr-grid { grid-template-columns: 1fr; } }
-    .tr-cell {
-      background: var(--surface-1);
-      padding: var(--sp-5);
-      display: flex; flex-direction: column-reverse; gap: 6px;
-    }
-    .tr-cell dt {
-      font-family: var(--font-mono);
-      font-size: 10.5px;
-      letter-spacing: var(--tracking-eyebrow);
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .tr-cell dd {
-      font-family: var(--font-display);
-      font-size: var(--text-lg);
-      color: var(--text);
-      font-weight: 500;
-      letter-spacing: -0.01em;
-    }
-    .tr-thesis {
-      margin-top: var(--sp-6);
-      max-width: var(--wrap-narrow);
-      color: var(--muted);
-      font-size: var(--text-md);
-      line-height: var(--leading-body);
-    }
+    .tr-cell { background: var(--surface-1); padding: var(--sp-5); display: flex; flex-direction: column-reverse; gap: 6px; }
+    .tr-cell dt { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--muted); }
+    .tr-cell dd { margin: 0; font-family: var(--font-display); font-size: var(--text-lg); color: var(--text); font-weight: 500; letter-spacing: -0.01em; }
+    .tr-thesis { margin-top: var(--sp-6); max-width: var(--wrap-narrow); color: var(--muted); font-size: var(--text-md); line-height: var(--leading-body); }
     .tr-thesis p + p { margin-top: var(--sp-4); }
-    .tr-thesis strong {
-      color: var(--purple-bright);
-      font-weight: 500;
-    }
 
     /* ============ Stack ============ */
-    .stack-list {
-      display: flex; flex-direction: column;
-      border-top: 1px solid var(--line);
-    }
+    .stack-list { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
     .stack-row {
       display: grid;
       grid-template-columns: 260px 1fr;
@@ -452,65 +604,22 @@ const activeCount = PROJECTS.filter(
     }
     @media (max-width: 760px) { .stack-row { grid-template-columns: 1fr; gap: var(--sp-3); } }
     .stack-head { display: flex; flex-direction: column; gap: 4px; }
-    .stack-label {
-      font-family: var(--font-display);
-      font-size: var(--text-md);
-      font-weight: 500;
-      color: var(--text);
-    }
-    .stack-verdict {
-      font-family: var(--font-mono);
-      font-size: 10.5px;
-      letter-spacing: var(--tracking-eyebrow);
-      text-transform: uppercase;
-      color: var(--purple-bright);
-    }
-    .stack-reason {
-      color: var(--muted);
-      font-size: var(--text-sm);
-      line-height: var(--leading-body);
-    }
+    .stack-label { font-family: var(--font-display); font-size: var(--text-md); font-weight: 500; color: var(--text); }
+    .stack-verdict { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--purple-bright); }
+    .stack-reason { color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); }
 
     /* ============ Identity ============ */
-    .id-grid {
-      display: flex; flex-direction: column;
-      border-top: 1px solid var(--line);
-      max-width: var(--wrap-narrow);
-    }
-    .id-row {
-      display: grid;
-      grid-template-columns: 200px 1fr;
-      gap: var(--sp-5);
-      padding: var(--sp-4) 0;
-      border-bottom: 1px solid var(--line);
-      align-items: baseline;
-    }
+    .id-grid { display: flex; flex-direction: column; border-top: 1px solid var(--line); max-width: var(--wrap-narrow); }
+    .id-row { display: grid; grid-template-columns: 200px 1fr; gap: var(--sp-5); padding: var(--sp-4) 0; border-bottom: 1px solid var(--line); align-items: baseline; }
     @media (max-width: 640px) { .id-row { grid-template-columns: 1fr; gap: 4px; } }
-    .id-key {
-      font-family: var(--font-mono);
-      font-size: var(--text-xxs);
-      letter-spacing: var(--tracking-eyebrow);
-      text-transform: uppercase;
-      color: var(--muted);
-    }
+    .id-key { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--muted); }
     .id-val { color: var(--text); font-size: var(--text-sm); }
     .id-val a { color: var(--purple-bright); border-bottom: 1px solid currentColor; }
 
     /* ============ Availability ============ */
-    .avail-block {
-      max-width: var(--wrap-narrow);
-      color: var(--muted);
-      font-size: var(--text-md);
-      line-height: var(--leading-body);
-    }
+    .avail-block { max-width: var(--wrap-narrow); color: var(--muted); font-size: var(--text-md); line-height: var(--leading-body); }
     .avail-lede { color: var(--text); }
-    .avail-list {
-      margin: var(--sp-5) 0;
-      padding: 0;
-      list-style: none;
-      display: flex; flex-direction: column;
-      gap: var(--sp-3);
-    }
+    .avail-list { margin: var(--sp-5) 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--sp-3); }
     .avail-list li {
       padding: var(--sp-4);
       background: color-mix(in oklab, var(--surface-1) 60%, transparent);
@@ -520,18 +629,11 @@ const activeCount = PROJECTS.filter(
       line-height: var(--leading-body);
     }
     .avail-list strong { color: var(--purple-bright); }
-    .avail-foot {
-      margin-top: var(--sp-5);
-      color: var(--muted);
-    }
+    .avail-foot { margin-top: var(--sp-5); color: var(--muted); }
     .avail-foot a { color: var(--purple-bright); border-bottom: 1px solid currentColor; }
 
     /* ============ Contact anchor ============ */
-    .contact-links {
-      display: flex; flex-wrap: wrap; gap: var(--sp-4) var(--sp-7);
-      font-size: var(--text-md);
-      color: var(--text);
-    }
+    .contact-links { display: flex; flex-wrap: wrap; gap: var(--sp-4) var(--sp-7); font-size: var(--text-md); color: var(--text); }
     .contact-links a {
       color: var(--text);
       border-bottom: 1px solid var(--line);

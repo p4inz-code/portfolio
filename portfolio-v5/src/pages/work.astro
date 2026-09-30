@@ -20,7 +20,7 @@ const constellationProjects = [...FEATURED_PROJECTS, ...SUPPORTING_PROJECTS].fil
     headingLevel="h1"
     heading="designed, built, and shipped by one person."
     headingEmphasis="Every project below —"
-    intro="One operating system on hold after a real release. One back in active development after a pause. One encrypted vault in public beta. One reference workspace, still shipping most weeks. One precision platformer, live and playable, polish ongoing. Every case study links to real code, real screenshots, or a live download: no design mockups pretending to be products."
+    intro="One operating system on hold after a real release, another back in active development, an encrypted vault in public beta, a reference workspace that ships most weeks, and a platformer you can play now. Every case study links to real code, real screenshots or a live download."
   >
     <WorkDeck projects={FEATURED_PROJECTS} />
   </Section>
@@ -29,11 +29,11 @@ const constellationProjects = [...FEATURED_PROJECTS, ...SUPPORTING_PROJECTS].fil
     <WorkIndex projects={[...FEATURED_PROJECTS, ...SUPPORTING_PROJECTS]} />
   </Section>
 
-  <Section eyebrow="Same work, sorted differently" heading="By what it actually is." intro="Web, app, CLI, OS. A few things above don't fit one of those four cleanly and aren't repeated here.">
+  <Section eyebrow="Same work, sorted differently" heading="By type." intro="Web, app, CLI or OS. A few projects don't fit one of those four and aren't repeated here.">
     <WorkByCategory projects={[...FEATURED_PROJECTS, ...SUPPORTING_PROJECTS]} />
   </Section>
 
-  <Section eyebrow="Same work, one more way" heading="How it all actually connects." intro="Every project here, linked by what genuinely ties it to another: same category, shared stack, a shared tag. Not a flat list -- the real shape of it.">
+  <Section eyebrow="Same work, one more way" heading="How it connects." intro="Each project is linked to the others it shares something with: a category, a technology, a license. Drag the nodes around.">
     <ProjectConstellation projects={constellationProjects} />
   </Section>
 </BaseLayout>

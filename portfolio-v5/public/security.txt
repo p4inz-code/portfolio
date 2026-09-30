@@ -2,14 +2,19 @@
 # Preferred path: https://atharvapatil.tech/.well-known/security.txt
 # Legacy path (also served): https://atharvapatil.tech/security.txt
 #
-# This site is a static Astro build with no backend, database, or user
+# This site is a static Astro build plus two small Cloudflare Pages
+# Functions: the contact form (/api/contact, sends mail via Resend, with
+# Turnstile) and the chat assistant (/api/chat, optionally Cloudflare
+# Workers AI). Cloudflare KV holds only expiring rate-limit counters and a
+# short-lived answer cache. There is no database and there are no user
 # accounts. Realistic report categories: XSS/injection points,
-# clickjacking, exposed secrets in built HTML/JS, or hosting/DNS
-# misconfiguration on Cloudflare Pages.
+# clickjacking, exposed secrets in built HTML/JS, abuse of the two
+# endpoints (rate-limit bypass, prompt injection in the chat), or
+# hosting/DNS misconfiguration on Cloudflare Pages.
 #
 # For issues in the software this portfolio hosts case studies for
-# (Mission OS, Nexus, Kanvaz, Veris, Pursue OS, repo-map, Obscura,
-# Glint), please open an issue on the respective GitHub repository OR
+# (Mission OS, Nexus, Kanvaz, Veris, Pursue OS, Obscura, MINK, Glint,
+# CrossPort), please open an issue on the respective GitHub repository OR
 # contact directly for embargoed / non-public disclosure.
 
 Contact: mailto:atharva.patil.cg@gmail.com

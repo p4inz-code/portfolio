@@ -2,8 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
 ---
-<BaseLayout title="Accessibility — Atharva Patil" description="Accessibility statement for atharvapatil.tech: an honest account of what's implemented and what gaps still exist, targeting WCAG 2.1 AA.">
-  <Section headingLevel="h1" eyebrow="Accessibility statement" heading="What's actually done, and what honestly isn't yet." intro="Target: WCAG 2.1 AA. What's below is an honest self-assessment, not an unverified compliance badge.">
+<BaseLayout title="Accessibility — Atharva Patil" description="Accessibility statement for atharvapatil.tech: what's implemented and what gaps remain, targeting WCAG 2.1 AA.">
+  <Section headingLevel="h1" eyebrow="Accessibility statement" heading="What's done, and what isn't yet." intro="Target: WCAG 2.1 AA. What's below is a self-assessment, not an unverified compliance badge.">
     <div class="a11y-block">
       <h2 class="a11y-heading">What's implemented</h2>
       <ul class="a11y-list">
@@ -22,7 +22,7 @@ import Section from '../components/layout/Section.astro';
     <div class="a11y-block">
       <h2 class="a11y-heading">Known gaps</h2>
       <ul class="a11y-list">
-        <li>Not independently audited yet: no external accessibility review has been performed. This is an honest self-assessment.</li>
+        <li>Not independently audited yet: no external accessibility review has been performed. This is a self-assessment.</li>
         <li>Some screenshots on case-study pages have descriptive alt text but no long-description transcript for complex visuals (e.g., the Kanvaz board view). Planned addition.</li>
         <li>The theme-boot inline script runs before first paint and can't be gated by <code>prefers-reduced-motion</code>; the theme switch itself is instant regardless of user preference (no animation applied).</li>
       </ul>

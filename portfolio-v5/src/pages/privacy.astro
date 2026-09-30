@@ -2,40 +2,62 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
 import { SITE, CONTACT } from '../data/site';
+import { PROJECTS } from '../data/projects';
+
+const noTelemetry = PROJECTS.filter((p) => /(zero|no) telemetry/i.test(p.description)).map((p) => p.name);
+const noTelemetryList = noTelemetry.length <= 1 ? noTelemetry.join('') : noTelemetry.slice(0, -1).join(', ') + ' and ' + noTelemetry[noTelemetry.length - 1];
 ---
-<BaseLayout title={`Privacy — ${SITE.title}`} description="Privacy policy for atharvapatil.tech: no cookies, no third-party analytics, no dark patterns. Short and honest.">
+<BaseLayout title={`Privacy — ${SITE.title}`} description="Privacy policy for atharvapatil.tech: no tracking cookies, no third-party analytics. What the contact form and the chat assistant do with what you type.">
   <Section
     wide
     headingLevel="h1"
-    heading="honest, and short."
+    heading="What it collects, and what it doesn't."
     headingEmphasis="Privacy at atharvapatil.tech."
-    intro="No dark patterns. No cookie banner because there are no tracking cookies to consent to."
+    intro="No cookie banner, because there are no tracking cookies to consent to. Here is what the contact form and the chat do with what you type."
   >
     <div class="prose">
       <h2>What this site collects about you</h2>
-      <p><strong>Nothing personally identifiable.</strong> No accounts. No login. No form that POSTs to a server (the contact page composes a mailto link locally: nothing leaves your browser until you click send in your own mail client).</p>
+      <p><strong>Nothing, until you use the contact form or the chat.</strong> No accounts, no login, no newsletter. Just reading the site sends nothing beyond what any web page sends to load.</p>
       <p><strong>One thing counted:</strong> Cloudflare Web Analytics, the privacy-preserving beacon Cloudflare ships on their Pages product. It counts page views and rough performance timings <em>without</em> cookies, without cross-site tracking, and without collecting IP addresses or fingerprintable data. <a href="https://www.cloudflare.com/web-analytics/" target="_blank" rel="noopener noreferrer">Cloudflare's documentation</a> is the authoritative source on what that includes.</p>
+
+      <h2>The contact form</h2>
+      <p>If you send a message, your name, email address, message and the optional topic and budget fields go to a small server function on Cloudflare Pages, which emails them to me through <strong>Resend</strong>. <strong>Cloudflare Turnstile</strong> checks that you're a person before anything is sent. If the server is unavailable, the form falls back to composing a <code>mailto:</code> link in your browser instead.</p>
+      <ul>
+        <li>Messages are not stored in a database. They end up in my inbox.</li>
+        <li>To limit abuse, your IP address is used as a rate-limit counter in Cloudflare KV. It expires on its own within about a day, and it's a counter, not a log.</li>
+      </ul>
+
+      <h2>The chat assistant</h2>
+      <p>The chat sends the question you type to this site's own <code>/api/chat</code> function.</p>
+      <ul>
+        <li>Common questions (availability, licenses, what a project is built with) are answered from a knowledge base generated from this site's own project data. No AI is involved.</li>
+        <li>Anything else may be answered by a Cloudflare Workers AI model, grounded in the same project data. Cloudflare processes that request under its own terms.</li>
+        <li>Answers to repeated AI questions may be cached for up to 48 hours. The cache key is a hash of the question, not the question itself.</li>
+        <li>Rate limiting uses your IP address as an expiring counter, the same as the contact form.</li>
+        <li>Your conversation is kept in your browser's <code>sessionStorage</code> so it survives moving between pages. It's cleared when you close the tab or press the trash button in the chat. I don't keep a copy.</li>
+      </ul>
 
       <h2>What this site does NOT do</h2>
       <ul>
         <li>No Google Analytics, Meta Pixel, TikTok Pixel, Segment, Amplitude, PostHog, Hotjar, LogRocket, or any other third-party analytics.</li>
         <li>No advertising trackers. No re-targeting pixels.</li>
-        <li>No cookies for tracking, session, or personalisation. The only client-side storage is <code>localStorage</code> keys <code>nb-theme</code> (your dark/light preference) and <code>nb-cmdk-recent</code> (your recent command-palette searches, up to five). Both live only in your browser, never leave your device.</li>
+        <li>No cookies for tracking, session, or personalisation set by this site. The only client-side storage is <code>localStorage</code> keys <code>nb-theme</code> (your dark/light preference), <code>nb-cmdk-recent</code> (your recent command-palette searches, up to five) and <code>nb-404-best</code> (your best score in the 404 page game), plus the chat's <code>sessionStorage</code> key <code>ap-chat-v1</code>. They live only in your browser.</li>
         <li>No cross-site tracking. No user identifiers of any kind.</li>
       </ul>
 
       <h2>What the products this site showcases collect</h2>
-      <p>The products themselves (Nexus, Mission OS, Kanvaz, Pursue OS, Veris, Obscura, MINK, Glint, 3D Ref Skills) each have their own privacy postures, all built around the same rule: <strong>no telemetry, ever.</strong> Every product's source or documentation states this explicitly. Nexus's cryptographic architecture is public. Mission OS's telemetry hooks are compile-time excluded. Kanvaz is MIT + open source, inspectable line by line.</p>
+      <p>Each product has its own privacy posture, so check the specific product's page or README. {noTelemetryList} state that they ship <strong>without telemetry</strong>. Nexus's cryptographic architecture is public, and Kanvaz is open source and can be inspected line by line. Where a product touches the network at all (an update check, a download), its documentation says so.</p>
 
       <h2>Third-party services this site loads</h2>
       <ul>
-        <li><strong>Fontshare</strong> (<code>api.fontshare.com</code>, <code>cdn.fontshare.com</code>) — serves the Neue Machina, Neue Montreal, and Supply Mono font files. Fontshare does not use cookies for anonymous font requests.</li>
-        <li><strong>Cloudflare</strong> — hosts the site (Cloudflare Pages) and serves the Web Analytics beacon.</li>
+        <li><strong>Fontshare</strong> (<code>api.fontshare.com</code>, <code>cdn.fontshare.com</code>) — serves the Clash Display, General Sans, Azeret Mono, Technor and Kalam font files. Fontshare does not use cookies for anonymous font requests.</li>
+        <li><strong>Cloudflare</strong> — hosts the site (Cloudflare Pages), serves the Web Analytics beacon, runs the contact and chat functions, and provides Turnstile (loaded only on the contact page) and Workers AI. See Cloudflare's documentation for what Turnstile stores.</li>
+        <li><strong>Resend</strong> — delivers the email when you use the contact form. It only receives your message at the moment you send it.</li>
         <li>Nothing else.</li>
       </ul>
 
       <h2>Your rights</h2>
-      <p>Because this site collects no personal data, there is nothing to request, export, correct, or delete on my side. If you interact with me directly (email, Discord, WhatsApp, GitHub issue), that correspondence lives in the respective platform's storage, subject to their privacy policies, not mine.</p>
+      <p>The only personal data that reaches me is what you choose to send through the contact form, and it lives in my email inbox. If you want a message deleted, email me and I will delete it. There is nothing else on my side to request, export or correct. If you interact with me directly (email, Discord, WhatsApp, GitHub issue), that correspondence lives in the respective platform's storage, subject to their privacy policies, not mine.</p>
 
       <h2>Changes to this policy</h2>
       <p>If this policy meaningfully changes, the change lands in the site's <a href="/status/">changelog</a> with a real version bump. Nothing quiet.</p>
@@ -43,7 +65,7 @@ import { SITE, CONTACT } from '../data/site';
       <h2>Contact</h2>
       <p>Questions about privacy on this site: <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>. Security disclosures follow <a href="/.well-known/security.txt">RFC 9116</a>.</p>
 
-      <p class="meta">Last updated: 2026-08-12.</p>
+      <p class="meta">Last updated: 2026-09-30.</p>
     </div>
   </Section>
 
