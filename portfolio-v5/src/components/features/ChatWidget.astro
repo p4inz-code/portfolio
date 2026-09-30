@@ -410,6 +410,16 @@
   .chat-send:disabled { opacity: 0.6; cursor: default; }
   .chat-send:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
 
+  /* Below 900px there's no side-rail to dock beside, and the site's own
+     nav becomes a hamburger toggle at the same breakpoint -- docking the
+     panel below it the way desktop does would waste most of a small
+     screen. Instead this is a real takeover (same pattern as Telegram/
+     Instagram/WhatsApp's chat screens): the panel and its own header sit
+     above the site nav entirely, rather than being hidden underneath it. */
+  @media (max-width: 900px) {
+    .chat-panel, .chat-overlay { z-index: 110; }
+  }
+
   /* Tablet: slightly narrower drawer still reads comfortably */
   @media (max-width: 900px) and (min-width: 641px) {
     .chat-panel { width: min(360px, 100vw); }
