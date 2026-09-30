@@ -497,8 +497,8 @@ function globalEntries(): KbEntry[] {
     },
     {
       id: 'who',
-      all: [['who are you', 'who is atharva', 'about you', 'about atharva', 'tell me about yourself', 'introduce yourself', 'background', 'who is p4inz', 'who is he']],
-      weight: 44,
+      all: [['who are you', 'who is atharva', 'about you', 'about atharva', 'tell me about yourself', 'introduce yourself', 'background', 'who is he', 'tell me about him', 'what do you do', 'what does he do', 'p4inz', 'painz', 'atharva', 'atharva patil']],
+      weight: 41,
       noProject: true,
       followups: ['What should I look at first?', 'Are you available for freelance work?', 'Where can I see your resume?'],
       answer: bullets('Atharva Patil (p4inz):', [
@@ -518,8 +518,8 @@ function globalEntries(): KbEntry[] {
     },
     {
       id: 'studio',
-      all: [['studio', 'interactive labs', 'northbyte', 'painz', 'what is p4inz']],
-      weight: 42,
+      all: [['studio', 'interactive labs', 'northbyte']],
+      weight: 45,
       noProject: true,
       followups: ['Who are you?', 'What should I look at first?', 'How many products have you shipped?'],
       answer: bullets(`${SITE.studio}:`, [
