@@ -86,6 +86,7 @@
     // close-mid-open) can tell a stale scheduled callback "you've been
     // superseded" instead of clobbering whichever state actually won.
     let transitionGen = 0;
+    let pendingBack = false;
 
     // The site's sticky top nav and desktop side-rail are real, persistent
     // chrome -- the panel should dock below/beside them, never fight them
@@ -103,24 +104,15 @@
     function openChat() {
       if (open) return;
       open = true;
-      const myGen = ++transitionGen;
+      transitionGen++;
       lastFocused = document.activeElement as HTMLElement;
+      // No transition + class-add dance: the panel's natural state is
+      // "in place", and a keyframe animation plays the slide-in the moment
+      // it's un-hidden. Nothing here can leave it stuck off-screen.
       panel.hidden = false;
       overlay.hidden = false;
-      // A single rAF here is flaky: on a cold first open, the browser can
-      // batch the "un-hide" and the class-add into the same frame, so there
-      // is never a committed closed state to transition from -- the panel
-      // just stays stuck at translateX(100%). Forcing a layout read, then
-      // waiting a second frame, guarantees the closed state is actually
-      // painted before the open class (and its transition) is applied.
-      void panel.offsetHeight;
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          if (myGen !== transitionGen) return; // superseded by a close in between
-          panel.classList.add('chat-panel-open');
-          overlay.classList.add('chat-overlay-open');
-        });
-      });
+      panel.dataset.state = 'open';
+      overlay.dataset.state = 'open';
       trigger.setAttribute('aria-expanded', 'true');
       // Real back-button handling: a visitor who presses back (common
       // instinct, especially for less tech-fluent visitors on mobile)
@@ -134,27 +126,26 @@
       if (!open) return;
       open = false;
       const myGen = ++transitionGen;
-      panel.classList.remove('chat-panel-open');
-      overlay.classList.remove('chat-overlay-open');
-      // Hide only once the slide-out transition actually finishes (300ms
-      // per --dur) rather than a hardcoded delay that drifted out of sync
-      // with it and cut the animation short. transitionend won't fire at
-      // all under prefers-reduced-motion (transition:none), so a short
-      // fallback timeout covers that case too. The generation check means a
-      // reopen in the meantime always wins -- this callback can only hide
-      // the panel if nothing has superseded this exact close since.
-      let hidden = false;
+      panel.dataset.state = 'closing';
+      overlay.dataset.state = 'closing';
+      // Actually hide (display:none) once the slide-out finishes. The
+      // timeout is the guarantee -- animationend never fires under
+      // prefers-reduced-motion -- and the generation check means a reopen
+      // in the meantime always wins.
       const finishHide = () => {
-        if (hidden || myGen !== transitionGen) return;
-        hidden = true;
+        if (myGen !== transitionGen) return;
         panel.hidden = true;
         overlay.hidden = true;
+        delete panel.dataset.state;
+        delete overlay.dataset.state;
       };
-      panel.addEventListener('transitionend', finishHide, { once: true });
-      window.setTimeout(finishHide, 350);
+      window.setTimeout(finishHide, 260);
       trigger.setAttribute('aria-expanded', 'false');
       document.removeEventListener('keydown', onKeydown);
       if (!fromPopstate && history.state && history.state.chatOpen) {
+        // history.back() fires popstate asynchronously; remember it's ours
+        // so a quick reopen isn't immediately closed by that late event.
+        pendingBack = true;
         history.back();
       }
       if (lastFocused) lastFocused.focus();
@@ -172,7 +163,10 @@
       }
     }
 
-    window.addEventListener('popstate', () => { if (open) closeChat(true); });
+    window.addEventListener('popstate', () => {
+      if (pendingBack) { pendingBack = false; return; }
+      if (open) closeChat(true);
+    });
 
     trigger.addEventListener('click', openChat);
     closeBtn.addEventListener('click', () => closeChat());
@@ -294,15 +288,19 @@
   }
   .chat-trigger:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 3px; }
 
+  /* The author display:flex below would otherwise beat the browser's own
+     [hidden]{display:none}, leaving a "closed" panel merely slid aside --
+     and visible as a sliver over the side-rail. */
+  .chat-panel[hidden], .chat-overlay[hidden] { display: none; }
+
+  /* Resting state is always the correct, visible one; open/close are
+     keyframe animations layered on top, so a missed frame or class can
+     never strand the panel off-screen. */
   .chat-overlay {
     position: fixed; inset: 0;
     background: color-mix(in oklab, var(--bg) 55%, transparent);
-    opacity: 0;
-    transition: opacity var(--dur) var(--ease-out);
     z-index: 61;
   }
-  .chat-overlay-open { opacity: 1; }
-
   .chat-panel {
     position: fixed;
     top: 0; right: 0; bottom: 0;
@@ -312,13 +310,20 @@
     box-shadow: -12px 0 40px color-mix(in oklab, #000 35%, transparent);
     display: flex;
     flex-direction: column;
-    transform: translateX(100%);
-    transition: transform var(--dur) var(--ease-out);
     z-index: 62;
   }
-  .chat-panel-open { transform: translateX(0); }
+  .chat-panel[data-state='open'] { animation: chat-slide-in var(--dur) var(--ease-out) both; }
+  .chat-panel[data-state='closing'] { animation: chat-slide-out 240ms var(--ease-in-out) forwards; }
+  .chat-overlay[data-state='open'] { animation: chat-fade-in var(--dur) var(--ease-out) both; }
+  .chat-overlay[data-state='closing'] { animation: chat-fade-out 240ms var(--ease-in-out) forwards; }
+
+  @keyframes chat-slide-in { from { transform: translateX(calc(100% + 80px)); } to { transform: none; } }
+  @keyframes chat-slide-out { from { transform: none; } to { transform: translateX(calc(100% + 80px)); } }
+  @keyframes chat-fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes chat-fade-out { from { opacity: 1; } to { opacity: 0; } }
+
   @media (prefers-reduced-motion: reduce) {
-    .chat-panel, .chat-overlay { transition: none; }
+    .chat-panel[data-state], .chat-overlay[data-state] { animation: none; }
   }
 
   .chat-head {
