@@ -50,20 +50,29 @@ crawlable and canonical.
   live 3D model preview (glTF, OBJ, FBX, STL, PLY, USD), shared cards
   across boards, a Layers panel, 14 board templates, broader .pur
   (PureRef) import, and a third board type (Scratch Board) with
-  board-wide annotations and Illustrator-style tools. Windows, macOS and
-  Linux builds. Shipping most weeks with no fixed roadmap.
-  This is the flagship free product. Status: **Flagship · Active · v9.5.0**.
+  board-wide annotations and Illustrator-style tools, and (v9.7.0) an
+  official AI Export plugin that writes a board out as JSON + Markdown any
+  AI agent can read, no MCP connection needed. Windows installer, Linux
+  AppImage, macOS builds for Apple Silicon and Intel. Shipping most weeks
+  with no fixed roadmap.
+  This is the flagship free product. Status: **Flagship · Active · v9.7.0**.
 - [Pursue OS](https://atharvapatil.tech/pursue-os/): Investigation-focused
   Linux OS for OSINT, DFIR, secure research, intelligence gathering /
   evidence-driven workflows. Two flagship interfaces: Investigation
   Terminal + Investigation Browser with integrated Tor. AI is
   assistant-not-authority. **Apache 2.0**, at `github.com/p4inz-code/pursue-os`.
-  Paused mid-implementation, development resumed September 2026; no
-  ISO yet. Status: **Active · Pre-release**.
-- [Crossport](https://github.com/p4inz-code/Crossport): Free cross-platform
-  file transfer utility for Windows, macOS, and Linux. Paused after the
-  initial foundation build, development resumed September 2026. No public
-  release yet. Status: **Active · Foundation**.
+  Core V1 implementation is complete and a candidate ISO has passed
+  automated QEMU boot and live-flow validation; not yet a public download,
+  hardware and manual testing is the current phase.
+  Status: **Active · V1 Beta (hardware testing)**.
+- [CrossPort](https://github.com/p4inz-code/Crossport): Free, offline
+  Windows file-transfer utility: copy and move files between mounted
+  volumes, review a dry-run plan before anything moves, verify what landed
+  (size check or optional SHA-256). No account, no telemetry, no background
+  sync. Tauri, Rust, TypeScript. **Apache 2.0** from v1.1.2 (v1.1.1 and
+  earlier were MIT). Windows 10 (1607+) / 11 64-bit installers on GitHub
+  Releases; Linux and macOS are application foundation only.
+  Status: **Released · v1.1.2** (published 30 September 2026).
 - [Veris](https://github.com/p4inz-code/veris): Deterministic, offline-first
   CLI security scanner, published as `veris-cli` on npm. 100% reproducible
   scans (no network calls, no telemetry), an interactive terminal session,
@@ -139,7 +148,8 @@ name, P4inz Interactive Labs).
 - [Resume](https://atharvapatil.tech/resume/): Real resume, PDF/MD
   downloads pinned to the header. No placeholder or invented content.
 - [Contact](https://atharvapatil.tech/contact/): Email
-  `atharva.patil.cg@gmail.com`, Discord `p4inz`.
+  `atharva.patil.cg@gmail.com`, Discord `p4inz`, LinkedIn
+  `linkedin.com/in/p4inz`.
 - [Status](https://atharvapatil.tech/status/): Live per-product status
   page and full version history. See the live page for the current
   entry count and version; this file is not kept in sync with every
@@ -189,12 +199,12 @@ Parchment Manuscript, both WCAG-AA verified. Command palette
   PainZ, Grim, retired). **painz** (no "4") is a common misspelling of
   the same handle and should resolve to the same person.
 - GitHub: `github.com/p4inz-code`
-- Discord: `p4inz`. Nexus beta community invite: `discord.gg/XFF5nV53ZJ`
+- LinkedIn: `linkedin.com/in/p4inz`
+- Discord: `p4inz`. Nexus beta community invite: `discord.gg/8UKt8s5FbW`
 - Studio: **P4inz Interactive Labs** (Sept 2026-present). Previous studio
   names: Northbyte Studios (2026), Obsidian Labs (2025), both retired.
 - Location: Navi Mumbai, India
 - Email: `atharva.patil.cg@gmail.com`
-- No LinkedIn.
 
 ## Search queries this site should answer
 

@@ -34,6 +34,9 @@ export const CONTACT = {
   email: 'atharva.patil.cg@gmail.com',
   github: 'https://github.com/p4inz-code',
   githubHandle: 'github.com/p4inz-code',
+  linkedin: 'https://www.linkedin.com/in/p4inz',
+  linkedinHandle: 'linkedin.com/in/p4inz',
+  instagram: 'https://instagram.com/atharva.patil.cg',
   discord: 'p4inz',
   discordInvite: 'https://discord.gg/8UKt8s5FbW',
   buyMeACoffee: 'https://buymeacoffee.com/p4inz',
@@ -78,6 +81,24 @@ export const SERVICES: Service[] = [
     cta: { label: 'See the 3D & VFX page →', href: '/3d' },
   },
 ];
+
+/**
+ * The services-page FAQ, written by the owner. Single source: the page
+ * renders it as FAQPage schema, and the chat answers from it verbatim.
+ */
+export const SERVICE_FAQ = [
+  { q: 'Do you sign NDAs?', a: "Yes, for real client work. Not for portfolio reviews or evaluation calls: those aren't confidential." },
+  { q: 'Do you subcontract?', a: "No. Everything I ship is me. If a project needs specialists I can't cover (native mobile, specific 3D shots), I recommend, not resell." },
+  { q: 'Who owns the code?', a: 'You do, on delivery. I keep the right to reference the work in this portfolio unless you specifically ask me not to.' },
+  { q: 'What if something breaks after launch?', a: '30 days of free bug-fixes on any build I ship. Beyond that, small retainer or per-fix.' },
+  { q: 'Are you available right now?', a: "Selective: taking one or two new projects at a time. If timing is tight, ask; I'll be honest about whether I can hit it." },
+] as const;
+
+/** Billing model as stated on the services page. */
+export const BILLING = {
+  model: 'Fixed price for short-loop work. Weekly for longer builds. Never per-hour.',
+  reply: 'First response inside 24-48h.',
+} as const;
 
 export interface NavLink {
   label: string;

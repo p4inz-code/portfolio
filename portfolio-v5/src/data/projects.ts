@@ -38,6 +38,8 @@ export interface Project {
   links: ProjectLink[];
   license?: string;
   stack?: string[];
+  /** Only where the project's own description states it -- never inferred. */
+  platforms?: string[];
   role?: string;
   started?: string;
   currentVersion?: string;
@@ -110,6 +112,7 @@ export const PROJECTS: Project[] = [
     ],
     license: 'Proprietary',
     stack: ['C#', '.NET 8', 'WPF', 'AES-256-GCM', 'Argon2id'],
+    platforms: ['Windows'],
     role: 'Sole engineer',
     started: 'March 2026',
     currentVersion: 'v10.12.5',
@@ -121,8 +124,8 @@ export const PROJECTS: Project[] = [
     name: 'Kanvaz',
     tagline: 'Your canvas. Your references.',
     description:
-      'Visual reference workspace for VFX and 3D artists. Live 3D model preview (glTF, OBJ, FBX, STL, USD, and more), typed connections with a Map View, a Scratch Board drawing layer, a Task Tracker, shared cards across boards, and 14 board templates. Plugin system with a local-only MCP Bridge: an AI agent can read and edit the active board, off by default and undo-reversible. Windows, macOS and Linux builds. Free forever, MIT-licensed.',
-    status: { kind: 'active', label: 'Flagship · Active · v9.6.0' },
+      'Visual reference workspace for VFX and 3D artists. Live 3D model preview (glTF, OBJ, FBX, STL, USD, and more), typed connections with a Map View, a Scratch Board drawing layer, a Task Tracker, shared cards across boards, and 14 board templates. Plugin system with a local-only MCP Bridge: an AI agent can read and edit the active board, off by default and undo-reversible. Windows, macOS and Linux builds. Free forever, MIT-licensed, no telemetry.',
+    status: { kind: 'active', label: 'Flagship · Active · v9.7.0' },
     category: 'app',
     tags: ['Electron', 'MIT'],
     metaTags: ['Electron', 'MIT', 'Open Source'],
@@ -138,11 +141,12 @@ export const PROJECTS: Project[] = [
     ],
     license: 'MIT',
     stack: ['Electron', 'vanilla JS'],
+    platforms: ['Windows', 'macOS', 'Linux'],
     role: 'Sole engineer + designer',
     started: 'June 2026',
-    currentVersion: 'v9.6.0',
+    currentVersion: 'v9.7.0',
     nextMilestone: 'Shipping most weeks, driven by user feedback. No fixed roadmap.',
-    notes: 'Ten releases since the site last checked (v8.8.5 -> v9.6.0, Sept 2026): security/platform hardening (v9.0.0), 13 render modes plus Kanvaz Link and Open With (v9.1.0), a Blender picker and preview quality gates (v9.2.0), OBJ material support and HDR/EXR previews (v9.3.0), Krita/Clip Studio/Procreate recognition (v9.4.0), a third board type -- Scratch Board, with board-wide annotations and Illustrator-style tools (v9.5.0) -- and a second pass fixing Map View overlap, a Windows dialog-freeze bug, and BMP export (v9.6.0). Screenshots on the case study page are now the real v9.6.0 set, replacing one that had drifted as far back as v4.2.1.',
+    notes: 'v9.7.0 (30 Sept 2026) added an official AI Export plugin (a JSON + Markdown export of the board any AI agent can read, no MCP connection or server needed), Home Screen window controls, and separate Apple Silicon and Intel macOS installers, plus a fix to an async board-switching bug. Ten releases before that since the site last checked (v8.8.5 -> v9.6.0, Sept 2026): security/platform hardening (v9.0.0), 13 render modes plus Kanvaz Link and Open With (v9.1.0), a Blender picker and preview quality gates (v9.2.0), OBJ material support and HDR/EXR previews (v9.3.0), Krita/Clip Studio/Procreate recognition (v9.4.0), a third board type -- Scratch Board, with board-wide annotations and Illustrator-style tools (v9.5.0) -- and a second pass fixing Map View overlap, a Windows dialog-freeze bug, and BMP export (v9.6.0). Screenshots on the case study page are now the real v9.6.0 set, replacing one that had drifted as far back as v4.2.1.',
   },
   {
     slug: 'pursue-os',
@@ -217,6 +221,7 @@ export const PROJECTS: Project[] = [
     ],
     license: 'Proprietary',
     stack: ['Godot 4', 'GDScript', 'Python (launcher)'],
+    platforms: ['Windows', 'macOS', 'Linux', 'Browser (itch.io)'],
     role: 'Creative direction, design, and QA (implementation via Claude Code)',
     started: 'August 2026',
     currentVersion: 'v0.14.1',
@@ -265,6 +270,7 @@ export const PROJECTS: Project[] = [
     links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/glint', external: true }],
     license: 'MIT',
     stack: ['C#', '.NET 8', 'Avalonia'],
+    platforms: ['Windows'],
     role: 'Sole engineer',
     started: '2026',
     currentVersion: 'v1.1.0',
@@ -291,6 +297,7 @@ export const PROJECTS: Project[] = [
     ],
     license: 'Apache 2.0',
     stack: ['Rust', 'x86_64 native codegen (PE + ELF)', 'No external toolchain'],
+    platforms: ['Windows', 'Linux (x86_64)'],
     role: 'Sole engineer',
     started: '2026',
     currentVersion: 'v1.0.3',
@@ -360,28 +367,33 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: 'crossport',
-    name: 'Crossport',
-    tagline: 'Send a file to any of your devices, no account, no cloud.',
+    name: 'CrossPort',
+    tagline: 'Move files between drives, and prove what landed.',
     description:
-      'Free cross-platform file transfer utility for Windows, macOS, and Linux. No GitHub Release published yet; the repo is tagged at an early foundation build. Paused after the initial foundation work, development resumed in September 2026.',
-    status: { kind: 'active', label: 'Active · Foundation' },
+      'A free, offline Windows file-transfer utility: copy and move files between mounted volumes, review a dry-run plan before anything moves, and verify what landed (a size check, or optional SHA-256). Conflict handling (Replace, Skip, Rename), live progress with pause and resume. No account, no telemetry, no background sync. Windows 10 (1607+) and 11, 64-bit, with NSIS and MSI installers on GitHub Releases; Linux and macOS are application foundation only.',
+    status: { kind: 'released', label: 'Released · v1.1.2' },
     category: 'app',
-    tags: ['Utility', 'Cross-Platform'],
-    metaTags: ['Windows', 'macOS', 'Linux'],
+    tags: ['Utility', 'Windows'],
+    metaTags: ['Windows', 'Tauri', 'Apache 2.0'],
     media: { src: '/assets/banners/crossport.webp', alt: 'GitHub repository card for p4inz-code/Crossport.', kind: 'banner', ratio: '1200 / 600' },
     featured: false,
     order: 12,
     href: 'https://github.com/p4inz-code/Crossport',
     isExternal: true,
-    links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/Crossport', external: true }],
-    // Rust + TypeScript/HTML/CSS is what the repo's own language breakdown
-    // shows; not naming a specific framework (Tauri looks likely from that
-    // combination, but "looks likely" isn't a real confirmation).
-    stack: ['Rust', 'TypeScript'],
+    links: [
+      { label: 'View on GitHub', href: 'https://github.com/p4inz-code/Crossport', external: true },
+      { label: 'Download latest', href: 'https://github.com/p4inz-code/Crossport/releases/latest', external: true },
+    ],
+    // Framework confirmed by the repo's own topics (tauri, react, rust,
+    // typescript) and its README (the installer bootstraps WebView2).
+    license: 'Apache 2.0',
+    stack: ['Rust', 'TypeScript', 'React', 'Tauri'],
+    platforms: ['Windows'],
     role: 'Sole engineer',
     started: '2026',
-    currentVersion: 'v0.1.0-foundation',
-    nextMilestone: 'Foundation stage, development active again as of September 2026. As of Sept 27, work in progress locally, not yet committed or pushed; expected to wrap within a day or two.',
+    currentVersion: 'v1.1.2',
+    nextMilestone: 'No committed roadmap. Windows is the only packaged platform today; Linux and macOS exist as application foundation only.',
+    notes: 'Went from a paused foundation build to published releases in September 2026: v1.1.1 (29 Sept) and v1.1.2 (30 Sept, a corrective release that fixed two defects). v1.1.2 moved the license to Apache 2.0; v1.1.1 and earlier were published under MIT and remain under it.',
   },
   {
     slug: 'draft',

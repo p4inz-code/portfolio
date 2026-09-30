@@ -14,8 +14,10 @@
  * Back-button handling: opening pushes a history entry, so pressing back
  * (a very common instinct on mobile) closes the chat instead of leaving.
  */
+import { SUGGESTIONS } from '../../data/chat-kb.ts';
+const suggest = JSON.stringify(SUGGESTIONS.map((s) => s.q));
 ---
-<div id="chatWidget" class="chat-widget">
+<div id="chatWidget" class="chat-widget" data-suggest={suggest}>
   <noscript><style>.chat-widget { display: none; }</style></noscript>
 
   <button
@@ -103,21 +105,17 @@
     const FALLBACK = "That's outside what I can answer from the real project data right now.";
     const RATE_LIMITED = "That's a lot of questions in a short time -- give it a few minutes, or reach out through the contact form.";
     const OFFLINE = "You look offline right now -- reconnect and ask again, or use the contact form.";
-    // Every entry here is answered by the free FAQ tier in chat.ts, so
-    // follow-up suggestions never cost an AI call.
-    const POOL = [
-      'What are you working on right now?',
-      "What's Kanvaz built with?",
-      'Are you available for freelance work?',
-      'How many products have you shipped?',
-      'What license is Kanvaz under?',
-      'Tell me about Pursue OS',
-      "What's your tech stack?",
-    ];
+    // Starter chips come from the knowledge base (src/data/chat-kb.ts); the
+    // tests guarantee every one resolves to a free answer.
+    let POOL: string[] = ['What should I look at first?', 'Are you available for freelance work?', 'Which project is right for me?'];
+    try {
+      const fromKb = JSON.parse(widget.dataset.suggest || '[]');
+      if (Array.isArray(fromKb) && fromKb.length) POOL = fromKb.filter((q) => typeof q === 'string');
+    } catch { /* keep defaults */ }
     const STORE_KEY = 'ap-chat-v1';
     const MAX_STORED = 24;
 
-    type Msg = { r: 'u' | 'b'; t: string; c?: boolean };
+    type Msg = { r: 'u' | 'b'; t: string; c?: boolean; f?: string[] };
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const coarse = window.matchMedia('(pointer: coarse)');
     const small = window.matchMedia('(max-width: 899px)');
@@ -291,11 +289,46 @@
       if (!animate) row.dataset.still = '1';
       thread!.appendChild(row);
     }
+    // URLs and the site's own paths become real links; everything is built
+    // from text nodes, so answer text can never inject markup.
+    const LINK_RE = /(https?:\/\/[^\s)]+|\/(?:work|contact|resume|about|services|3d|status)\b\/?)/g;
+    function appendRich(parent: HTMLElement, text: string) {
+      let last = 0;
+      for (const m of text.matchAll(LINK_RE)) {
+        const idx = m.index ?? 0;
+        if (idx > last) parent.appendChild(document.createTextNode(text.slice(last, idx)));
+        const raw = m[0];
+        const url = raw.replace(/[.,;:!?]+$/, '');
+        const a = el('a', 'chat-autolink');
+        a.href = url;
+        a.textContent = url.replace(/^https?:\/\/(www\.)?/, '');
+        if (url.startsWith('http')) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+        parent.appendChild(a);
+        last = idx + url.length;
+      }
+      if (last < text.length) parent.appendChild(document.createTextNode(text.slice(last)));
+    }
+    function renderBody(bubble: HTMLElement, text: string) {
+      let ul: HTMLUListElement | null = null;
+      for (const line of text.split('\n')) {
+        if (line.startsWith('- ')) {
+          if (!ul) { ul = el('ul', 'chat-list'); bubble.appendChild(ul); }
+          const li = el('li');
+          appendRich(li, line.slice(2));
+          ul.appendChild(li);
+        } else if (line.trim()) {
+          ul = null;
+          const p = el('p', 'chat-lead');
+          appendRich(p, line);
+          bubble.appendChild(p);
+        }
+      }
+    }
     function renderBot(text: string, contact: boolean | undefined, animate: boolean) {
       const row = el('div', 'chat-row');
       row.dataset.dyn = '1';
       const bubble = el('div', 'chat-bubble chat-bubble-bot');
-      bubble.appendChild(document.createTextNode(text));
+      renderBody(bubble, text);
       if (contact) {
         const a = el('a', 'chat-link');
         a.href = '/contact';
@@ -336,10 +369,13 @@
       const s = document.getElementById('chatSuggest');
       if (s) s.remove();
     }
-    function renderSuggest(scroll = true) {
+    function renderSuggest(scroll = true, followups?: string[]) {
       clearSuggest();
       const asked = new Set(msgs.filter((m) => m.r === 'u').map((m) => m.t.toLowerCase()));
-      const picks = POOL.filter((q) => !asked.has(q.toLowerCase())).slice(0, 3);
+      const fresh = (list: string[]) => list.filter((q) => !asked.has(q.toLowerCase()));
+      // Contextual follow-ups first (what a curious visitor asks next about
+      // THIS topic), topped up from the general starters.
+      const picks = [...fresh(followups ?? []), ...fresh(POOL)].filter((q, i, a) => a.indexOf(q) === i).slice(0, 3);
       if (picks.length === 0) return;
       const wrap = el('div', 'chat-suggest');
       wrap.id = 'chatSuggest';
@@ -379,7 +415,7 @@
       const start = Date.now();
       showTyping();
 
-      let reply: { text: string; contact?: boolean } = { text: FALLBACK, contact: true };
+      let reply: { text: string; contact?: boolean; followups?: string[] } = { text: FALLBACK, contact: true };
       const ctrl = new AbortController();
       // Without a timeout a hung AI call would leave the widget "thinking"
       // forever.
@@ -395,7 +431,13 @@
             signal: ctrl.signal,
           });
           const data = await res.json().catch(() => ({ ok: false }));
-          if (data && data.ok && data.answer) reply = { text: data.answer };
+          if (data && data.ok && data.answer) {
+            reply = {
+              text: data.answer,
+              contact: !!data.contact,
+              followups: Array.isArray(data.followups) ? data.followups.filter((q: unknown) => typeof q === 'string') : [],
+            };
+          }
           else if (data && data.reason === 'rate_limited') reply = { text: RATE_LIMITED, contact: true };
         }
       } catch {
@@ -407,11 +449,11 @@
       const elapsed = Date.now() - start;
       if (elapsed < minDelay) await new Promise((r) => setTimeout(r, minDelay - elapsed));
       hideTyping();
-      msgs.push({ r: 'b', t: reply.text, c: reply.contact });
+      msgs.push({ r: 'b', t: reply.text, c: reply.contact, f: reply.followups });
       saveMsgs();
       const answerRow = renderBot(reply.text, reply.contact, true);
       setBusy(false);
-      renderSuggest(false);
+      renderSuggest(false, reply.followups);
       revealAnswer(answerRow);
       if (open && !coarse.matches) input!.focus();
     }
@@ -444,7 +486,8 @@
       else renderBot(m.t, m.c, false);
     }
     clearBtn.hidden = msgs.length === 0;
-    renderSuggest();
+    const lastBot = [...msgs].reverse().find((m) => m.r === 'b');
+    renderSuggest(true, lastBot?.f);
     syncSend();
   })();
 </script>
@@ -559,6 +602,15 @@
     overflow-wrap: anywhere;
   }
   .chat-widget .chat-bubble-bot { background: var(--surface-2); color: var(--text); border-bottom-left-radius: 5px; }
+  .chat-widget .chat-lead { margin: 0; font-weight: 500; }
+  .chat-widget .chat-lead + .chat-lead { margin-top: var(--sp-2); }
+  .chat-widget .chat-list { margin: var(--sp-2) 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 5px; }
+  .chat-widget .chat-list li { padding-left: 2px; }
+  .chat-widget .chat-list li::marker { color: var(--purple-bright); }
+  .chat-widget .chat-bubble > :first-child { margin-top: 0; }
+  .chat-widget .chat-autolink { color: var(--purple-bright); text-decoration: underline; text-underline-offset: 2px; word-break: break-all; }
+  .chat-widget .chat-autolink:hover { text-decoration-thickness: 2px; }
+  .chat-widget .chat-autolink:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; border-radius: 3px; }
   .chat-widget .chat-bubble-user { background: var(--purple-bright); color: var(--bg); border-bottom-right-radius: 5px; }
   .chat-widget .chat-link {
     display: block; margin-top: var(--sp-2);
