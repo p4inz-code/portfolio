@@ -82,16 +82,44 @@
 
     let open = false;
     let lastFocused: HTMLElement | null = null;
+    // Bumped on every open/close call so a rapid reopen-mid-close (or
+    // close-mid-open) can tell a stale scheduled callback "you've been
+    // superseded" instead of clobbering whichever state actually won.
+    let transitionGen = 0;
+
+    // The site's sticky top nav and desktop side-rail are real, persistent
+    // chrome -- the panel should dock below/beside them, never fight them
+    // for the same pixels. Measured, not guessed, since nav height can
+    // change with content or a future redesign.
+    function syncChromeOffset() {
+      const nav = document.querySelector('.nav');
+      if (nav) {
+        document.documentElement.style.setProperty('--chat-nav-h', nav.getBoundingClientRect().height + 'px');
+      }
+    }
+    syncChromeOffset();
+    window.addEventListener('resize', syncChromeOffset);
 
     function openChat() {
       if (open) return;
       open = true;
+      const myGen = ++transitionGen;
       lastFocused = document.activeElement as HTMLElement;
       panel.hidden = false;
       overlay.hidden = false;
+      // A single rAF here is flaky: on a cold first open, the browser can
+      // batch the "un-hide" and the class-add into the same frame, so there
+      // is never a committed closed state to transition from -- the panel
+      // just stays stuck at translateX(100%). Forcing a layout read, then
+      // waiting a second frame, guarantees the closed state is actually
+      // painted before the open class (and its transition) is applied.
+      void panel.offsetHeight;
       requestAnimationFrame(() => {
-        panel.classList.add('chat-panel-open');
-        overlay.classList.add('chat-overlay-open');
+        requestAnimationFrame(() => {
+          if (myGen !== transitionGen) return; // superseded by a close in between
+          panel.classList.add('chat-panel-open');
+          overlay.classList.add('chat-overlay-open');
+        });
       });
       trigger.setAttribute('aria-expanded', 'true');
       // Real back-button handling: a visitor who presses back (common
@@ -105,11 +133,25 @@
     function closeChat(fromPopstate?: boolean) {
       if (!open) return;
       open = false;
+      const myGen = ++transitionGen;
       panel.classList.remove('chat-panel-open');
       overlay.classList.remove('chat-overlay-open');
-      window.setTimeout(() => {
-        if (!open) { panel.hidden = true; overlay.hidden = true; }
-      }, 220);
+      // Hide only once the slide-out transition actually finishes (300ms
+      // per --dur) rather than a hardcoded delay that drifted out of sync
+      // with it and cut the animation short. transitionend won't fire at
+      // all under prefers-reduced-motion (transition:none), so a short
+      // fallback timeout covers that case too. The generation check means a
+      // reopen in the meantime always wins -- this callback can only hide
+      // the panel if nothing has superseded this exact close since.
+      let hidden = false;
+      const finishHide = () => {
+        if (hidden || myGen !== transitionGen) return;
+        hidden = true;
+        panel.hidden = true;
+        overlay.hidden = true;
+      };
+      panel.addEventListener('transitionend', finishHide, { once: true });
+      window.setTimeout(finishHide, 350);
       trigger.setAttribute('aria-expanded', 'false');
       document.removeEventListener('keydown', onKeydown);
       if (!fromPopstate && history.state && history.state.chatOpen) {
@@ -232,8 +274,8 @@
     position: fixed;
     right: var(--sp-5);
     bottom: var(--sp-5);
-    width: 52px;
-    height: 52px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     background: var(--purple-bright);
     color: var(--bg);
@@ -242,11 +284,14 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 8px 24px -6px color-mix(in oklab, var(--purple-bright) 60%, transparent);
+    box-shadow: 0 10px 28px -6px color-mix(in oklab, var(--purple-bright) 55%, transparent);
     z-index: 60;
-    transition: transform var(--dur-fast) var(--ease-out);
+    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
   }
-  .chat-trigger:hover { transform: translateY(-2px); }
+  .chat-trigger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px -6px color-mix(in oklab, var(--purple-bright) 65%, transparent);
+  }
   .chat-trigger:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 3px; }
 
   .chat-overlay {
@@ -368,6 +413,21 @@
   /* Tablet: slightly narrower drawer still reads comfortably */
   @media (max-width: 900px) and (min-width: 641px) {
     .chat-panel { width: min(360px, 100vw); }
+  }
+
+  /* Desktop: the side-rail (fixed, right:14px, 52px wide, full height) and
+     the sticky top nav are real persistent chrome here, not page content --
+     the trigger and panel must sit clear of both rather than overlap and
+     fight them for clicks. (The rail is only ever shown at >=900px, so
+     these rules mirror that exact breakpoint.) */
+  @media (min-width: 900px) {
+    .chat-trigger { right: 96px; }
+    .chat-panel {
+      top: var(--chat-nav-h, 84px);
+      right: 66px;
+      border-left: 1px solid var(--line-strong);
+      box-shadow: -12px 0 32px color-mix(in oklab, #000 30%, transparent);
+    }
   }
 
   /* Mobile: full-width takeover -- a 400px drawer on a 375px screen is
