@@ -137,9 +137,13 @@
         const raw = sessionStorage.getItem(STORE_KEY);
         const parsed = raw ? JSON.parse(raw) : [];
         if (!Array.isArray(parsed)) return [];
-        return parsed
+        const valid = parsed
           .filter((m) => m && (m.r === 'u' || m.r === 'b') && typeof m.t === 'string')
           .slice(-MAX_STORED);
+        // Trimming can cut a pair in half; never restore starting on an
+        // answer whose question is gone.
+        while (valid.length && valid[0].r === 'b') valid.shift();
+        return valid;
       } catch {
         return [];
       }
@@ -302,6 +306,17 @@
       row.appendChild(bubble);
       if (!animate) row.dataset.still = '1';
       thread!.appendChild(row);
+      return row;
+    }
+    // A short answer is best read with the suggestions below it in view; a
+    // long one should be read from its first line, not from its last.
+    function revealAnswer(row: HTMLElement) {
+      const t = thread!;
+      if (row.offsetHeight > t.clientHeight * 0.55) {
+        t.scrollTo({ top: Math.max(0, row.offsetTop - 12), behavior: reduceMotion ? 'auto' : 'smooth' });
+      } else {
+        scrollDown();
+      }
     }
     function showTyping() {
       const row = el('div', 'chat-row');
@@ -321,7 +336,7 @@
       const s = document.getElementById('chatSuggest');
       if (s) s.remove();
     }
-    function renderSuggest() {
+    function renderSuggest(scroll = true) {
       clearSuggest();
       const asked = new Set(msgs.filter((m) => m.r === 'u').map((m) => m.t.toLowerCase()));
       const picks = POOL.filter((q) => !asked.has(q.toLowerCase())).slice(0, 3);
@@ -336,7 +351,7 @@
         wrap.appendChild(b);
       }
       thread!.appendChild(wrap);
-      scrollDown();
+      if (scroll) scrollDown();
     }
     function syncSend() {
       sendBtn!.disabled = busy || input!.value.trim().length === 0;
@@ -394,9 +409,10 @@
       hideTyping();
       msgs.push({ r: 'b', t: reply.text, c: reply.contact });
       saveMsgs();
-      renderBot(reply.text, reply.contact, true);
+      const answerRow = renderBot(reply.text, reply.contact, true);
       setBusy(false);
-      renderSuggest();
+      renderSuggest(false);
+      revealAnswer(answerRow);
       if (open && !coarse.matches) input!.focus();
     }
 
