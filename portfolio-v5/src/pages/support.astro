@@ -6,11 +6,12 @@ const free = [
   { name: 'Kanvaz', what: 'Infinite reference board for artists', href: '/kanvaz/' },
   { name: 'Obscura', what: 'Luau protection toolkit', href: 'https://github.com/p4inz-code/obscura' },
   { name: 'Glint', what: 'Brightness and volume tray utility', href: 'https://github.com/p4inz-code/glint' },
+  { name: 'CrossPort', what: 'Offline Windows file transfer with verification', href: 'https://github.com/p4inz-code/Crossport' },
   { name: 'MINK', what: 'A programming language and its compiler', href: 'https://github.com/p4inz-code/mink' },
   { name: '3D Ref Skills', what: 'Reference skills for 3D artists', href: 'https://github.com/p4inz-code/3d-ref-skills' },
 ];
 ---
-<BaseLayout title={`Support the free tools — ${SITE.title}`} description="Kanvaz, Obscura, Glint, MINK and 3D Ref Skills are free and open source. If one of them saved you time, you can chip in on Buy Me a Coffee or by UPI.">
+<BaseLayout title={`Support the free tools — ${SITE.title}`} description="Kanvaz, Obscura, Glint, CrossPort, MINK and 3D Ref Skills are free and open source. If one of them saved you time, you can chip in on Buy Me a Coffee or by UPI.">
   <section class="sup wrap" aria-labelledby="sup-title">
     <p class="sup-eyebrow">Support</p>
     <h1 id="sup-title" class="sup-title">Free tools take <em>real</em> time. If one helped you, chip in.</h1>
@@ -76,7 +77,7 @@ const free = [
     .bmc-qr { position: relative; margin-top: var(--sp-4); width: 132px; height: 132px; border-radius: 12px; background: #fff; }
     .sup-upi img { width: 100%; max-width: 240px; height: auto; margin-top: var(--sp-3); border-radius: 14px; background: #fff; }
     .sup-small { font-size: 13px; }
-    .sup-small a, .sup-note a { color: var(--purple-bright); text-underline-offset: 3px; }
+    .sup-small a, .sup-note a { color: var(--purple-bright); text-decoration: underline; text-underline-offset: 3px; }
     .sup-h2 { margin-top: var(--sp-9, 72px); font-family: var(--font-display); font-weight: 400; font-size: var(--text-lg); letter-spacing: -0.01em; }
     .sup-list { list-style: none; padding: 0; margin: var(--sp-5) 0 0; border-top: 1px solid var(--line); }
     .sup-list li { border-bottom: 1px solid var(--line); }

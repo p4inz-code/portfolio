@@ -27,7 +27,7 @@ const breadcrumbJsonLd = {
   ],
 };
 ---
-<BaseLayout scene="pursue" title="Pursue OS — Investigation Linux OS · Atharva Patil" description="Investigation-focused Linux OS for OSINT and DFIR work: Investigation Terminal, Investigation Browser with Tor. Apache 2.0. V1 core implementation complete, hardware testing underway as of September 2026." keywords="Pursue OS, Pursue OS p4inz, p4inz OSINT tool, investigation Linux OS, painz DFIR tool" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
+<BaseLayout scene="pursue" title="Pursue OS — Investigation Linux OS · Atharva Patil" description="Investigation-focused Linux OS for OSINT and DFIR work: Investigation Terminal, Investigation Browser with Tor. Apache 2.0. V1 core complete, hardware testing underway." keywords="Pursue OS, Pursue OS p4inz, p4inz OSINT tool, investigation Linux OS, painz DFIR tool" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
   <section class="notice-wrap">
@@ -137,6 +137,7 @@ const breadcrumbJsonLd = {
     .status-label { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--muted-2); }
     .status-value { font-family: var(--font-display); font-size: var(--text-md); color: var(--text); }
     .status-value.warn { color: var(--warn-text); }
+    :global(:root[data-theme='light']) .status-value.warn { color: #6B4500; }
 
     /* v5.16.0 YMYL disclaimer */
     .ymyl-note {

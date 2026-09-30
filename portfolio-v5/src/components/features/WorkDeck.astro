@@ -50,7 +50,7 @@ const num = (r: string) => { const [a, b] = r.split('/').map(Number); return a /
             <figure class="dmedia" data-kind={m.kind}>
               <div class="dframe" style={`aspect-ratio:${m.ratio};--rn:${num(m.ratio).toFixed(4)};`}>
                 {m.video ? (
-                  <video class="dimg" muted loop playsinline preload="none" poster={m.src} role="img" aria-label={m.alt} data-showcase-video>
+                  <video class="dimg" muted loop playsinline preload="none" poster={m.src} aria-label={m.alt} data-showcase-video>
                     <source src={m.video.webm} type="video/webm" />
                     <source src={m.video.mp4} type="video/mp4" />
                   </video>

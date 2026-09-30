@@ -9,7 +9,7 @@
 
 /* SITE */
 
-  Last major update:               2026-09 (v5.46, see /status)
+  Last major update:               2026-09 (v5.47, see /status)
   Language:                        English
   Doctype:                         HTML5
   IDE:                             VS Code
