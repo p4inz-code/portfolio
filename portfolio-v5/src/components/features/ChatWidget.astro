@@ -1,18 +1,23 @@
 ---
 /**
- * Sitewide chat widget -- a floating trigger that opens a sidebar (full
- * width takeover below 640px, a fixed drawer above it). Answers come from
+ * Sitewide chat widget -- a floating trigger that opens a docked sidebar on
+ * desktop and a full-screen takeover below 900px. Answers come from
  * functions/api/chat.ts: an FAQ table, then a cache, then a real Workers AI
  * call grounded in this site's own live llms.txt. Never fabricates -- if
  * the backend can't answer, it says so.
  *
- * Real back-button handling: opening the sidebar pushes a history entry,
- * so a visitor who presses their device's back button (a very common
- * instinct, especially for less tech-fluent visitors on mobile) closes the
- * chat instead of leaving the page entirely.
+ * Styles are global (scoped by .chat-widget) on purpose: message rows are
+ * created by script, and Astro's per-component scoping attribute never
+ * reaches script-created nodes, so scoped styles left every question and
+ * answer completely unstyled.
+ *
+ * Back-button handling: opening pushes a history entry, so pressing back
+ * (a very common instinct on mobile) closes the chat instead of leaving.
  */
 ---
 <div id="chatWidget" class="chat-widget">
+  <noscript><style>.chat-widget { display: none; }</style></noscript>
+
   <button
     type="button"
     id="chatTrigger"
@@ -21,44 +26,58 @@
     aria-expanded="false"
     aria-controls="chatPanel"
     aria-label="Open chat"
+    title="Ask about the work"
   >
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
     </svg>
   </button>
 
   <div id="chatOverlay" class="chat-overlay" hidden></div>
 
-  <div id="chatPanel" class="chat-panel" role="dialog" aria-modal="true" aria-label="Ask about the work" hidden>
+  <div id="chatPanel" class="chat-panel" role="dialog" aria-modal="true" aria-labelledby="chatTitle" tabindex="-1" hidden>
     <div class="chat-head">
-      <img src="/ap-mark.png" alt="" class="chat-avatar" width="30" height="30" />
+      <img src="/ap-mark.png" alt="" class="chat-avatar" width="32" height="32" />
       <div class="chat-head-text">
-        <p class="chat-head-title">Ask about the work</p>
-        <p class="chat-head-status"><span class="chat-dot" aria-hidden="true"></span>Answers from what's actually shipped</p>
+        <p id="chatTitle" class="chat-head-title">Ask about the work</p>
+        <p class="chat-head-status"><span class="chat-dot" aria-hidden="true"></span>Answers from what's shipped</p>
       </div>
+      <button type="button" id="chatClear" class="chat-icon-btn" aria-label="Clear conversation" title="Clear conversation" hidden>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+          <path d="M10 11v6"></path><path d="M14 11v6"></path>
+          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+        </svg>
+      </button>
       <button type="button" id="chatClose" class="chat-icon-btn" aria-label="Close chat">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
     </div>
 
-    <div id="chatThread" class="chat-thread" aria-live="polite">
+    <div id="chatThread" class="chat-thread" role="log" aria-live="polite" aria-relevant="additions" aria-label="Conversation">
       <div class="chat-row">
         <img src="/ap-mark.png" alt="" class="chat-avatar-sm" width="24" height="24" />
-        <p class="chat-bubble chat-bubble-bot">Ask me anything about the real work. If I don't know, I'll say so instead of guessing.</p>
-      </div>
-      <div id="chatStarters" class="chat-starters">
-        <button type="button" class="chat-chip" data-q="What are you working on right now?">What are you working on right now?</button>
-        <button type="button" class="chat-chip" data-q="What's Kanvaz built with?">What's Kanvaz built with?</button>
-        <button type="button" class="chat-chip" data-q="Are you available for freelance work?">Are you available for freelance work?</button>
+        <div class="chat-bubble chat-bubble-bot">Ask me anything about the real work. If I don't know, I'll say so instead of guessing.</div>
       </div>
     </div>
 
     <form id="chatForm" class="chat-inputrow" novalidate>
-      <input id="chatInput" class="chat-input" type="text" placeholder="Ask a question" autocomplete="off" maxlength="500" />
-      <button type="submit" id="chatSend" class="chat-send" aria-label="Send">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <input
+        id="chatInput"
+        class="chat-input"
+        type="text"
+        placeholder="Ask a question"
+        aria-label="Your question"
+        autocomplete="off"
+        autocapitalize="sentences"
+        enterkeyhint="send"
+        maxlength="500"
+      />
+      <button type="submit" id="chatSend" class="chat-send" aria-label="Send" disabled>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
         </svg>
       </button>
@@ -68,99 +87,169 @@
 
 <script>
   (function () {
+    const root = document.documentElement;
     const widget = document.getElementById('chatWidget');
-    const trigger = document.getElementById('chatTrigger');
+    const trigger = document.getElementById('chatTrigger') as HTMLButtonElement | null;
     const overlay = document.getElementById('chatOverlay');
     const panel = document.getElementById('chatPanel');
     const closeBtn = document.getElementById('chatClose');
+    const clearBtn = document.getElementById('chatClear');
     const thread = document.getElementById('chatThread');
-    const starters = document.getElementById('chatStarters');
     const form = document.getElementById('chatForm');
-    const input = document.getElementById('chatInput');
-    const sendBtn = document.getElementById('chatSend');
-    if (!widget || !trigger || !overlay || !panel || !closeBtn || !thread || !form || !input || !sendBtn) return;
+    const input = document.getElementById('chatInput') as HTMLInputElement | null;
+    const sendBtn = document.getElementById('chatSend') as HTMLButtonElement | null;
+    if (!widget || !trigger || !overlay || !panel || !closeBtn || !clearBtn || !thread || !form || !input || !sendBtn) return;
+
+    const FALLBACK = "That's outside what I can answer from the real project data right now.";
+    const RATE_LIMITED = "That's a lot of questions in a short time -- give it a few minutes, or reach out through the contact form.";
+    const OFFLINE = "You look offline right now -- reconnect and ask again, or use the contact form.";
+    // Every entry here is answered by the free FAQ tier in chat.ts, so
+    // follow-up suggestions never cost an AI call.
+    const POOL = [
+      'What are you working on right now?',
+      "What's Kanvaz built with?",
+      'Are you available for freelance work?',
+      'How many products have you shipped?',
+      'What license is Kanvaz under?',
+      'Tell me about Pursue OS',
+      "What's your tech stack?",
+    ];
+    const STORE_KEY = 'ap-chat-v1';
+    const MAX_STORED = 24;
+
+    type Msg = { r: 'u' | 'b'; t: string; c?: boolean };
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const coarse = window.matchMedia('(pointer: coarse)');
+    const small = window.matchMedia('(max-width: 899px)');
 
     let open = false;
+    let busy = false;
     let lastFocused: HTMLElement | null = null;
-    // Bumped on every open/close call so a rapid reopen-mid-close (or
-    // close-mid-open) can tell a stale scheduled callback "you've been
-    // superseded" instead of clobbering whichever state actually won.
+    // Bumped on every open/close so a stale scheduled hide can tell it has
+    // been superseded by a reopen.
     let transitionGen = 0;
     let pendingBack = false;
+    let prevOverflow = '';
+    let scrollLocked = false;
 
-    // The site's sticky top nav and desktop side-rail are real, persistent
-    // chrome -- the panel should dock below/beside them, never fight them
-    // for the same pixels. Measured, not guessed, since nav height can
-    // change with content or a future redesign.
+    function loadMsgs(): Msg[] {
+      try {
+        const raw = sessionStorage.getItem(STORE_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(parsed)) return [];
+        return parsed
+          .filter((m) => m && (m.r === 'u' || m.r === 'b') && typeof m.t === 'string')
+          .slice(-MAX_STORED);
+      } catch {
+        return [];
+      }
+    }
+    function saveMsgs() {
+      try { sessionStorage.setItem(STORE_KEY, JSON.stringify(msgs.slice(-MAX_STORED))); } catch { /* private mode */ }
+    }
+    let msgs: Msg[] = loadMsgs();
+
+    // -- layout sync -------------------------------------------------------
+    // Measured, not guessed: nav height can change with content or redesign.
     function syncChromeOffset() {
       const nav = document.querySelector('.nav');
-      if (nav) {
-        document.documentElement.style.setProperty('--chat-nav-h', nav.getBoundingClientRect().height + 'px');
-      }
+      if (nav) root.style.setProperty('--chat-nav-h', nav.getBoundingClientRect().height + 'px');
     }
     syncChromeOffset();
     window.addEventListener('resize', syncChromeOffset);
 
+    // On iOS the layout viewport doesn't shrink for the keyboard, so a
+    // fixed bottom:0 input row ends up hidden behind it. Track the visual
+    // viewport instead so the takeover always fits what's really visible.
+    const vv = window.visualViewport;
+    function syncViewport() {
+      if (!vv) return;
+      root.style.setProperty('--chat-vh', vv.height + 'px');
+      root.style.setProperty('--chat-vt', vv.offsetTop + 'px');
+    }
+    if (vv) {
+      vv.addEventListener('resize', syncViewport);
+      vv.addEventListener('scroll', syncViewport);
+    }
+
+    function lockScroll() {
+      if (!small.matches || scrollLocked) return;
+      prevOverflow = root.style.overflow;
+      root.style.overflow = 'hidden';
+      scrollLocked = true;
+    }
+    function unlockScroll() {
+      if (!scrollLocked) return;
+      root.style.overflow = prevOverflow;
+      scrollLocked = false;
+    }
+
+    // -- open / close ------------------------------------------------------
     function openChat() {
       if (open) return;
       open = true;
       transitionGen++;
       lastFocused = document.activeElement as HTMLElement;
-      // No transition + class-add dance: the panel's natural state is
-      // "in place", and a keyframe animation plays the slide-in the moment
-      // it's un-hidden. Nothing here can leave it stuck off-screen.
-      panel.hidden = false;
-      overlay.hidden = false;
-      panel.dataset.state = 'open';
-      overlay.dataset.state = 'open';
-      trigger.setAttribute('aria-expanded', 'true');
-      // Real back-button handling: a visitor who presses back (common
-      // instinct, especially for less tech-fluent visitors on mobile)
-      // should close the chat, not leave the page.
+      // Resting state is the visible one; a keyframe animation plays the
+      // slide-in when it's un-hidden, so nothing can strand it off-screen.
+      panel!.hidden = false;
+      overlay!.hidden = false;
+      panel!.dataset.state = 'open';
+      overlay!.dataset.state = 'open';
+      trigger!.setAttribute('aria-expanded', 'true');
+      syncViewport();
+      lockScroll();
+      // Back button closes the chat instead of leaving the page.
       history.pushState({ chatOpen: true }, '');
-      input.focus();
       document.addEventListener('keydown', onKeydown);
+      // Focusing the input on a phone would throw the keyboard up over the
+      // conversation before anyone has read it -- only do that with a
+      // physical keyboard.
+      if (coarse.matches) panel!.focus({ preventScroll: true });
+      else input!.focus();
+      scrollDown(true);
     }
 
     function closeChat(fromPopstate?: boolean) {
       if (!open) return;
       open = false;
       const myGen = ++transitionGen;
-      panel.dataset.state = 'closing';
-      overlay.dataset.state = 'closing';
-      // Actually hide (display:none) once the slide-out finishes. The
-      // timeout is the guarantee -- animationend never fires under
-      // prefers-reduced-motion -- and the generation check means a reopen
-      // in the meantime always wins.
-      const finishHide = () => {
+      panel!.dataset.state = 'closing';
+      overlay!.dataset.state = 'closing';
+      // Really hide (display:none) after the slide-out. The timeout is the
+      // guarantee -- animationend never fires under reduced motion -- and
+      // the generation check lets a reopen win.
+      window.setTimeout(() => {
         if (myGen !== transitionGen) return;
-        panel.hidden = true;
-        overlay.hidden = true;
-        delete panel.dataset.state;
-        delete overlay.dataset.state;
-      };
-      window.setTimeout(finishHide, 260);
-      trigger.setAttribute('aria-expanded', 'false');
+        panel!.hidden = true;
+        overlay!.hidden = true;
+        delete panel!.dataset.state;
+        delete overlay!.dataset.state;
+      }, 260);
+      trigger!.setAttribute('aria-expanded', 'false');
       document.removeEventListener('keydown', onKeydown);
+      unlockScroll();
       if (!fromPopstate && history.state && history.state.chatOpen) {
         // history.back() fires popstate asynchronously; remember it's ours
-        // so a quick reopen isn't immediately closed by that late event.
+        // so a quick reopen isn't closed by that late event.
         pendingBack = true;
         history.back();
       }
-      if (lastFocused) lastFocused.focus();
+      if (lastFocused && document.contains(lastFocused)) lastFocused.focus({ preventScroll: true });
     }
 
     function onKeydown(e: KeyboardEvent) {
       if (e.key === 'Escape') { closeChat(); return; }
-      if (e.key === 'Tab') {
-        const focusables = panel.querySelectorAll<HTMLElement>('button, input, [tabindex]:not([tabindex="-1"])');
-        if (focusables.length === 0) return;
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-      }
+      if (e.key !== 'Tab') return;
+      const focusables = Array.from(
+        panel!.querySelectorAll<HTMLElement>('button, input, a[href]')
+      ).filter((el) => !(el as HTMLButtonElement).disabled && !el.hidden && el.offsetParent !== null);
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && (active === first || active === panel)) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && active === last) { e.preventDefault(); first.focus(); }
     }
 
     window.addEventListener('popstate', () => {
@@ -168,106 +257,194 @@
       if (open) closeChat(true);
     });
 
-    trigger.addEventListener('click', openChat);
+    trigger.addEventListener('click', () => { if (open) closeChat(); else openChat(); });
     closeBtn.addEventListener('click', () => closeChat());
     overlay.addEventListener('click', () => closeChat());
 
-    function addUserMsg(text: string) {
-      const row = document.createElement('div');
-      row.className = 'chat-row chat-row-user';
-      const bubble = document.createElement('p');
-      bubble.className = 'chat-bubble chat-bubble-user';
+    // -- rendering ---------------------------------------------------------
+    function el<K extends keyof HTMLElementTagNameMap>(tag: K, cls?: string): HTMLElementTagNameMap[K] {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      return n;
+    }
+    function scrollDown(instant?: boolean) {
+      thread!.scrollTo({ top: thread!.scrollHeight, behavior: instant || reduceMotion ? 'auto' : 'smooth' });
+    }
+    function avatarSm(): HTMLImageElement {
+      const img = el('img', 'chat-avatar-sm');
+      img.src = '/ap-mark.png';
+      img.alt = '';
+      img.width = 24;
+      img.height = 24;
+      return img;
+    }
+    function renderUser(text: string, animate: boolean) {
+      const row = el('div', 'chat-row chat-row-user');
+      row.dataset.dyn = '1';
+      const bubble = el('div', 'chat-bubble chat-bubble-user');
       bubble.textContent = text;
       row.appendChild(bubble);
-      thread.appendChild(row);
-      thread.scrollTop = thread.scrollHeight;
+      if (!animate) row.dataset.still = '1';
+      thread!.appendChild(row);
     }
-
-    function addBotMsg(text: string) {
-      const row = document.createElement('div');
-      row.className = 'chat-row';
-      const avatar = document.createElement('img');
-      avatar.src = '/ap-mark.png';
-      avatar.alt = '';
-      avatar.className = 'chat-avatar-sm';
-      const bubble = document.createElement('p');
-      bubble.className = 'chat-bubble chat-bubble-bot';
-      bubble.textContent = text;
-      row.appendChild(avatar);
+    function renderBot(text: string, contact: boolean | undefined, animate: boolean) {
+      const row = el('div', 'chat-row');
+      row.dataset.dyn = '1';
+      const bubble = el('div', 'chat-bubble chat-bubble-bot');
+      bubble.appendChild(document.createTextNode(text));
+      if (contact) {
+        const a = el('a', 'chat-link');
+        a.href = '/contact';
+        a.textContent = 'Ask through the contact form →';
+        bubble.appendChild(a);
+      }
+      row.appendChild(avatarSm());
       row.appendChild(bubble);
-      thread.appendChild(row);
-      thread.scrollTop = thread.scrollHeight;
+      if (!animate) row.dataset.still = '1';
+      thread!.appendChild(row);
     }
-
     function showTyping() {
-      const row = document.createElement('div');
-      row.className = 'chat-row';
+      const row = el('div', 'chat-row');
       row.id = 'chatTyping';
-      row.innerHTML =
-        '<span class="chat-avatar-sm chat-avatar-typing"></span>' +
-        '<span class="chat-typing"><span></span><span></span><span></span></span>';
-      thread.appendChild(row);
-      thread.scrollTop = thread.scrollHeight;
+      const dots = el('span', 'chat-typing');
+      dots.innerHTML = '<span></span><span></span><span></span><span class="chat-sr">Typing</span>';
+      row.appendChild(avatarSm());
+      row.appendChild(dots);
+      thread!.appendChild(row);
+      scrollDown();
     }
     function hideTyping() {
       const row = document.getElementById('chatTyping');
       if (row) row.remove();
     }
+    function clearSuggest() {
+      const s = document.getElementById('chatSuggest');
+      if (s) s.remove();
+    }
+    function renderSuggest() {
+      clearSuggest();
+      const asked = new Set(msgs.filter((m) => m.r === 'u').map((m) => m.t.toLowerCase()));
+      const picks = POOL.filter((q) => !asked.has(q.toLowerCase())).slice(0, 3);
+      if (picks.length === 0) return;
+      const wrap = el('div', 'chat-suggest');
+      wrap.id = 'chatSuggest';
+      for (const q of picks) {
+        const b = el('button', 'chat-chip');
+        b.type = 'button';
+        b.textContent = q;
+        b.addEventListener('click', () => ask(q));
+        wrap.appendChild(b);
+      }
+      thread!.appendChild(wrap);
+      scrollDown();
+    }
+    function syncSend() {
+      sendBtn!.disabled = busy || input!.value.trim().length === 0;
+    }
+    function setBusy(v: boolean) {
+      busy = v;
+      thread!.setAttribute('aria-busy', String(v));
+      syncSend();
+    }
 
+    // -- asking ------------------------------------------------------------
     async function ask(question: string) {
-      if (starters) starters.remove();
-      addUserMsg(question);
-      input.disabled = true;
-      sendBtn.disabled = true;
-      // natural pacing: a short real "typing" beat scaled a little by
-      // question length, not a flat identical delay every time
+      if (busy) return;
+      setBusy(true);
+      clearSuggest();
+      msgs.push({ r: 'u', t: question });
+      saveMsgs();
+      clearBtn!.hidden = false;
+      renderUser(question, true);
+      scrollDown();
+
+      // A short "typing" beat scaled a little by question length, layered
+      // over the real fetch latency, so answers don't land instantly.
       const minDelay = 450 + Math.min(question.length * 4, 500);
       const start = Date.now();
       showTyping();
 
-      let answer = "That's outside what I can answer from the real project data right now -- try the contact form for anything else.";
+      let reply: { text: string; contact?: boolean } = { text: FALLBACK, contact: true };
+      const ctrl = new AbortController();
+      // Without a timeout a hung AI call would leave the widget "thinking"
+      // forever.
+      const timer = window.setTimeout(() => ctrl.abort(), 15000);
       try {
-        const res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ question }),
-        });
-        const data = await res.json().catch(() => ({ ok: false }));
-        if (data && data.ok && data.answer) answer = data.answer;
+        if (navigator.onLine === false) {
+          reply = { text: OFFLINE, contact: true };
+        } else {
+          const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ question }),
+            signal: ctrl.signal,
+          });
+          const data = await res.json().catch(() => ({ ok: false }));
+          if (data && data.ok && data.answer) reply = { text: data.answer };
+          else if (data && data.reason === 'rate_limited') reply = { text: RATE_LIMITED, contact: true };
+        }
       } catch {
-        // network failure -- fall back message above already covers it
+        if (navigator.onLine === false) reply = { text: OFFLINE, contact: true };
+      } finally {
+        window.clearTimeout(timer);
       }
 
       const elapsed = Date.now() - start;
       if (elapsed < minDelay) await new Promise((r) => setTimeout(r, minDelay - elapsed));
       hideTyping();
-      addBotMsg(answer);
-      input.disabled = false;
-      sendBtn.disabled = false;
-      input.focus();
+      msgs.push({ r: 'b', t: reply.text, c: reply.contact });
+      saveMsgs();
+      renderBot(reply.text, reply.contact, true);
+      setBusy(false);
+      renderSuggest();
+      if (open && !coarse.matches) input!.focus();
     }
 
-    document.querySelectorAll<HTMLButtonElement>('.chat-chip').forEach((chip) => {
-      chip.addEventListener('click', () => ask(chip.dataset.q || chip.textContent || ''));
-    });
+    function clearConversation() {
+      if (busy) return;
+      msgs = [];
+      saveMsgs();
+      thread!.querySelectorAll('[data-dyn]').forEach((n) => n.remove());
+      clearBtn!.hidden = true;
+      renderSuggest();
+      if (!coarse.matches) input!.focus();
+    }
+    clearBtn.addEventListener('click', clearConversation);
 
+    input.addEventListener('input', syncSend);
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const val = input.value.trim();
+      if (busy) return;
+      const val = input!.value.trim();
       if (!val) return;
-      input.value = '';
+      input!.value = '';
+      syncSend();
       ask(val);
     });
+
+    // -- restore a previous conversation (pages are full reloads) ----------
+    for (const m of msgs) {
+      if (m.r === 'u') renderUser(m.t, false);
+      else renderBot(m.t, m.c, false);
+    }
+    clearBtn.hidden = msgs.length === 0;
+    renderSuggest();
+    syncSend();
   })();
 </script>
 
-<style>
-  .chat-widget { position: relative; }
+<style is:global>
+  .chat-widget [hidden] { display: none !important; }
+  .chat-widget .chat-sr {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
 
-  .chat-trigger {
+  /* -- trigger ------------------------------------------------------- */
+  .chat-widget .chat-trigger {
     position: fixed;
     right: var(--sp-5);
-    bottom: var(--sp-5);
+    bottom: calc(var(--sp-5) + env(safe-area-inset-bottom, 0px));
     width: 56px;
     height: 56px;
     border-radius: 50%;
@@ -278,30 +455,27 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
     box-shadow: 0 10px 28px -6px color-mix(in oklab, var(--purple-bright) 55%, transparent);
     z-index: 60;
     transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
   }
-  .chat-trigger:hover {
+  .chat-widget .chat-trigger:hover {
     transform: translateY(-2px);
     box-shadow: 0 14px 32px -6px color-mix(in oklab, var(--purple-bright) 65%, transparent);
   }
-  .chat-trigger:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 3px; }
+  .chat-widget .chat-trigger:active { transform: scale(0.96); }
+  .chat-widget .chat-trigger:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 3px; }
 
-  /* The author display:flex below would otherwise beat the browser's own
-     [hidden]{display:none}, leaving a "closed" panel merely slid aside --
-     and visible as a sliver over the side-rail. */
-  .chat-panel[hidden], .chat-overlay[hidden] { display: none; }
-
-  /* Resting state is always the correct, visible one; open/close are
-     keyframe animations layered on top, so a missed frame or class can
-     never strand the panel off-screen. */
-  .chat-overlay {
+  /* -- overlay + panel (resting state is the visible one; open/close are
+        keyframe animations on top, so a missed frame can't strand it) --- */
+  .chat-widget .chat-overlay {
     position: fixed; inset: 0;
     background: color-mix(in oklab, var(--bg) 55%, transparent);
     z-index: 61;
   }
-  .chat-panel {
+  .chat-widget .chat-panel {
     position: fixed;
     top: 0; right: 0; bottom: 0;
     width: min(400px, 100vw);
@@ -311,147 +485,178 @@
     display: flex;
     flex-direction: column;
     z-index: 62;
+    outline: none;
   }
-  .chat-panel[data-state='open'] { animation: chat-slide-in var(--dur) var(--ease-out) both; }
-  .chat-panel[data-state='closing'] { animation: chat-slide-out 240ms var(--ease-in-out) forwards; }
-  .chat-overlay[data-state='open'] { animation: chat-fade-in var(--dur) var(--ease-out) both; }
-  .chat-overlay[data-state='closing'] { animation: chat-fade-out 240ms var(--ease-in-out) forwards; }
+  .chat-widget .chat-panel[data-state='open'] { animation: chat-slide-in var(--dur) var(--ease-out) both; }
+  .chat-widget .chat-panel[data-state='closing'] { animation: chat-slide-out 240ms var(--ease-in-out) forwards; }
+  .chat-widget .chat-overlay[data-state='open'] { animation: chat-fade-in var(--dur) var(--ease-out) both; }
+  .chat-widget .chat-overlay[data-state='closing'] { animation: chat-fade-out 240ms var(--ease-in-out) forwards; }
 
   @keyframes chat-slide-in { from { transform: translateX(calc(100% + 80px)); } to { transform: none; } }
   @keyframes chat-slide-out { from { transform: none; } to { transform: translateX(calc(100% + 80px)); } }
   @keyframes chat-fade-in { from { opacity: 0; } to { opacity: 1; } }
   @keyframes chat-fade-out { from { opacity: 1; } to { opacity: 0; } }
+  @keyframes chat-msg-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
-  @media (prefers-reduced-motion: reduce) {
-    .chat-panel[data-state], .chat-overlay[data-state] { animation: none; }
-  }
-
-  .chat-head {
+  /* -- header -------------------------------------------------------- */
+  .chat-widget .chat-head {
     display: flex; align-items: center; gap: var(--sp-3);
-    padding: var(--sp-4);
+    padding: var(--sp-3) var(--sp-3) var(--sp-3) var(--sp-4);
     border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
   }
-  .chat-avatar { border-radius: 50%; flex-shrink: 0; }
-  .chat-head-text { flex: 1; min-width: 0; }
-  .chat-head-title { margin: 0; font-family: var(--font-display); font-size: var(--text-sm); color: var(--text); }
-  .chat-head-status {
+  .chat-widget .chat-avatar { border-radius: 50%; flex-shrink: 0; }
+  .chat-widget .chat-head-text { flex: 1; min-width: 0; }
+  .chat-widget .chat-head-title { margin: 0; font-family: var(--font-display); font-size: var(--text-sm); color: var(--text); }
+  .chat-widget .chat-head-status {
     margin: 2px 0 0; display: flex; align-items: center; gap: 6px;
     font-family: var(--font-mono); font-size: 10.5px; color: var(--muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .chat-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green-live); flex-shrink: 0; }
-  .chat-icon-btn {
-    width: 32px; height: 32px; border-radius: var(--radius-sm);
+  .chat-widget .chat-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green-live); flex-shrink: 0; }
+  .chat-widget .chat-icon-btn {
+    width: 40px; height: 40px; flex-shrink: 0; border-radius: var(--radius-sm);
     background: none; border: none; color: var(--muted); cursor: pointer;
     display: flex; align-items: center; justify-content: center;
+    touch-action: manipulation;
+    transition: color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
   }
-  .chat-icon-btn:hover, .chat-icon-btn:focus-visible { color: var(--text); outline: none; }
+  .chat-widget .chat-icon-btn:hover { color: var(--text); background: var(--surface-2); }
+  .chat-widget .chat-icon-btn:focus-visible { color: var(--text); outline: 2px solid var(--purple-bright); outline-offset: -2px; }
 
-  .chat-thread {
-    flex: 1; overflow-y: auto;
+  /* -- thread -------------------------------------------------------- */
+  .chat-widget .chat-thread {
+    flex: 1; min-height: 0; overflow-y: auto;
+    overscroll-behavior: contain;
     padding: var(--sp-4);
-    display: flex; flex-direction: column; gap: var(--sp-4);
+    display: flex; flex-direction: column; gap: var(--sp-3);
   }
-  .chat-row { display: flex; gap: var(--sp-2); align-items: flex-start; }
-  .chat-row-user { justify-content: flex-end; }
-  .chat-avatar-sm { border-radius: 50%; flex-shrink: 0; margin-top: 2px; }
-  .chat-avatar-typing { width: 24px; height: 24px; border-radius: 50%; background: var(--surface-3); flex-shrink: 0; }
-  .chat-bubble {
-    margin: 0; max-width: 82%;
-    font-size: 13.5px; line-height: 1.55;
-    padding: var(--sp-2) var(--sp-3);
-    border-radius: var(--radius);
+  .chat-widget .chat-row { display: flex; gap: var(--sp-2); align-items: flex-end; animation: chat-msg-in 220ms var(--ease-out) backwards; }
+  .chat-widget .chat-row[data-still] { animation: none; }
+  .chat-widget .chat-row-user { justify-content: flex-end; }
+  .chat-widget .chat-avatar-sm { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; margin-bottom: 2px; }
+  .chat-widget .chat-bubble {
+    margin: 0; max-width: 84%;
+    font-size: 14px; line-height: 1.5;
+    padding: 9px 13px;
+    border-radius: 16px;
+    overflow-wrap: anywhere;
   }
-  .chat-bubble-bot { background: var(--surface-2); color: var(--text); border-bottom-left-radius: 4px; }
-  .chat-bubble-user { background: var(--purple-bright); color: var(--bg); border-bottom-right-radius: 4px; }
+  .chat-widget .chat-bubble-bot { background: var(--surface-2); color: var(--text); border-bottom-left-radius: 5px; }
+  .chat-widget .chat-bubble-user { background: var(--purple-bright); color: var(--bg); border-bottom-right-radius: 5px; }
+  .chat-widget .chat-link {
+    display: block; margin-top: var(--sp-2);
+    color: var(--purple-bright); font-weight: 500; text-decoration: none;
+  }
+  .chat-widget .chat-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .chat-widget .chat-link:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; border-radius: 3px; }
 
-  .chat-starters { display: flex; flex-direction: column; gap: var(--sp-2); margin-left: 32px; }
-  .chat-chip {
+  .chat-widget .chat-suggest {
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-2);
+    margin-left: 32px;
+    animation: chat-msg-in 260ms var(--ease-out) backwards;
+  }
+  .chat-widget .chat-chip {
     text-align: left;
+    min-height: 40px;
     background: var(--surface-2);
     border: 1px solid var(--line-strong);
-    border-radius: var(--radius);
-    padding: var(--sp-2) var(--sp-3);
+    border-radius: 18px;
+    padding: 9px 14px;
     color: var(--text);
-    font-size: 12.5px;
+    font: inherit; font-size: 13.5px; line-height: 1.35;
     cursor: pointer;
-    transition: border-color var(--dur-fast) var(--ease-out);
+    touch-action: manipulation;
+    transition: border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
   }
-  .chat-chip:hover, .chat-chip:focus-visible { border-color: var(--purple-bright); outline: none; }
+  .chat-widget .chat-chip:hover { border-color: var(--purple-bright); background: var(--surface-3); }
+  .chat-widget .chat-chip:focus-visible { border-color: var(--purple-bright); outline: 2px solid var(--purple-bright); outline-offset: 2px; }
 
-  .chat-typing { display: inline-flex; gap: 4px; align-items: center; padding: var(--sp-2) 0; }
-  .chat-typing span {
-    width: 5px; height: 5px; border-radius: 50%; background: var(--muted);
+  .chat-widget .chat-typing {
+    display: inline-flex; gap: 4px; align-items: center;
+    background: var(--surface-2); border-radius: 16px; border-bottom-left-radius: 5px;
+    padding: 13px 14px;
+  }
+  .chat-widget .chat-typing > span:not(.chat-sr) {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--muted);
     animation: chat-typing-dot 1.1s ease-in-out infinite;
   }
-  .chat-typing span:nth-child(2) { animation-delay: 0.15s; }
-  .chat-typing span:nth-child(3) { animation-delay: 0.3s; }
+  .chat-widget .chat-typing > span:nth-child(2) { animation-delay: 0.15s; }
+  .chat-widget .chat-typing > span:nth-child(3) { animation-delay: 0.3s; }
   @keyframes chat-typing-dot { 0%, 60%, 100% { opacity: 0.25; } 30% { opacity: 1; } }
-  @media (prefers-reduced-motion: reduce) { .chat-typing span { animation: none; opacity: 0.7; } }
 
-  .chat-inputrow {
+  /* -- input --------------------------------------------------------- */
+  .chat-widget .chat-inputrow {
     display: flex; gap: var(--sp-2); align-items: center;
     padding: var(--sp-3) var(--sp-4);
+    padding-bottom: calc(var(--sp-3) + env(safe-area-inset-bottom, 0px));
     border-top: 1px solid var(--line);
+    flex-shrink: 0;
   }
-  .chat-input {
-    flex: 1;
+  .chat-widget .chat-input {
+    flex: 1; min-width: 0;
     background: var(--surface-2);
     border: 1px solid var(--line-strong);
     border-radius: var(--radius-pill);
-    padding: var(--sp-2) var(--sp-4);
+    padding: 10px var(--sp-4);
     color: var(--text);
-    font-size: 13.5px;
+    font: inherit; font-size: 14px;
     outline: none;
   }
-  .chat-input:focus { border-color: var(--purple-bright); box-shadow: 0 0 0 3px color-mix(in oklab, var(--purple-bright) 25%, transparent); }
-  .chat-input:disabled { opacity: 0.6; }
-  .chat-send {
-    width: 38px; height: 38px; flex-shrink: 0;
+  .chat-widget .chat-input::placeholder { color: var(--muted); }
+  .chat-widget .chat-input:focus { border-color: var(--purple-bright); box-shadow: 0 0 0 3px color-mix(in oklab, var(--purple-bright) 25%, transparent); }
+  .chat-widget .chat-send {
+    width: 40px; height: 40px; flex-shrink: 0;
     background: var(--purple-bright); color: var(--bg);
     border: none; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
+    cursor: pointer; touch-action: manipulation;
+    transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
   }
-  .chat-send:disabled { opacity: 0.6; cursor: default; }
-  .chat-send:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
+  .chat-widget .chat-send:disabled { opacity: 0.4; cursor: default; }
+  .chat-widget .chat-send:not(:disabled):active { transform: scale(0.94); }
+  .chat-widget .chat-send:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
 
-  /* Below 900px there's no side-rail to dock beside, and the site's own
-     nav becomes a hamburger toggle at the same breakpoint -- docking the
-     panel below it the way desktop does would waste most of a small
-     screen. Instead this is a real takeover (same pattern as Telegram/
-     Instagram/WhatsApp's chat screens): the panel and its own header sit
-     above the site nav entirely, rather than being hidden underneath it. */
-  @media (max-width: 900px) {
-    .chat-panel, .chat-overlay { z-index: 110; }
-  }
-
-  /* Tablet: slightly narrower drawer still reads comfortably */
-  @media (max-width: 900px) and (min-width: 641px) {
-    .chat-panel { width: min(360px, 100vw); }
+  /* -- reduced motion ----------------------------------------------- */
+  @media (prefers-reduced-motion: reduce) {
+    .chat-widget .chat-panel[data-state], .chat-widget .chat-overlay[data-state] { animation: none; }
+    .chat-widget .chat-row, .chat-widget .chat-suggest { animation: none; }
+    .chat-widget .chat-typing > span:not(.chat-sr) { animation: none; opacity: 0.7; }
+    .chat-widget .chat-trigger, .chat-widget .chat-send { transition: none; }
   }
 
-  /* Desktop: the side-rail (fixed, right:14px, 52px wide, full height) and
-     the sticky top nav are real persistent chrome here, not page content --
-     the trigger and panel must sit clear of both rather than overlap and
-     fight them for clicks. (The rail is only ever shown at >=900px, so
-     these rules mirror that exact breakpoint.) */
+  /* -- desktop: dock below the nav and beside the side-rail (fixed,
+        right:14px, 52px wide, full height; shown at >=900px) ----------- */
   @media (min-width: 900px) {
-    .chat-trigger { right: 96px; }
-    .chat-panel {
+    .chat-widget .chat-trigger { right: 96px; }
+    .chat-widget .chat-panel {
       top: var(--chat-nav-h, 84px);
       right: 66px;
-      border-left: 1px solid var(--line-strong);
       box-shadow: -12px 0 32px color-mix(in oklab, #000 30%, transparent);
     }
   }
 
-  /* Mobile: full-width takeover -- a 400px drawer on a 375px screen is
-     unusable, and this is exactly the audience most likely to hit back
-     instead of finding a close button, so the back-button handling above
-     matters most here. */
-  @media (max-width: 640px) {
-    .chat-panel { width: 100vw; border-left: none; }
-    .chat-trigger { right: var(--sp-4); bottom: var(--sp-4); }
-    .chat-starters { margin-left: 0; }
+  /* -- below 900px: real takeover above the nav (same pattern as
+        Telegram/Instagram/WhatsApp chat screens). Height follows the
+        visual viewport so the on-screen keyboard never covers the input. */
+  @media (max-width: 899px) {
+    .chat-widget .chat-panel, .chat-widget .chat-overlay { z-index: 110; }
+    .chat-widget .chat-panel {
+      top: var(--chat-vt, 0px);
+      bottom: auto;
+      height: var(--chat-vh, 100dvh);
+    }
+    .chat-widget .chat-input { font-size: 16px; } /* <16px makes iOS zoom the page on focus */
   }
+  @media (max-width: 899px) and (min-width: 641px) {
+    .chat-widget .chat-panel { width: min(380px, 100vw); }
+  }
+  @media (max-width: 640px) {
+    .chat-widget .chat-panel { width: 100vw; border-left: none; }
+    .chat-widget .chat-trigger { right: var(--sp-4); bottom: calc(var(--sp-4) + env(safe-area-inset-bottom, 0px)); }
+  }
+
+  /* Not on the Mission OS demo (it has its own fake-desktop metaphor) or paper. */
+  body:has(.demo-scope) .chat-widget { display: none; }
+  @media print { .chat-widget { display: none; } }
 </style>
