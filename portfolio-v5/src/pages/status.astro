@@ -13,7 +13,7 @@ import { CHANGELOG } from '../data/changelog';
         <div class="site-status-name"><span class="dot"></span> atharvapatil.tech · build {SITE.currentVersion}</div>
         <span class="site-status-tag">Operational</span>
       </div>
-      <p class="site-status-desc">0 known critical issues. Migrated to Astro on 2026-08-09; live on a preview branch. Main site (v4.7) unaffected until v5 has full parity.</p>
+      <p class="site-status-desc">0 known critical issues. Static Astro site on Cloudflare Pages, deployed from the main branch. Per-product status is below.</p>
     </div>
   </Section>
 
@@ -73,6 +73,7 @@ import { CHANGELOG } from '../data/changelog';
       padding: 4px 10px; border-radius: var(--radius-pill);
       border: 1px solid color-mix(in oklab, var(--green) 30%, transparent);
     }
+    :global(:root[data-theme='light']) .site-status-tag { color: #0E6B37; }
     .site-status-desc { color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); }
 
     .product-status-list { display: flex; flex-direction: column; gap: var(--sp-4); }
