@@ -40,6 +40,8 @@ export interface Project {
   stack?: string[];
   /** Only where the project's own description states it -- never inferred. */
   platforms?: string[];
+  /** Owner-confirmed: a release is on the way. No dates, no promises of detail. */
+  comingSoon?: string;
   role?: string;
   started?: string;
   currentVersion?: string;
@@ -96,7 +98,7 @@ export const PROJECTS: Project[] = [
     tagline: 'Your private files, sealed behind one password.',
     description:
       'Encrypted personal vault for Windows. AES-256-GCM authenticated encryption with Argon2id key derivation. Windows Hello unlock, in-app SHA-256-verified updater, portable mode. Fully offline, zero telemetry. Source is proprietary; public repo hosts releases and Discord community only.',
-    status: { kind: 'beta', label: 'Public Beta · v10.12.5' },
+    status: { kind: 'onHold', label: 'On Hold · v10.12.5' },
     category: 'app',
     tags: ['WPF', 'AES-256-GCM'],
     metaTags: ['Windows Desktop', 'AES-256-GCM', 'Fully Offline'],
@@ -116,8 +118,8 @@ export const PROJECTS: Project[] = [
     role: 'Sole engineer',
     started: 'March 2026',
     currentVersion: 'v10.12.5',
-    nextMilestone: 'v11 · new UI + final release currently in prep',
-    notes: 'Flagship commercial product of P4inz Interactive Labs. Source is proprietary; the public repo hosts releases and community discussion only. v11 (new UI, final-release grade) is in prep — case study will refresh once it ships.',
+    nextMilestone: 'Development is complete. The next release is on hold.',
+    notes: 'Flagship commercial product of P4inz Interactive Labs. Source is proprietary; the public repo hosts releases and community discussion only. The next version (v11, a full UI redesign) is complete; its release is on hold. The latest public build is v10.12.5.',
   },
   {
     slug: 'kanvaz',
@@ -145,6 +147,7 @@ export const PROJECTS: Project[] = [
     role: 'Sole engineer + designer',
     started: 'June 2026',
     currentVersion: 'v9.7.0',
+    comingSoon: 'Next release coming soon.',
     nextMilestone: 'Shipping most weeks, driven by user feedback. No fixed roadmap.',
     notes: 'v9.7.0 (30 Sept 2026) added an official AI Export plugin (a JSON + Markdown export of the board any AI agent can read, no MCP connection or server needed), Home Screen window controls, and separate Apple Silicon and Intel macOS installers, plus a fix to an async board-switching bug. Ten releases before that since the site last checked (v8.8.5 -> v9.6.0, Sept 2026): security/platform hardening (v9.0.0), 13 render modes plus Kanvaz Link and Open With (v9.1.0), a Blender picker and preview quality gates (v9.2.0), OBJ material support and HDR/EXR previews (v9.3.0), Krita/Clip Studio/Procreate recognition (v9.4.0), a third board type -- Scratch Board, with board-wide annotations and Illustrator-style tools (v9.5.0) -- and a second pass fixing Map View overlap, a Windows dialog-freeze bug, and BMP export (v9.6.0). Screenshots on the case study page are now the real v9.6.0 set, replacing one that had drifted as far back as v4.2.1.',
   },
@@ -170,6 +173,7 @@ export const PROJECTS: Project[] = [
     role: 'Creator and sole developer',
     started: '2026',
     currentVersion: 'V1 Beta',
+    comingSoon: 'Public release coming soon, after hardware testing.',
     nextMilestone: 'Hardware and manual testing on real devices, following a clean automated QEMU cold-boot pass. Candidate ISO built directly from the verified source tree; not yet hosted as a GitHub release download.',
     notes: 'Real jump since the site last checked: 348/348 (Phase 9) and 310/310 (Phase 10) workspace tests passing, a 19/19 adversarial security suite (path traversal, blob/manifest tampering, hash breaks, framing attacks all fail closed), clean clippy + cargo fmt, and a 7/7 live investigation flow (case creation through cryptographic case verification) passing inside QEMU. Desktop is Sway on Debian 13 Trixie. "No ISO yet" was true when last recorded and is no longer true.',
   },
@@ -415,6 +419,7 @@ export const PROJECTS: Project[] = [
     role: 'Sole engineer',
     started: '2026',
     currentVersion: 'v0.1.0',
+    comingSoon: 'First public release coming soon.',
     nextMilestone: 'Repo\'s own README calls this "active foundation development (pre-v1)": real and working, not yet feature-complete.',
   },
   {

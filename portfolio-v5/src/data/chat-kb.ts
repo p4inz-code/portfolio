@@ -383,6 +383,17 @@ function globalEntries(): KbEntry[] {
       answer: faqAnswer(3),
     },
     {
+      id: 'coming-soon',
+      all: [['launching soon', 'launch soon', 'coming soon', 'upcoming', 'what is next', 'whats next', 'what is coming', 'new products', 'next product']],
+      weight: 46,
+      noProject: true,
+      followups: ['What are you working on right now?', `Tell me about ${P}`, 'Are you available for freelance work?'],
+      answer: bullets('Releases on the way:', [
+        ...PROJECTS.filter((p) => p.comingSoon).sort(byOrder).map((p) => `${p.name}: ${p.comingSoon}`),
+        'More products are in the works; nothing else is public yet',
+      ]),
+    },
+    {
       id: 'count',
       all: [['how many', 'count', 'number of'], ['product*', 'project*', 'shipped', 'built', 'made', 'apps']],
       weight: 44,

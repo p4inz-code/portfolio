@@ -21,14 +21,16 @@ export interface ChangelogEntry {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     version: 'v5.47.0',
-    kind: 'in-progress',
-    summary: "Site-wide accuracy pass, a rewritten About page, LinkedIn, and a chat assistant that answers from the project data. Built on the design-lab branch, not yet merged.",
+    kind: 'released',
+    summary: "Site-wide accuracy pass, a rewritten and interactive About page, LinkedIn, a chat assistant that answers from the project data, and the project constellation on the Work page.",
     body: [
       "Every page was checked against the real repos, READMEs and release notes, and the mismatches were fixed. The privacy page said no form posts to a server and that nothing else is loaded from third parties; it now describes the contact form (Resend, Turnstile), the chat, the real fonts and every storage key. The contact page header no longer claims \"no data leaves this page\". The Mission OS page no longer promises Docker, VS Code, Tor Browser, design apps in mission-store, or LUKS2/TPM/Secure Boot as shipped; mission-store is a planned feature and the README says nothing about the rest, so the page now states only what the README does. \"No telemetry\" is scoped to the projects whose own descriptions say so instead of being a blanket claim. Smaller ones: a Nexus stat that contradicted its own updater, a homepage heading that called an on-hold project \"shipping right now\", a services page that said there was no form, security.txt saying there was no backend, and humans.txt still at v5.17.",
       "Data corrected against GitHub: Kanvaz v9.6.0 to v9.7.0 (released 30 September, 47 releases across v6-v9), and Crossport is now CrossPort v1.1.2, a released Windows file-transfer utility (Tauri, Apache-2.0; v1.1.1 and earlier were MIT) instead of an unreleased foundation build with no license. llms.txt had Kanvaz at v9.5.0, contradicted itself on Pursue OS, had a stale Nexus Discord invite and claimed there was no LinkedIn.",
       "About page rewritten in a plainer voice, with a ship log built from verified repo dates, the three studio names, and a stack section whose project chips are computed from the data. The resume shows Mission OS as an Open Beta on hold, gained LinkedIn, and the PDF was regenerated to stay a single page and in sync with the Markdown and the page.",
       "LinkedIn (linkedin.com/in/p4inz) added to the side rail, contact page, About page, resume and the site's identity data.",
       "Chat assistant: answers come from a knowledge base generated from the same project data the pages use, so they cannot drift; common questions cost nothing, and anything else can go to an AI model grounded in that data when one is enabled. Every question gets an answer. Sexual, abusive, prompt-injection, personal, joke and off-topic messages get a soft, polite boundary instead. 28 automated tests (npm test) cover the matcher, every chip and follow-up, the function's tiers and the never-empty guarantee.",
+      "The About page is now interactive: status tabs (in progress, released, on hold) generated from the project data, a ship log with a progress rail and a highlighted current month, a section index on wide screens, hover or focus on any project to light it up everywhere, evidence links under each principle, and Ask-the-assistant buttons that open the chat with the question filled in. An axe-core sweep of every page in both themes came back clean.",
+      "Status updates: Nexus is shown as development complete with its release on hold (latest public build v10.12.5), and Pursue OS, DRAFT and Kanvaz are marked as having releases coming soon. The Work page also gains the project constellation, a linked view of how the projects relate.",
     ],
   },
   {

@@ -471,6 +471,14 @@ const suggest = JSON.stringify(SUGGESTIONS.map((s) => s.q));
     }
     clearBtn.addEventListener('click', clearConversation);
 
+    // Other parts of the site (e.g. the About page) can hand the chat a question.
+    window.addEventListener('ap-chat-ask', (e) => {
+      const q = (e as CustomEvent).detail;
+      if (typeof q !== 'string' || !q.trim()) return;
+      if (!open) openChat();
+      ask(q.trim());
+    });
+
     input.addEventListener('input', syncSend);
     form.addEventListener('submit', (e) => {
       e.preventDefault();

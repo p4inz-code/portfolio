@@ -15,7 +15,7 @@ import { PROJECTS, PRODUCT_COUNT } from '../data/projects';
 const bySlug = (slug: string) => PROJECTS.find((p) => p.slug === slug)!;
 const chip = (slug: string) => {
   const p = bySlug(slug);
-  return { name: p.name, href: p.href, external: p.isExternal };
+  return { slug: p.slug, name: p.name, href: p.href, external: p.isExternal };
 };
 const isProduct = (p: (typeof PROJECTS)[number]) => !p.tags.includes('Client work') && !p.tags.includes('Event site');
 const usedIn = (term: string) =>
@@ -77,6 +77,34 @@ const chapters = [
   },
 ];
 
+// Where each project stands, grouped from the status in projects.ts.
+const groupDefs = [
+  { key: 'progress', label: 'In progress', kinds: ['active', 'beta', 'polish', 'testing'] },
+  { key: 'released', label: 'Released', kinds: ['released', 'final'] },
+  { key: 'hold', label: 'On hold', kinds: ['onHold'] },
+];
+const groups = groupDefs.map((g) => ({
+  key: g.key,
+  label: g.label,
+  items: PROJECTS.filter((p) => isProduct(p) && g.kinds.includes(p.status.kind))
+    .sort((a, b) => a.order - b.order)
+    .map((p) => ({ slug: p.slug, name: p.name, href: p.href, external: p.isExternal, sub: p.currentVersion ?? p.status.label })),
+}));
+
+const soon = PROJECTS.filter((p) => p.comingSoon).sort((a, b) => a.order - b.order);
+
+const toc = [
+  ['story', 'Story'],
+  ['studio', 'Studio names'],
+  ['log', 'Ship log'],
+  ['principles', 'Principles'],
+  ['numbers', 'Numbers'],
+  ['stack', 'Stack'],
+  ['identity', 'Identity'],
+  ['work', 'Working with me'],
+  ['contact', 'Contact'],
+];
+
 // Dates: GitHub repo-creation dates and release dates, checked with `gh api`.
 const shipLog = [
   {
@@ -115,28 +143,39 @@ const shipLog = [
     text: `The studio becomes ${SITE.studio}. DRAFT opens on the 5th. Veris jumps to v1.2, Pursue OS returns to active development with a candidate ISO passing automated boot validation, CrossPort ships v1.1.1 and v1.1.2 (29 and 30 Sept) and Kanvaz reaches ${bySlug('kanvaz').currentVersion}.`,
     chips: [chip('draft'), chip('veris'), chip('pursue-os'), chip('crossport'), chip('kanvaz')],
   },
+  {
+    when: 'Next',
+    title: 'Releases on the way',
+    text: `${nameList(soon)} have releases coming soon, with more products behind them.`,
+    chips: soon.map((p) => chip(p.slug)),
+  },
 ];
 
 const principles = [
   {
     title: 'No telemetry',
+    evidence: [{ label: 'Kanvaz README', href: 'https://github.com/p4inz-code/kanvaz#readme' }, { label: 'Mission OS README', href: 'https://github.com/p4inz-code/mission-os#readme' }, { label: 'Privacy page', href: '/privacy/' }],
     body: `${nameList(noTelemetry)} ship without telemetry, and each project's own page or README says so. Where a product touches the network at all, it's an update check or a download, not a report about you.`,
   },
   {
     title: 'Hardened by default',
+    evidence: [{ label: 'Mission OS README', href: 'https://github.com/p4inz-code/mission-os#readme' }, { label: 'Mission OS page', href: '/mission-os/' }],
     body: 'Mission OS switches its sysctl hardening and Rust system services on during install, with no post-install script to remember. Nexus seals your files with AES-256-GCM and Argon2id. Security is applied automatically where the product supports it, not left as a manual checklist for afterward.',
   },
   {
     title: "Say what's true",
+    evidence: [{ label: 'Editorial policy', href: '/editorial/' }, { label: 'Changelog', href: '/status/' }],
     body: "Before I ship an update to this site, I check the claim against the real README or release notes. If something's only a concept preview, it says so. I've delayed a ship before because a status label on /status was already out of date.",
   },
   {
     title: 'I build all of it myself',
+    evidence: [{ label: 'Site source on GitHub', href: 'https://github.com/p4inz-code/portfolio' }, { label: 'Work', href: '/work/' }],
     body: "The products, the case studies, this site's design system, the Mission OS demo, the résumé. One person, start to finish, because that's just how the timeline worked out.",
   },
   {
     title: 'Free when I can make it free',
-    body: `${nameList(openSource)} are open source. Veris is free on npm (veris-cli). Nexus is the one paid product, because running a one-person studio costs money, but it doesn't get a telemetry exception either.`,
+    evidence: [{ label: 'License list', href: '/terms/' }, { label: 'Support page', href: '/support/' }],
+    body: `${nameList(openSource)} are open source. Veris is free on npm (veris-cli). Nexus is the one commercial product, and it doesn't get a telemetry exception either.`,
   },
 ];
 
@@ -204,6 +243,7 @@ const stackReasons = [
 ---
 <BaseLayout title="About — Atharva Patil" description="Atharva Patil — solo founder of P4inz Interactive Labs, Navi Mumbai. Software engineer and second-year VFX/3D animation student." keywords="who is p4inz, who is painz, p4inz real name, Atharva Patil p4inz, P4INZ developer, P4inz Interactive Labs, Northbyte Studios">
 
+  <div class="about-tight">
   <!-- HERO -->
   <Section wide headingLevel="h1" heading="Software engineer, in the second year of a 3D animation degree." headingEmphasis="Atharva Patil.">
     <div class="about-hero">
@@ -240,8 +280,34 @@ const stackReasons = [
     </div>
   </Section>
 
+  <!-- WHERE EACH PROJECT STANDS -->
+  <Section id="glance" eyebrow="Right now" heading="Where each project stands.">
+    <div class="tabs" data-tabs>
+      <div class="tab-list" role="tablist" aria-label="Project status">
+        {groups.map((g, i) => (
+          <button type="button" role="tab" class="tab" id={`tab-${g.key}`} aria-controls={`panel-${g.key}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-tab={g.key}>
+            {g.label} <span class="tab-count">{g.items.length}</span>
+          </button>
+        ))}
+      </div>
+      {groups.map((g) => (
+        <div role="tabpanel" class="tab-panel" id={`panel-${g.key}`} aria-labelledby={`tab-${g.key}`} data-panel={g.key} tabindex="0">
+          <ul class="chips chips-lg" role="list">
+            {g.items.map((c) => (
+              <li>
+                <a class="chip chip-lg" href={c.href} data-slug={c.slug} {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+                  <b>{c.name}</b><em>{c.sub}</em>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </Section>
+
   <!-- CHAPTERS -->
-  <Section eyebrow="The short version" heading="Why software and 3D, and why probably not stopping.">
+  <Section id="story" eyebrow="The short version" heading="Why software and 3D, and why probably not stopping.">
     <div class="chapters">
       {chapters.map((c) => (
         <article class="chapter">
@@ -255,7 +321,7 @@ const stackReasons = [
   </Section>
 
   <!-- NAMES -->
-  <Section eyebrow="Studio names" heading="The studio has had three names.">
+  <Section id="studio" eyebrow="Studio names" heading="The studio has had three names.">
     <ol class="names" role="list">
       {names.map((n) => (
         <li class:list={['name-node', n.current && 'is-current']}>
@@ -268,7 +334,7 @@ const stackReasons = [
   </Section>
 
   <!-- SHIP LOG -->
-  <Section eyebrow="Ship log" heading="The last two years, one month at a time.">
+  <Section id="log" eyebrow="Ship log" heading="The last two years, one month at a time.">
     <ol class="log" role="list">
       {shipLog.map((m) => (
         <li class="log-row">
@@ -280,7 +346,7 @@ const stackReasons = [
               <ul class="chips" role="list">
                 {m.chips.map((c) => (
                   <li>
-                    <a class="chip" href={c.href} {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{c.name}</a>
+                    <a class="chip" href={c.href} data-slug={c.slug} {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{c.name}</a>
                   </li>
                 ))}
               </ul>
@@ -292,19 +358,22 @@ const stackReasons = [
   </Section>
 
   <!-- PRINCIPLES -->
-  <Section eyebrow="What I believe" heading="Things you can go check, not a values statement." intro="Every line here holds up if you read the installer copy, the ship notes, or the source for any product on this site.">
+  <Section id="principles" eyebrow="What I believe" heading="Things you can go check, not a values statement." intro="Every line here holds up if you read the installer copy, the ship notes, or the source for any product on this site.">
     <div class="pr-grid">
       {principles.map((p) => (
         <article class="pr-card">
           <h3 class="pr-title">{p.title}</h3>
           <p class="pr-body">{p.body}</p>
+          {p.evidence && (
+            <p class="pr-evidence"><span>Check it</span>{p.evidence.map((e, i) => (<><a href={e.href} {...(e.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{e.label}</a>{i < p.evidence.length - 1 ? ' · ' : ''}</>))}</p>
+          )}
         </article>
       ))}
     </div>
   </Section>
 
   <!-- INVESTOR / COLLABORATOR READ -->
-  <Section eyebrow="For investors + collaborators" heading="What this studio looks like from the outside." intro="Every number below is checkable, against the repos, or against the changelog on /status.">
+  <Section id="numbers" eyebrow="For investors + collaborators" heading="What this studio looks like from the outside." intro="Every number below is checkable, against the repos, or against the changelog on /status.">
     <dl class="tr-grid">
       {traction.map((t) => (
         <div class="tr-cell">
@@ -321,13 +390,16 @@ const stackReasons = [
   </Section>
 
   <!-- STACK -->
-  <Section eyebrow="Current stack" heading="What I reach for, and why." intro="I don't have one favourite language. I have projects that each demanded the right one and I picked deliberately. The chips are generated from the project data, so they always match what's really built with what.">
+  <Section id="stack" eyebrow="Current stack" heading="What I reach for, and why." intro="I don't have one favourite language. I have projects that each demanded the right one and I picked deliberately. The chips are generated from the project data, so they always match what's really built with what.">
     <div class="stack-list">
       {stackReasons.map((s) => (
         <article class="stack-row">
           <header class="stack-head">
             <h3 class="stack-label">{s.label}</h3>
             <p class="stack-verdict">{s.verdict}</p>
+            {s.used[0] && (
+              <button type="button" class="ask-btn" data-ask={`What is ${s.used[0].name} built with?`}>Ask the assistant <span aria-hidden="true">→</span></button>
+            )}
           </header>
           <div>
             <p class="stack-reason">{s.reason}</p>
@@ -335,7 +407,7 @@ const stackReasons = [
               <ul class="chips" role="list" aria-label={`Built with ${s.label}`}>
                 {s.used.map((c) => (
                   <li>
-                    <a class="chip" href={c.href} {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{c.name}</a>
+                    <a class="chip" href={c.href} data-slug={c.slug} {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{c.name}</a>
                   </li>
                 ))}
               </ul>
@@ -347,7 +419,7 @@ const stackReasons = [
   </Section>
 
   <!-- IDENTITY / HANDLES -->
-  <Section eyebrow="Identity" heading="One person, several names, one canonical source.">
+  <Section id="identity" eyebrow="Identity" heading="One person, several names, one canonical source.">
     <div class="id-grid">
       <div class="id-row"><span class="id-key">Real name</span><span class="id-val">Atharva Patil</span></div>
       <div class="id-row"><span class="id-key">Current handle</span><span class="id-val">p4inz, everywhere (GitHub, Discord, this site's byline)</span></div>
@@ -361,7 +433,7 @@ const stackReasons = [
   </Section>
 
   <!-- AVAILABILITY -->
-  <Section eyebrow="Working with me" heading="Freelance capacity: selective, taking new work.">
+  <Section id="work" eyebrow="Working with me" heading="Freelance capacity: selective, taking new work.">
     <div class="avail-block">
       <p class="avail-lede">
         I take on independent client work in web development, UI/UX, branding, and 3D/VFX
@@ -381,7 +453,7 @@ const stackReasons = [
   </Section>
 
   <!-- CONTACT -->
-  <Section eyebrow="Contact" heading="Reach me directly.">
+  <Section id="contact" eyebrow="Contact" heading="Reach me directly.">
     <div class="contact-links">
       <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
       <a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer">{CONTACT.linkedinHandle}</a>
@@ -390,8 +462,170 @@ const stackReasons = [
       <a href="/contact/">Full contact page →</a>
     </div>
   </Section>
+  </div>
+
+  <nav class="toc" aria-label="On this page">
+    <ol>
+      {toc.map(([id, label]) => (
+        <li><a href={`#${id}`} data-toc={id}><span>{label}</span></a></li>
+      ))}
+    </ol>
+  </nav>
+
+  <script>
+    (function () {
+      document.documentElement.classList.add('js');
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Status tabs (without JS all three lists just show, stacked).
+      document.querySelectorAll<HTMLElement>('[data-tabs]').forEach((root) => {
+        const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+        const panels = Array.from(root.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+        function select(tab: HTMLButtonElement, focus: boolean) {
+          tabs.forEach((t) => {
+            const on = t === tab;
+            t.setAttribute('aria-selected', String(on));
+            t.tabIndex = on ? 0 : -1;
+          });
+          panels.forEach((p) => { p.hidden = p.id !== tab.getAttribute('aria-controls'); });
+          if (focus) tab.focus();
+        }
+        tabs.forEach((t, i) => {
+          t.addEventListener('click', () => select(t, false));
+          t.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') { e.preventDefault(); select(tabs[(i + 1) % tabs.length], true); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); select(tabs[(i - 1 + tabs.length) % tabs.length], true); }
+            else if (e.key === 'Home') { e.preventDefault(); select(tabs[0], true); }
+            else if (e.key === 'End') { e.preventDefault(); select(tabs[tabs.length - 1], true); }
+          });
+        });
+        select(tabs[0], false);
+      });
+
+      // Ship log: progress rail + the month in view.
+      const log = document.querySelector<HTMLElement>('.log');
+      const rows = log ? Array.from(log.querySelectorAll<HTMLElement>('.log-row')) : [];
+      // Section index: which section you're in.
+      const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc]'));
+      const targets = tocLinks.map((a) => document.getElementById(a.dataset.toc || '')).filter(Boolean) as HTMLElement[];
+
+      let ticking = false;
+      function update() {
+        ticking = false;
+        const mid = window.innerHeight * 0.45;
+        if (log && rows.length) {
+          const r = log.getBoundingClientRect();
+          const p = Math.min(1, Math.max(0, (mid - r.top) / r.height));
+          log.style.setProperty('--p', p.toFixed(3));
+          let active = -1;
+          rows.forEach((row, i) => { if (row.getBoundingClientRect().top < mid) active = i; });
+          rows.forEach((row, i) => {
+            row.classList.toggle('is-active', i === active);
+            row.classList.toggle('is-past', i < active);
+          });
+        }
+        let current = '';
+        targets.forEach((t) => { if (t.getBoundingClientRect().top < window.innerHeight * 0.4) current = t.id; });
+        tocLinks.forEach((a) => {
+          if (a.dataset.toc === current) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+        });
+      }
+      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      update();
+
+      // Hover or focus a project anywhere: light up the same project everywhere.
+      function setHl(slug: string | null) {
+        document.querySelectorAll<HTMLElement>('.chip[data-slug]').forEach((c) => c.classList.toggle('hl', !!slug && c.dataset.slug === slug));
+      }
+      document.addEventListener('mouseover', (e) => setHl((e.target as HTMLElement).closest<HTMLElement>('.chip[data-slug]')?.dataset.slug ?? null));
+      document.addEventListener('focusin', (e) => setHl((e.target as HTMLElement).closest<HTMLElement>('.chip[data-slug]')?.dataset.slug ?? null));
+      document.addEventListener('mouseout', () => setHl(null));
+      document.addEventListener('focusout', () => setHl(null));
+
+      // "Ask the assistant" buttons open the chat with the question filled in.
+      document.querySelectorAll<HTMLButtonElement>('[data-ask]').forEach((b) => {
+        b.addEventListener('click', () => window.dispatchEvent(new CustomEvent('ap-chat-ask', { detail: b.dataset.ask })));
+      });
+      void reduce;
+    })();
+  </script>
 
   <style>
+    /* ============ Tighter rhythm on this page ============ */
+    .about-tight :global(.section) { padding: var(--sp-9) 0; }
+    .about-tight :global(.section:first-of-type) { padding-top: var(--sp-8); }
+
+    /* ============ Status tabs ============ */
+    .tab-list { display: flex; gap: var(--sp-2); flex-wrap: wrap; margin-bottom: var(--sp-5); }
+    .tab {
+      display: inline-flex; align-items: center; gap: var(--sp-2);
+      min-height: 40px; padding: 6px 16px;
+      background: none; color: var(--muted);
+      border: 1px solid var(--line-strong); border-radius: var(--radius-pill);
+      font: inherit; font-size: var(--text-sm); cursor: pointer;
+      transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+    }
+    .tab:hover { color: var(--text); border-color: var(--purple-bright); }
+    .tab[aria-selected='true'] { color: var(--text); border-color: var(--purple-bright); background: color-mix(in oklab, var(--purple) 14%, transparent); }
+    .tab:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
+    .tab-count { font-family: var(--font-mono); font-size: var(--text-xxs); color: var(--muted); }
+    .tab-panel { outline: none; }
+    .tab-panel + .tab-panel { margin-top: var(--sp-5); }
+    .tab-panel[hidden] { display: none; }
+    .tab-panel:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 4px; border-radius: var(--radius); }
+    .chips-lg { gap: var(--sp-3); }
+    .chip-lg { flex-direction: column; align-items: flex-start; gap: 2px; padding: 10px 16px; min-height: 52px; border-radius: var(--radius); }
+    .chip-lg b { font-weight: 500; font-size: var(--text-sm); }
+    .chip-lg em { font-style: normal; font-family: var(--font-mono); font-size: var(--text-xxs); color: var(--muted); }
+    .chip.hl { border-color: var(--purple-bright); color: var(--purple-bright); background: color-mix(in oklab, var(--purple) 16%, transparent); }
+
+    /* ============ Ship log rail ============ */
+    .log { position: relative; margin-left: 26px; }
+    .log::before { content: ''; position: absolute; left: -20px; top: 0; bottom: 0; width: 2px; background: var(--line); }
+    .log::after { content: ''; position: absolute; left: -20px; top: 0; width: 2px; height: calc(var(--p, 0) * 100%); background: var(--purple-bright); }
+    .log-row { position: relative; }
+    .log-row::before {
+      content: ''; position: absolute; left: -26px; top: calc(var(--sp-5) + 5px);
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--bg); border: 2px solid var(--line-strong); z-index: 1;
+    }
+    .log-row.is-past::before { border-color: var(--purple-bright); }
+    .log-row.is-active::before { background: var(--purple-bright); border-color: var(--purple-bright); box-shadow: 0 0 0 4px color-mix(in oklab, var(--purple-bright) 22%, transparent); }
+    .log-row.is-active .log-when { color: var(--text); }
+    .log-row.is-active .log-title { color: var(--purple-bright); }
+
+    /* ============ Section index (wide screens only) ============ */
+    .toc { display: none; }
+    @media (min-width: 1380px) {
+      .toc { display: block; position: fixed; left: 18px; top: 24%; z-index: 40; }
+    }
+    .toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+    .toc a { display: flex; align-items: center; gap: 10px; min-height: 24px; color: var(--muted); text-decoration: none; }
+    .toc a::before { content: ''; width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--line-strong); flex-shrink: 0; transition: background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
+    .toc a span { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; opacity: 0; transform: translateX(-4px); transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out); white-space: nowrap; }
+    .toc a:hover span, .toc a:focus-visible span, .toc a[aria-current='true'] span { opacity: 1; transform: none; }
+    .toc a:hover::before, .toc a[aria-current='true']::before { background: var(--purple-bright); border-color: var(--purple-bright); }
+    .toc a[aria-current='true'] { color: var(--text); }
+    .toc a:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 3px; border-radius: 4px; }
+
+    /* ============ Principles: evidence + ask buttons ============ */
+    .pr-evidence { margin-top: var(--sp-3); font-size: var(--text-xs); color: var(--muted); }
+    .pr-evidence span { font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; margin-right: 6px; }
+    .pr-evidence a { color: var(--purple-bright); text-decoration: underline; text-underline-offset: 3px; }
+    .ask-btn {
+      margin-top: var(--sp-2); align-self: flex-start; min-height: 32px; padding: 4px 0;
+      background: none; border: none; color: var(--purple-bright);
+      font: inherit; font-size: var(--text-xs); cursor: pointer; text-align: left;
+    }
+    .ask-btn:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .ask-btn:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; border-radius: 3px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .toc a span, .toc a::before, .tab, .chip { transition: none; }
+    }
+
     /* ============ Hero with portrait ============ */
     .about-hero {
       display: grid;

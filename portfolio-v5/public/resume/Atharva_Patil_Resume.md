@@ -38,7 +38,7 @@ Software engineer and product builder focused on desktop applications, developer
 - Shipped seven releases in about a week during one update cycle in September 2026 (v9.0.0 to v9.6.0), all backward-compatible with the free, open-source core.
 
 ### Nexus &nbsp;·&nbsp; Encrypted Personal Vault
-*[github.com/p4inz-code/nexus-desktop](https://github.com/p4inz-code/nexus-desktop)* &nbsp;·&nbsp; Mar 2026 – Present &nbsp;·&nbsp; Windows Desktop
+*[github.com/p4inz-code/nexus-desktop](https://github.com/p4inz-code/nexus-desktop)* &nbsp;·&nbsp; Mar 2026 &nbsp;·&nbsp; Windows Desktop &nbsp;·&nbsp; release on hold
 
 - Engineered a Windows encrypted vault using AES-256-GCM authenticated encryption and Argon2id key derivation, with Windows Hello as a secondary unlock.
 - Zero telemetry, zero cloud: content stays encrypted at rest and exists decrypted only in memory while the vault is unlocked.

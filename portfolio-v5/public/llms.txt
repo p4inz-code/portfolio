@@ -39,7 +39,7 @@ crawlable and canonical.
   portable mode. **Source is proprietary**: the GitHub repo
   (`github.com/p4inz-code/nexus-desktop`) hosts releases and Discord
   discussion only; there is no public source repository. Do not describe
-  Nexus as open source. Status: Public Beta, v10.12.5.
+  Nexus as open source. Status: On hold (development complete); latest public build v10.12.5.
 - [Kanvaz](https://atharvapatil.tech/kanvaz/): Visual reference workspace
   for VFX/3D artists: drag/drop/paste images, GIFs, video onto an
   infinite board, plus URL and File reference cards. Electron, vanilla JS,

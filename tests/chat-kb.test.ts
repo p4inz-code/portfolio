@@ -67,6 +67,8 @@ test('real question -> expected entry', () => {
     ['What is Ascent built with', 'ascent:stack'],
     ['How many products have you shipped?', 'count'],
     ['What are you working on right now?', 'working-now'],
+    ["What's launching soon?", 'coming-soon'],
+    ['Anything coming soon?', 'coming-soon'],
     ['Are you working on Kanvaz right now?', 'working-now'],
     ['Does Kanvaz work on Mac?', 'kanvaz:platform'],
     ['What does Nexus run on?', 'nexus:platform'],
