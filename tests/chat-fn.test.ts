@@ -160,13 +160,26 @@ test('no AI binding: an unmatched question still gets a real answer, not an erro
   assert.equal(body.contact, true);
   assert.match(body.answer, /don't have that/i);
   assert.ok(body.followups.length >= 3, 'fallback should offer things to ask instead');
+  assert.equal(body.fallbackReason, 'no_binding');
+});
+
+test('no AI binding: the fallback never uses a visitor\'s rate-limit quota', async () => {
+  mockFetch();
+  const kv = new FakeKV();
+  for (let i = 0; i < 12; i++) await post(`Unmatched question number ${i} about nothing relevant`, { RATE_LIMIT: kv });
+  assert.equal(kv.store.size, 0, 'nothing should be counted when there is no AI to ration');
+  const last = await post('One more unmatched question about nothing relevant', { RATE_LIMIT: kv });
+  assert.equal(last.status, 200, 'never rate-limited when no AI is configured');
 });
 
 test('AI failure or an empty AI reply also falls back gracefully', async () => {
   mockFetch();
   const boom = await post('Would you consider moving to Berlin someday?', { AI: { run: async () => { throw new Error('model down'); } } });
   assert.equal(boom.status, 200);
-  assert.equal((await boom.json()).source, 'fallback');
+  const boomBody = await boom.json();
+  assert.equal(boomBody.source, 'fallback');
+  assert.equal(boomBody.fallbackReason, 'ai_error');
+  assert.equal(boomBody.detail, 'model down');
   const empty = await post('Do you like mountains or beaches more?', { AI: { run: async () => ({ response: '   ' }) } });
   assert.equal(empty.status, 200);
   assert.equal((await empty.json()).source, 'fallback');

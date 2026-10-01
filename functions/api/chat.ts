@@ -71,7 +71,11 @@ const DEFAULT_FALLBACK = [
   '- For anything else, the contact form reaches Atharva directly',
 ].join('\n');
 
-function fallbackReply(kb: Kb | null): Response {
+type FallbackReason = 'no_binding' | 'no_grounding' | 'ai_error' | 'ai_empty';
+
+// reason/detail say why the AI tier didn't answer (a category, plus a short
+// error message when the model call itself failed); nothing sensitive.
+function fallbackReply(kb: Kb | null, reason?: FallbackReason, detail?: string): Response {
   const f = kb?.fallback;
   return json({
     ok: true,
@@ -79,6 +83,8 @@ function fallbackReply(kb: Kb | null): Response {
     source: 'fallback',
     contact: true,
     followups: f?.followups ?? [],
+    fallbackReason: reason,
+    ...(detail ? { detail } : {}),
   });
 }
 let kbCache: { at: number; kb: Kb } | null = null;
@@ -160,6 +166,12 @@ export async function onRequestPost(context: { request: Request; env: Env }): Pr
     return json({ ok: true, answer: hit.answer, source: 'faq', contact: !!hit.contact, followups: hit.followups ?? [] });
   }
 
+  // Without an AI binding there is nothing to ration: reply with the
+  // fallback before the limiter, so it never uses a visitor's quota.
+  if (!env.AI) {
+    return fallbackReply(kb, 'no_binding');
+  }
+
   // Rate limit only applies past this point -- FAQ hits are free, no reason
   // to burn a visitor's quota on a question that cost nothing to answer.
   const kv = env.RATE_LIMIT;
@@ -189,11 +201,7 @@ export async function onRequestPost(context: { request: Request; env: Env }): Pr
     if (cached) return json({ ok: true, answer: cached, source: 'cache' });
   }
 
-  // No AI binding: answer with the knowledge base's fallback instead of an
-  // error, so the visitor always gets a reply and a next step.
-  if (!env.AI) {
-    return fallbackReply(kb);
-  }
+  const ai = env.AI;
 
   // Tier 3: real AI call, grounded in the compact KB block. It covers every
   // project in ~5KB; llms.txt (~20KB) was being cut off at 6000 chars, so
@@ -208,11 +216,11 @@ export async function onRequestPost(context: { request: Request; env: Env }): Pr
     }
   }
   if (!grounding) {
-    return fallbackReply(kb);
+    return fallbackReply(kb, 'no_grounding');
   }
 
   try {
-    const result = await env.AI.run(MODEL, {
+    const result = await ai.run(MODEL, {
       messages: [
         { role: 'system', content: `${SYSTEM_PROMPT}\n\nReference data:\n${grounding}` },
         { role: 'user', content: question },
@@ -221,13 +229,14 @@ export async function onRequestPost(context: { request: Request; env: Env }): Pr
     });
     const answer = typeof result === 'string' ? result : result.response;
     const trimmed = (answer ?? '').trim().slice(0, 900);
-    if (!trimmed) return fallbackReply(kb);
+    if (!trimmed) return fallbackReply(kb, 'ai_empty');
 
     if (kv && cacheKey) {
       await kv.put(cacheKey, trimmed, { expirationTtl: 172_800 }); // 48h
     }
     return json({ ok: true, answer: trimmed, source: 'ai', contact: /\/contact/.test(trimmed) });
-  } catch {
-    return fallbackReply(kb);
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    return fallbackReply(kb, 'ai_error', msg.slice(0, 160));
   }
 }
