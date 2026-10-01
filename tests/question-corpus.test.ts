@@ -145,6 +145,10 @@ for (const q of [
   'what is it like building an operating system alone', 'would you ever teach a class on compilers', 'do you prefer tabs or spaces', 'what keyboard do you use',
   'do you dream in code', 'what was your first program', 'what is your morning routine', 'how many hours do you work a day',
   'what is the hardest bug you fixed', 'do you listen to podcasts', 'any advice for beginners', 'what laptop do you use',
+  // long, mixed-intent questions that merely contain a topic word belong to the AI tier
+  'what is it like building an operating system alone as a student', 'as a student how do you balance a studio and your classes and still sleep',
+  'i am a student and want to build a portfolio like yours so what should i learn first and in which order',
+  'when you are based in india how do you handle the clients who want calls at odd hours in their own time zone every single week',
 ]) add('out-of-scope', q, NONE);
 
 // -- 7. two projects in one question: left for the AI to compare -------------------

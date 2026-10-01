@@ -832,6 +832,11 @@ function refine(entries: KbEntry[]): KbEntry[] {
     const add = [...(ADD_TERMS[e.id] ?? []), ...(MORE_TERMS[e.id] ?? [])];
     if (add.length) e.all[0] = [...new Set([...e.all[0], ...add])];
     if (WEIGHTS[e.id] !== undefined) e.weight = WEIGHTS[e.id];
+    // A long, rambling question that merely contains a topic word ("...building an OS
+    // alone as a student") is probably about something else; leave it to the AI tier.
+    if (!e.maxWords && !e.project && e.noProject && !e.id.startsWith('boundary-') && !e.id.startsWith('offtopic-') && !e.id.startsWith('skill') && e.id !== 'tech-overview') {
+      e.maxWords = e.id === 'education' ? 9 : 14;
+    }
     const remove = REMOVE_TERMS[e.id];
     if (remove) e.all[0] = e.all[0].filter((t) => !remove.includes(t));
   }
