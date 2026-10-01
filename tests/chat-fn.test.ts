@@ -172,6 +172,16 @@ test('no AI binding: the fallback never uses a visitor\'s rate-limit quota', asy
   assert.equal(last.status, 200, 'never rate-limited when no AI is configured');
 });
 
+test('a retired model moves on to the next one instead of failing', async () => {
+  mockFetch();
+  const tried: string[] = [];
+  const env = { AI: { run: async (model: string) => { tried.push(model); if (tried.length === 1) throw new Error('5028: model was deprecated'); return { response: 'Lead line\n- a point' }; } } };
+  const body = await (await post('Would you ever speak at a conference about compilers?', env)).json();
+  assert.equal(body.source, 'ai');
+  assert.equal(tried.length, 2, 'should have tried a second model');
+  assert.notEqual(tried[0], tried[1]);
+});
+
 test('AI failure or an empty AI reply also falls back gracefully', async () => {
   mockFetch();
   const boom = await post('Would you consider moving to Berlin someday?', { AI: { run: async () => { throw new Error('model down'); } } });

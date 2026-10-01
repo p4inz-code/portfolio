@@ -36,7 +36,14 @@ interface Env {
 }
 
 const ALLOWED_ORIGIN = 'https://atharvapatil.tech';
-const MODEL = '@cf/meta/llama-3.1-8b-instruct';
+// Tried in order. The old '@cf/meta/llama-3.1-8b-instruct' was deprecated by
+// Cloudflare on 2026-05-30 (error 5028), which silently turned every AI reply
+// into the fallback -- so a retired model now just moves to the next one.
+const MODELS = [
+  '@cf/meta/llama-3.1-8b-instruct-fp8',
+  '@cf/meta/llama-3.2-3b-instruct',
+  '@cf/ibm-granite/granite-4.0-h-micro',
+];
 
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
@@ -220,16 +227,26 @@ export async function onRequestPost(context: { request: Request; env: Env }): Pr
   }
 
   try {
-    const result = await ai.run(MODEL, {
-      messages: [
-        { role: 'system', content: `${SYSTEM_PROMPT}\n\nReference data:\n${grounding}` },
-        { role: 'user', content: question },
-      ],
-      max_tokens: 260,
-    });
-    const answer = typeof result === 'string' ? result : result.response;
-    const trimmed = (answer ?? '').trim().slice(0, 900);
-    if (!trimmed) return fallbackReply(kb, 'ai_empty');
+    const messages = [
+      { role: 'system', content: `${SYSTEM_PROMPT}\n\nReference data:\n${grounding}` },
+      { role: 'user', content: question },
+    ];
+    let trimmed = '';
+    let lastError: unknown = null;
+    for (const model of MODELS) {
+      try {
+        const result = await ai.run(model, { messages, max_tokens: 260 });
+        const answer = typeof result === 'string' ? result : result.response;
+        trimmed = (answer ?? '').trim().slice(0, 900);
+        if (trimmed) break;
+      } catch (err) {
+        lastError = err;
+      }
+    }
+    if (!trimmed) {
+      if (lastError) throw lastError;
+      return fallbackReply(kb, 'ai_empty');
+    }
 
     if (kv && cacheKey) {
       await kv.put(cacheKey, trimmed, { expirationTtl: 172_800 }); // 48h
