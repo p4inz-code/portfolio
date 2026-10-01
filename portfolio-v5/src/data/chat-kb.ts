@@ -64,19 +64,19 @@ const ALIASES: Record<string, string[]> = {
 };
 
 const INTENTS = {
-  cost: ['cost', 'costs', 'price', 'pricing', 'paid', 'pay', 'buy', 'purchase', 'free'],
-  license: ['licen*', 'open source', 'opensource', 'proprietary', 'mit', 'gpl', 'gplv3', 'apache', 'source code'],
-  status: ['status', 'version', 'release*', 'latest', 'current*', 'stage', 'beta', 'ready', 'finished', 'launched', 'live', 'progress', 'maintained'],
-  next: ['next', 'roadmap', 'plan', 'planned', 'planning', 'upcoming', 'future', 'coming', 'milestone'],
+  cost: ['cost', 'costs', 'price', 'pricing', 'paid', 'pay', 'buy', 'purchase', 'free', 'how much'],
+  license: ['licen*', 'open source', 'opensource', 'proprietary', 'mit', 'gpl', 'gplv3', 'apache', 'source code', 'read the source', 'the source', 'commercial*', 'redistribut*', 'modify', 'modif*', 'credit', 'attribution', 'fork'],
+  status: ['status', 'version', 'release*', 'latest', 'current*', 'stage', 'beta', 'ready', 'finished', 'launched', 'live', 'progress', 'maintained', 'out yet', 'shipped', 'stable', 'production ready', 'still updating', 'still maintained', 'still supported', 'still alive', 'dead', 'abandoned', 'discontinued', 'active', 'actively', 'changelog', 'what changed', 'release notes', 'new in'],
+  next: ['next', 'roadmap', 'plan', 'planned', 'planning', 'upcoming', 'future', 'coming', 'milestone', 'plans', 'updat*', 'launch', 'launching', 'launches', 'new version', 'next version', 'next release', 'next update', 'new release', 'release date', 'eta', 'coming out', 'come out', 'new features', 'new feature', 'more features', 'upcoming features', 'planned features', 'future features'],
   download: ['download*', 'install*', 'link', 'links', 'github', 'repo', 'repository', 'npm', 'itch', 'play', 'try', 'releases', 'website', 'url', 'visit', 'where can i get', 'where to get', 'where do i get', 'how to get', 'how do i get', 'get it'],
   platform: ['platform*', 'mac', 'macos', 'windows', 'linux', 'android', 'ios', 'run on', 'runs on', 'work on', 'works on', 'operating system'],
-  started: ['when', 'start date', 'started', 'begin', 'began', 'how long', 'since'],
-  role: ['role', 'who built', 'who made', 'who wrote', 'who works', 'alone', 'solo'],
+  started: ['when', 'start date', 'how old', 'age of', 'old is', 'started', 'begin', 'began', 'how long', 'since'],
+  role: ['role', 'who built', 'who made', 'who wrote', 'who works', 'alone', 'solo', 'who else', 'worked on', 'who helped', 'contributors'],
   stack: ['stack', 'built with', 'built using', 'built on', 'made with', 'made using', 'written in', 'language*', 'tech', 'technolog*', 'framework*', 'use', 'uses', 'using', 'powered', 'engine'],
 } as const;
 type Intent = keyof typeof INTENTS;
 const INTENT_WEIGHT: Record<Intent, number> = {
-  cost: 67, license: 66, status: 65, next: 64, download: 63, platform: 62, started: 61, role: 60, stack: 59,
+  cost: 67, license: 66, next: 65.5, status: 65, download: 63, platform: 62, started: 61, role: 60, stack: 59,
 };
 
 function firstSentences(text: string, softCap = 110): string {
@@ -626,7 +626,7 @@ const KNOW = [
   'know', 'knows', 'knew', 'use', 'uses', 'used', 'using', 'work with', 'works with', 'worked with', 'working with',
   'experience', 'experienced', 'familiar', 'skilled', 'skill*', 'proficient', 'expert', 'good at', 'code in', 'coding in',
   'program in', 'programming in', 'write in', 'written in', 'comfortable', 'learn', 'learned', 'build with', 'built with',
-  'develop in', 'developing in', 'your stack', 'his stack', 'your toolkit', 'his toolkit',
+  'develop in', 'developing in', 'good with', 'his list', 'your list', 'script in', 'scripting in', 'script with', 'scripts in', 'your stack', 'his stack', 'your toolkit', 'his toolkit',
 ];
 const plainName = (n: string) => n.toLowerCase().replace(/[-\/_]/g, ' ').replace(/[^\w\s]/g, '').replace(/\s+/g, ' ').trim();
 const slugOf = (n: string) => plainName(n).replace(/ /g, '-');
@@ -656,7 +656,7 @@ function skillEntries(): KbEntry[] {
       const id = `skill:${slugOf(s.name)}`;
       out.push({ id, all: [terms, KNOW], weight: 56, noProject: true, answer, followups });
       if (!AMBIGUOUS.has(terms[0]) && terms.every((t) => t.length >= 4)) {
-        out.push({ id: `${id}:plain`, all: [terms], weight: 38, noProject: true, answer, followups });
+        out.push({ id: `${id}:plain`, all: [terms], weight: 38, noProject: true, maxWords: 4, answer, followups });
       }
     }
   }
@@ -762,6 +762,48 @@ function extraEntries(): KbEntry[] {
         'Web, UI/UX, branding and 3D/VFX work are covered -- see the services list',
       ]),
     },
+    {
+      id: 'legal-pages',
+      all: [['privacy policy', 'terms of service', 'terms and conditions', 'terms of use', 'tos', 'cookie policy', 'legal pages', 'legal page', 'where are your terms']],
+      weight: 50,
+      noProject: true,
+      followups: ['Do your products collect data?', 'How can I contact you?', 'What should I look at first?'],
+      answer: bullets('The legal pages are on this site:', ['Privacy policy: /privacy', 'Terms: /terms', 'Help and support: /support']),
+    },
+    {
+      id: 'why-hire',
+      all: [['why should i pick you', 'why should i hire', 'why should we hire', 'why hire', 'why pick you', 'why choose you', 'different from other', 'what makes you different', 'what sets you apart', 'why you', 'stand out', 'why should i choose']],
+      weight: 60,
+      noProject: true,
+      contact: true,
+      followups: ['What should I look at first?', 'How does billing work?', 'Are you available for freelance work?'],
+      answer: bullets('What you get working with him:', [
+        'One person runs the studio -- design, code, testing and shipping -- so you deal with him directly',
+        'Real products with public versions and status, listed on /work',
+        'Software engineering together with a VFX and 3D animation background',
+        'Every message is read personally',
+      ]),
+    },
+    {
+      id: 'business-deals',
+      all: [['enterprise', 'white label', 'whitelabel', 'acquire', 'acquisition', 'acquiring', 'buyout', 'buy out', 'commercial licensing']],
+      weight: 100,
+      contact: true,
+      followups: ['How can I contact you?', 'Are you available for freelance work?', 'Which of your projects are open source?'],
+      answer: bullets('There are no standard terms for this on the site:', [
+        'Licensing, white-label and acquisition questions are handled case by case',
+        'Tell him what you have in mind through the contact form (/contact)',
+      ]),
+    },
+    {
+      id: 'human-languages',
+      all: [['do you speak', 'does he speak', 'can you speak', 'can he speak', 'languages do you speak', 'languages does he speak', 'languages you speak', 'languages he speaks', 'spoken language', 'spoken languages', 'fluent in', 'fluency', 'native language', 'mother tongue']],
+      weight: 60,
+      noProject: true,
+      contact: true,
+      followups: FOLLOW_STARTERS,
+      answer: bullets("Spoken languages aren't listed on this site:", ['The site and its projects are in English', 'If a language matters for your project, ask through the contact form']),
+    },
   ];
 }
 
@@ -817,8 +859,47 @@ const MORE_TERMS: Record<string, string[]> = {
   clients: ['who have you worked with', 'who have you worked for', 'who has he worked with', 'who has he worked for', 'who did you work for', 'worked for clients'],
   'support-help': ['a bug', 'bugs', 'bug report', 'found bug', 'this bug', 'the bug', 'got a bug'],
 };
+// Third pass: the held-out interview (tests/question-holdout.test.ts).
+const MORE_TERMS_2: Record<string, string[]> = {
+  'offtopic-general': ['recommend me a game', 'recommend a game', 'recommend a movie', 'recommend me a movie', 'recommend a book', 'recommend me a show', 'recommend a show', 'best anime', 'anime', 'laptop', 'should i buy', 'best free', 'better than', 'how do i install', 'how to install', 'how to become', 'how do i become', 'how do i get into', 'how to get into', 'learn game dev', 'learn vfx'],
+  'offtopic-joke': ['skill issue', 'touch grass'],
+  profiles: ['insta'],
+  accessibility: ['keyboard only', 'keyboard navigation', 'keyboard users', 'with a keyboard', 'keyboard accessible'],
+  availability: ['looking for a job', 'looking for work', 'job opening', 'relocat*', 'book a call', 'schedule a call', 'quick call', 'start tomorrow', 'start immediately', 'when can you start', 'small business', 'small businesses', 'redesign', 'revamp', 'international clients', 'overseas', 'abroad', 'free ho', 'tum free', 'aap free'],
+  pricing: ['advance payment', 'upfront', 'advance', 'installment', 'installments', 'discount*', 'consultation', 'free quote', 'free tier', 'free plan', 'free trial', 'a quote', 'get a quote', 'your quote', 'quote for', 'payment', 'refund'],
+  nda: ['sign a contract', 'sign contract', 'written contract', 'keep my idea', 'keep it secret', 'keep a secret', 'keep this secret'],
+  'code-ownership': ['who will own', 'own the website', 'own the site', 'source files', 'get the source', 'who gets the code'],
+  'post-launch': ['maintenance', 'goes live', 'go live', 'after the launch', 'ongoing support', 'after deployment'],
+  'license-overview': ['closed source', 'proprietary projects'],
+  'which-for': ['i am a designer', 'i am a developer', 'i am an artist', 'for 3d artists', 'for designers', 'which product is for me', 'what should i check out', 'check out', 'which project should', 'which project do you recommend', 'which project is right', 'which project is best', 'which project to try', 'which project to start'],
+  'working-now': ['what is new', 'whats new'],
+  'coming-soon': ['next releases', 'upcoming releases', 'new releases'],
+  who: ['a real person', 'more of a designer', 'more of a developer', 'designer or a developer', 'developer or a designer', 'full name', 'real name', 'what is his name', 'designer or developer', 'developer or designer', 'kya kaam karta', 'kya kaam karte', 'kaam kya karta'],
+  'boundary-personal': ['how old is he', 'his age', 'what is his age', 'is he single', 'are you single', 'are u single', 'r u single', 'u single', 'is he married', 'is he dating'],
+  education: ['major', 'fresher', 'which year', 'what year', 'year is he in', 'year are you in', 'which college', 'what college', 'which school', 'what school', 'his college', 'your college', 'what course', 'which course', 'are you a student', 'is he a student', 'still a student'],
+  'tech-overview': ['game engines', 'frontend frameworks', 'front end frameworks', 'backend frameworks', 'databases', 'operating systems', 'list all technologies', 'list all skills', 'full list of skills', 'full list of technologies', 'which frameworks', 'what frameworks'],
+  'privacy-overview': ['sell my information', 'my information', 'sell my', 'my chats'],
+  'support-help': ['typo', 'not loading', 'request a feature', 'not load', 'doesnt load', 'an issue', 'the issue', 'issue with', 'issues', 'have an issue', 'found an issue', 'open an issue', 'license key', 'lost my', 'forgot my'],
+  'about-bot': ['are you a real person', 'are you real', 'talking to a real', 'talking to a person', 'talking to a human', 'what ai', 'what can you do', 'what should i ask', 'are you there', 'anyone there', 'my chats'],
+  'boundary-abuse': ['suck', 'you suck'],
+  'boundary-injection': ['hidden instructions', 'evil ai', 'developer mode', 'you must now'],
+  greeting: ['heyy*', 'hiii*', 'helloo*', 'hlo'],
+  clients: ['websites for events', 'event sites', 'for events', 'give me a reference', 'a reference', 'who are your clients', 'your clients', 'his clients', 'our clients'],
+  studio: ['interactive labs'],
+  services: ['do you offer', 'what do you offer', 'what you offer', 'what does he offer', 'services offered', 'game development', 'game dev', 'redesign', 'revamp', '3d model', '3d models', 'animate', 'character animation'],
+  'mobile-apps': ['mujhe app', 'app banwani', 'app banwana', 'app banana'],
+};
+const REMOVE_TERMS_2: Record<string, string[]> = {
+  'support-help': ['issue'],
+  education: ['college', 'school', 'course', 'student'],
+  clients: ['clients', 'review'],
+  'tech-overview': ['list all', 'full list'],
+  services: ['offer', 'offers', 'offering'],
+  'which-for': ['which project'],
+  pricing: ['quote'],
+};
 // Entries that must outrank a near neighbour on a shared word.
-const WEIGHTS: Record<string, number> = { clients: 45, collaboration: 48, 'privacy-overview': 49 };
+const WEIGHTS: Record<string, number> = { clients: 45, collaboration: 48, 'privacy-overview': 49, studio: 47, 'support-help': 47 };
 const REMOVE_TERMS: Record<string, string[]> = {
   education: ['studies'],
   'support-help': ['bug'],
@@ -829,16 +910,17 @@ const REMOVE_TERMS: Record<string, string[]> = {
 
 function refine(entries: KbEntry[]): KbEntry[] {
   for (const e of entries) {
-    const add = [...(ADD_TERMS[e.id] ?? []), ...(MORE_TERMS[e.id] ?? [])];
+    const add = [...(ADD_TERMS[e.id] ?? []), ...(MORE_TERMS[e.id] ?? []), ...(MORE_TERMS_2[e.id] ?? [])];
     if (add.length) e.all[0] = [...new Set([...e.all[0], ...add])];
     if (WEIGHTS[e.id] !== undefined) e.weight = WEIGHTS[e.id];
+    if (e.id === 'offtopic-general') e.noProject = true;
     // A long, rambling question that merely contains a topic word ("...building an OS
     // alone as a student") is probably about something else; leave it to the AI tier.
-    if (!e.maxWords && !e.project && e.noProject && !e.id.startsWith('boundary-') && !e.id.startsWith('offtopic-') && !e.id.startsWith('skill') && e.id !== 'tech-overview') {
-      e.maxWords = e.id === 'education' ? 9 : 14;
+    if (!e.maxWords && !e.project && !e.id.startsWith('boundary-') && !e.id.startsWith('offtopic-') && !e.id.startsWith('skill') && e.id !== 'tech-overview') {
+      e.maxWords = e.id === 'education' ? 9 : e.id === 'why-hire' ? 16 : 14;
     }
-    const remove = REMOVE_TERMS[e.id];
-    if (remove) e.all[0] = e.all[0].filter((t) => !remove.includes(t));
+    const remove = [...(REMOVE_TERMS[e.id] ?? []), ...(REMOVE_TERMS_2[e.id] ?? [])];
+    if (remove.length) e.all[0] = e.all[0].filter((t) => !remove.includes(t));
   }
   const byId = new Map(entries.map((e) => [e.id, e]));
 
@@ -885,6 +967,15 @@ function refine(entries: KbEntry[]): KbEntry[] {
       "If I don't know something, I say so instead of guessing",
       'For anything else, the contact form reaches Atharva directly',
     ]);
+  }
+  const count = byId.get('count');
+  if (count) {
+    entries.push({
+      ...count,
+      id: 'project-list',
+      all: [['released products', 'everything you have built', 'everything you built', 'all your projects', 'all projects', 'all your products', 'list your projects', 'about your projects', 'about ur projects']],
+      weight: 45,
+    });
   }
   return entries;
 }

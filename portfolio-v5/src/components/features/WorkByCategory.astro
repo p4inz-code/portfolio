@@ -99,6 +99,7 @@ const grouped = GROUPS.map((g) => ({
     background: var(--surface-1);
   }
   .cat-body { display: flex; flex-direction: column; gap: 6px; }
+  @media (max-width: 899px), (pointer: coarse) { .cat-name { display: inline-flex; align-items: center; min-height: 44px; } }
   .cat-name {
     font-family: var(--font-display); font-size: var(--text-md); font-weight: 500;
     color: var(--text); text-decoration: none; width: fit-content;

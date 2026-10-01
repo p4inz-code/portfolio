@@ -293,7 +293,7 @@ const suggest = JSON.stringify(SUGGESTIONS.map((s) => s.q));
     }
     // URLs and the site's own paths become real links; everything is built
     // from text nodes, so answer text can never inject markup.
-    const LINK_RE = /(https?:\/\/[^\s)]+|\/(?:work|contact|resume|about|services|3d|status)\b\/?)/g;
+    const LINK_RE = /(https?:\/\/[^\s)]+|\/(?:work|contact|resume|about|services|3d|status|privacy|terms|support)\b\/?)/g;
     function appendRich(parent: HTMLElement, text: string) {
       let last = 0;
       for (const m of text.matchAll(LINK_RE)) {
@@ -596,6 +596,11 @@ const suggest = JSON.stringify(SUGGESTIONS.map((s) => s.q));
   }
   .chat-widget .chat-icon-btn:hover { color: var(--text); background: var(--surface-2); }
   .chat-widget .chat-icon-btn:focus-visible { color: var(--text); outline: 2px solid var(--purple-bright); outline-offset: -2px; }
+  /* Touch devices: full-size tap targets for the header, send and chips */
+  @media (pointer: coarse) {
+    .chat-widget .chat-icon-btn, .chat-widget button.chat-send { width: 44px; height: 44px; }
+    .chat-widget .chat-chip { min-height: 44px; }
+  }
 
   /* -- thread -------------------------------------------------------- */
   .chat-widget .chat-thread {

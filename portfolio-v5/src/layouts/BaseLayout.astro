@@ -656,6 +656,14 @@ import '../scripts/fx';</script>
       .footer-legal a { color: var(--muted); }
       .footer-legal a:hover { color: var(--purple-bright); }
       .footer-legal span { color: var(--line-strong); }
+      /* Touch: footer links are stacked text, so give each a full-height tap area */
+      @media (max-width: 899px), (pointer: coarse) {
+        .footer-nav { gap: 0; }
+        .footer-nav a, .footer-meta a { display: flex; align-items: center; min-height: 44px; }
+        .footer-legal { gap: 0; align-items: center; }
+        .footer-legal a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; }
+        .footer-legal span { display: none; }
+      }
       .footer-meta .mono {
         font-family: var(--font-mono); font-size: var(--text-xs);
         /* --muted (not --muted-2) so this small mono line passes WCAG AA on --bg. */
