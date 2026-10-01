@@ -77,6 +77,8 @@ test('tier 1: a follow-up leans on the previous project, a combo answers every p
   assert.equal(follow.topic, 'kanvaz');
   const combo = await (await post('what is the license and stack of Kanvaz')).json();
   assert.ok(combo.answer.includes('\n\n'), 'two intents about one project are answered together');
+  const single = await (await post('yo when is the next kanvaz version dropping')).json();
+  assert.ok(!single.answer.includes('\n\n'), 'one question that trips two keywords gets one answer, not a pile');
   // a forged or unknown context is ignored, not trusted
   const forged = await (await post('and its license?', {}, 'https://atharvapatil.tech', 'no-such-project')).json();
   assert.notEqual(forged.topic, 'no-such-project');

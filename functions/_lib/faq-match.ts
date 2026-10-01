@@ -210,6 +210,9 @@ export function matchMany(entries: KbEntry[], question: string, contextProject?:
   const best = matchWithContext(entries, question, contextProject);
   if (!best) return [];
   if (!best.project || best.id.endsWith(':overview')) return [best];
+  // Only an explicit multi-part ask ("license and stack", "price, platform") gets
+  // several answers; one question that merely trips two keywords gets the best one.
+  if (!/(^| )(and|also|plus|as well|along with)( |$)|[,&+]/.test(` ${question.toLowerCase()} `)) return [best];
   const all = matchAll(entries, question).filter((e) => e.project === best.project && !e.id.endsWith(':overview'));
   const seen = new Set<string>();
   const out: KbEntry[] = [];
