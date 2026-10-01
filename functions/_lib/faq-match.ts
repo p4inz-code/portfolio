@@ -14,7 +14,19 @@ export interface KbEntry {
   followups?: string[];
 }
 
+// Text-speak that people type on a phone; mapped before matching, whole tokens only.
+const SLANG: Record<string, string> = {
+  wat: 'what', wht: 'what', hw: 'how', u: 'you', ur: 'your', r: 'are', y: 'why', abt: 'about', bout: 'about',
+  pls: 'please', plz: 'please', wen: 'when', tk: 'took', cuz: 'because', coz: 'because', bcz: 'because',
+  gimme: 'give me', lemme: 'let me', wanna: 'want to', gonna: 'going to', dis: 'this', dat: 'that', wats: 'what is', whats: 'what is',
+};
+
 export function normalize(q: string): string {
+  const base = normalizeBase(q);
+  return base.split(' ').map((t) => SLANG[t] ?? t).join(' ');
+}
+
+function normalizeBase(q: string): string {
   return q
     .toLowerCase()
     // curly apostrophes, "who's" -> "who is", then possessives ("Kanvaz's" -> "Kanvaz")
@@ -180,7 +192,19 @@ export function matchAll(entries: KbEntry[], question: string): KbEntry[] {
   return corrected.some((e) => e.project) ? corrected : direct;
 }
 
-const ANAPHORA = /(^| )(it|its|that|this one|that one|there|same|them|the same)( |$)/;
+// Words that point back at the project being discussed. "this" does not count when it
+// is the site itself ("who made this site").
+const ANAPHORA = /(^| )(it|its|that|this one|that one|there|same|them|the same|this(?! (site|website|portfolio|page|chat|bot|guy|person)))( |$)|(^| )the (github|repo|link|download|version|licen[sc]e|price|stack)( |$)/;
+// A one-word ask that only makes sense about the last project ("link?", "license", "price").
+const BARE_INTENT = /^(link|links|github|repo|download|licen[sc]e|price|cost|version|stack|platforms?|status|roadmap|source|source code)$/;
+// Softer pointers ("how long he took to come here") and short intent-only questions
+// ("which platforms", "when is the next version"): used only when nothing else matched,
+// so "where is he based" or "who made this site" are never hijacked by the last project.
+const SOFT_POINTER = /(^| )(he|him|his|here|she|they|their)( |$)/;
+const ABOUT_PERSON = /(^| )(atharva|patil|p4inz|painz)( |$)/;
+const ADDRESSES_HIM = /(^| )(you|your|yours)( |$)/;
+const BARE_FOLLOWUP = /^(and|and then|then|more|why|explain|go on|continue|tell me more|what else|anything else|so|really|elaborate|details|more details|more info|and what else)$/;
+const INTENT_ORDER = ['next', 'stack', 'license', 'download', 'platform', 'status', 'started', 'role', 'cost'];
 
 /**
  * Like matchFaq, but a follow-up that leans on the previous topic ("and its
@@ -191,14 +215,44 @@ const ANAPHORA = /(^| )(it|its|that|this one|that one|there|same|them|the same)(
 export function matchWithContext(entries: KbEntry[], question: string, contextProject?: string | null): KbEntry | null {
   const plain = matchFaq(entries, question);
   const nq = normalize(question);
-  // "what is it like building..." is a general question, not a pronoun follow-up
-  if (!contextProject || !ANAPHORA.test(nq) || /(^| )it like( |$)/.test(nq)) return plain;
+  if (!contextProject || ABOUT_PERSON.test(nq) || ADDRESSES_HIM.test(nq)) return plain;
+  const hard = (ANAPHORA.test(nq) && !/(^| )it like( |$)/.test(nq)) || BARE_INTENT.test(nq);
+  const soft = !plain && (SOFT_POINTER.test(nq) || nq.split(' ').length <= 7);
+  if (!(hard || soft)) return plain;
   const overview = entries.find((e) => e.id === `${contextProject}:overview`);
   const alias = overview?.all[0]?.[0];
   if (!alias) return plain;
   const aug = matchFaq(entries, `${question} ${alias}`);
   if (aug && aug.project === contextProject && !aug.id.endsWith(':overview')) return aug;
   return plain;
+}
+
+export interface Turn {
+  hits: KbEntry[];
+  /** the question repeats the answer given just before it */
+  repeat: KbEntry | null;
+}
+
+/**
+ * One chat turn: follow-ups lean on the last project, "more"/"why?" move to the next
+ * fact not yet shown, and asking the same thing twice is flagged instead of repeated.
+ */
+export function resolveTurn(entries: KbEntry[], question: string, contextProject: string | null, seen: string[] = []): Turn {
+  const nq = normalize(question);
+  let hits: KbEntry[];
+  if (BARE_FOLLOWUP.test(nq)) {
+    hits = [];
+    if (contextProject) {
+      const wanted = [...INTENT_ORDER.map((i) => `${contextProject}:${i}`), `${contextProject}:overview`];
+      const next = wanted.map((id) => entries.find((e) => e.id === id)).find((e) => e && !seen.includes(e.id));
+      if (next) hits = [next];
+    }
+    return { hits, repeat: null };
+  }
+  hits = matchMany(entries, question, contextProject);
+  const last = seen[seen.length - 1];
+  if (hits.length && last && hits[0].id === last) return { hits: [], repeat: hits[0] };
+  return { hits, repeat: null };
 }
 
 /**

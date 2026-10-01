@@ -40,10 +40,10 @@ function mockFetch(handler?: (url: string) => Response | undefined) {
   }) as typeof fetch;
 }
 
-function post(question: unknown, env: Record<string, unknown> = {}, origin: string | null = 'https://atharvapatil.tech', context?: unknown) {
+function post(question: unknown, env: Record<string, unknown> = {}, origin: string | null = 'https://atharvapatil.tech', context?: unknown, extra: Record<string, unknown> = {}) {
   const headers: Record<string, string> = { 'content-type': 'application/json', 'CF-Connecting-IP': '1.2.3.4' };
   if (origin) headers.Origin = origin;
-  return onRequestPost({ request: new Request('https://atharvapatil.tech/api/chat', { method: 'POST', headers, body: JSON.stringify(context === undefined ? { question } : { question, context }) }), env });
+  return onRequestPost({ request: new Request('https://atharvapatil.tech/api/chat', { method: 'POST', headers, body: JSON.stringify({ question, ...(context === undefined ? {} : { context }), ...extra }) }), env });
 }
 
 class FakeKV {
@@ -84,6 +84,42 @@ test('tier 1: a follow-up leans on the previous project, a combo answers every p
   assert.notEqual(forged.topic, 'no-such-project');
   const general = await (await post('Are you available for freelance work?')).json();
   assert.equal(general.topic, null);
+});
+
+test('follow-ups: "how long he took to come here" resolves, "more" moves on, a repeat is flagged, not pasted', async () => {
+  mockFetch();
+  const first = await (await post('what is nexus')).json();
+  assert.equal(first.id, 'nexus:overview');
+  const how = await (await post('how long he took to come here?', {}, 'https://atharvapatil.tech', 'nexus', { seen: [first.id] })).json();
+  assert.equal(how.id, 'nexus:started');
+  const more = await (await post('more', {}, 'https://atharvapatil.tech', 'nexus', { seen: [first.id, how.id] })).json();
+  assert.equal(more.topic, 'nexus');
+  assert.ok(![first.id, how.id].includes(more.id), 'more must show a fact not shown yet');
+  const again = await (await post('how long he took to come here?', {}, 'https://atharvapatil.tech', 'nexus', { seen: [how.id] })).json();
+  assert.match(again.answer, /answer just above/);
+  const cold = await (await post('more')).json();
+  assert.notEqual(cold.source, 'faq', 'with no topic, "more" is left to the AI / fallback');
+});
+
+test('the AI tier gets the last turns so "he/it/here" can be resolved, and such answers are not shared via the cache', async () => {
+  mockFetch();
+  let seen: { role: string; content: string }[] = [];
+  const kv = new FakeKV();
+  const env = { AI: { run: async (_m: string, a: { messages: { role: string; content: string }[] }) => { seen = a.messages; return { response: 'ok answer' }; } }, RATE_LIMIT: kv };
+  const history = [{ q: 'what is kanvaz', a: 'Kanvaz is a thing' }];
+  const body = await (await post('how did that feel for him', env, 'https://atharvapatil.tech', undefined, { history })).json();
+  assert.equal(body.source, 'ai');
+  assert.deepEqual(seen.slice(1).map((m) => m.role), ['user', 'assistant', 'user']);
+  assert.equal(seen[1].content, 'what is kanvaz');
+  assert.ok(![...kv.store.keys()].some((k) => k.startsWith('chatcache:')), 'a context-dependent answer must not be cached for others');
+});
+
+test('slang is understood: "wat is it built with", "gimme ur insta", "hw much 4 a website"', async () => {
+  mockFetch();
+  const a = await (await post('wat is it built with', {}, 'https://atharvapatil.tech', 'kanvaz')).json();
+  assert.equal(a.id, 'kanvaz:stack');
+  assert.equal((await (await post('gimme ur insta')).json()).id, 'profiles');
+  assert.equal((await (await post('hw much 4 a website')).json()).id, 'pricing');
 });
 
 test('tier 1: contact flag is passed through for hiring questions', async () => {
