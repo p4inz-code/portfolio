@@ -37,6 +37,7 @@ export const CONTACT = {
   linkedin: 'https://www.linkedin.com/in/p4inz',
   linkedinHandle: 'linkedin.com/in/p4inz',
   instagram: 'https://instagram.com/atharva.patil.cg',
+  whatsapp: 'https://wa.me/919321614988',
   discord: 'p4inz',
   discordInvite: 'https://discord.gg/8UKt8s5FbW',
   buyMeACoffee: 'https://buymeacoffee.com/p4inz',
@@ -98,6 +99,109 @@ export const SERVICE_FAQ = [
 export const BILLING = {
   model: 'Fixed price for short-loop work. Weekly for longer builds. Never per-hour.',
   reply: 'First response inside 24-48h.',
+} as const;
+
+/**
+ * Everything he lists as skills, grouped. Sources: the resume's Technical
+ * Skills block, the 3D & VFX page's software list, and the stacks in
+ * projects.ts (a test makes sure no project technology is missing here).
+ * `aka` are extra words a visitor might type (normalized: "c#" -> csharp,
+ * "c++" -> cpp, ".net" -> dotnet); `keys` find the projects that use it.
+ */
+export interface Skill {
+  name: string;
+  aka: string[];
+  keys: string[];
+  note?: string;
+}
+export interface SkillGroup {
+  group: string;
+  items: Skill[];
+}
+export const SKILLS: SkillGroup[] = [
+  {
+    group: 'Languages',
+    items: [
+      { name: 'C#', aka: ['csharp', 'c sharp'], keys: ['c#'] },
+      { name: 'Rust', aka: [], keys: ['rust'] },
+      { name: 'TypeScript', aka: ['ts'], keys: ['typescript'] },
+      { name: 'JavaScript', aka: ['js', 'javascript', 'vanilla js'], keys: ['vanilla js', 'javascript'] },
+      { name: 'C and C++', aka: ['cpp', 'c plus plus'], keys: ['c++'] },
+      { name: 'Lua and Luau', aka: ['lua', 'luau'], keys: ['luau'] },
+      { name: 'GDScript', aka: ['gdscript'], keys: ['gdscript'] },
+      { name: 'Python', aka: ['python'], keys: ['python'], note: 'only as the launcher in Project Ascent' },
+    ],
+  },
+  {
+    group: 'Frameworks and runtimes',
+    items: [
+      { name: '.NET 8', aka: ['dotnet', 'net 8'], keys: ['.net'] },
+      { name: 'WPF', aka: ['wpf'], keys: ['wpf'] },
+      { name: 'Avalonia', aka: ['avalonia'], keys: ['avalonia'] },
+      { name: 'Node.js', aka: ['nodejs', 'node'], keys: ['node.js'] },
+      { name: 'Electron', aka: ['electron'], keys: ['electron'] },
+      { name: 'Tauri', aka: ['tauri'], keys: ['tauri'] },
+      { name: 'React', aka: ['react', 'reactjs'], keys: ['react'] },
+      { name: 'Astro', aka: ['astro'], keys: [], note: 'used for this site' },
+      { name: 'Qt and QML', aka: ['qt', 'qml'], keys: [] },
+      { name: 'Godot 4', aka: ['godot'], keys: ['godot'] },
+    ],
+  },
+  {
+    group: 'Systems and security',
+    items: [
+      { name: 'Debian Linux', aka: ['debian', 'linux'], keys: ['debian'] },
+      { name: 'KDE Plasma', aka: ['kde', 'plasma'], keys: ['kde plasma'] },
+      { name: 'Calamares', aka: ['calamares'], keys: ['calamares'] },
+      { name: 'AES-256-GCM', aka: ['aes', 'aes 256', 'aes256'], keys: ['aes-256-gcm'] },
+      { name: 'Argon2id', aka: ['argon2', 'argon2id'], keys: ['argon2id'] },
+      { name: 'Windows Hello', aka: ['windows hello'], keys: [] },
+      { name: 'LUKS2', aka: ['luks', 'luks2'], keys: [] },
+      { name: 'TPM', aka: ['tpm'], keys: [] },
+      { name: 'Secure Boot', aka: ['secure boot', 'secureboot'], keys: [] },
+    ],
+  },
+  {
+    group: 'Data and tooling',
+    items: [
+      { name: 'SQLite', aka: ['sqlite'], keys: ['sqlite'] },
+      { name: 'Git and GitHub Actions', aka: ['git', 'github actions', 'ci', 'cicd'], keys: ['github actions'] },
+      { name: 'VS Code', aka: ['vscode', 'vs code', 'visual studio code'], keys: [] },
+      { name: 'FFmpeg', aka: ['ffmpeg'], keys: [] },
+      { name: 'Cloudflare Pages', aka: ['cloudflare', 'cloudflare pages'], keys: [] },
+      { name: 'Handlebars', aka: ['handlebars'], keys: ['handlebars'] },
+      { name: 'Firebase Hosting', aka: ['firebase'], keys: ['firebase'] },
+    ],
+  },
+  {
+    group: '3D and VFX',
+    items: [
+      { name: 'Maya', aka: ['maya'], keys: [] },
+      { name: 'ZBrush', aka: ['zbrush'], keys: [] },
+      { name: 'Substance 3D', aka: ['substance', 'substance painter', 'substance designer'], keys: [] },
+      { name: 'Premiere Pro', aka: ['premiere', 'premiere pro'], keys: [] },
+      { name: 'After Effects', aka: ['after effects', 'aftereffects'], keys: [] },
+      { name: 'Photoshop', aka: ['photoshop'], keys: [] },
+      { name: 'Lightroom', aka: ['lightroom'], keys: [] },
+      { name: 'Blender', aka: ['blender'], keys: [], note: 'a backup tool, at a basic level' },
+    ],
+  },
+];
+
+/** Popular technologies that are NOT on his list, so "does he know X?" gets an honest answer. */
+export const NOT_LISTED_TECH = [
+  'java', 'php', 'swift', 'kotlin', 'golang', 'ruby', 'scala', 'perl', 'dart', 'flutter',
+  'react native', 'angular', 'vue', 'svelte', 'nextjs', 'django', 'flask', 'spring', 'laravel',
+  'docker', 'kubernetes', 'aws', 'azure', 'mongodb', 'postgres', 'postgresql', 'mysql', 'redis', 'graphql',
+  'unity', 'unreal', 'figma', 'houdini', 'nuke', 'davinci resolve', 'cinema 4d', 'c4d',
+] as const;
+
+/** From the resume's Education block. */
+export const EDUCATION = {
+  degree: 'B.Sc. Animation (VFX and 3D)',
+  school: 'D. Y. Patil University, Nerul, Navi Mumbai',
+  years: '2025 to 2028',
+  status: 'second year in progress',
 } as const;
 
 export interface NavLink {

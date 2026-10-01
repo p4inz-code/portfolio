@@ -99,7 +99,7 @@ test('real question -> expected entry', () => {
     ["What is Atharva's email?", 'contact'],
     ['Does p4inz have a resume?', 'resume'],
     ['p4inz', 'who'],
-    ['who is painz', 'who'],
+    ['who is painz', 'handles'],
     ['tell me about Atharva', 'who'],
     ['what do you do', 'who'],
     ['what is P4inz Interactive Labs', 'studio'],
@@ -127,7 +127,7 @@ test('real question -> expected entry', () => {
     ['what is the weather today', 'offtopic-general'],
     // deliberately left for the AI tier / contact form
     ['Kanvaz vs Nexus, which is better?', null],
-    ['Can you build me a mobile app?', null],
+    ['Can you build me a mobile app?', 'mobile-apps'],
     ['asdf qwerty', null],
     ['', null],
   ];

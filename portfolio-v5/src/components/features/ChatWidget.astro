@@ -117,7 +117,7 @@ const suggest = JSON.stringify(SUGGESTIONS.map((s) => s.q));
     const STORE_KEY = 'ap-chat-v1';
     const MAX_STORED = 24;
 
-    type Msg = { r: 'u' | 'b'; t: string; c?: boolean; f?: string[] };
+    type Msg = { r: 'u' | 'b'; t: string; c?: boolean; f?: string[]; p?: string };
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const coarse = window.matchMedia('(pointer: coarse)');
     const small = window.matchMedia('(max-width: 899px)');
@@ -417,7 +417,10 @@ const suggest = JSON.stringify(SUGGESTIONS.map((s) => s.q));
       const start = Date.now();
       showTyping();
 
-      let reply: { text: string; contact?: boolean; followups?: string[] } = { text: FALLBACK, contact: true };
+      // The project the last answer was about, so "and its license?" has something to lean on.
+      const lastMsg = msgs.length >= 2 ? msgs[msgs.length - 2] : null;
+      const topic = lastMsg && lastMsg.r === 'b' ? lastMsg.p : undefined;
+      let reply: { text: string; contact?: boolean; followups?: string[]; topic?: string } = { text: FALLBACK, contact: true };
       const ctrl = new AbortController();
       // Without a timeout a hung AI call would leave the widget "thinking"
       // forever.
@@ -429,7 +432,7 @@ const suggest = JSON.stringify(SUGGESTIONS.map((s) => s.q));
           const res = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({ question }),
+            body: JSON.stringify(topic ? { question, context: topic } : { question }),
             signal: ctrl.signal,
           });
           const data = await res.json().catch(() => ({ ok: false }));
@@ -438,6 +441,7 @@ const suggest = JSON.stringify(SUGGESTIONS.map((s) => s.q));
               text: data.answer,
               contact: !!data.contact,
               followups: Array.isArray(data.followups) ? data.followups.filter((q: unknown) => typeof q === 'string') : [],
+              topic: typeof data.topic === 'string' ? data.topic : undefined,
             };
           }
           else if (data && data.reason === 'rate_limited') reply = { text: RATE_LIMITED, contact: true };
@@ -451,7 +455,7 @@ const suggest = JSON.stringify(SUGGESTIONS.map((s) => s.q));
       const elapsed = Date.now() - start;
       if (elapsed < minDelay) await new Promise((r) => setTimeout(r, minDelay - elapsed));
       hideTyping();
-      msgs.push({ r: 'b', t: reply.text, c: reply.contact, f: reply.followups });
+      msgs.push({ r: 'b', t: reply.text, c: reply.contact, f: reply.followups, p: reply.topic });
       saveMsgs();
       const answerRow = renderBot(reply.text, reply.contact, true);
       setBusy(false);

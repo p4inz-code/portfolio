@@ -12,7 +12,7 @@
  * can load this file directly (Astro/Vite accept them too).
  */
 import { PROJECTS, PRODUCT_COUNT, FEATURED_PROJECTS, type Project } from './projects.ts';
-import { SITE, CONTACT, SERVICES, SERVICE_FAQ, BILLING } from './site.ts';
+import { SITE, CONTACT, SERVICES, SERVICE_FAQ, BILLING, SKILLS, NOT_LISTED_TECH, EDUCATION } from './site.ts';
 
 export interface KbEntry {
   id: string;
@@ -65,12 +65,12 @@ const ALIASES: Record<string, string[]> = {
 
 const INTENTS = {
   cost: ['cost', 'costs', 'price', 'pricing', 'paid', 'pay', 'buy', 'purchase', 'free'],
-  license: ['licens*', 'open source', 'opensource', 'proprietary', 'mit', 'gpl', 'gplv3', 'apache', 'source code'],
+  license: ['licen*', 'open source', 'opensource', 'proprietary', 'mit', 'gpl', 'gplv3', 'apache', 'source code'],
   status: ['status', 'version', 'release*', 'latest', 'current*', 'stage', 'beta', 'ready', 'finished', 'launched', 'live', 'progress', 'maintained'],
   next: ['next', 'roadmap', 'plan', 'planned', 'planning', 'upcoming', 'future', 'coming', 'milestone'],
-  download: ['download*', 'install*', 'link', 'links', 'github', 'repo', 'repository', 'npm', 'itch', 'play', 'try', 'releases', 'website', 'url', 'visit'],
+  download: ['download*', 'install*', 'link', 'links', 'github', 'repo', 'repository', 'npm', 'itch', 'play', 'try', 'releases', 'website', 'url', 'visit', 'where can i get', 'where to get', 'where do i get', 'how to get', 'how do i get', 'get it'],
   platform: ['platform*', 'mac', 'macos', 'windows', 'linux', 'android', 'ios', 'run on', 'runs on', 'work on', 'works on', 'operating system'],
-  started: ['when', 'started', 'begin', 'began', 'how long', 'since'],
+  started: ['when', 'start date', 'started', 'begin', 'began', 'how long', 'since'],
   role: ['role', 'who built', 'who made', 'who wrote', 'who works', 'alone', 'solo'],
   stack: ['stack', 'built with', 'built using', 'built on', 'made with', 'made using', 'written in', 'language*', 'tech', 'technolog*', 'framework*', 'use', 'uses', 'using', 'powered', 'engine'],
 } as const;
@@ -620,6 +620,270 @@ function globalEntries(): KbEntry[] {
   ];
 }
 
+// -- skills, identity and the rest of what a visitor asks -------------------------
+
+const KNOW = [
+  'know', 'knows', 'knew', 'use', 'uses', 'used', 'using', 'work with', 'works with', 'worked with', 'working with',
+  'experience', 'experienced', 'familiar', 'skilled', 'skill*', 'proficient', 'expert', 'good at', 'code in', 'coding in',
+  'program in', 'programming in', 'write in', 'written in', 'comfortable', 'learn', 'learned', 'build with', 'built with',
+  'develop in', 'developing in', 'your stack', 'his stack', 'your toolkit', 'his toolkit',
+];
+const plainName = (n: string) => n.toLowerCase().replace(/[-\/_]/g, ' ').replace(/[^\w\s]/g, '').replace(/\s+/g, ' ').trim();
+const slugOf = (n: string) => plainName(n).replace(/ /g, '-');
+// terms common enough in ordinary sentences that a bare mention shouldn't trigger a skill answer
+const AMBIGUOUS = new Set(['linux', 'node', 'git', 'ci', 'ts', 'js', 'tpm', 'qt', 'plasma', 'kde', 'debian', 'react', 'maya', 'substance']);
+const DISPLAY: Record<string, string> = {
+  aws: 'AWS', php: 'PHP', nextjs: 'Next.js', c4d: 'Cinema 4D', 'cinema 4d': 'Cinema 4D', graphql: 'GraphQL', mongodb: 'MongoDB',
+  mysql: 'MySQL', postgres: 'PostgreSQL', postgresql: 'PostgreSQL', golang: 'Go', 'react native': 'React Native',
+  'davinci resolve': 'DaVinci Resolve', kubernetes: 'Kubernetes', angular: 'Angular',
+};
+const cap = (n: string) => DISPLAY[n] ?? n.replace(/\b\w/g, (c) => c.toUpperCase());
+
+function skillEntries(): KbEntry[] {
+  const out: KbEntry[] = [];
+  for (const g of SKILLS) {
+    for (const s of g.items) {
+      const terms = [...new Set([...(/^[a-z0-9 ]+$/i.test(s.name) ? [plainName(s.name)] : []), ...s.aka])];
+      if (!terms.length) continue;
+      const users = PROJECTS.filter((p) => (p.stack ?? []).some((t) => s.keys.some((k) => t.toLowerCase().includes(k))))
+        .sort(byOrder)
+        .map((p) => p.name);
+      const answer = bullets(`Yes -- ${s.name} is on his list${s.note ? ` (${s.note})` : ''}.`, [
+        ...(users.length ? [`Used in: ${list(users)}`] : []),
+        'Ask for his full tech stack to see everything else',
+      ]);
+      const followups = ['What is his full tech stack?', users[0] ? `Tell me about ${users[0]}` : 'Which project is right for me?', 'Are you available for freelance work?'];
+      const id = `skill:${slugOf(s.name)}`;
+      out.push({ id, all: [terms, KNOW], weight: 56, noProject: true, answer, followups });
+      if (!AMBIGUOUS.has(terms[0]) && terms.every((t) => t.length >= 4)) {
+        out.push({ id: `${id}:plain`, all: [terms], weight: 38, noProject: true, answer, followups });
+      }
+    }
+  }
+  for (const name of NOT_LISTED_TECH) {
+    out.push({
+      id: `skill-no:${slugOf(name)}`,
+      all: [[name], KNOW],
+      weight: 57,
+      noProject: true,
+      contact: true,
+      followups: ['What is his full tech stack?', 'Are you available for freelance work?', 'How does billing work?'],
+      answer: bullets(`${cap(name)} isn't on his listed skills.`, [
+        'He picks the tool for the project, so his full list is the best guide',
+        'If a specific technology matters for your project, ask through the contact form',
+      ]),
+    });
+  }
+  return out;
+}
+
+function extraEntries(): KbEntry[] {
+  const clients = PROJECTS.filter(isClientOrEvent).sort(byOrder);
+  return [
+    {
+      id: 'handles',
+      all: [['handle', 'handles', 'username', 'usernames', 'alias', 'aliases', 'also known as', 'aka', 'other names', 'old name', 'old names', 'previous name', 'previous names', 'retired', 'grim', 'pain z', 'painz']],
+      weight: 46,
+      noProject: true,
+      followups: ['Where can I find him online?', 'Who are you?', 'Tell me about your studio'],
+      answer: bullets('One person, a few names:', [
+        'Current handle: p4inz (GitHub: p4inz-code)',
+        'Retired handles: PainZ and Grim',
+        '"painz" (no 4) is also a common misspelling of p4inz',
+        'Studio names: Obsidian Labs (2025), Northbyte Studios (2026), P4inz Interactive Labs (now)',
+      ]),
+    },
+    {
+      id: 'education',
+      all: [['education', 'degree', 'college', 'university', 'study', 'studying', 'student', 'studies', 'course', 'school', 'qualification', 'qualifications', 'b sc', 'bsc', 'dy patil', 'dypatil', 'd y patil', 'animation degree', 'graduate', 'graduation']],
+      weight: 47,
+      noProject: true,
+      followups: ['Who are you?', 'Where can I see your resume?', 'Are you available for freelance work?'],
+      answer: bullets('Education:', [
+        EDUCATION.degree,
+        EDUCATION.school,
+        `${EDUCATION.years}, ${EDUCATION.status}`,
+      ]),
+    },
+    {
+      id: 'collaboration',
+      all: [['collaborate', 'collaboration', 'collab', 'partner', 'partnership', 'work together', 'team up', 'contribute', 'contributing', 'contribution', 'pull request', 'investor', 'investors', 'invest', 'funding', 'open source contribution']],
+      weight: 45,
+      noProject: true,
+      contact: true,
+      followups: ['What should I look at first?', 'Which of your projects are open source?', 'How can I contact you?'],
+      answer: bullets('Collaboration and investor conversations are welcome:', [
+        'The most useful thing right now is introductions to founders, investors and open-source maintainers who care more about the product being right than about growing fast',
+        'Not looking for growth marketing, an agency handoff or a full team',
+        'Start with the contact form',
+      ]),
+    },
+    {
+      id: 'clients',
+      all: [['testimonial', 'testimonials', 'review', 'reviews', 'clients', 'client list', 'past clients', 'previous clients', 'references', 'client work', 'case study', 'case studies']],
+      weight: 46,
+      noProject: true,
+      followups: ['What services do you offer?', 'How does billing work?', 'What should I look at first?'],
+      answer: bullets('Client and event work on the site:', [
+        ...clients.map((p) => `${p.name}: ${p.tagline}`),
+        'Every client so far has been remote',
+        'Full case studies are on the Work page',
+      ]),
+    },
+    {
+      id: 'this-site',
+      all: [['this site', 'this website', 'this portfolio', 'how was this built', 'how is this built', 'how was this site built', 'how is this site built', 'who built this site', 'who made this site', 'who made this website', 'who designed this site', 'site source', 'source of this site', 'is this site open source', 'website stack', 'portfolio stack', 'what is this site built with', 'what was this site built with']],
+      weight: 48,
+      noProject: true,
+      followups: ['Who are you?', 'Do you track users?', 'What is his full tech stack?'],
+      answer: bullets('About this site:', [
+        'A static Astro 5 site on Cloudflare Pages, built and maintained by Atharva alone',
+        'Source: https://github.com/p4inz-code/portfolio',
+        'Fonts come from Fontshare; no analytics scripts and no tracking cookies',
+      ]),
+    },
+    {
+      id: 'accessibility',
+      all: [['accessible', 'accessibility', 'wcag', 'screen reader', 'a11y']],
+      weight: 50,
+      noProject: true,
+      followups: ['How was this site built?', 'Who are you?', 'What should I look at first?'],
+      answer: bullets('Accessibility:', ['The site targets WCAG 2.1 AA', 'The full statement, including known gaps, is on the /accessibility page']),
+    },
+    {
+      id: 'mobile-apps',
+      all: [['mobile app', 'mobile apps', 'android app', 'android apps', 'ios app', 'ios apps', 'iphone app', 'native mobile', 'android development', 'ios development', 'app for phone']],
+      weight: 52,
+      noProject: true,
+      contact: true,
+      followups: ['What services do you offer?', 'How does billing work?', 'Are you available for freelance work?'],
+      answer: bullets("Native mobile isn't something he covers directly.", [
+        "If a project needs specialists he can't cover (native mobile, specific 3D shots), he recommends someone instead of reselling",
+        'Web, UI/UX, branding and 3D/VFX work are covered -- see the services list',
+      ]),
+    },
+  ];
+}
+
+// Extra phrasings per entry (added to its first term group). Kept in one table so
+// the coverage is easy to audit: handles, Hinglish, hiring, links, and so on.
+const ADD_TERMS: Record<string, string[]> = {
+  who: ['kaun hai', 'kon hai', 'tum kaun', 'aap kaun', 'kaun ho', 'kya karte ho', 'kya karta hai', 'tell me about him', 'what do you do', 'what does he do', 'intro do'],
+  availability: ['available hai', 'kaam karte', 'kaam chahiye', 'need a developer', 'need a website', 'need an app', 'looking for a developer', 'looking to hire', 'can i hire', 'can we hire', 'internship', 'intern', 'job', 'jobs', 'full time', 'fulltime', 'part time', 'contract', 'remote work', 'openings', 'hire you', 'hire him', 'build me', 'make me a', 'build a website for me'],
+  location: ['kahan rehte', 'kaha rehte', 'kahan se', 'kaha se', 'mumbai', 'navi mumbai', 'india', 'which part of india'],
+  pricing: ['kitna charge', 'kitne paise', 'kitna lagega', 'price kya', 'ballpark', 'estimate', 'rate card', 'per hour', 'per project'],
+  count: ['kitne', 'total'],
+  contact: ['contact kaise', 'kaise contact', 'phone number', 'mobile number', 'call you', 'whatsapp', 'reach him', 'talk to him'],
+  thanks: ['shukriya', 'dhanyavad', 'thankyou', 'thanks a lot', 'appreciate it'],
+  greeting: ['namaste', 'namaskar', 'kya haal', 'kaise ho', 'good morning', 'good evening', 'good afternoon', 'howdy', 'heyy', 'hola'],
+  'best-work': ['what should i see first', 'where to start', 'start here', 'what to look at', 'show me something', 'favorite project', 'favourite project', 'favorite work', 'favourite work', 'proudest work'],
+  resume: ['download resume', 'resume pdf', 'cv pdf'],
+  profiles: ['p4inz code', 'find him online', 'find you online', 'online presence', 'github link', 'linkedin link', 'links'],
+  studio: ['obsidian', 'obsidian labs', 'formerly', 'p4inz labs'],
+  'privacy-overview': ['cookies', 'cookie', 'gdpr', 'data collection', 'ads'],
+  'coming-soon': ['roadmap', 'road map', 'plans', 'future', 'soon', 'upcoming projects'],
+  'working-now': ['building now', 'working these days', 'latest project', 'newest project', 'recent project', 'recently', 'kya kar rahe'],
+  services: ['build websites', 'build a website', 'make a website', 'design a website', 'web design', 'web development', 'web dev', 'app development', 'build apps', 'branding', 'logo', 'logos', '3d work', 'vfx work', 'animation work', 'motion graphics', 'what kind of work', 'what work do you'],
+  'about-bot': ['are you human', 'is this ai', 'chatgpt', 'is this chatgpt', 'which model', 'what model', 'powered by'],
+  'tech-overview': [
+    'full stack', 'whole stack', 'entire stack', 'complete stack', 'list his stack', 'list your stack', 'list all', 'full list', 'skills list',
+    'skillset', 'skill set', 'all his skills', 'all your skills', 'everything he knows', 'everything you know', 'everything he has used',
+    'what languages', 'which languages', 'languages does', 'programming languages', 'tools does he use', 'software does he use',
+    'technologies he', 'technologies you', 'worked with', 'has worked with', 'he has worked with', 'you have worked with',
+    'stack he has', 'what can he code', 'what does he know', 'what do you know', 'what all', 'his skills', 'your skills', 'skills',
+  ],
+};
+// Second pass from the 1,000-question interview (tests/question-corpus.test.ts).
+const MORE_TERMS: Record<string, string[]> = {
+  'offtopic-general': ['learn programming', 'learn to code', 'how to learn', 'how do i learn', 'teach me'],
+  who: ['this guy', 'this person', 'intro please', 'intro'],
+  handles: ['go by', 'goes by', 'nickname', 'nicknames', 'other usernames'],
+  profiles: ['repos', 'repositories'],
+  availability: ['new clients', 'taking clients', 'take clients', 'new projects', 'take on projects'],
+  services: ['vfx', 'ui ux', 'ux design', 'ui design', 'design work'],
+  subcontract: ['just you', 'only you', 'one person', 'one man', 'solo'],
+  'mobile-apps': ['iphone'],
+  location: ['country', 'work remotely', 'remotely', 'where are you from', 'where is he from'],
+  collaboration: ['founders', 'cofounder', 'co founder'],
+  'working-now': ['in progress'],
+  'coming-soon': ['releasing', 'release next', 'launching next', 'launch next'],
+  'best-work': ['where should i start', 'should i start', 'where do i start', 'proud of', 'most proud', 'proud'],
+  'privacy-overview': ['collect data', 'collect my data', 'store my data', 'sell my data', 'tracking me', 'track me'],
+  'support-work': ['coffee', 'buy me a coffee', 'buy him a coffee'],
+  accessibility: ['screen readers', 'keyboard navigation'],
+  'tech-overview': ['software do you use', 'software he uses', 'tools do you use', 'tools he uses', 'what has he worked with', 'what have you worked with', 'tools he has worked with', 'everything he has worked with', 'everything you have worked with', 'all he has worked with'],
+  'boundary-sexual': ['talk dirty', 'dirty talk', 'sexting'],
+  'boundary-abuse': ['trash', 'pathetic', 'worthless', 'sucks', 'crap'],
+  clients: ['who have you worked with', 'who have you worked for', 'who has he worked with', 'who has he worked for', 'who did you work for', 'worked for clients'],
+  'support-help': ['a bug', 'bugs', 'bug report', 'found bug', 'this bug', 'the bug', 'got a bug'],
+};
+// Entries that must outrank a near neighbour on a shared word.
+const WEIGHTS: Record<string, number> = { clients: 45, collaboration: 48, 'privacy-overview': 49 };
+const REMOVE_TERMS: Record<string, string[]> = {
+  education: ['studies'],
+  'support-help': ['bug'],
+  'tech-overview': ['worked with', 'has worked with', 'he has worked with', 'you have worked with'],
+  'boundary-personal': ['phone number'],
+  'best-work': ['favorite', 'favourite'],
+};
+
+function refine(entries: KbEntry[]): KbEntry[] {
+  for (const e of entries) {
+    const add = [...(ADD_TERMS[e.id] ?? []), ...(MORE_TERMS[e.id] ?? [])];
+    if (add.length) e.all[0] = [...new Set([...e.all[0], ...add])];
+    if (WEIGHTS[e.id] !== undefined) e.weight = WEIGHTS[e.id];
+    const remove = REMOVE_TERMS[e.id];
+    if (remove) e.all[0] = e.all[0].filter((t) => !remove.includes(t));
+  }
+  const byId = new Map(entries.map((e) => [e.id, e]));
+
+  // the full stack, grouped, plus what is used most across the projects
+  const counts = SKILLS.flatMap((g) => g.items)
+    .map((s) => ({ name: s.name, n: PROJECTS.filter((p) => isProduct(p) && (p.stack ?? []).some((t) => s.keys.some((k) => t.toLowerCase().includes(k)))).length }))
+    .filter((x) => x.n >= 2)
+    .sort((a, b) => b.n - a.n || a.name.localeCompare(b.name))
+    .slice(0, 5)
+    .map((x) => `${x.name} (${x.n} projects)`);
+  const tech = byId.get('tech-overview');
+  if (tech) {
+    tech.answer = bullets('Everything he lists, by area (he picks the tool for each project):', [
+      ...SKILLS.map((g) => `${g.group}: ${g.items.map((i) => i.name + (i.note ? ` (${i.note})` : '')).join(', ')}`),
+      `Used most across projects: ${list(counts)}`,
+    ]);
+  }
+
+  const contact = byId.get('contact');
+  if (contact) {
+    contact.answer = bullets('Fastest way is the contact form (/contact):', [
+      'Every message is read personally; replies within 1-2 days',
+      `Email: ${CONTACT.email}`,
+      `WhatsApp (business): ${CONTACT.whatsapp}`,
+      `LinkedIn: ${CONTACT.linkedinHandle}`,
+      `GitHub: ${CONTACT.githubHandle}`,
+    ]);
+  }
+  const profiles = byId.get('profiles');
+  if (profiles) {
+    profiles.answer = bullets('Find Atharva here:', [
+      `LinkedIn: ${CONTACT.linkedin}`,
+      `GitHub: ${CONTACT.github}`,
+      `Discord: ${CONTACT.discord} (${CONTACT.discordInvite})`,
+      `Instagram: ${CONTACT.instagram}`,
+      `WhatsApp (business): ${CONTACT.whatsapp}`,
+    ]);
+  }
+  const bot = byId.get('about-bot');
+  if (bot) {
+    bot.answer = bullets("I'm an assistant on this portfolio:", [
+      "Most answers come from a knowledge base generated from this site's own project data",
+      'Anything else may go to an AI model (Cloudflare Workers AI) that only sees that same data',
+      "If I don't know something, I say so instead of guessing",
+      'For anything else, the contact form reaches Atharva directly',
+    ]);
+  }
+  return entries;
+}
+
 // -- bundle --------------------------------------------------------------------
 
 function buildGrounding(): string {
@@ -656,7 +920,7 @@ const FALLBACK: KbEntry = {
 };
 
 export function buildKb(): KbBundle {
-  const entries = [...globalEntries(), ...[...PROJECTS].sort(byOrder).flatMap(projectEntries)];
+  const entries = refine([...globalEntries(), ...extraEntries(), ...skillEntries(), ...[...PROJECTS].sort(byOrder).flatMap(projectEntries)]);
   return { entries, grounding: buildGrounding(), fallback: FALLBACK };
 }
 

@@ -40,10 +40,10 @@ function mockFetch(handler?: (url: string) => Response | undefined) {
   }) as typeof fetch;
 }
 
-function post(question: unknown, env: Record<string, unknown> = {}, origin: string | null = 'https://atharvapatil.tech') {
+function post(question: unknown, env: Record<string, unknown> = {}, origin: string | null = 'https://atharvapatil.tech', context?: unknown) {
   const headers: Record<string, string> = { 'content-type': 'application/json', 'CF-Connecting-IP': '1.2.3.4' };
   if (origin) headers.Origin = origin;
-  return onRequestPost({ request: new Request('https://atharvapatil.tech/api/chat', { method: 'POST', headers, body: JSON.stringify({ question }) }), env });
+  return onRequestPost({ request: new Request('https://atharvapatil.tech/api/chat', { method: 'POST', headers, body: JSON.stringify(context === undefined ? { question } : { question, context }) }), env });
 }
 
 class FakeKV {
@@ -65,6 +65,23 @@ test('tier 1: a KB question is answered free, with bullets and follow-ups, and n
   assert.ok(Array.isArray(body.followups) && body.followups.length > 0);
   assert.equal(aiCalls, 0);
   assert.equal(env.RATE_LIMIT.store.size, 0, 'a free FAQ hit must not consume rate-limit quota');
+});
+
+test('tier 1: a follow-up leans on the previous project, a combo answers every part, and the topic is reported', async () => {
+  mockFetch();
+  const first = await (await post('Tell me about Kanvaz')).json();
+  assert.equal(first.topic, 'kanvaz');
+  const follow = await (await post('and its license?', {}, 'https://atharvapatil.tech', first.topic)).json();
+  assert.equal(follow.source, 'faq');
+  assert.match(follow.answer, /GPL|license|proprietary|open/i);
+  assert.equal(follow.topic, 'kanvaz');
+  const combo = await (await post('what is the license and stack of Kanvaz')).json();
+  assert.ok(combo.answer.includes('\n\n'), 'two intents about one project are answered together');
+  // a forged or unknown context is ignored, not trusted
+  const forged = await (await post('and its license?', {}, 'https://atharvapatil.tech', 'no-such-project')).json();
+  assert.notEqual(forged.topic, 'no-such-project');
+  const general = await (await post('Are you available for freelance work?')).json();
+  assert.equal(general.topic, null);
 });
 
 test('tier 1: contact flag is passed through for hiring questions', async () => {
@@ -97,7 +114,7 @@ test('tier 3: an unmatched question goes to AI, grounded in the FULL compact KB 
   mockFetch();
   let prompt = '';
   const env = { AI: { run: async (_m: string, input: any) => { prompt = input.messages[0].content; return { response: 'Lead line\n- a point' }; } }, RATE_LIMIT: new FakeKV() };
-  const body = await (await post('Can you build me a mobile app in Swift for my bakery?', env)).json();
+  const body = await (await post('Do you prefer tabs or spaces for indentation?', env)).json();
   assert.equal(body.source, 'ai');
   for (const name of ['MINK', 'Glint', 'Obscura', 'CrossPort', 'Kalasadhana Academy', '30 days of free bug-fixes']) {
     assert.ok(prompt.includes(name), `AI prompt is missing "${name}" (grounding truncated?)`);
@@ -152,7 +169,7 @@ test('rate limit: the 9th uncached AI question in a burst is refused with reason
 
 test('no AI binding: an unmatched question still gets a real answer, not an error', async () => {
   mockFetch();
-  const res = await post('Could you design a logo for my bakery in Pune?', {});
+  const res = await post('What is your favourite colour?', {});
   assert.equal(res.status, 200);
   const body = await res.json();
   assert.equal(body.ok, true);

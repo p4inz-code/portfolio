@@ -19,7 +19,7 @@
 // jokes, off-topic, private) are answered by free rules in the knowledge base
 // with a soft warning, before any AI call or rate-limit quota is used.
 
-import { matchFaq, type KbEntry } from '../_lib/faq-match';
+import { matchMany, type KbEntry } from '../_lib/faq-match';
 
 interface KVNamespaceLike {
   get(key: string): Promise<string | null>;
@@ -168,9 +168,21 @@ export async function onRequestPost(context: { request: Request; env: Env }): Pr
 
   // Tier 1: knowledge base, free and instant.
   const kb = await loadKb();
-  const hit = kb ? matchFaq(kb.entries, question) : null;
-  if (hit) {
-    return json({ ok: true, answer: hit.answer, source: 'faq', contact: !!hit.contact, followups: hit.followups ?? [] });
+  // The project the visitor was last asking about, so "and its license?" resolves.
+  // Only accepted if it names a real project in the knowledge base.
+  const ctxRaw = typeof body.context === 'string' ? body.context.slice(0, 60) : '';
+  const lastTopic = ctxRaw && kb?.entries.some((e) => e.project === ctxRaw) ? ctxRaw : null;
+  const hits = kb ? matchMany(kb.entries, question, lastTopic) : [];
+  if (hits.length) {
+    const hit = hits[0];
+    return json({
+      ok: true,
+      answer: hits.map((h) => h.answer).join('\n\n'),
+      source: 'faq',
+      contact: hits.some((h) => h.contact),
+      followups: hit.followups ?? [],
+      topic: hit.project ?? null,
+    });
   }
 
   // Without an AI binding there is nothing to ration: reply with the
