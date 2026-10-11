@@ -45,7 +45,7 @@ Software engineer and product builder focused on desktop applications, developer
 - Rebuilt the entire v11 interface (lock screen, media browser, credentials, notes, settings, updater) without touching the cryptographic core underneath it.
 
 ### MINK &nbsp;·&nbsp; Programming Language
-*[github.com/p4inz-code/mink](https://github.com/p4inz-code/mink)* &nbsp;·&nbsp; 2026 – Released v1.0.3 &nbsp;·&nbsp; Rust, Apache 2.0
+*[github.com/p4inz-code/mink](https://github.com/p4inz-code/mink)* &nbsp;·&nbsp; 2026 – Released v1.0.4 &nbsp;·&nbsp; Rust, Apache 2.0
 
 - Designed and built a compiler from scratch: lexer, parser, type system, optimizer, and native code generator, producing standalone executables with no external toolchain.
 - Added a second native backend (Linux ELF, alongside Windows PE) plus real threads, an async runtime, a package manager, and a test runner, growing the regression suite to just under 3,000 native-execution tests.

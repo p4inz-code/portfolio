@@ -126,8 +126,8 @@ export const PROJECTS: Project[] = [
     name: 'Kanvaz',
     tagline: 'Your canvas. Your references.',
     description:
-      'Visual reference workspace for VFX and 3D artists. Live 3D model preview (glTF, OBJ, FBX, STL, USD, and more), typed connections with a Map View, a Scratch Board drawing layer, a Task Tracker, shared cards across boards, and 14 board templates. Plugin system with a local-only MCP Bridge: an AI agent can read and edit the active board, off by default and undo-reversible. Windows, macOS and Linux builds. Free forever, MIT-licensed, no telemetry.',
-    status: { kind: 'active', label: 'Flagship · Active · v9.7.0' },
+      'Visual reference workspace for VFX and 3D artists. Live 3D model preview (glTF, OBJ, FBX, STL, USD, and more), typed connections with a Map View, a Scratch Board drawing layer, a Task Tracker, shared cards across boards, MoodLock (a read-only, always-on-top view for working from references), and 14 board templates. Plugin system with a local-only MCP Bridge: an AI agent can read and edit the active board, off by default and undo-reversible. Windows, macOS and Linux builds. Free forever, MIT-licensed, no telemetry.',
+    status: { kind: 'active', label: 'Flagship · Active · v9.8.2' },
     category: 'app',
     tags: ['Electron', 'MIT'],
     metaTags: ['Electron', 'MIT', 'Open Source'],
@@ -146,10 +146,10 @@ export const PROJECTS: Project[] = [
     platforms: ['Windows', 'macOS', 'Linux'],
     role: 'Sole engineer + designer',
     started: 'June 2026',
-    currentVersion: 'v9.7.0',
+    currentVersion: 'v9.8.2',
     comingSoon: 'Next release coming soon.',
     nextMilestone: 'Shipping most weeks, driven by user feedback. No fixed roadmap.',
-    notes: 'v9.7.0 (30 Sept 2026) added an official AI Export plugin (a JSON + Markdown export of the board any AI agent can read, no MCP connection or server needed), Home Screen window controls, and separate Apple Silicon and Intel macOS installers, plus a fix to an async board-switching bug. Ten releases before that since the site last checked (v8.8.5 -> v9.6.0, Sept 2026): security/platform hardening (v9.0.0), 13 render modes plus Kanvaz Link and Open With (v9.1.0), a Blender picker and preview quality gates (v9.2.0), OBJ material support and HDR/EXR previews (v9.3.0), Krita/Clip Studio/Procreate recognition (v9.4.0), a third board type -- Scratch Board, with board-wide annotations and Illustrator-style tools (v9.5.0) -- and a second pass fixing Map View overlap, a Windows dialog-freeze bug, and BMP export (v9.6.0). Screenshots on the case study page are now the real v9.6.0 set, replacing one that had drifted as far back as v4.2.1.',
+    notes: 'v9.8.2 (7 Oct 2026) gave MoodLock a titlebar lock button, arrow-key flipping through references and a remembered window position. v9.8.1 (6 Oct) introduced MoodLock (Ctrl+Shift+L: isolate cards, hide all chrome, stay on top, read-only), fixed "Always on top" losing to apps like ZBrush, and added a 14-second README walkthrough. v9.8.0 (4 Oct) added overwrite protection for boards on shared drives, reading-order Presentation Mode, a live user guide at p4inz-code.github.io/kanvaz and CI-verified release assets. Before that, v9.7.0 (30 Sept 2026) added an official AI Export plugin (a JSON + Markdown export of the board any AI agent can read, no MCP connection or server needed), Home Screen window controls, and separate Apple Silicon and Intel macOS installers, plus a fix to an async board-switching bug. Ten releases before that since the site last checked (v8.8.5 -> v9.6.0, Sept 2026): security/platform hardening (v9.0.0), 13 render modes plus Kanvaz Link and Open With (v9.1.0), a Blender picker and preview quality gates (v9.2.0), OBJ material support and HDR/EXR previews (v9.3.0), Krita/Clip Studio/Procreate recognition (v9.4.0), a third board type -- Scratch Board, with board-wide annotations and Illustrator-style tools (v9.5.0) -- and a second pass fixing Map View overlap, a Windows dialog-freeze bug, and BMP export (v9.6.0). Screenshots on the case study page are the real v9.6.0 set from the repository, plus the new walkthrough clip.',
   },
   {
     slug: 'pursue-os',
@@ -286,7 +286,7 @@ export const PROJECTS: Project[] = [
     tagline: 'A general-purpose programming language, built from first principles.',
     description:
       'A compiled, general-purpose programming language built from the ground up: its own lexer, parser, type system, HIR/MIR, optimizer, and native code generator. Compiles to a standalone native executable with no external toolchain (no C compiler, assembler, or linker) on both Windows (PE) and Linux (ELF, x86_64). Real OS threads, an async task loop with genuine `async`/`await` concurrency, TLS-verified networking, a package manager (manifest, resolver, lockfile), and a built-in test runner (`mink test`) and REPL (`mink repl`). Rust, Apache 2.0.',
-    status: { kind: 'released', label: 'Released · v1.0.3' },
+    status: { kind: 'released', label: 'Released · v1.0.4' },
     category: 'cli',
     tags: ['Rust', 'Compilers', 'Systems'],
     metaTags: ['Rust', 'Compiler', 'Apache 2.0'],
@@ -304,9 +304,9 @@ export const PROJECTS: Project[] = [
     platforms: ['Windows', 'Linux (x86_64)'],
     role: 'Sole engineer',
     started: '2026',
-    currentVersion: 'v1.0.3',
+    currentVersion: 'v1.0.4',
     nextMilestone: 'Linux support (the previous milestone) is done and execution-verified via WSL. Ongoing work is Windows API-parity coverage against Python, tracked session-by-session in the repo.',
-    notes: 'v1.0.0 shipped 2026-08-24 with 1928 compiler tests. Everything past v1.0.1 was a much bigger jump than the site had caught: a full Linux x86_64 backend, real threads and an async runtime, a package manager, a test runner, a REPL, regex, TLS networking, and DEFLATE/zip compression, taking the regression suite to just under 3,000 native-execution tests. v1.0.2 and v1.0.3 are real, tagged, shipped versions but don\'t have formal GitHub release notes the way v1.0.0/v1.0.1 do. One real gap worth flagging: as of this check, the published npm package still serves the older v1.0.1 build, not v1.0.3 — install from a tagged GitHub release if you need the current version.',
+    notes: 'v1.0.0 shipped 2026-08-24 with 1928 compiler tests. Everything past v1.0.1 was a much bigger jump than the site had caught: a full Linux x86_64 backend, real threads and an async runtime, a package manager, a test runner, a REPL, regex, TLS networking, and DEFLATE/zip compression, taking the regression suite to just under 3,000 native-execution tests. v1.0.2 to v1.0.4 are real, tagged versions without formal GitHub release notes the way v1.0.0/v1.0.1 have. v1.0.4 (26 Sept 2026) fixes a `mod collections;` build failure that v1.0.3 shipped with, and the npm package now serves v1.0.4.',
   },
   {
     slug: '3d-ref-skills',
@@ -419,7 +419,7 @@ export const PROJECTS: Project[] = [
     role: 'Sole engineer',
     started: '2026',
     currentVersion: 'v0.1.0',
-    comingSoon: 'First public release coming soon.',
+    comingSoon: 'Next release coming soon.',
     nextMilestone: 'Repo\'s own README calls this "active foundation development (pre-v1)": real and working, not yet feature-complete.',
   },
   {

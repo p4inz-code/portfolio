@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.48.0',
+    kind: 'released',
+    summary: "Project data re-synced with GitHub (Kanvaz v9.8.2, MINK v1.0.4), a 14-second Kanvaz walkthrough replaces the old GIF, and the retired studio name is gone from the repos.",
+    body: [
+      "Kanvaz is now shown at v9.8.2 (7 October 2026): MoodLock, a read-only always-on-top view, arrived in v9.8.1 and got a titlebar button, arrow-key flipping and a remembered window position in v9.8.2; v9.8.0 added overwrite protection for boards on shared drives and a live user guide. The release count is stated as 75 on GitHub. MINK moves to v1.0.4, which fixes a build failure in v1.0.3 and is now on npm, so the old note that npm lagged behind is removed. DRAFT no longer says its first public release is still to come: v0.1.0 has been out since 9 September, and its next release is the one that is coming.",
+      "The Kanvaz page now opens with the repo's own 14-second walkthrough as a looping clip of 0.7 MB instead of a 13 MB GIF. It plays only while on screen and not at all for visitors who asked for reduced motion.",
+      "The retired studio name was replaced with P4inz Interactive Labs across 10 GitHub repos: credits, READMEs, project specs, the Discord bot's own prompt, and the copyright lines of the Obscura, Glint and Project Ascent licenses. Historical changelogs, plugin ids and bundle ids were left alone so nothing already installed breaks. License files were also checked against the site: the Veris license named VERIS Contributors and 2024, the Docflow and repo-map licenses had a wrong or missing holder, and P4inz had a three-line stub instead of the Apache 2.0 text; all four are fixed.",
+    ],
+  },
+  {
     version: 'v5.47.0',
     kind: 'released',
     summary: "Site-wide accuracy pass, a rewritten and interactive About page, LinkedIn, a chat assistant that answers from the project data, and the project constellation on the Work page.",

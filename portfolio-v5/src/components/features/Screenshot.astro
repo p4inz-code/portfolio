@@ -20,6 +20,7 @@ interface Props {
   span?: 'full' | 'half' | 'third';
   width?: number;    // intrinsic width for CLS hint
   height?: number;
+  video?: string;    // looping muted clip shown instead of the image (src is then the poster)
 }
 const {
   src,
@@ -29,14 +30,38 @@ const {
   span = 'half',
   width = 1600,
   height = 1000,
+  video,
 } = Astro.props;
 ---
 <figure class:list={['shot', `span-${span}`]}>
   <div class="frame" style={`--frame-aspect:${aspect};`}>
-    <img src={src} alt={alt} loading="lazy" decoding="async" width={width} height={height} />
+    {video ? (
+      <video data-loop-clip src={video} poster={src} role="img" aria-label={alt} muted loop playsinline preload="none" width={width} height={height}></video>
+    ) : (
+      <img src={src} alt={alt} loading="lazy" decoding="async" width={width} height={height} />
+    )}
   </div>
   {caption && <figcaption>{caption}</figcaption>}
 </figure>
+
+<script>
+  // Looping clips play only while visible, and never for people who asked for less motion.
+  const clips = document.querySelectorAll<HTMLVideoElement>('video[data-loop-clip]');
+  if (clips.length) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) clips.forEach((v) => { v.controls = true; });
+    else {
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          const v = e.target as HTMLVideoElement;
+          if (e.isIntersecting) v.play().catch(() => {});
+          else v.pause();
+        }
+      }, { threshold: 0.25 });
+      clips.forEach((v) => io.observe(v));
+    }
+  }
+</script>
 
 <style>
   .shot {
@@ -67,7 +92,7 @@ const {
     transform: translateY(-2px);
     box-shadow: 0 20px 50px color-mix(in oklab, var(--bg) 60%, transparent);
   }
-  .frame img {
+  .frame img, .frame video {
     position: absolute;
     inset: 0;
     width: 100%;

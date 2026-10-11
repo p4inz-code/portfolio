@@ -28,7 +28,7 @@ const breadcrumbJsonLd = {
   ],
 };
 ---
-<BaseLayout scene={project.scene} title="Kanvaz — Visual Reference Workspace · Atharva Patil" description="Free, open-source visual reference workspace for VFX and 3D artists: live 3D model preview, typed connections, Map View, Scratch Board, plugins. Windows, macOS, Linux. MIT, v9.7.0." keywords="Kanvaz, Kanvaz p4inz, Kanvaz painz, p4inz app dev, reference board app, VFX reference tool" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
+<BaseLayout scene={project.scene} title="Kanvaz — Visual Reference Workspace · Atharva Patil" description="Free, open-source visual reference workspace for VFX and 3D artists: live 3D model preview, typed connections, Map View, Scratch Board, plugins. Windows, macOS, Linux. MIT, v9.8.2." keywords="Kanvaz, Kanvaz p4inz, Kanvaz painz, p4inz app dev, reference board app, VFX reference tool" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
   <!-- Screenshots first — visual hook before the wall of text. All pulled
@@ -36,13 +36,16 @@ const breadcrumbJsonLd = {
        had drifted as far back as v4.2.1 on one dialog. -->
   <Section eyebrow="What Kanvaz looks like">
     <div class="shot-grid">
-      <!-- Card-creation walkthrough GIF — the README's own opening shot -->
+      <!-- The README's own opening shot: a 14-second walkthrough, served as a small looping clip -->
       <Screenshot
-        src="/assets/kanvaz/kanvaz-card-creation.gif"
-        alt="Kanvaz walkthrough: home screen, starting a new board, and dropping in a card, live."
-        caption="Home screen to first card · v9.6.0"
-        aspect="16 / 10"
+        src="/assets/kanvaz/kanvaz-walkthrough-poster.webp"
+        video="/assets/kanvaz/kanvaz-walkthrough.mp4"
+        alt="Kanvaz walkthrough: the Home Screen, a board filling with images, a note, colour swatches and a 3D model, live 3D orbit, the Properties panel, then a switch from dark to light theme for Map View as a node network, the Layers panel and the Command Palette."
+        caption="14-second walkthrough · half dark, half light"
+        aspect="1000 / 626"
         span="full"
+        width={1000}
+        height={626}
       />
 
       <!-- README showcase pair: the same board in both themes. -->
@@ -121,6 +124,14 @@ const breadcrumbJsonLd = {
   <Section eyebrow="What's inside" heading="3D preview, connections, plugins, and a lot of releases.">
     <div class="feature-grid">
       <article class="feature-card">
+        <h3 class="feature-name">MoodLock (v9.8.1–9.8.2)</h3>
+        <p class="feature-desc">Ctrl+Shift+L isolates the selected cards (or the whole board), hides every piece of Kanvaz chrome, keeps the window on top and makes the board read-only. Flip through the references with the arrow keys; the locked window remembers where you parked it. A lock button now sits next to Minimize in the titlebar.</p>
+      </article>
+      <article class="feature-card">
+        <h3 class="feature-name">Shared-drive safety + reading-order Presentation Mode (v9.8.0)</h3>
+        <p class="feature-desc">Saving over a board file someone else changed on a shared drive no longer silently erases their work. Presentation Mode steps through cards top-to-bottom, left-to-right instead of creation order, and the user guide is now live at p4inz-code.github.io/kanvaz.</p>
+      </article>
+      <article class="feature-card">
         <h3 class="feature-name">Map View + Scratch Board (v9.1–9.5)</h3>
         <p class="feature-desc">Map View turns every card into a node-editor-style graph, color-coded by type and wired with the same typed connections as the board itself. Scratch Board adds a real Illustrator-style drawing layer over the whole board — pen, highlighter, shapes, eraser — sharing one undo history with everything else.</p>
       </article>
@@ -171,10 +182,10 @@ const breadcrumbJsonLd = {
     </div>
   </Section>
 
-  <Section heading="Kanvaz is at v9.7.0, and still shipping.">
+  <Section heading="Kanvaz is at v9.8.2, and still shipping.">
     <div class="body-copy">
-      <p>Kanvaz went through a v5.3.0 bug-bounty pass that I once treated as the end of development. It wasn't. Since then there have been 47 published releases across the v6, v7, v8 and v9 lines: Smart Search, shared cards, real 3D model preview, Map View, Scratch Board, a Task Tracker, an AI Export plugin, and a lot of templates.</p>
-      <p>The latest published release is v9.7.0, with a Windows installer, a Linux AppImage, and macOS builds for both Apple Silicon and Intel. There's no fixed roadmap; updates land most weeks depending on what people report.</p>
+      <p>Kanvaz went through a v5.3.0 bug-bounty pass that I once treated as the end of development. It wasn't. Since then there have been dozens of published releases across the v6, v7, v8 and v9 lines (75 on GitHub at the last check): Smart Search, shared cards, real 3D model preview, Map View, Scratch Board, a Task Tracker, an AI Export plugin, MoodLock, and a lot of templates.</p>
+      <p>The latest published release is v9.8.2 (7 October 2026), with a Windows installer, a Linux AppImage, and macOS builds for both Apple Silicon and Intel. There's no fixed roadmap; updates land most weeks depending on what people report.</p>
       <p>No subscription, no feature paywall, no telemetry. The only network calls are buttons you click yourself, like Check for Updates. Your files stay on your machine, and it stays free.</p>
     </div>
   </Section>

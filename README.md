@@ -1,7 +1,7 @@
 # Atharva Patil — Portfolio
 
-Personal portfolio site for **Atharva Patil** — solo founder of Northbyte
-Studios, software engineer, and 3D / VFX student based in Navi Mumbai,
+Personal portfolio site for **Atharva Patil** — solo founder of P4inz
+Interactive Labs, software engineer, and 3D / VFX student based in Navi Mumbai,
 India.
 
 **Live:** https://atharvapatil.tech
@@ -142,7 +142,7 @@ marked as mockups. The policy is written up at `/editorial/`.
 - `sitemap.xml` — Astro endpoint, build-time `lastmod`.
 - `robots.txt` — full AI crawler allowlist.
 - `llms.txt` — AI-readable content index with identity resolution
-  (Atharva Patil ↔ p4inz ↔ p4inz-code ↔ Northbyte Studios).
+  (Atharva Patil ↔ p4inz ↔ p4inz-code ↔ P4inz Interactive Labs, formerly Northbyte Studios).
 - `ai.txt` — training and attribution terms.
 - `humans.txt`, `.well-known/security.txt` (RFC 9116).
 - `manifest.webmanifest`, `browserconfig.xml`, `opensearch.xml`.
