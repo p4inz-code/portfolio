@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.49.0',
+    kind: 'released',
+    summary: "Copy edit across the site and every GitHub repo: dashes, stock phrasing and decorative formatting taken out, wording otherwise kept.",
+    body: [
+      "On the site, em dashes and double hyphens are gone from page copy, chat answers, titles, comments and the changelog text, replaced by commas, colons or full stops depending on the sentence. A few stiff passages on the services page and in project descriptions were reworded, and notes that talked about what the site had said before were rewritten to describe the project as it is now. Facts, numbers and links did not change.",
+      "In the repos, the same pass ran over the Markdown in 23 of them: dashes, decorative bold and emoji, title-case headings and a handful of stock phrases. The README introductions of Kanvaz, Mission OS, Pursue OS, Veris, Obscura, 3D Ref Skills, Reference Engineering, Docflow and repo-map were reworded by hand. Changelogs, license files and code were not touched, and status ticks and crosses were kept in files that use both so the lists still mean the same thing.",
+    ],
+  },
+  {
     version: 'v5.48.0',
     kind: 'released',
     summary: "Project data re-synced with GitHub (Kanvaz v9.8.2, MINK v1.0.4), a 14-second Kanvaz walkthrough replaces the old GIF, and the retired studio name is gone from the repos.",

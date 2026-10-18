@@ -514,7 +514,7 @@ function globalEntries(): KbEntry[] {
       weight: 44,
       noProject: true,
       followups: ['Are you available for freelance work?', 'How can I contact you?', 'How does billing work?'],
-      answer: bullets(`Based in ${SITE.location} (IST).`, ['Every client so far has been remote', 'Async-friendly and timezone-agnostic']),
+      answer: bullets(`Based in ${SITE.location} (IST).`, ['Every client so far has been remote', 'Working async across time zones is fine']),
     },
     {
       id: 'studio',
