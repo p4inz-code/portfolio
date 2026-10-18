@@ -20,6 +20,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.51.0',
+    kind: 'released',
+    summary: "Project Ascent is marked as under rework.",
+    body: [
+      "Project Ascent's status changed from Visual Polish Phase to Under Rework. The latest public build is still v0.14.1. The earlier plan on this site (a character enemy and a couple more months of visual polish) was removed from the project data, the llms.txt entry and the chat answers rather than left standing next to a rework it may no longer match.",
+    ],
+  },
+  {
     version: 'v5.50.0',
     kind: 'released',
     summary: "DRAFT's license is now stated correctly: source-available, free to use, not open source.",

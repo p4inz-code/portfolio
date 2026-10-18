@@ -213,7 +213,7 @@ export const PROJECTS: Project[] = [
     tagline: 'A precision platformer where the only thing between you and the top is your own timing.',
     description:
       'A 25-level, 5-act 2D precision platformer built in Godot 4: full moveset from the start (run, jump, wall-jump, dash, slide, ground pound, wall run, ledge grab, grapple), five boss chases on a visible countdown, and a shared cyberpunk UI across every screen. Offline-first: no accounts, no backend, no ads, no network runtime beyond an optional signed update check. Ships for Windows, macOS, Linux, and browser (playable on itch.io) from one codebase.',
-    status: { kind: 'polish', label: 'Visual Polish Phase · v0.14.1' },
+    status: { kind: 'active', label: 'Under Rework · v0.14.1' },
     tags: ['Godot 4', 'GDScript', 'Platformer', 'Game'],
     metaTags: ['Godot 4', 'GDScript', 'Cross-Platform'],
     featured: true,
@@ -232,7 +232,7 @@ export const PROJECTS: Project[] = [
     role: 'Creative direction, design, and QA (implementation via Claude Code)',
     started: 'August 2026',
     currentVersion: 'v0.14.1',
-    nextMilestone: 'Core development is done. A real character/monster enemy is planned, alongside visual polish expected to continue for at least the next two months.',
+    nextMilestone: 'The game is being reworked. The latest public build is v0.14.1.',
     notes: 'Went from first playable (v0.1.0) to a full 25-level campaign with cross-platform exports and PlayStation controller support in about a week. 18 automated test suites, including a full 25-level reachability sweep that measures the player\'s actual jump envelope rather than trusting the configured jump height.',
   },
   {

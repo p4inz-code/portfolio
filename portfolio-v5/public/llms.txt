@@ -107,9 +107,8 @@ crawlable and canonical.
   no accounts, no backend, no ads. Windows, macOS, Linux, and browser
   from one codebase. Play at `p4inz-code.itch.io/project-ascent`, source
   at `github.com/p4inz-code/project-ascent` (proprietary license).
-  Core development is done; a real character/monster enemy is planned,
-  alongside visual polish expected to continue for at least the next
-  two months. Status: **Visual Polish Phase · v0.14.1**.
+  The game is being reworked; the latest public build is v0.14.1.
+  Status: **Under Rework · v0.14.1**.
 - [Glint](https://github.com/p4inz-code/glint): Native brightness and
   volume tray utility for Windows, no Electron. Per-monitor brightness
   over DDC/CI and WMI, a master and per-app volume mixer, global
