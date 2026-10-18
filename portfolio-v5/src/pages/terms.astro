@@ -8,7 +8,7 @@ import { PROJECTS } from '../data/projects';
 const licensed = PROJECTS.filter((p) => p.license && !p.tags.includes('Client work') && !p.tags.includes('Event site'));
 const unlicensed = PROJECTS.filter((p) => !p.license && !p.tags.includes('Client work') && !p.tags.includes('Event site')).map((p) => p.name);
 const licenseSentence =
-  licensed.map((p) => `${p.name} is ${p.license === 'Proprietary' ? 'proprietary' : p.license}`).join('. ') + '.' +
+  licensed.map((p) => `${p.name} is ${p.license === 'Proprietary' ? 'proprietary' : p.license === 'Source-available' ? 'source-available (free to use, not open source)' : p.license}`).join('. ') + '.' +
   (unlicensed.length ? ` ${unlicensed.join(', ')} has no license listed yet.` : '');
 ---
 <BaseLayout title={`Terms | ${SITE.title}`} description="Terms of use for atharvapatil.tech, plain terms covering what you can and can't do with the site's content.">

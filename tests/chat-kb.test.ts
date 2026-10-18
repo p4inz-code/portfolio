@@ -184,7 +184,11 @@ test('every project has the core entries, built from its real data', () => {
     assert.ok(overview.includes(p.status.label), `${p.slug}: overview lacks status label`);
     assert.ok(byId.get(`${p.slug}:status`)!.answer.includes(p.status.label), `${p.slug}: status entry lacks label`);
 
-    if (p.license && p.license !== 'Proprietary') {
+    if (p.license === 'Source-available') {
+      const a = byId.get(`${p.slug}:license`)!.answer;
+      assert.match(a, /source-available/i);
+      assert.match(a, /not open source/i, 'a source-available project must never be described as open source');
+    } else if (p.license && p.license !== 'Proprietary') {
       assert.ok(byId.get(`${p.slug}:license`)!.answer.includes(p.license), `${p.slug}: license entry lacks ${p.license}`);
     }
     if (p.license === 'Proprietary') assert.match(byId.get(`${p.slug}:license`)!.answer, /proprietary/i);

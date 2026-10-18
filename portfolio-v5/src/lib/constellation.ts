@@ -35,7 +35,7 @@ interface InputNode {
 // generic word, so plain tag-matching missed every real open-source
 // connection except those two. This checks the actual license field.
 function isOpenSource(license?: string): boolean {
-  return !!license && license !== 'Proprietary';
+  return !!license && license !== 'Proprietary' && license !== 'Source-available';
 }
 
 // mulberry32, tiny seeded PRNG, deterministic across runs

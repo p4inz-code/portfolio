@@ -11,7 +11,7 @@
  * them as a list). Imports carry explicit .ts extensions so `node --test`
  * can load this file directly (Astro/Vite accept them too).
  */
-import { PROJECTS, PRODUCT_COUNT, FEATURED_PROJECTS, type Project } from './projects.ts';
+import { PROJECTS, PRODUCT_COUNT, FEATURED_PROJECTS, isOpenLicense, type Project } from './projects.ts';
 import { SITE, CONTACT, SERVICES, SERVICE_FAQ, BILLING, SKILLS, NOT_LISTED_TECH, EDUCATION } from './site.ts';
 
 export interface KbEntry {
@@ -95,7 +95,7 @@ const bullets = (lead: string, items: string[]) => [lead, ...items.map((i) => `-
 
 const isClientOrEvent = (p: Project) => p.tags.includes('Client work') || p.tags.includes('Event site');
 const isProduct = (p: Project) => !isClientOrEvent(p);
-const isOpen = (p: Project) => !!p.license && p.license !== 'Proprietary';
+const isOpen = (p: Project) => isOpenLicense(p.license);
 const byOrder = (a: Project, b: Project) => a.order - b.order;
 const find = (slug: string) => PROJECTS.find((p) => p.slug === slug);
 const nameOf = (slug: string) => find(slug)?.name ?? slug;
@@ -146,7 +146,9 @@ function projectEntries(p: Project): KbEntry[] {
     ? null
     : p.license === 'Proprietary'
       ? 'License: proprietary'
-      : p.license
+      : p.license === 'Source-available'
+        ? 'License: source-available (free to use, not open source)'
+        : p.license
         ? `License: ${p.license}`
         : null;
   const platformBullet = p.platforms?.length ? `Runs on: ${p.platforms.join(', ')}` : null;
@@ -196,6 +198,9 @@ function projectEntries(p: Project): KbEntry[] {
   } else if (p.license === 'Proprietary') {
     cost = `${p.name} is proprietary, and no price is listed on this site.`;
     license = `${p.name} is proprietary. The source isn't public.`;
+  } else if (p.license === 'Source-available') {
+    cost = `${p.name} is free to use for any purpose, including commercial work.`;
+    license = `${p.name} is source-available, not open source. It is free to use for any purpose, and the source can be read and contributed to, but not redistributed or used to build a competing product. The full terms are in LICENSE.md in its repository.`;
   } else if (p.license) {
     cost = `${p.name} is free and open source (${p.license}).`;
     license = `${p.name} is open source under ${p.license}.`;
@@ -277,7 +282,7 @@ function globalEntries(): KbEntry[] {
     byLicense.set(p.license, [...(byLicense.get(p.license) ?? []), p.name]);
   }
   const unlicensed = products.filter((p) => !p.license).map((p) => p.name);
-  const licenseBullets = [...byLicense.entries()].map(([lic, names]) => `${lic}: ${list(names)}`);
+  const licenseBullets = [...byLicense.entries()].map(([lic, names]) => `${lic === 'Source-available' ? 'Source-available (free to use, not open source)' : lic}: ${list(names)}`);
   if (unlicensed.length) licenseBullets.push(`No license listed yet: ${list(unlicensed)}`);
 
   const tally = new Map<string, string[]>();

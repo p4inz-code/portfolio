@@ -20,6 +20,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.50.0',
+    kind: 'released',
+    summary: "DRAFT's license is now stated correctly: source-available, free to use, not open source.",
+    body: [
+      "DRAFT had no license listed on this site even though its repository has one. It is a source-available license: free to use for any purpose including commercial work, with the source open to read and contribute to, but not for redistribution or a competing product. The site, the chat answers, the Terms page and llms.txt now say that, and nothing that counts open-source projects counts DRAFT (it stays out of the open-source count). The license file itself keeps the same terms with plainer punctuation, and its README now says source-available instead of proprietary.",
+    ],
+  },
+  {
     version: 'v5.49.0',
     kind: 'released',
     summary: "Copy edit across the site and every GitHub repo: dashes, stock phrasing and decorative formatting taken out, wording otherwise kept.",

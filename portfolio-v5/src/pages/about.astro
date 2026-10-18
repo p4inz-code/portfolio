@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../components/layout/Section.astro';
 import { SITE, CONTACT, BILLING } from '../data/site';
-import { PROJECTS, PRODUCT_COUNT } from '../data/projects';
+import { PROJECTS, PRODUCT_COUNT, isOpenLicense } from '../data/projects';
 
 /**
  * About page, v5.47 rewrite. Same rule as before: every claim is either
@@ -22,7 +22,7 @@ const usedIn = (term: string) =>
   PROJECTS.filter((p) => (p.stack ?? []).some((s) => s.toLowerCase().includes(term.toLowerCase()))).map((p) => chip(p.slug));
 
 const activeNow = PROJECTS.filter((p) => isProduct(p) && (p.status.kind === 'active' || p.status.kind === 'beta'));
-const openSource = PROJECTS.filter((p) => isProduct(p) && p.license && p.license !== 'Proprietary');
+const openSource = PROJECTS.filter((p) => isProduct(p) && isOpenLicense(p.license));
 // Only the projects whose own description says so; not a blanket claim.
 const noTelemetry = PROJECTS.filter((p) => /(zero|no) telemetry/i.test(p.description));
 

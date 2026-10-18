@@ -66,6 +66,9 @@ export interface Project {
   category?: 'web' | 'app' | 'cli' | 'os';
 }
 
+/** True for licenses that let anyone fork and redistribute. Proprietary and source-available do not. */
+export const isOpenLicense = (license?: string): boolean => !!license && license !== 'Proprietary' && license !== 'Source-available';
+
 export const PROJECTS: Project[] = [
   {
     slug: 'mission-os',
@@ -415,6 +418,7 @@ export const PROJECTS: Project[] = [
     href: 'https://github.com/p4inz-code/Draft',
     isExternal: true,
     links: [{ label: 'View on GitHub', href: 'https://github.com/p4inz-code/Draft', external: true }],
+    license: 'Source-available',
     stack: ['Rust', 'TypeScript'],
     role: 'Sole engineer',
     started: '2026',

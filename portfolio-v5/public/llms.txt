@@ -129,7 +129,9 @@ crawlable and canonical.
   agents as live data, not a screenshot. Especially suited to game/level
   design; also works for UI mockups and diagrams. Status: **v0.1.0**,
   the repo's own README calls this "active foundation development,
-  pre-v1."
+  pre-v1." License: **source-available**, free to use for any purpose
+  including commercial work; the source can be read and contributed to but
+  not redistributed or used in a competing product. Not open source.
 Not listed on purpose: Docflow (discontinued, won't restart) and a Discord
 bot repo at `github.com/p4inz-code/p4inz` (not dead, just postponed. The
 work is done, it's on hold for hosting-budget reasons, expected back on the

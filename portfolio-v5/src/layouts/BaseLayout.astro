@@ -11,11 +11,11 @@ import SceneFx from '../components/SceneFx.astro';
 import LiveStats from '../components/LiveStats.astro';
 import ChatWidget from '../components/features/ChatWidget.astro';
 import { SITE, NAV, CONTACT } from '../data/site';
-import { PROJECTS, PRODUCT_COUNT } from '../data/projects';
+import { PROJECTS, PRODUCT_COUNT, isOpenLicense } from '../data/projects';
 
 // Same population PRODUCT_COUNT uses (products only), computed so it can't drift.
 const OPEN_SOURCE_COUNT = PROJECTS.filter(
-  (p) => !p.tags.includes('Client work') && !p.tags.includes('Event site') && p.license && p.license !== 'Proprietary'
+  (p) => !p.tags.includes('Client work') && !p.tags.includes('Event site') && isOpenLicense(p.license)
 ).length;
 
 interface Props {
