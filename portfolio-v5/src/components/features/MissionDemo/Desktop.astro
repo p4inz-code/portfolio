@@ -55,7 +55,7 @@ import FirefoxApp from './apps/FirefoxApp.astro';
         <circle cx="200" cy="200" r="150" fill="none" stroke="currentColor" stroke-width="1" opacity="0.5"/>
         <circle cx="200" cy="200" r="110" fill="none" stroke="url(#wp-ring-grad)" stroke-width="1.5" stroke-dasharray="4 6"/>
 
-        <!-- Orbit tick marks around outer ring — the four cardinal points -->
+        <!-- Orbit tick marks around outer ring. The four cardinal points -->
         <g fill="#B993FF">
           <circle cx="200" cy="15"  r="3"/>
           <circle cx="385" cy="200" r="3"/>
@@ -94,15 +94,15 @@ import FirefoxApp from './apps/FirefoxApp.astro';
       </ul>
     </div>
 
-    <!-- Corner build meta — feels like a real OS wallpaper -->
+    <!-- Corner build meta, feels like a real OS wallpaper -->
     <p class="wp-corner-tl">no telemetry · no phone-home · builds signed · gplv3</p>
     <p class="wp-corner-br">p4inz@mission-os · <span>2026</span></p>
   </div>
 
   <!-- ================== TOP BAR ================== -->
-  <!-- v5.17.3 fix — role="banner" here conflicted with the real page
+  <!-- v5.17.3 fix, role="banner" here conflicted with the real page
        banner landmark (the site nav, hidden but still present in the DOM
-       on this route) — axe flagged "banner landmark not top-level". This
+       on this route), axe flagged "banner landmark not top-level". This
        is simulated OS chrome, not the page's actual banner. -->
   <header class="topbar">
     <div class="tb-left">
@@ -128,13 +128,13 @@ import FirefoxApp from './apps/FirefoxApp.astro';
     </div>
 
     <div class="tb-right">
-      <span class="tb-chip tb-chip-good" title="Telemetry hooks not compiled — locked off">
+      <span class="tb-chip tb-chip-good" title="Telemetry hooks not compiled, locked off">
         <span class="tb-chip-dot" aria-hidden="true"></span>Privacy
       </span>
       <span class="tb-chip tb-chip-good" title="Full-disk encryption enabled (LUKS2 + Argon2id)">
         <span class="tb-chip-dot" aria-hidden="true"></span>Crypto
       </span>
-      <span class="tb-item" role="img" aria-label="Network offline — offline-first policy">
+      <span class="tb-item" role="img" aria-label="Network offline, offline-first policy">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
           <path d="M2 8a15 15 0 0 1 20 0" />
           <path d="M5 12a10 10 0 0 1 14 0" />
@@ -202,7 +202,7 @@ import FirefoxApp from './apps/FirefoxApp.astro';
     </DemoWindow>
 
     <DemoWindow
-      title="Firefox — about:privacy"
+      title="Firefox, about:privacy"
       subtitle="mission os defaults"
       appSlug="firefox"
       wide
@@ -213,7 +213,7 @@ import FirefoxApp from './apps/FirefoxApp.astro';
 
   <!-- ================== DOCK ================== -->
   <nav class="dock" aria-label="Applications">
-    <!-- System apps — informational panels (not full simulations). -->
+    <!-- System apps, informational panels (not full simulations). -->
     <div class="dock-group" aria-label="System">
       <button type="button" class="dock-icon" data-dock-app="files" aria-label="Open Files (informational)">
         <span class="dock-icon-glyph" aria-hidden="true">
@@ -245,7 +245,7 @@ import FirefoxApp from './apps/FirefoxApp.astro';
 
     <div class="dock-divider" aria-hidden="true"></div>
 
-    <!-- Info apps — functional in the demo. -->
+    <!-- Info apps, functional in the demo. -->
     <div class="dock-group" aria-label="Info">
       <button type="button" class="dock-icon" data-dock-app="installer" aria-label="Open Mission Installer">
         <span class="dock-icon-glyph" aria-hidden="true">
@@ -279,7 +279,7 @@ import FirefoxApp from './apps/FirefoxApp.astro';
 </div>
 
 <style>
-  /* System-UI font stack for OS chrome — the portfolio's PP Editorial New
+  /* System-UI font stack for OS chrome. The portfolio's PP Editorial New
      is beautiful editorial serif but it leaks brand into what should read
      as an OS. Keep PP Editorial inside app windows (editorial content
      in windows is fine); chrome speaks a system-UI voice. */
@@ -325,7 +325,7 @@ import FirefoxApp from './apps/FirefoxApp.astro';
     -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 85%);
   }
 
-  /* v5.10.0 LIGHT THEME wallpaper — day mode for Mission OS. Cream base,
+  /* v5.10.0 LIGHT THEME wallpaper, day mode for Mission OS. Cream base,
      softer purple glows, dot grid inverted so it still shows. */
   :root[data-theme='light'] .wp-base {
     background:
@@ -340,7 +340,7 @@ import FirefoxApp from './apps/FirefoxApp.astro';
 
   /* v5.10.0 wallpaper composition (replacing the tiny text watermark). */
   .desktop-root {
-    /* Wallpaper accent tokens — overrideable by light theme below. */
+    /* Wallpaper accent tokens, overrideable by light theme below. */
     --wp-accent: #7B3FE4;
     --wp-accent-bright: #B993FF;
     --wp-line: rgba(232, 225, 208, 0.10);
@@ -575,7 +575,7 @@ import FirefoxApp from './apps/FirefoxApp.astro';
     background: var(--line);
     margin: 0 4px;
   }
-  /* v5.10.0 dock icon visibility fix — icons + labels were reading as
+  /* v5.10.0 dock icon visibility fix, icons + labels were reading as
      "muted grey" which is nearly invisible on the dark wallpaper. Now
      text is bright cream, glyphs are purple, hover deepens. */
   .dock-icon {

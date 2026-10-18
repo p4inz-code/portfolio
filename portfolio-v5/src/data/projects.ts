@@ -38,7 +38,7 @@ export interface Project {
   links: ProjectLink[];
   license?: string;
   stack?: string[];
-  /** Only where the project's own description states it -- never inferred. */
+  /** Only where the project's own description states it, never inferred. */
   platforms?: string[];
   /** Owner-confirmed: a release is on the way. No dates, no promises of detail. */
   comingSoon?: string;
@@ -72,7 +72,7 @@ export const PROJECTS: Project[] = [
     name: 'Mission OS',
     tagline: 'A privacy-first Linux OS built for developers, designers, and systems engineers who ship.',
     description:
-      'A privacy-first, offline-first Linux operating system built on Debian Stable and KDE Plasma. Four pillars: privacy-first, security-conscious, portable-first, offline-first. Ships hardened by default: sysctl hardening and Mission OS\'s Rust system services are enabled automatically during install, no post-install script needed. Installer is Calamares, customized with Mission OS branding and a Python post-install module. No telemetry, ever.',
+      'A privacy-first, offline-first Linux operating system built on Debian Stable and KDE Plasma. The other priorities are security and portability. It ships hardened by default: sysctl hardening and Mission OS\'s Rust system services are switched on during install, with no post-install script needed. The installer is Calamares, customized with Mission OS branding and a Python post-install module. No telemetry, ever.',
     status: { kind: 'onHold', label: 'On Hold · Open Beta' },
     tags: ['Linux', 'GPLv3', 'Privacy'],
     metaTags: ['Debian Stable', 'KDE Plasma', 'Rust', 'GPLv3'],
@@ -149,14 +149,14 @@ export const PROJECTS: Project[] = [
     currentVersion: 'v9.8.2',
     comingSoon: 'Next release coming soon.',
     nextMilestone: 'Shipping most weeks, driven by user feedback. No fixed roadmap.',
-    notes: 'v9.8.2 (7 Oct 2026) gave MoodLock a titlebar lock button, arrow-key flipping through references and a remembered window position. v9.8.1 (6 Oct) introduced MoodLock (Ctrl+Shift+L: isolate cards, hide all chrome, stay on top, read-only), fixed "Always on top" losing to apps like ZBrush, and added a 14-second README walkthrough. v9.8.0 (4 Oct) added overwrite protection for boards on shared drives, reading-order Presentation Mode, a live user guide at p4inz-code.github.io/kanvaz and CI-verified release assets. Before that, v9.7.0 (30 Sept 2026) added an official AI Export plugin (a JSON + Markdown export of the board any AI agent can read, no MCP connection or server needed), Home Screen window controls, and separate Apple Silicon and Intel macOS installers, plus a fix to an async board-switching bug. Ten releases before that since the site last checked (v8.8.5 -> v9.6.0, Sept 2026): security/platform hardening (v9.0.0), 13 render modes plus Kanvaz Link and Open With (v9.1.0), a Blender picker and preview quality gates (v9.2.0), OBJ material support and HDR/EXR previews (v9.3.0), Krita/Clip Studio/Procreate recognition (v9.4.0), a third board type -- Scratch Board, with board-wide annotations and Illustrator-style tools (v9.5.0) -- and a second pass fixing Map View overlap, a Windows dialog-freeze bug, and BMP export (v9.6.0). Screenshots on the case study page are the real v9.6.0 set from the repository, plus the new walkthrough clip.',
+    notes: 'v9.8.2 (7 Oct 2026) gave MoodLock a titlebar lock button, arrow-key flipping through references and a remembered window position. v9.8.1 (6 Oct) introduced MoodLock (Ctrl+Shift+L: isolate cards, hide all chrome, stay on top, read-only), fixed "Always on top" losing to apps like ZBrush, and added a 14-second README walkthrough. v9.8.0 (4 Oct) added overwrite protection for boards on shared drives, reading-order Presentation Mode, a live user guide at p4inz-code.github.io/kanvaz and CI-verified release assets. Before that, v9.7.0 (30 Sept 2026) added an official AI Export plugin (a JSON + Markdown export of the board any AI agent can read, no MCP connection or server needed), Home Screen window controls, and separate Apple Silicon and Intel macOS installers, plus a fix to an async board-switching bug. Between v8.8.5 and v9.6.0 (Sept 2026) there were ten more releases: security/platform hardening (v9.0.0), 13 render modes plus Kanvaz Link and Open With (v9.1.0), a Blender picker and preview quality gates (v9.2.0), OBJ material support and HDR/EXR previews (v9.3.0), Krita/Clip Studio/Procreate recognition (v9.4.0), a third board type, Scratch Board, with board-wide annotations and Illustrator-style tools (v9.5.0), and a second pass fixing Map View overlap, a Windows dialog-freeze bug, and BMP export (v9.6.0). Screenshots on the case study page are the real v9.6.0 set from the repository, plus the new walkthrough clip.',
   },
   {
     slug: 'pursue-os',
     name: 'Pursue OS',
     tagline: 'One operating system for the investigation workflow.',
     description:
-      'Investigation-focused Linux OS for OSINT, DFIR, secure research, intelligence gathering, and evidence-driven workflows. Two flagship interfaces: Investigation Terminal + Investigation Browser with integrated Tor. Case Vault uses content-addressed SHA-256 storage with an append-only, hash-chained audit trail. Apache 2.0. Built by P4inz. Core V1 implementation is complete: a candidate ISO exists and has passed automated QEMU boot and live-flow validation. Not yet a public download -- hardware and manual testing is the current phase.',
+      'Investigation-focused Linux OS for OSINT, DFIR, secure research, intelligence gathering, and evidence-driven workflows. It has two main interfaces: the Investigation Terminal and the Investigation Browser, which has Tor built in. Case Vault uses content-addressed SHA-256 storage with an append-only, hash-chained audit trail. Apache 2.0. Built by P4inz. Core V1 implementation is complete: a candidate ISO exists and has passed automated QEMU boot and live-flow validation. It is not a public download yet; hardware and manual testing is the current phase.',
     status: { kind: 'active', label: 'Active · V1 Beta (hardware testing)' },
     tags: ['Linux', 'OSINT', 'Apache 2.0'],
     metaTags: ['Linux', 'OSINT & DFIR', 'Apache 2.0'],
@@ -175,7 +175,7 @@ export const PROJECTS: Project[] = [
     currentVersion: 'V1 Beta',
     comingSoon: 'Public release coming soon, after hardware testing.',
     nextMilestone: 'Hardware and manual testing on real devices, following a clean automated QEMU cold-boot pass. Candidate ISO built directly from the verified source tree; not yet hosted as a GitHub release download.',
-    notes: 'Real jump since the site last checked: 348/348 (Phase 9) and 310/310 (Phase 10) workspace tests passing, a 19/19 adversarial security suite (path traversal, blob/manifest tampering, hash breaks, framing attacks all fail closed), clean clippy + cargo fmt, and a 7/7 live investigation flow (case creation through cryptographic case verification) passing inside QEMU. Desktop is Sway on Debian 13 Trixie. "No ISO yet" was true when last recorded and is no longer true.',
+    notes: 'Test results: 348/348 (Phase 9) and 310/310 (Phase 10) workspace tests passing, a 19/19 adversarial security suite (path traversal, blob/manifest tampering, hash breaks, framing attacks all fail closed), clean clippy + cargo fmt, and a 7/7 live investigation flow (case creation through cryptographic case verification) passing inside QEMU. Desktop is Sway on Debian 13 Trixie. "No ISO yet" was true when last recorded and is no longer true.',
   },
   {
     slug: 'veris',
@@ -202,7 +202,7 @@ export const PROJECTS: Project[] = [
     started: '29 June 2026',
     currentVersion: 'v1.2.1',
     nextMilestone: 'Repo\'s own README calls this "production hold / maintenance only" as of v1.2.0. v1.2.1 was a terminal-lifecycle bug fix on top of that; no new feature work planned.',
-    notes: 'Bigger jump than the site had caught: went from v1.0.0 straight to v1.2.1 (Sept 2026) while marked on hold here. v1.2.0 shipped the CI gates, AI rule authoring, investigation dashboard, and plugin marketplace foundation in one release; v1.2.1 was a follow-up fix for the terminal session header. The case study on this site still describes the pre-v1.2 shape and needs a proper rewrite.',
+    notes: 'Veris went from v1.0.0 to v1.2.1 in Sept 2026. v1.2.0 shipped the CI gates, AI rule authoring, investigation dashboard, and plugin marketplace foundation in one release; v1.2.1 was a follow-up fix for the terminal session header. The case study on this site still describes the pre-v1.2 shape and needs a proper rewrite.',
   },
   {
     slug: 'ascent',
@@ -237,7 +237,7 @@ export const PROJECTS: Project[] = [
     name: 'Obscura',
     tagline: 'Luau AST toolkit for Roblox developers.',
     description:
-      'Open-source Luau code protection toolkit for Roblox developers. AST-based transformations, free forever, no telemetry, no vendor lock-in. MIT licensed. Shipped v1.0.0 with the full test suite green — 340/340 passing.',
+      'Open-source Luau code protection toolkit for Roblox developers. AST-based transformations, free forever, no telemetry, no vendor lock-in. MIT licensed. Shipped v1.0.0 with the full test suite green: 340/340 passing.',
     status: { kind: 'released', label: 'Released · v1.0.0' },
     category: 'cli',
     tags: ['Luau', 'MIT'],
@@ -306,7 +306,7 @@ export const PROJECTS: Project[] = [
     started: '2026',
     currentVersion: 'v1.0.4',
     nextMilestone: 'Linux support (the previous milestone) is done and execution-verified via WSL. Ongoing work is Windows API-parity coverage against Python, tracked session-by-session in the repo.',
-    notes: 'v1.0.0 shipped 2026-08-24 with 1928 compiler tests. Everything past v1.0.1 was a much bigger jump than the site had caught: a full Linux x86_64 backend, real threads and an async runtime, a package manager, a test runner, a REPL, regex, TLS networking, and DEFLATE/zip compression, taking the regression suite to just under 3,000 native-execution tests. v1.0.2 to v1.0.4 are real, tagged versions without formal GitHub release notes the way v1.0.0/v1.0.1 have. v1.0.4 (26 Sept 2026) fixes a `mod collections;` build failure that v1.0.3 shipped with, and the npm package now serves v1.0.4.',
+    notes: 'v1.0.0 shipped 2026-08-24 with 1928 compiler tests. Between v1.0.1 and v1.0.3 it gained a full Linux x86_64 backend, real threads and an async runtime, a package manager, a test runner, a REPL, regex, TLS networking, and DEFLATE/zip compression, taking the regression suite to just under 3,000 native-execution tests. v1.0.2 to v1.0.4 are real, tagged versions without formal GitHub release notes the way v1.0.0/v1.0.1 have. v1.0.4 (26 Sept 2026) fixes a `mod collections;` build failure that v1.0.3 shipped with, and the npm package now serves v1.0.4.',
   },
   {
     slug: '3d-ref-skills',

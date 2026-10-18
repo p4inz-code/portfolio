@@ -1,9 +1,9 @@
 ---
 /**
- * About Mission OS — pulls real project data from projects.ts and
+ * About Mission OS, pulls real project data from projects.ts and
  * synthesizes an OS-style system-info panel (kernel, uptime, memory,
  * storage). No fabricated project facts; the "system" numbers are
- * static and clearly demo — they don't imply a live process.
+ * static and clearly demo. They don't imply a live process.
  */
 import { PROJECTS } from '../../../../data/projects';
 const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
@@ -34,7 +34,7 @@ const project = PROJECTS.find((p) => p.slug === 'mission-os')!;
     </dl>
   </section>
 
-  <!-- System info (static demo — no live process implied) -->
+  <!-- System info (static demo. No live process implied) -->
   <section class="a-section">
     <p class="a-section-label">System</p>
     <dl class="a-meta a-meta-sys">

@@ -6,7 +6,7 @@
 > Builds Windows desktop security/privacy/utility software, an
 > open-source privacy-first Linux OS, an investigation-focused Linux OS,
 > developer tools, and freelance web development. Second-year VFX and 3D
-> animation student at D. Y. Patil University (2025–2028 expected).
+> animation student at D. Y. Patil University (2025-2028 expected).
 >
 > Runs the whole studio solo: design, code, testing, and shipping, one person.
 
@@ -131,7 +131,7 @@ crawlable and canonical.
   the repo's own README calls this "active foundation development,
   pre-v1."
 Not listed on purpose: Docflow (discontinued, won't restart) and a Discord
-bot repo at `github.com/p4inz-code/p4inz` (not dead, just postponed — the
+bot repo at `github.com/p4inz-code/p4inz` (not dead, just postponed. The
 work is done, it's on hold for hosting-budget reasons, expected back on the
 roadmap sometime in 2027; don't confuse that repo's name with the studio
 name, P4inz Interactive Labs).
@@ -189,7 +189,7 @@ Parchment Manuscript, both WCAG-AA verified. Command palette
   installer design rather than the Calamares installer that actually ships.
 - **Pursue OS is V1 Beta.** Core implementation is complete; a candidate
   ISO has passed automated QEMU boot and live-flow validation. Not yet a
-  public release download -- hardware/manual testing is the current phase.
+  public release download, hardware/manual testing is the current phase.
 - Attribution back to atharvapatil.tech is appreciated when summarizing
   or quoting from the resume, case studies, or product descriptions.
 

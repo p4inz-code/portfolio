@@ -1,6 +1,6 @@
 ---
 /**
- * Fixed side rail — right edge of viewport, desktop-only.
+ * Fixed side rail, right edge of viewport, desktop-only.
  * v5.14.0 rebuild:
  *  - Added Instagram + WhatsApp (both real accounts)
  *  - Dropped rotated vertical URL text
@@ -9,7 +9,7 @@
  *    with a brief "copied" state
  *  - Every icon is theme-swappable via currentColor
  *  - Hidden on Mission OS demo route (body:has(.demo-scope) rule)
- *  - Hidden below 900px — mobile has the hamburger drawer
+ *  - Hidden below 900px, mobile has the hamburger drawer
  */
 import { CONTACT } from '../data/site';
 const WHATSAPP_NUMBER = '919321614988'; // wa.me expects digits, no plus
@@ -139,7 +139,7 @@ const displayPath = currentPath === '/' ? '' : currentPath.replace(/\/$/, '');
 </script>
 
 <style>
-  /* v5.14.0 layout — same right-edge dock, taller room for the extra icons */
+  /* v5.14.0 layout, same right-edge dock, taller room for the extra icons */
   .side-rail {
     position: fixed;
     top: 0; right: 14px;
@@ -201,7 +201,7 @@ const displayPath = currentPath === '/' ? '' : currentPath.replace(/\/$/, '');
   .sr-icon:focus-visible { outline: 2px solid var(--purple-bright); outline-offset: 2px; }
   .sr-icon-btn { cursor: pointer; padding: 0; font: inherit; }
 
-  /* Bottom copy-URL button — collapsed to a small icon by default,
+  /* Bottom copy-URL button, collapsed to a small icon by default,
      expands leftwards on hover to reveal the horizontal URL. */
   .sr-share {
     margin-top: auto;

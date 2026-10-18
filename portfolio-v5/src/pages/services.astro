@@ -4,7 +4,7 @@ import Section from '../components/layout/Section.astro';
 import Button from '../components/ui/Button.astro';
 import { SERVICES, CONTACT, SERVICE_FAQ } from '../data/site';
 
-// v5.17.6 SEO push — real FAQ content already exists below; mirroring it
+// v5.17.6 SEO push, real FAQ content already exists below; mirroring it
 // as FAQPage schema is a genuine rich-snippet opportunity, not padding.
 const faqJsonLd = {
   '@type': 'FAQPage',
@@ -16,14 +16,14 @@ const faqJsonLd = {
   })),
 };
 ---
-<BaseLayout title="Services — Atharva Patil" description="Product development, UI/UX design, branding, and 3D/VFX visualization: one person covering all three disciplines." keywords="p4inz web dev, p4inz freelance developer, hire p4inz, painz web developer, p4inz app dev, p4inz cli dev" extraJsonLd={[faqJsonLd]}>
+<BaseLayout title="Services | Atharva Patil" description="Product development, UI/UX design, branding, and 3D/VFX visualization: one person covering all three disciplines." keywords="p4inz web dev, p4inz freelance developer, hire p4inz, painz web developer, p4inz app dev, p4inz cli dev" extraJsonLd={[faqJsonLd]}>
 
   <Section
     wide
     headingLevel="h1"
-    heading="Fewer handoffs. One coherent visual language."
-    headingEmphasis="One person. Three disciplines."
-    intro="Most clients hire a developer, a designer, and a 3D artist separately. I'm one person who covers all three: the same instinct that shapes a lock-screen shapes a landing page, and the same eye that lights a 3D scene picks the type on a hero. The result is fewer handoffs, fewer misalignments, and a coherent visual voice from architecture to render."
+    heading="fewer handoffs and one visual language."
+    headingEmphasis="One person, three disciplines:"
+    intro="Most clients hire a developer, a designer and a 3D artist separately. I cover all three, so the instinct that shapes a lock screen also shapes a landing page, and the eye that lights a 3D scene also picks the type on a hero. That means fewer handoffs, fewer mismatches between the pieces, and one consistent look from the code to the render."
   >
     <div class="s-lede-meta">
       <div class="s-lede-item">
@@ -36,15 +36,15 @@ const faqJsonLd = {
       </div>
       <div class="s-lede-item">
         <span class="s-lede-key">Where I'm based</span>
-        <span class="s-lede-val">Navi Mumbai, India, but every client so far has been remote. Async-friendly, timezone-agnostic.</span>
+        <span class="s-lede-val">Navi Mumbai, India. Every client so far has been remote, and I'm fine working async in any time zone.</span>
       </div>
     </div>
   </Section>
 
-  <!-- Editorial rows — each service is a substantive row, not a card in a grid.
+  <!-- Editorial rows. Each service is a substantive row, not a card in a grid.
        Kills the "01 / 02 / 03 / 04 bento" AI pattern in favour of an
        editorial-magazine layout. -->
-  <Section eyebrow="What I take on" heading="Four disciplines, one person covering all of them.">
+  <Section eyebrow="What I take on" heading="Four kinds of work, all done by me.">
     <div class="s-rows">
       {SERVICES.map((s, i) => (
         <article class="s-row" style={`--i:${i}`}>
@@ -67,7 +67,7 @@ const faqJsonLd = {
     </div>
   </Section>
 
-  <!-- FAQ-style trust anchor — actual answers to actual client questions. -->
+  <!-- FAQ-style trust anchor, actual answers to actual client questions. -->
   <Section eyebrow="Before you write" heading="Questions clients ask.">
     <dl class="faq-list">
       {SERVICE_FAQ.map((f) => (
@@ -114,7 +114,7 @@ const faqJsonLd = {
     .s-lede-val a { color: var(--purple-bright); border-bottom: 1px solid currentColor; }
 
     /* ============ Editorial rows ============ */
-    /* v5.36.0 — --line is a ~10-12%-opacity token built for subtle card
+    /* v5.36.0, --line is a ~10-12%-opacity token built for subtle card
        borders, not a divider meant to be seen at a glance between full
        sections of body copy; reported as barely visible, same root cause
        as the resume's ruled lines and the header contrast fix earlier.

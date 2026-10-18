@@ -4,18 +4,18 @@ import Section from '../components/layout/Section.astro';
 import { CONTACT, SITE } from '../data/site';
 
 // Empty until the Turnstile sitekey is created (Cloudflare dashboard, manual
-// step) and set as PUBLIC_TURNSTILE_SITE_KEY in the Pages build env — until
+// step) and set as PUBLIC_TURNSTILE_SITE_KEY in the Pages build env, until
 // then the widget and its script simply don't render.
 const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
 ---
-<BaseLayout title="Get in Touch — Atharva Patil" description="Get in touch with Atharva Patil: freelance web development, UI/UX, branding, and 3D/VFX work. Real inbox, no contact-form middleman.">
+<BaseLayout title="Get in Touch | Atharva Patil" description="Get in touch with Atharva Patil: freelance web development, UI/UX, branding, and 3D/VFX work. Real inbox, no contact-form middleman.">
   <Section
     wide
     headingLevel="h1"
     eyebrow="Get in touch"
     heading="Send it as a real message, not a form to no one."
     headingEmphasis="Write to me directly."
-    intro="I read every message myself and reply within 1–2 days. Freelance, collaboration, hiring, security disclosure: whatever it is, it lands in my inbox."
+    intro="I read every message myself and reply within 1-2 days. Freelance, collaboration, hiring, security disclosure: whatever it is, it lands in my inbox."
   >
     <div class="contact-grid">
 
@@ -136,8 +136,8 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
               </button>
               <ul class="term-select-list" role="listbox" hidden>
                 <li role="option" data-value="Under $1k">Under $1k</li>
-                <li role="option" data-value="$1k – $5k">$1k – $5k</li>
-                <li role="option" data-value="$5k – $15k">$5k – $15k</li>
+                <li role="option" data-value="$1k to $5k">$1k to $5k</li>
+                <li role="option" data-value="$5k to $15k">$5k to $15k</li>
                 <li role="option" data-value="$15k+">$15k+</li>
                 <li role="option" data-value="Not sure yet">Not sure yet</li>
               </ul>
@@ -170,7 +170,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
 
           <p class="term-status" id="c-status" role="status" aria-live="polite" hidden></p>
 
-          <!-- v5.17.0 — auto-recovery fallback: some devices/browsers have
+          <!-- v5.17.0, auto-recovery fallback: some devices/browsers have
                no mail client configured, so mailto: silently does nothing.
                If the tab is still focused ~1.4s after triggering it, we
                assume that happened and offer a copyable alternative
@@ -336,7 +336,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
         onDone();
       }
 
-      // v5.41.0 — Turnstile invisible-mode token, populated by the widget's
+      // v5.41.0: Turnstile invisible-mode token, populated by the widget's
       // own callback once a sitekey is configured; stays '' (and the backend
       // skips its check to match) until that manual setup step is done.
       let turnstileToken = '';
@@ -373,9 +373,9 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
           return;
         }
 
-        const subject = 'Project inquiry — ' + name;
+        const subject = 'Project inquiry, ' + name;
         const bodyLines = [
-          '(sent from atharvapatil.tech/contact — mailto composer)',
+          '(sent from atharvapatil.tech/contact, mailto composer)',
           '',
           'from:     ' + name + ' <' + email + '>',
           'service:  ' + (service || '(not specified)'),
@@ -386,7 +386,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
           message,
         ];
         const plainBody = bodyLines.join('\n');
-        // v5.12.0 fix — email obfuscated in the inline script so basic
+        // v5.12.0 fix, email obfuscated in the inline script so basic
         // scrapers don't harvest the plaintext (Cloudflare's mailto
         // rewriter only touches <a href="mailto:"> tags, not JS).
         const to = ['atharva.patil.cg', 'gmail.com'].join('@');
@@ -439,15 +439,15 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
           if (submitBtn) { submitBtn.disabled = false; submitBtn.querySelector('.term-label').textContent = 'send message'; }
           if (status) {
             status.hidden = false;
-            status.textContent = 'sent — I read every message myself, I\'ll reply within 1–2 days.';
+            status.textContent = 'sent. I read every message myself, I\'ll reply within 1-2 days.';
           }
           form.reset();
           updateSignal();
         }
 
-        // v5.41.0 — try a real server-side send first (functions/api/contact.ts).
-        // Any failure — network error, not yet configured, rate-limited, bot
-        // check — falls straight into the mailto composer that already
+        // v5.41.0, try a real server-side send first (functions/api/contact.ts).
+        // Any failure: network error, not yet configured, rate-limited, bot
+        // check, falls straight into the mailto composer that already
         // existed, so a message is never lost either way.
         if (card) card.classList.add('is-sending');
         if (submitBtn) { submitBtn.disabled = true; submitBtn.querySelector('.term-label').textContent = 'sending'; }
@@ -825,7 +825,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
       color: var(--muted-2);
     }
 
-    /* v5.17.0 — per-field inline error state */
+    /* v5.17.0, per-field inline error state */
     .term-line-field { align-items: start; }
     .term-field { display: flex; flex-direction: column; }
     .term-input-invalid { border-bottom-color: var(--warn) !important; }
@@ -839,7 +839,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
     }
     .term-field-error:empty { display: none; }
 
-    /* v5.17.0 — mailto auto-recovery fallback */
+    /* v5.17.0, mailto auto-recovery fallback */
     .term-fallback {
       margin-top: var(--sp-4);
       padding: var(--sp-4);
@@ -987,7 +987,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
       .term-line, .term-line-block { grid-template-columns: 1fr; gap: 4px; }
       .term-input, .term-textarea, .term-select-trigger { font-size: 16px; } /* iOS zoom prevention */
       /* touch: the underline fields read fine on a mouse at 15px + 6px padding,
-         but that's under a comfortable thumb target — give the tap area more
+         but that's under a comfortable thumb target, give the tap area more
          room on phones without changing the desktop look. */
       .term-input, .term-select-trigger { padding-top: 12px; padding-bottom: 12px; }
       .term-actions { gap: var(--sp-3); }

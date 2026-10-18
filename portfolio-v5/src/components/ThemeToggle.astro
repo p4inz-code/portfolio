@@ -53,25 +53,25 @@
 </style>
 
 <style is:global>
-  /* v5.32.0 — theme-swap wipe, revisited. The real bug behind "drops like a
+  /* v5.32.0, theme-swap wipe, revisited. The real bug behind "drops like a
      balloon" wasn't the wipe's own timing: global.css runs a *separate*
      page-navigation view transition (@view-transition, the vt-in/vt-out
      rule), and it targets the exact same ::view-transition-*(root)
-     pseudo-elements this one does — there's no built-in way to tell "this
+     pseudo-elements this one does, there's no built-in way to tell "this
      transition came from a link click" from "this came from the theme
      button." That other transition's own 0.42s opacity+translateY(14px)
      settle was firing on top of the wipe often enough to read as the
      wipe's motion. Fixed at the source in global.css, gated off while
      html[data-wipe] is set.
      A softer, feathered-edge version of this (animating a mask's radius)
-     was tried and pulled back out — it wouldn't render reliably in
+     was tried and pulled back out. It wouldn't render reliably in
      testing, animating custom properties into a pseudo-element's mask
      turned out to be shakier ground than expected. This keeps the plain
      clip-path circle (verified working), with a genuinely different
      shape of motion per direction instead of the same animation mirrored:
      going to light, the NEW layer grows outward from the click point.
      Going to dark, the OLD layer shrinks inward onto it instead, so dark
-     uncovers from underneath rather than light retreating outward —
+     uncovers from underneath rather than light retreating outward
      same mechanism, opposite element and direction. */
   ::view-transition-old(root),
   ::view-transition-new(root) {
@@ -84,10 +84,10 @@
 
 <script>
   // Guard against multiple hydrations if the component appears twice on a page.
-  // v5.17.1 fix — this component renders more than once per page (desktop
+  // v5.17.1 fix. This component renders more than once per page (desktop
   // nav + mobile drawer). It used to key off a single id="themeToggle" via
   // getElementById, which only ever finds the FIRST matching element in the
-  // DOM (duplicate IDs are invalid HTML) — so the mobile drawer's copy had
+  // DOM (duplicate IDs are invalid HTML). So the mobile drawer's copy had
   // no click listener at all and silently did nothing when tapped. Now
   // every .theme-toggle button on the page gets bound, and toggling is a
   // shared function instead of a simulated click on one specific button.
@@ -96,11 +96,11 @@
 
     let transitionInFlight = false;
 
-    // v5.30.0 — dark/light swap wipes outward from the click point via the
+    // v5.30.0, dark/light swap wipes outward from the click point via the
     // View Transitions API instead of snapping instantly. originX/originY
     // come from the actual click (or the keyboard shortcut, which has no
-    // click point, so it wipes from center). Skipped entirely — falls back
-    // to the old instant swap — when the browser doesn't support
+    // click point, so it wipes from center). Skipped entirely, falls back
+    // to the old instant swap. When the browser doesn't support
     // startViewTransition, prefers-reduced-motion is set, or a wipe is
     // already mid-flight; this is a short, click-driven transition rather
     // than the site's own >5s "ambient motion" (governed by html[data-still]
@@ -138,12 +138,12 @@
 
       transitionInFlight = true;
       const transition = (document as any).startViewTransition(() => commitTheme(next));
-      // Long soft settle, no snap at either end -- this is the actual fix
+      // Long soft settle, no snap at either end. This is the actual fix
       // for "feels abrupt": the old --ease-out front-loaded its motion
       // (fast start, quick stop), which read as a snap on something this
       // size regardless of duration.
       const easing = 'cubic-bezier(0.22, 1, 0.36, 1)';
-      // v5.33.0 — the parallax/3D layer. clip-path alone reads as a flat
+      // v5.33.0. The parallax/3D layer. clip-path alone reads as a flat
       // graphic wipe; a real tilt on top of it (perspective + rotateY +
       // a touch of scale, all plain `transform`, the one property that's
       // been reliable on these pseudo-elements every time it's been tried
@@ -155,7 +155,7 @@
         .then(() => {
           if (toLight) {
             // New (light) layer grows outward from the click point while
-            // tilting in from an angle and settling flat -- reads as
+            // tilting in from an angle and settling flat, reads as
             // swooping into place, not just expanding.
             root.animate(
               {
@@ -166,7 +166,7 @@
             );
           } else {
             // Old (light) layer shrinks inward onto the click point while
-            // tilting away and receding -- same mechanism, opposite
+            // tilting away and receding, same mechanism, opposite
             // element, direction, and tilt, so it reads as a different
             // gesture (closing/receding) rather than the same wipe
             // recolored.

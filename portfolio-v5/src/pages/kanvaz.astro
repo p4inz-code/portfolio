@@ -28,10 +28,10 @@ const breadcrumbJsonLd = {
   ],
 };
 ---
-<BaseLayout scene={project.scene} title="Kanvaz — Visual Reference Workspace · Atharva Patil" description="Free, open-source visual reference workspace for VFX and 3D artists: live 3D model preview, typed connections, Map View, Scratch Board, plugins. Windows, macOS, Linux. MIT, v9.8.2." keywords="Kanvaz, Kanvaz p4inz, Kanvaz painz, p4inz app dev, reference board app, VFX reference tool" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
+<BaseLayout scene={project.scene} title="Kanvaz: Visual Reference Workspace · Atharva Patil" description="Free, open-source visual reference workspace for VFX and 3D artists: live 3D model preview, typed connections, Map View, Scratch Board, plugins. Windows, macOS, Linux. MIT, v9.8.2." keywords="Kanvaz, Kanvaz p4inz, Kanvaz painz, p4inz app dev, reference board app, VFX reference tool" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
-  <!-- Screenshots first — visual hook before the wall of text. All pulled
+  <!-- Screenshots first, visual hook before the wall of text. All pulled
        directly from the real v9.6.0 repo (2026-09-28), replacing a set that
        had drifted as far back as v4.2.1 on one dialog. -->
   <Section eyebrow="What Kanvaz looks like">
@@ -67,14 +67,14 @@ const breadcrumbJsonLd = {
       <!-- Map View + Scratch Board: the two headline v9.x features -->
       <Screenshot
         src="/assets/kanvaz/kanvaz-mapview.webp"
-        alt="Kanvaz Map View — node-editor-style graph of cards, color-coded by type, with connection ports."
+        alt="Kanvaz Map View: node-editor-style graph of cards, color-coded by type, with connection ports."
         caption="Map View · every card as a node"
         aspect="16 / 10"
         span="half"
       />
       <Screenshot
         src="/assets/kanvaz/kanvaz-scratchboard.webp"
-        alt="Kanvaz Scratch Board — an Illustrator-style drawing layer over the board, pen tool, custom toolbar."
+        alt="Kanvaz Scratch Board: an Illustrator-style drawing layer over the board, pen tool, custom toolbar."
         caption="Scratch Board · draws over the whole board"
         aspect="16 / 10"
         span="half"
@@ -83,7 +83,7 @@ const breadcrumbJsonLd = {
       <!-- Task Tracker + Annotate: side-panel features -->
       <Screenshot
         src="/assets/kanvaz/kanvaz-tasktracker.webp"
-        alt="Kanvaz Task Tracker side panel section — tasks with subtasks, progress, and a completion toast."
+        alt="Kanvaz Task Tracker side panel section: tasks with subtasks, progress, and a completion toast."
         caption="Task Tracker · a to-do list next to your board"
         aspect="16 / 10"
         span="half"
@@ -99,14 +99,14 @@ const breadcrumbJsonLd = {
       <!-- Home screen + Export dialog -->
       <Screenshot
         src="/assets/kanvaz/kanvaz-home.webp"
-        alt="Kanvaz Home Screen — first-launch welcome overlay with Drop any file, Right-click, and shortcuts pointers."
+        alt="Kanvaz Home Screen: first-launch welcome overlay with Drop any file, Right-click, and shortcuts pointers."
         caption="First-launch home screen"
         aspect="16 / 10"
         span="half"
       />
       <Screenshot
         src="/assets/kanvaz/kanvaz-export.webp"
-        alt="Kanvaz Export as… dialog — format (PNG/JPEG/WEBP/BMP), quality, and size."
+        alt="Kanvaz Export as… dialog: format (PNG/JPEG/WEBP/BMP), quality, and size."
         caption="Export as… · PNG, JPEG, WEBP, or BMP"
         aspect="16 / 10"
         span="half"
@@ -124,7 +124,7 @@ const breadcrumbJsonLd = {
   <Section eyebrow="What's inside" heading="3D preview, connections, plugins, and a lot of releases.">
     <div class="feature-grid">
       <article class="feature-card">
-        <h3 class="feature-name">MoodLock (v9.8.1–9.8.2)</h3>
+        <h3 class="feature-name">MoodLock (v9.8.1-9.8.2)</h3>
         <p class="feature-desc">Ctrl+Shift+L isolates the selected cards (or the whole board), hides every piece of Kanvaz chrome, keeps the window on top and makes the board read-only. Flip through the references with the arrow keys; the locked window remembers where you parked it. A lock button now sits next to Minimize in the titlebar.</p>
       </article>
       <article class="feature-card">
@@ -132,15 +132,15 @@ const breadcrumbJsonLd = {
         <p class="feature-desc">Saving over a board file someone else changed on a shared drive no longer silently erases their work. Presentation Mode steps through cards top-to-bottom, left-to-right instead of creation order, and the user guide is now live at p4inz-code.github.io/kanvaz.</p>
       </article>
       <article class="feature-card">
-        <h3 class="feature-name">Map View + Scratch Board (v9.1–9.5)</h3>
-        <p class="feature-desc">Map View turns every card into a node-editor-style graph, color-coded by type and wired with the same typed connections as the board itself. Scratch Board adds a real Illustrator-style drawing layer over the whole board — pen, highlighter, shapes, eraser — sharing one undo history with everything else.</p>
+        <h3 class="feature-name">Map View + Scratch Board (v9.1-9.5)</h3>
+        <p class="feature-desc">Map View turns every card into a node-editor-style graph, color-coded by type and wired with the same typed connections as the board itself. Scratch Board adds a real Illustrator-style drawing layer over the whole board, pen, highlighter, shapes, eraser, sharing one undo history with everything else.</p>
       </article>
       <article class="feature-card">
-        <h3 class="feature-name">Task Tracker + per-card Annotate (v9.1–9.6)</h3>
+        <h3 class="feature-name">Task Tracker + per-card Annotate (v9.1-9.6)</h3>
         <p class="feature-desc">A real to-do list lives in the side panel now, with subtasks and per-task card links. Annotation moved into Properties too: brush width and color adjustable per card, no separate tool to switch into.</p>
       </article>
       <article class="feature-card">
-        <h3 class="feature-name">Live 3D model cards (v7.4–v8.4)</h3>
+        <h3 class="feature-name">Live 3D model cards (v7.4-v8.4)</h3>
         <p class="feature-desc">Drop a <code>.glb</code>, <code>.obj</code>, <code>.fbx</code>, <code>.stl</code>, <code>.ply</code>, <code>.vox</code> or <code>.usd</code> or <code>.usdz</code> and orbit it on the board with Normal, Wireframe and Matcap shading, animation playback and a remembered camera. <code>.blend</code> files preview too if Blender is installed.</p>
       </article>
       <article class="feature-card">
@@ -148,11 +148,11 @@ const breadcrumbJsonLd = {
         <p class="feature-desc">The same card can sit on several boards with no duplication, so an edit shows up everywhere it is used. A Layers panel lists every card in z-order with hide, lock, highlight and grouping.</p>
       </article>
       <article class="feature-card">
-        <h3 class="feature-name">Smart Search + Smart Folders (v6.2–6.3)</h3>
+        <h3 class="feature-name">Smart Search + Smart Folders (v6.2-6.3)</h3>
         <p class="feature-desc">On-device fuzzy search that finds &quot;car&quot; when you type &quot;cars&quot;, plus saved searches that re-run themselves as new references land. Pure JS, off by default, no native dependencies.</p>
       </article>
       <article class="feature-card">
-        <h3 class="feature-name">14 templates + profiles (v7.8–v8.9)</h3>
+        <h3 class="feature-name">14 templates + profiles (v7.8-v8.9)</h3>
         <p class="feature-desc">Board templates for VFX, game dev, filmmaking, architecture and more, most of them shipping with real typed connections already wired. Offline multi-profile support, exportable as a portable file.</p>
       </article>
       <article class="feature-card">
@@ -172,11 +172,11 @@ const breadcrumbJsonLd = {
         <p class="feature-desc">Two new reference card types on top of the original six. File cards block executable/script types on open for safety. No new dependencies, no telemetry.</p>
       </article>
       <article class="feature-card">
-        <h3 class="feature-name">MCP Bridge (v4.4–4.5)</h3>
+        <h3 class="feature-name">MCP Bridge (v4.4-4.5)</h3>
         <p class="feature-desc">A local-only MCP server exposes the active board to an AI agent through 30 tools: board management, undo/redo, view control, card editing, and settings. Off by default; every AI-driven change lands in undo history exactly like a manual edit.</p>
       </article>
       <article class="feature-card">
-        <h3 class="feature-name">Template gallery + text cards (v5.0–5.2)</h3>
+        <h3 class="feature-name">Template gallery + text cards (v5.0-5.2)</h3>
         <p class="feature-desc">Start a board from a template instead of a blank canvas. Text cards join the reference-card lineup, and .pur (PureRef) import handles a wider range of real PureRef files after a fix to a legacy migration bug that was silently corrupting annotation data with Map View open.</p>
       </article>
     </div>

@@ -93,16 +93,16 @@ const { project } = Astro.props;
     display: flex; flex-wrap: wrap; gap: var(--sp-3);
   }
 
-  /* v5.36.0 — banner reveal, per scene. Every case study with a banner
+  /* v5.36.0, banner reveal, per scene. Every case study with a banner
      image used the exact same static, unanimated frame; Mission OS and
      Pursue OS specifically got called out for looking identical here even
      after their backdrops (scenes) were made to differ.
-     v5.37.0 fix — the v5.36.0 version tied this to animation-timeline:
+     v5.37.0 fix. The v5.36.0 version tied this to animation-timeline:
      view(), the exact mechanism just found and removed from Section.astro
      for the same reason: this banner sits right under the hero text, so
      on most screens it's already inside (or nearly inside) the viewport
      at load, meaning the "entry" scroll range is already spent before the
-     visitor ever sees it -- both animations were snapping straight to
+     visitor ever sees it. Both animations were snapping straight to
      their end state with nothing visibly different playing. Switched to a
      plain animation that plays once on load regardless of scroll
      position, so the two are actually, visibly different every time. */

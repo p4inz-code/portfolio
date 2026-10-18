@@ -1,6 +1,6 @@
 ---
 /**
- * "Related" cross-links between case studies — real internal linking,
+ * "Related" cross-links between case studies, real internal linking,
  * not decorative. Helps crawl depth and spreads page authority between
  * the 4 case-study pages instead of leaving them as isolated leaves off
  * /work.
@@ -9,7 +9,7 @@ import { PROJECTS } from '../../data/projects';
 
 interface Props {
   currentSlug: string;
-  slugs: string[]; // explicit, not auto-picked — keep the pairing deliberate
+  slugs: string[]; // explicit, not auto-picked, keep the pairing deliberate
 }
 const { currentSlug, slugs } = Astro.props;
 const related = slugs

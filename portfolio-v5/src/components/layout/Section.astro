@@ -7,12 +7,12 @@ interface Props {
   wide?: boolean;
   class?: string;
   id?: string;
-  headingLevel?: 'h1' | 'h2'; // v5.17.3 fix — every page needs exactly one
+  headingLevel?: 'h1' | 'h2'; // v5.17.3 fix. Every page needs exactly one
                               // real <h1>. Pages with EditorialHero/CaseHero
                               // already have one there; every Section-only
                               // page (about, services, contact, resume,
                               // status, terms, privacy, editorial,
-                              // accessibility, 3d, work) had none at all —
+                              // accessibility, 3d, work) had none at all
                               // a real WCAG failure (axe: page-has-heading-one),
                               // not a style nitpick. Pass headingLevel="h1"
                               // on that page's first Section only.
@@ -43,17 +43,17 @@ const HeadingTag = headingLevel;
   .section {
     padding: var(--sp-11) 0;
   }
-  /* v5.17.0 — restrained scroll reveal, zero JS, same mechanism already
+  /* v5.17.0: restrained scroll reveal, zero JS, same mechanism already
      used by the scroll-progress hairline and featured showcase
      (animation-timeline). Settles quickly (35% of entry) so it reads as
      polish, not a slideshow effect.
-     v5.36.0 fix — real bug, not a style nitpick: this claimed "if a
+     v5.36.0 fix, real bug, not a style nitpick: this claimed "if a
      section is already in the viewport on load, the timeline resolves at
      full opacity immediately," but that's not reliable in practice for
      the very first section on a page (always in view at load, before any
      scroll has happened to give the browser a scroll position to compute
      the view-timeline from). Reported live: an entire hero section --
-     heading, intro paragraph, a 3-column meta grid -- rendering as
+     heading, intro paragraph, a 3-column meta grid, rendering as
      invisible empty space until the visitor scrolled. Excluded the first
      section on each page from the reveal entirely: it has no meaningful
      scroll distance before it appears anyway, so there was nothing worth

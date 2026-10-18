@@ -3,16 +3,16 @@
  * Four-stage cold-boot sequence for the Mission OS demo.
  *
  * Stages, driven by data-stage on the .boot-root element:
- *   1. boot   — typed boot line
- *   2. grub   — single-entry GRUB with countdown
- *   3. kernel — 6 kernel-style messages appear
- *   4. login  — user card + "Press Enter"
+ *   1. boot, typed boot line
+ *   2. grub, single-entry GRUB with countdown
+ *   3. kernel: 6 kernel-style messages appear
+ *   4. login, user card + "Press Enter"
  *
  * State transitions are driven by a small vanilla script on demo.astro.
  * prefers-reduced-motion collapses to stage 4 immediately.
  * Enter advances stages; Escape exits to /mission-os.
  *
- * The Desktop is a sibling of this component in the DOM — after login
+ * The Desktop is a sibling of this component in the DOM, after login
  * (data-stage="desktop"), this component fades out and Desktop takes over.
  */
 interface Props {

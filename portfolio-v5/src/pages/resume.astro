@@ -4,12 +4,12 @@ import Section from '../components/layout/Section.astro';
 import Button from '../components/ui/Button.astro';
 import { SITE, CONTACT } from '../data/site';
 
-// v5.17.4 resume redesign — curated selection, not the full roster.
+// v5.17.4 resume redesign, curated selection, not the full roster.
 // Matches Atharva_Patil_Resume.md exactly: prove engineering depth and
 // ownership through the strongest projects, not every project that exists.
 const primaryProjects = [
   {
-    name: 'Kanvaz', tagline: 'Visual Reference Workspace (Flagship, Free)', period: 'Jun 2026 – Present · Electron, MIT',
+    name: 'Kanvaz', tagline: 'Visual Reference Workspace (Flagship, Free)', period: 'Jun 2026 to Present · Electron, MIT',
     bullets: [
       'Built and maintain a free, MIT-licensed reference workspace for VFX and 3D artists: live 3D model preview (glTF, OBJ, FBX, STL, USD), a typed connection graph with a node-editor Map View, a Scratch Board drawing layer, and board templates, shipped for Windows, macOS, and Linux.',
       'Designed a local-only MCP Bridge that lets an AI agent read and edit the active board through a scoped tool set, off by default and fully undo-reversible.',
@@ -25,14 +25,14 @@ const primaryProjects = [
     ],
   },
   {
-    name: 'MINK', tagline: 'Programming Language', period: '2026 – Released v1.0.4 · Rust, Apache 2.0',
+    name: 'MINK', tagline: 'Programming Language', period: '2026 · Released v1.0.4 · Rust, Apache 2.0',
     bullets: [
       'Designed and built a compiler from scratch: lexer, parser, type system, optimizer, and native code generator, producing standalone executables with no external toolchain.',
       'Added a second native backend (Linux ELF, alongside Windows PE) plus real threads, an async runtime, a package manager, and a test runner, growing the regression suite to just under 3,000 native-execution tests.',
     ],
   },
   {
-    name: 'Pursue OS', tagline: 'Investigation-Focused Linux OS', period: '2026 – Present · Linux, Apache 2.0',
+    name: 'Pursue OS', tagline: 'Investigation-Focused Linux OS', period: '2026 to Present · Linux, Apache 2.0',
     bullets: [
       'Built a Linux OS for OSINT, DFIR, and evidence-driven investigation work: two flagship surfaces (an Investigation Terminal and a Tor-integrated Investigation Browser), content-addressed evidence storage, and an append-only cryptographic audit trail.',
       'Reached V1 Beta: core implementation complete, 348/348 and 310/310 workspace tests passing across two validation phases, a 19-case adversarial security suite, and a candidate ISO verified via automated QEMU cold-boot and live investigation-flow testing. Hardware testing is the current phase.',
@@ -51,7 +51,7 @@ const additionalProjects = [
   { name: 'Obscura', desc: 'Luau AST toolkit for Roblox developers · MIT · v1.0.0, all 340 tests passing' },
 ];
 ---
-<BaseLayout title={`Resume — ${SITE.title}`} description="Atharva Patil's resume: software engineer, founder of P4inz Interactive Labs. Download as PDF or plain-text Markdown.">
+<BaseLayout title={`Resume | ${SITE.title}`} description="Atharva Patil's resume: software engineer, founder of P4inz Interactive Labs. Download as PDF or plain-text Markdown.">
   <div class="resume-wrap wrap">
     <header class="resume-header">
       <div class="resume-header-left">
@@ -80,17 +80,17 @@ const additionalProjects = [
 
     <p class="resume-summary">Software engineer and product builder focused on desktop applications, developer tools, and systems programming. Founder of P4inz Interactive Labs, where I independently design, build, test, and ship privacy-first software: currently an encrypted vault, two Linux distributions, and a compiled programming language.</p>
 
-    <Section eyebrow="Experience" heading="P4inz Interactive Labs — Founder & Independent Software Studio">
+    <Section eyebrow="Experience" heading="P4inz Interactive Labs: Founder & Independent Software Studio">
       <article class="experience-block">
-        <p class="experience-period">2026 — Present · Navi Mumbai, India (remote-friendly)</p>
+        <p class="experience-period">2026 to Present · Navi Mumbai, India (remote-friendly)</p>
         <ul class="experience-bullets">
           <li>Own the full product cycle myself on every product below: direction, architecture, engineering, UI/UX, testing, and release.</li>
           <li>Every product ships on the same principles: no telemetry, trade-offs explained on-screen instead of buried in docs, free wherever the studio can afford it to be.</li>
         </ul>
       </article>
       <article class="experience-block">
-        <p class="experience-org">Freelance — Web, UX &amp; Brand</p>
-        <p class="experience-period">2025 — Present</p>
+        <p class="experience-org">Freelance: Web, UX &amp; Brand</p>
+        <p class="experience-period">2025 to Present</p>
         <ul class="experience-bullets">
           <li>Independent client work in web development, UI/UX, and 3D/VFX visualization, including a full production website build for a performing-arts academy (kalasadhana-navimumbai.in).</li>
         </ul>
@@ -102,7 +102,7 @@ const additionalProjects = [
         {primaryProjects.map((p) => (
           <article class="proj-item">
             <div class="proj-item-head">
-              <h3 class="proj-item-name">{p.name} <span class="proj-item-tagline">— {p.tagline}</span></h3>
+              <h3 class="proj-item-name">{p.name}<span class="proj-item-tagline">: {p.tagline}</span></h3>
               <span class="proj-item-period">{p.period}</span>
             </div>
             <ul class="proj-item-bullets">
@@ -114,7 +114,7 @@ const additionalProjects = [
       <div class="additional-list">
         <p class="additional-label">Additional projects</p>
         {additionalProjects.map((p) => (
-          <p class="additional-row"><strong>{p.name}</strong> — {p.desc}</p>
+          <p class="additional-row"><strong>{p.name}</strong>: {p.desc}</p>
         ))}
       </div>
     </Section>
@@ -141,12 +141,12 @@ const additionalProjects = [
     </Section>
 
     <Section eyebrow="Education" heading="B.Sc. Animation">
-      <p class="education-line">D. Y. Patil University, Nerul, Navi Mumbai · 2025 – 2028, second year in progress</p>
+      <p class="education-line">D. Y. Patil University, Nerul, Navi Mumbai · 2025 to 2028, second year in progress</p>
     </Section>
   </div>
 
   <style>
-    /* v5.34.0 — the on-site resume reads as a field notebook: ruled lines,
+    /* v5.34.0. The on-site resume reads as a field notebook: ruled lines,
        a margin rule, binding holes down the left edge. This is presentation
        for this page only, applied here rather than in Section.astro so it
        can't leak onto any other page. The actual downloads (PDF/MD) stay
@@ -161,8 +161,8 @@ const additionalProjects = [
        the hero don't get rules behind them at all now, the same way a real
        notebook's title area usually isn't part of the ruled body) and
        applied instead directly to each actual body-text block, sized with
-       the CSS `1lh` unit -- which literally means "this element's own
-       line-height" -- so the rule spacing is mathematically locked to that
+       the CSS `1lh` unit, which literally means "this element's own
+       line-height", so the rule spacing is mathematically locked to that
        block's real line height, not a guessed pixel value. */
     .resume-wrap {
       position: relative;
@@ -174,13 +174,13 @@ const additionalProjects = [
       .resume-wrap::before, .resume-wrap::after { display: none; }
     }
     /* Applied straight to the real text blocks, not a wrapper, and not to
-       the bulleted lists as a whole -- those are flex columns with a gap
+       the bulleted lists as a whole. Those are flex columns with a gap
        between items, so a background painted on the list container would
        drift out of sync with each item's actual position. Painting it on
        each <li> (and each plain paragraph of body copy) individually means
        every rule is locked to that specific element's own text, gap or no
        gap. */
-    /* v5.35.0 — these were turned off below 640px in the previous pass,
+    /* v5.35.0. These were turned off below 640px in the previous pass,
        carried over from when the ruled background was one fixed pattern
        painted across the whole page (genuinely too much on a small screen).
        Now that it's a thin, per-block background locked to each block's

@@ -6,7 +6,7 @@ import type { APIRoute } from 'astro';
  * frequently; case studies and services less so; accessibility/contact
  * rarely. Priority ranges 0.4 → 1.0.
  *
- * Route list is the source of truth — keep in sync with src/pages/*.astro
+ * Route list is the source of truth, keep in sync with src/pages/*.astro
  * plus the nested /mission-os/demo route.
  */
 

@@ -1,4 +1,4 @@
-# PURSUE OS — Spec (as provided by Atharva, 2026-08-09)
+# PURSUE OS: Spec (as provided by Atharva, 2026-08-09)
 
 **Status: Coming Soon.** Not ready for production. Currently entering implementation, no stable release or installation image.
 
@@ -13,8 +13,8 @@ One operating system for the investigation workflow. Instead of assembling a lar
 
 Two flagship interfaces sit alongside the broader investigation platform:
 
-- **Investigation Terminal** — purpose-built command-line environment for investigators.
-- **Investigation Browser** — secure, configurable browsing and research workflows with integrated Tor capabilities.
+- Investigation Terminal: purpose-built command-line environment for investigators.
+- Investigation Browser: secure, configurable browsing and research workflows with integrated Tor capabilities.
 
 ## Core areas being designed to support
 
@@ -69,20 +69,20 @@ Strong defaults without preventing experienced investigators from configuring th
 
 ## Development status
 
-- Planning: **Complete**
-- Repository foundation: **Complete**
-- Architecture foundation: **Established**
-- Implementation: **Starting**
-- Stable release: **Not available**
+- Planning: Complete
+- Repository foundation: Complete
+- Architecture foundation: Established
+- Implementation: Starting
+- Stable release: Not available
 
 The public repository is intentionally minimal during this stage. Core implementation will be developed and validated before a public release is announced.
 
 ## Creator
 
-**P4inz** — independent project created and maintained by P4inz.
+**P4inz**, independent project created and maintained by P4inz.
 
 ## Portfolio-copy angle (Atharva's brand-voice framing)
 
-Card status label: **"Coming Soon"** (never "Alpha", never "In Development" — the spec explicitly says no ISO exists).
+Card status label: **"Coming Soon"** (never "Alpha", never "In Development". The spec explicitly says no ISO exists).
 Positioning line for the portfolio card: *"An investigation-focused Linux OS for OSINT, DFIR, and evidence-driven work. Purpose-built terminal + browser at the core. Apache 2.0."*
-Featured priority: **High** (positioned alongside Mission OS as the second OS in Atharva's portfolio; PURSUE is investigation-focused, Mission OS is privacy-first — they're siblings, not competitors).
+Featured priority: **High** (positioned alongside Mission OS as the second OS in Atharva's portfolio; PURSUE is investigation-focused, Mission OS is privacy-first, they're siblings, not competitors).

@@ -8,7 +8,7 @@ import { PROJECTS } from '../data/projects';
 
 const project = PROJECTS.find((p) => p.slug === 'nexus')!;
 
-// v5.17.6 SEO push — real SoftwareApplication schema for a real, shipping product.
+// v5.17.6 SEO push, real SoftwareApplication schema for a real, shipping product.
 const softwareJsonLd = {
   '@type': 'SoftwareApplication',
   '@id': 'https://atharvapatil.tech/nexus/#software',
@@ -29,7 +29,7 @@ const breadcrumbJsonLd = {
   ],
 };
 ---
-<BaseLayout scene={project.scene} title="Nexus — Encrypted Windows Vault · Atharva Patil" description="Encrypted personal vault for Windows: AES-256-GCM, Argon2id, Windows Hello unlock. Zero telemetry, zero cloud. Latest public build v10.12.5; next release on hold." keywords="Nexus, Nexus p4inz, Nexus painz, p4inz app dev, encrypted vault Windows" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
+<BaseLayout scene={project.scene} title="Nexus: Encrypted Windows Vault · Atharva Patil" description="Encrypted personal vault for Windows: AES-256-GCM, Argon2id, Windows Hello unlock. Zero telemetry, zero cloud. Latest public build v10.12.5; next release on hold." keywords="Nexus, Nexus p4inz, Nexus painz, p4inz app dev, encrypted vault Windows" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
   <section class="stat-row-wrap">
@@ -70,7 +70,7 @@ const breadcrumbJsonLd = {
     </div>
   </Section>
 
-  <!-- v11 preview — real mockup screens from the internal design deck. -->
+  <!-- v11 preview, real mockup screens from the internal design deck. -->
   <Section eyebrow="v11 · designed and built" heading="The next version is a ground-up UI redesign.">
     <div class="v11-block">
       <p class="v11-lede">
@@ -86,43 +86,43 @@ const breadcrumbJsonLd = {
     <div class="shot-grid">
       <Screenshot
         src="/assets/nexus/nexus-v11-01.png"
-        alt="Nexus v11 Lock Screen — split brand + master password entry. Left column: Nexus wordmark with 'Your private files, sealed behind one password' + four trust chips (AES-256-GCM, Zero Telemetry, Offline-First, Anti-Tamper). Right column: master password field, Unlock Vault CTA, Sign in with Windows Hello, remember-device toggle. Bottom bar: verified build indicator + v1.4.2 version tag."
-        caption="Lock Screen · v2 — split brand + form, trust context always visible"
+        alt="Nexus v11 Lock Screen, split brand + master password entry. Left column: Nexus wordmark with 'Your private files, sealed behind one password' + four trust chips (AES-256-GCM, Zero Telemetry, Offline-First, Anti-Tamper). Right column: master password field, Unlock Vault CTA, Sign in with Windows Hello, remember-device toggle. Bottom bar: verified build indicator + v1.4.2 version tag."
+        caption="Lock Screen · v2, split brand + form, trust context always visible"
         aspect="16 / 10"
         span="full"
       />
       <Screenshot
         src="/assets/nexus/nexus-v11-05.png"
-        alt="Nexus v11 Splash Screen — centered isometric vault cube glyph, Nexus wordmark, 'Encrypted Personal Vault' subtitle, three animated loading dots. Version tag v1.4.2, build 20260312, Northbyte Studios credit at bottom."
-        caption="Splash — startup and loading"
+        alt="Nexus v11 Splash Screen: centered isometric vault cube glyph, Nexus wordmark, 'Encrypted Personal Vault' subtitle, three animated loading dots. Version tag v1.4.2, build 20260312, Northbyte Studios credit at bottom."
+        caption="Splash, startup and loading"
         aspect="16 / 10"
         span="half"
       />
       <Screenshot
         src="/assets/nexus/nexus-v11-09.png"
-        alt="Nexus v11 Media Browser — dark left sidebar with vault sections (Dashboard, Vault Files, Media selected, Secure Notes, Import Files, then System group: Security, Settings, Backup, What's New, About, then Personal: Credentials, Journal, Bookmarks, Contacts). Vault-unlocked indicator + AES-256-GCM local-only chip. Right pane: Media header with 412 items, 3.2 GB, filter tabs (All 412, Images 284, Videos 96, Audio 32), 5×3 grid of thumbnails with filenames, videos with duration overlay."
-        caption="Media Browser — thumbnail grid, sidebar navigation"
+        alt="Nexus v11 Media Browser: dark left sidebar with vault sections (Dashboard, Vault Files, Media selected, Secure Notes, Import Files, then System group: Security, Settings, Backup, What's New, About, then Personal: Credentials, Journal, Bookmarks, Contacts). Vault-unlocked indicator + AES-256-GCM local-only chip. Right pane: Media header with 412 items, 3.2 GB, filter tabs (All 412, Images 284, Videos 96, Audio 32), 5×3 grid of thumbnails with filenames, videos with duration overlay."
+        caption="Media Browser, thumbnail grid, sidebar navigation"
         aspect="16 / 10"
         span="half"
       />
       <Screenshot
         src="/assets/nexus/nexus-v11-11.png"
-        alt="Nexus v11 Import Files — same left sidebar, right pane shows a large dashed drop zone with soft purple encrypted-container icon, 'Drop files here or click to browse' text, file type constraints, Browse Files (primary) + Browse Folder buttons. Progress row underneath shows Encrypting · travel-japan-2026.zip at 62%, 4 of 7 files, 2.4 of 3.8 GB. Footer: 'Import behavior: Ask each time — Change in Settings'."
-        caption="Import Files — drop-zone + live encryption progress"
+        alt="Nexus v11 Import Files, same left sidebar, right pane shows a large dashed drop zone with soft purple encrypted-container icon, 'Drop files here or click to browse' text, file type constraints, Browse Files (primary) + Browse Folder buttons. Progress row underneath shows Encrypting · travel-japan-2026.zip at 62%, 4 of 7 files, 2.4 of 3.8 GB. Footer: 'Import behavior: Ask each time, Change in Settings'."
+        caption="Import Files, drop-zone + live encryption progress"
         aspect="16 / 10"
         span="half"
       />
       <Screenshot
         src="/assets/nexus/nexus-v11-25.png"
-        alt="Nexus v11 Image Viewer — full-window preview of an image (travel-japan-2026-day3.jpg, 4.2 MB, 4032×3024). Filename chip at top-left. Bottom action bar: 3 of 284 counter, zoom slider at 132%, Fit and Fill toggle, Export button, Close button. Blurred purple/blue image content shown."
-        caption="Image Viewer — full-window preview with zoom and export controls"
+        alt="Nexus v11 Image Viewer: full-window preview of an image (travel-japan-2026-day3.jpg, 4.2 MB, 4032×3024). Filename chip at top-left. Bottom action bar: 3 of 284 counter, zoom slider at 132%, Fit and Fill toggle, Export button, Close button. Blurred purple/blue image content shown."
+        caption="Image Viewer, full-window preview with zoom and export controls"
         aspect="16 / 10"
         span="half"
       />
       <Screenshot
         src="/assets/nexus/nexus-v11-27.png"
-        alt="Nexus v11 Audio Player — centered purple album artwork, filename voice-memo-thursday.m4a, metadata line (Recorded Mar 12 2026 · 14:32 · AAC · 256 kbps), animated waveform, timestamps 3:24 of 8:12, transport controls with -15 rewind, play button / +30 skip, scrub bar, playback rate 1.0×."
-        caption="Audio Player — waveform + transport"
+        alt="Nexus v11 Audio Player: centered purple album artwork, filename voice-memo-thursday.m4a, metadata line (Recorded Mar 12 2026 · 14:32 · AAC · 256 kbps), animated waveform, timestamps 3:24 of 8:12, transport controls with -15 rewind, play button / +30 skip, scrub bar, playback rate 1.0×."
+        caption="Audio Player, waveform + transport"
         aspect="16 / 10"
         span="half"
       />
@@ -173,7 +173,7 @@ const breadcrumbJsonLd = {
     .feature-name { font-family: var(--font-display); font-size: var(--text-md); font-weight: 500; margin-bottom: var(--sp-3); }
     .feature-desc { color: var(--muted); font-size: var(--text-sm); line-height: var(--leading-body); }
 
-    /* v11 shot grid — matches the Kanvaz layout */
+    /* v11 shot grid, matches the Kanvaz layout */
     .shot-grid {
       display: grid;
       grid-template-columns: repeat(12, 1fr);
@@ -194,7 +194,7 @@ const breadcrumbJsonLd = {
       line-height: var(--leading-body);
     }
 
-    /* v5.16.0 YMYL disclaimer — SEO audit E-E-A-T fix */
+    /* v5.16.0 YMYL disclaimer: SEO audit E-E-A-T fix */
     .ymyl-note {
       margin: var(--sp-8) auto;
       max-width: var(--wrap-narrow);

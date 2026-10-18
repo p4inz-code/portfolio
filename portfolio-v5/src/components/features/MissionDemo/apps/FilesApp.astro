@@ -1,6 +1,6 @@
 ---
 /**
- * Files — informational panel + a static view of what an unlocked
+ * Files, informational panel + a static view of what an unlocked
  * Mission OS vault looks like. Left = principles, right = a rendered
  * directory tree with sizes and encrypted-container markers. Not
  * interactive; nothing here is real filesystem content.
@@ -114,7 +114,7 @@
   }
   @media (max-width: 760px) { .files-root { grid-template-columns: 1fr; } }
 
-  /* Left column — brand */
+  /* Left column, brand */
   .files-lead { display: flex; flex-direction: column; gap: var(--sp-4); }
   .lead-eyebrow {
     font-family: var(--font-mono);
@@ -148,7 +148,7 @@
     line-height: 1.6;
   }
 
-  /* Right column — tree */
+  /* Right column, tree */
   .files-tree {
     background: color-mix(in oklab, var(--surface-2) 45%, transparent);
     border: 1px solid var(--line);

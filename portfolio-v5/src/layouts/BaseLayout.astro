@@ -22,12 +22,12 @@ interface Props {
   title: string;
   scene?: 'nexus' | 'kanvaz' | 'ascent' | 'mission' | 'pursue'; // per-project sub-theme, see styles/scenes.css
   description?: string;
-  keywords?: string; // v5.21.0 — per-page override of SITE.keywords, for
+  keywords?: string; // v5.21.0, per-page override of SITE.keywords, for
                       // project pages that want their own name + handle
                       // combos (e.g. "Project Ascent, project ascent p4inz").
   ogImage?: string;
   themeColor?: string;
-  extraJsonLd?: object[]; // v5.17.6 SEO push — lets a page add its own
+  extraJsonLd?: object[]; // v5.17.6 SEO push, lets a page add its own
                           // structured-data nodes (FAQPage, SoftwareApplication)
                           // into the same @graph without duplicating the
                           // Person/Organization/WebSite boilerplate here.
@@ -39,10 +39,10 @@ const {
   extraJsonLd = [],
   scene,
   // v5.12.0 fix: og.png was 404-ing (Cloudflare fell back to the homepage
-  // HTML). Now points at /og.svg — a real designed 1200x630 card. Discord,
+  // HTML). Now points at /og.svg, a real designed 1200x630 card. Discord,
   // Slack, iMessage, Signal, Telegram accept SVG og:image. LinkedIn + X
   // prefer PNG; if you need those, run svgexport over public/og.svg and
-  // drop the PNG at public/og.png — the layout falls back to the SVG.
+  // drop the PNG at public/og.png. The layout falls back to the SVG.
   ogImage = "/og.png",
   themeColor = "#0A0517",
 } = Astro.props;
@@ -50,7 +50,7 @@ const {
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const currentPath = Astro.url.pathname;
 
-// Structured data (JSON-LD) — helps Google, Bing, and LLM crawlers
+// Structured data (JSON-LD): helps Google, Bing, and LLM crawlers
 // resolve "p4inz" / "p4inz github" queries back to Atharva Patil, and
 // ties the site + person + studio + external repos together as one
 // entity graph. The Person node is the anchor; WebSite + Organization
@@ -60,7 +60,7 @@ const person = {
   '@type': 'Person',
   '@id': 'https://atharvapatil.tech/#person',
   name: 'Atharva Patil',
-  // 'painz' (no "4") is a retired spelling of the handle — see about.astro —
+  // 'painz' (no "4") is a retired spelling of the handle. See about.astro
   // but people still search it, so it stays here for entity resolution
   // even though it's not used as an active brand name anywhere on-site.
   alternateName: ['p4inz', 'P4INZ', 'painz', 'p4inz-code'],
@@ -130,12 +130,12 @@ const website = {
   '@type': 'WebSite',
   '@id': 'https://atharvapatil.tech/#website',
   url: 'https://atharvapatil.tech/',
-  name: `${SITE.title} — ${SITE.tagline}`,
+  name: `${SITE.title}: ${SITE.tagline}`,
   description: SITE.description,
   inLanguage: 'en',
   author: { '@id': 'https://atharvapatil.tech/#person' },
   publisher: { '@id': 'https://atharvapatil.tech/#studio' },
-  // v5.17.8 — sitelinks searchbox. The command palette IS a real
+  // v5.17.8, sitelinks searchbox. The command palette IS a real
   // client-side search; this just tells Google it exists. q={q} maps to
   // the palette's query param the same way any query-string search would.
   potentialAction: {
@@ -161,7 +161,7 @@ const jsonLd = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="keywords" content={keywords} />
-    <!-- v5.22.0: explicit crawl signal — full indexing, and ask for large
+    <!-- v5.22.0: explicit crawl signal, full indexing, and ask for large
          image previews in results (Google/Bing image-rich snippets). -->
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
     <link rel="canonical" href={canonicalURL} />
@@ -176,7 +176,7 @@ const jsonLd = {
     <meta property="og:image" content={new URL(ogImage, Astro.site)} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={`${SITE.title} — ${SITE.tagline}`} />
+    <meta property="og:image:alt" content={`${SITE.title}: ${SITE.tagline}`} />
     <meta property="og:site_name" content={SITE.title} />
     <meta property="og:locale" content="en_US" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -185,7 +185,7 @@ const jsonLd = {
     <!-- v5.12.0 fix: explicit twitter:image, don't rely on X falling
          back to og:image (unreliable). -->
     <meta name="twitter:image" content={new URL(ogImage, Astro.site)} />
-    <meta name="twitter:image:alt" content={`${SITE.title} — ${SITE.tagline}`} />
+    <meta name="twitter:image:alt" content={`${SITE.title}: ${SITE.tagline}`} />
 
     <!-- v5.20.0: favicon.svg was an older, simpler line-art mark, replaced
          sitewide by the real AP badge artwork. No vector source for the new
@@ -199,8 +199,8 @@ const jsonLd = {
     <link rel="sitemap" href="/sitemap.xml" />
     <link rel="me" href={CONTACT.github} />
     <link rel="me" href={`mailto:${CONTACT.email}`} />
-    <link rel="alternate" type="application/rss+xml" title={`${SITE.title} — changelog`} href="/feed.xml" />
-    <link rel="alternate" type="text/plain" title="llms.txt — AI-readable content index" href="/llms.txt" />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.title}, changelog`} href="/feed.xml" />
+    <link rel="alternate" type="text/plain" title="llms.txt: AI-readable content index" href="/llms.txt" />
     <link rel="search" type="application/opensearchdescription+xml" title="Atharva Patil" href="/opensearch.xml" />
     <link rel="author" href="/humans.txt" />
     <link rel="license" href="/LICENSE" />
@@ -213,12 +213,12 @@ const jsonLd = {
     <meta name="format-detection" content="telephone=no" />
     <meta name="author" content={SITE.title} />
 
-    <!-- Structured data — Person / Organization / WebSite entity graph.
+    <!-- Structured data: Person / Organization / WebSite entity graph.
          Ties p4inz / p4inz-code / Atharva Patil / P4inz Interactive Labs into
          one linked graph so search + LLM crawlers resolve consistently. -->
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
-    <!-- v5.12.0 fix: dropped the two Google Fonts preconnects — the site
+    <!-- v5.12.0 fix: dropped the two Google Fonts preconnects. The site
          no longer loads any Google Fonts. Dead connections cost DNS+TLS
          handshakes for nothing.
          Also v5.12.0 fix: font stylesheet moved from a CSS @import (which
@@ -227,7 +227,7 @@ const jsonLd = {
          it in parallel with the page HTML. FCP/LCP win on the hero.
          v5.27.0: the base stack was PP Neue Machina / PP Neue Montreal /
          PP Supply Mono, which are Pangram Pangram fonts, not actually on
-         Fontshare — that request returned empty CSS and the site was
+         Fontshare, that request returned empty CSS and the site was
          silently rendering system Helvetica/Arial everywhere. Replaced
          with three real, free Fontshare families in the same register:
          Clash Display (display), General Sans (body) and Azeret Mono
@@ -244,7 +244,7 @@ const jsonLd = {
       // ---- Shared diagnostics core (v5.17.0) ----
       // One in-memory log every interactive island reports into instead of
       // swallowing errors silently. Nothing here is persisted or sent
-      // anywhere — it exists only so the live-stats widget can show real
+      // anywhere. It exists only so the live-stats widget can show real
       // caught-and-recovered errors instead of a hardcoded "0 issues"
       // claim. Defined first, before any other inline script, so it's
       // always available by the time a component needs it.
@@ -263,7 +263,7 @@ const jsonLd = {
           if (entries.length > MAX) entries.length = MAX;
           try {
             document.dispatchEvent(new CustomEvent('nb-diag', { detail: entry }));
-          } catch (e) { /* CustomEvent unsupported — widget will just miss the live update */ }
+          } catch (e) { /* CustomEvent unsupported, widget will just miss the live update */ }
           return entry;
         }
         return { entries: entries, log: log };
@@ -296,7 +296,7 @@ const jsonLd = {
           document.documentElement.setAttribute('data-theme', theme);
         } catch (e) {
           document.documentElement.setAttribute('data-theme', 'dark');
-          window.__nbDiag.log('theme', 'Stored theme preference unreadable (private browsing) — defaulted to dark', { recovered: true });
+          window.__nbDiag.log('theme', 'Stored theme preference unreadable (private browsing), defaulted to dark', { recovered: true });
         }
       })();
     </script>
@@ -304,17 +304,17 @@ const jsonLd = {
   <body data-scene={scene}>
     <SceneBackdrop scene={scene === 'nexus' || scene === 'kanvaz' || scene === 'ascent' ? scene : undefined} />
     <SceneFx scene={scene} />
-    <!-- Scroll progress bar — hairline at very top of viewport, fills as
+    <!-- Scroll progress bar, hairline at very top of viewport, fills as
          the page scrolls. Zero-JS: powered by CSS animation-timeline: scroll().
          Falls back to nothing (element stays at scaleX 0) on browsers without
-         scroll-driven animations. Aria-hidden — decorative. -->
+         scroll-driven animations. Aria-hidden, decorative. -->
     <div class="scroll-progress" aria-hidden="true"></div>
 
     <a href="#main" class="skip-nav">Skip to content</a>
 
     <header class="nav">
       <div class="nav-inner wrap">
-        <a href="/" class="brand" aria-label="Atharva Patil — home">
+        <a href="/" class="brand" aria-label="Atharva Patil, home">
           <APMark size={38} />
           <span class="brand-name">Atharva Patil</span>
         </a>
@@ -342,7 +342,7 @@ const jsonLd = {
         </nav>
 
         <!-- v5.12.0 fix: mobile drawer. Below 760px the desktop nav-links
-             hide everything except the CTA. Was found by audit — 2 of 6
+             hide everything except the CTA. Was found by audit: 2 of 6
              primary sections were unreachable on mobile from the header
              AND the footer. -->
         <button
@@ -360,7 +360,7 @@ const jsonLd = {
       </div>
     </header>
 
-    <!-- v5.17.0 fix: moved out of <header> — the header's backdrop-filter
+    <!-- v5.17.0 fix: moved out of <header>, the header's backdrop-filter
          creates a new containing block for position:fixed descendants, so
          this drawer's inset:0 was resolving against the ~60px-tall header
          box instead of the viewport. Rendered squashed into a sliver near
@@ -442,9 +442,9 @@ import '../scripts/fx';</script>
     <main id="main"><slot /></main>
 
     <footer class="site-footer">
-      <!-- v5.16.0 trust strip — real numbers, addresses SEO audit E-E-A-T
+      <!-- v5.16.0 trust strip, real numbers, addresses SEO audit E-E-A-T
            "no trust signals" warning. v5.17.3 fix: this used to render on
-           every single page (repetitive — the same 5 numbers on the
+           every single page (repetitive. The same 5 numbers on the
            Terms page, the 404 page, everywhere), and the product count
            was hardcoded to 10 when there are 9. Now homepage-only, and
            the count reads live from projects.ts so it can't drift again. -->
@@ -525,8 +525,8 @@ import '../scripts/fx';</script>
         padding: var(--sp-5) 0;
         position: sticky; top: 0; z-index: 100;
         backdrop-filter: blur(12px);
-        /* v5.31.0 — was tinted with --bg itself, which in dark theme (--bg
-           #0A0517, --surface-1 #150B25 -- much closer together than the
+        /* v5.31.0. Was tinted with --bg itself, which in dark theme (--bg
+           #0A0517, --surface-1 #150B25, much closer together than the
            light-theme pair) made the header nearly indistinguishable from
            the page underneath. --surface-1 is the same "one step up from
            the page" token cards already use, so this reads as a header on
@@ -556,7 +556,7 @@ import '../scripts/fx';</script>
         border-radius: var(--radius-pill);
       }
       .nav-cta:hover { border-color: var(--purple); color: var(--purple-bright) !important; }
-      /* v5.14.0 — clean icon-only search button, no pill / no ⌘K label /
+      /* v5.14.0, clean icon-only search button, no pill / no ⌘K label /
          no border. Reads as an intentional tool, not chrome-on-chrome. */
       .nav-cmdk {
         display: inline-flex; align-items: center; justify-content: center;
@@ -585,7 +585,7 @@ import '../scripts/fx';</script>
         margin-top: var(--sp-12);
         border-top: 1px solid var(--line);
       }
-      /* v5.16.0 trust strip — real numbers, addresses SEO E-E-A-T warning */
+      /* v5.16.0 trust strip, real numbers, addresses SEO E-E-A-T warning */
       .trust-strip {
         list-style: none; padding: 0; margin: 0 0 var(--sp-9);
         display: grid;
@@ -647,7 +647,7 @@ import '../scripts/fx';</script>
       .footer-nav a:hover { color: var(--purple-bright); }
       .footer-meta { display: flex; flex-direction: column; gap: var(--sp-3); font-size: var(--text-sm); color: var(--muted); }
       .footer-meta a:hover { color: var(--purple-bright); }
-      /* v5.31.0 — full identity chain (real name, handle, studio), plus the
+      /* v5.31.0: full identity chain (real name, handle, studio), plus the
          legal pages repeated here in a dedicated line rather than only in
          the main footer-nav list, since a copyright/legal line is where
          people expect to find them regardless of what else the footer has. */
@@ -705,10 +705,10 @@ import '../scripts/fx';</script>
       }
       .nav-mobile-drawer.open { opacity: 1; }
       .nav-mobile-drawer[hidden] { display: none; }
-      /* v5.17.1 fix — the drawer is a full-screen overlay that paints over
+      /* v5.17.1 fix. The drawer is a full-screen overlay that paints over
          the header underneath, including the hamburger button that used to
          morph into an X. That X was the only close affordance, and it's now
-         invisible beneath the drawer's own opaque background — reported as
+         invisible beneath the drawer's own opaque background, reported as
          "no way to close this." Explicit close button inside the drawer. */
       .nmd-close {
         position: absolute;
@@ -763,7 +763,7 @@ import '../scripts/fx';</script>
         padding: var(--sp-5);
         border: 1px solid var(--line);
         border-radius: 4px;
-        /* v5.31.0 — was one cramped row (search bar + motion + theme all
+        /* v5.31.0. Was one cramped row (search bar + motion + theme all
            squeezed together); the theme toggle now gets its own row below
            the search bar, so it's a bigger, easier tap target on mobile
            and tablet instead of fighting for space next to two other
@@ -797,7 +797,7 @@ import '../scripts/fx';</script>
         .nav-links { display: none !important; }
         .nav-mobile-toggle { display: inline-flex; }
       }
-      /* v5.16.0 hid the brand-name below 380px to fix an overflow bug —
+      /* v5.16.0 hid the brand-name below 380px to fix an overflow bug
          but that threshold caught most real phones (375px is a common
          viewport width, not an edge case), hiding the name for the
          majority of mobile visitors. Flexbox space-between already keeps

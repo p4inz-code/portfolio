@@ -1,15 +1,15 @@
 ---
 /**
- * Live transparency + diagnostics widget — bottom-left corner.
+ * Live transparency + diagnostics widget, bottom-left corner.
  *
  * v5.17.0: revived from the old v4 monolith's "live-stats" widget (same
- * position, same idea — see git history at df9396d) and extended with a
+ * position, same idea. See git history at df9396d) and extended with a
  * diagnostics log. Everything below is computed live in the visitor's own
  * browser via the real Performance / Layout Instability APIs. Nothing is
- * sent anywhere — check it against DevTools → Network.
+ * sent anywhere, check it against DevTools → Network.
  *
  * The diagnostics section reads from window.__nbDiag (defined early in
- * BaseLayout's head script) — every interactive island on the site that
+ * BaseLayout's head script). Every interactive island on the site that
  * catches an error logs into that same array instead of failing silently.
  * This widget is just the window onto it.
  *
@@ -90,7 +90,7 @@
           clsEl.textContent = clsScore.toFixed(3);
         });
         clsObserver.observe({ type: 'layout-shift', buffered: true });
-      } catch (e5) { /* layout-shift entry type unsupported in this browser — stays at 0.000 */ }
+      } catch (e5) { /* layout-shift entry type unsupported in this browser, stays at 0.000 */ }
     }
 
     // ---- live load time ----
@@ -110,7 +110,7 @@
       } catch (e6) { loadTimeEl.textContent = 'n/a'; }
     }
 
-    // ---- estimated carbon per load — rough, openly-approximate, from the
+    // ---- estimated carbon per load, rough, openly-approximate, from the
     // Sustainable Web Design model's ~0.5g CO2/MB global-grid-average
     // coefficient. Labeled an estimate because the underlying methodology
     // is itself an industry approximation. ----
@@ -130,7 +130,7 @@
       } catch (e10) { carbonEl.textContent = 'n/a'; }
     }
 
-    // ---- live accessibility spot-check — a few fast, genuinely-checkable
+    // ---- live accessibility spot-check, a few fast, genuinely-checkable
     // rules (not a replacement for the full statement on /accessibility):
     // images without alt text, controls with no accessible name. ----
     function refreshA11y() {
@@ -152,7 +152,7 @@
       } catch (e11) { a11yEl.textContent = 'n/a'; }
     }
 
-    // ---- diagnostics log — reads window.__nbDiag, defined in BaseLayout's
+    // ---- diagnostics log, reads window.__nbDiag, defined in BaseLayout's
     // head script before any other component runs. ----
     function refreshDiag() {
       var diag = window.__nbDiag;
@@ -415,7 +415,7 @@
 
   @media (max-width: 640px) {
     .live-stats { left: 12px; bottom: 12px; }
-    /* v5.17.1 fix — the full-text pill ("1 external · 0 trackers...")
+    /* v5.17.1 fix. The full-text pill ("1 external · 0 trackers...")
        is wide enough to sit directly on top of page content at whatever
        scroll position happens to land there (reported: covering the
        hero's CTA button, likely blocking its clicks too). Collapse to a

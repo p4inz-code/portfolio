@@ -1,5 +1,5 @@
 /* ============================================================================
- * atharvapatil.tech v5 — design tokens
+ * atharvapatil.tech v5, design tokens
  *
  * Dual-theme system. Ultraviolet Cathedral stays as the default dark theme
  * (matching v4.x) and a complementary "Parchment" light mode inverts the
@@ -11,12 +11,12 @@
 :root {
   /* ---- Type stack ----
      Three-family split, each font doing exactly one job:
-       --font-display  Clash Display  — hero, H1, H2, big display moments
-       --font-body     General Sans   — paragraphs, cards, UI text
-       --font-mono     Azeret Mono    — eyebrows, code, kbd, badges
+       --font-display  Clash Display: hero, H1, H2, big display moments
+       --font-body     General Sans, paragraphs, cards, UI text
+       --font-mono     Azeret Mono: eyebrows, code, kbd, badges
 
      Rationale: the previous PP Editorial + JetBrains Mono stack is on every
-     AI-generated portfolio recommendation from 2024-onward — it reads as
+     AI-generated portfolio recommendation from 2024-onward. It reads as
      "safe designer default" now, not "chosen". These three are all from
      Fontshare (already CSP-allowed), all free, all distinctive, and none
      of them appear as AI-suggested defaults in the templates currently
@@ -25,7 +25,7 @@
      alternative.
 
      v5.27.0: the original pick here was PP Neue Machina / PP Neue Montreal
-     / PP Supply Mono — Pangram Pangram fonts that are NOT on Fontshare, so
+     / PP Supply Mono: Pangram Pangram fonts that are NOT on Fontshare, so
      every visit silently fell back to system Helvetica/Arial. Replaced with
      the closest free Fontshare equivalents in the same role: Clash Display
      (geometric, technical display face, same register as Neue Machina),
@@ -77,7 +77,7 @@
   --ease-out: cubic-bezier(0.16, 0.8, 0.24, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   /* Used once, deliberately: the command palette's own open animation.
-     Everything else on the site shares --ease-out — this one interaction
+     Everything else on the site shares --ease-out. This one interaction
      gets a slight overshoot so it doesn't move exactly like everything
      else it's opening on top of. */
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -91,7 +91,7 @@
 }
 
 /* ============================================================================
- * DARK — Ultraviolet Cathedral (default, matches v4.x)
+ * DARK: Ultraviolet Cathedral (default, matches v4.x)
  * ========================================================================== */
 :root,
 :root[data-theme='dark'] {
@@ -123,7 +123,7 @@
   --green-live: #4ADE80;
 
   /* --warn is the visual amber (dots, borders, subtle tint). --warn-text is
-     the contrast-safe amber used ONLY for text — same value in dark theme
+     the contrast-safe amber used ONLY for text, same value in dark theme
      because pure amber passes AA on --bg. Overridden in light theme. */
   --warn: #FFC04D;
   --warn-text: #FFC04D;
@@ -137,14 +137,14 @@
     transparent 70%
   );
 
-  /* Scrollbar thumb — dark theme gets a metallic-purple gradient.
+  /* Scrollbar thumb, dark theme gets a metallic-purple gradient.
      v5.10.3 addition per user ask: "metallic shine on dark scroll." */
   --sb-thumb: linear-gradient(180deg, #6c3fd6 0%, #b993ff 50%, #6c3fd6 100%);
   --sb-thumb-hover: linear-gradient(180deg, #8b5cff 0%, #d6bfff 50%, #8b5cff 100%);
 }
 
 /* ============================================================================
- * LIGHT — Parchment Manuscript
+ * LIGHT: Parchment Manuscript
  *
  * Inverts the relationship: the parchment cream becomes the surface, and
  * ultraviolet becomes the accent color that sits on top of it. Reads like a
@@ -192,8 +192,8 @@
     transparent 70%
   );
 
-  /* Scrollbar thumb — light theme gets a "cream / paper" gradient with
-     a warm parchment feel. Not just a purple bar — reads as a warm
+  /* Scrollbar thumb, light theme gets a "cream / paper" gradient with
+     a warm parchment feel. Not just a purple bar, reads as a warm
      tan-cream ribbon on the parchment page. Per v5.10.3 "creamy effect
      on light scroll" ask. */
   --sb-thumb: linear-gradient(180deg, #C8B48A 0%, #E6D9B8 50%, #C8B48A 100%);
@@ -201,18 +201,18 @@
 }
 
 /* ============================================================================
- * Mobile spacing scale — v5.17.1 fix
+ * Mobile spacing scale, v5.17.1 fix
  *
  * The --sp-9..12 tokens (56/72/96/128px) drive section, hero, and
  * inter-block padding site-wide via `padding: var(--sp-11) 0` etc. None of
  * them scaled down for mobile, so every phone visitor got the same
- * desktop-scale gaps — reported as "unnecessary gaps... feels stuffed"
+ * desktop-scale gaps, reported as "unnecessary gaps... feels stuffed"
  * (dense horizontal text right next to huge vertical whitespace). Scaling
  * the large end of the ramp down ~40% on narrow viewports fixes this
  * everywhere at once, since every component reads from the same tokens.
  *
  * v5.35.0: the breakpoint was 640px, but the nav itself switches to the
- * mobile drawer at 900px (see BaseLayout.astro) — so anything from 641px to
+ * mobile drawer at 900px (see BaseLayout.astro). So anything from 641px to
  * 900px got the mobile nav with full desktop spacing underneath it, the
  * exact "stuffed" complaint this block exists to fix, just in a width band
  * this threshold didn't cover. Widened to match the nav's own breakpoint so

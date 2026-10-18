@@ -7,7 +7,7 @@ import { PROJECTS } from '../data/projects';
 const noTelemetry = PROJECTS.filter((p) => /(zero|no) telemetry/i.test(p.description)).map((p) => p.name);
 const noTelemetryList = noTelemetry.length <= 1 ? noTelemetry.join('') : noTelemetry.slice(0, -1).join(', ') + ' and ' + noTelemetry[noTelemetry.length - 1];
 ---
-<BaseLayout title={`Privacy — ${SITE.title}`} description="Privacy policy for atharvapatil.tech: no tracking cookies, no third-party analytics. What the contact form and the chat assistant do with what you type.">
+<BaseLayout title={`Privacy | ${SITE.title}`} description="Privacy policy for atharvapatil.tech: no tracking cookies, no third-party analytics. What the contact form and the chat assistant do with what you type.">
   <Section
     wide
     headingLevel="h1"
@@ -50,9 +50,9 @@ const noTelemetryList = noTelemetry.length <= 1 ? noTelemetry.join('') : noTelem
 
       <h2>Third-party services this site loads</h2>
       <ul>
-        <li><strong>Fontshare</strong> (<code>api.fontshare.com</code>, <code>cdn.fontshare.com</code>) — serves the Clash Display, General Sans, Azeret Mono, Technor and Kalam font files. Fontshare does not use cookies for anonymous font requests.</li>
-        <li><strong>Cloudflare</strong> — hosts the site (Cloudflare Pages), serves the Web Analytics beacon, runs the contact and chat functions, and provides Turnstile (loaded only on the contact page) and Workers AI. See Cloudflare's documentation for what Turnstile stores.</li>
-        <li><strong>Resend</strong> — delivers the email when you use the contact form. It only receives your message at the moment you send it.</li>
+        <li><strong>Fontshare</strong> (<code>api.fontshare.com</code>, <code>cdn.fontshare.com</code>): serves the Clash Display, General Sans, Azeret Mono, Technor and Kalam font files. Fontshare does not use cookies for anonymous font requests.</li>
+        <li><strong>Cloudflare</strong>: hosts the site (Cloudflare Pages), serves the Web Analytics beacon, runs the contact and chat functions, and provides Turnstile (loaded only on the contact page) and Workers AI. See Cloudflare's documentation for what Turnstile stores.</li>
+        <li><strong>Resend</strong>, delivers the email when you use the contact form. It only receives your message at the moment you send it.</li>
         <li>Nothing else.</li>
       </ul>
 

@@ -1,4 +1,4 @@
-# ai.txt — training / attribution terms for AI systems
+# ai.txt, training / attribution terms for AI systems
 # Complements robots.txt (crawl permission) and llms.txt (structured
 # content) with an explicit stance on training + attribution.
 #

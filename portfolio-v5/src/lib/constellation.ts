@@ -30,7 +30,7 @@ interface InputNode {
 }
 
 // "Open Source" only ever appeared as a literal tag on two entries
-// (3D Ref Skills, Reference Engineering) -- everything else tags with its
+// (3D Ref Skills, Reference Engineering), everything else tags with its
 // own specific license name (MIT, GPLv3, Apache 2.0...) instead of the
 // generic word, so plain tag-matching missed every real open-source
 // connection except those two. This checks the actual license field.
@@ -38,7 +38,7 @@ function isOpenSource(license?: string): boolean {
   return !!license && license !== 'Proprietary';
 }
 
-// mulberry32 -- tiny seeded PRNG, deterministic across runs
+// mulberry32, tiny seeded PRNG, deterministic across runs
 function mulberry32(seed: number) {
   return function () {
     seed |= 0;
@@ -85,10 +85,10 @@ export function computeConstellation(
   labels: Record<string, string>
 ): { nodes: ConstellationNode[]; edges: ConstellationEdge[] } {
   const edges = buildEdges(inputNodes);
-  const rand = mulberry32(20260929); // fixed seed -- deterministic between builds
+  const rand = mulberry32(20260929); // fixed seed, deterministic between builds
 
-  // A node with no edges has nothing pulling it inward -- only repulsion
-  // and the base center pull -- so it settles wherever the crowd pushes it,
+  // A node with no edges has nothing pulling it inward. Only repulsion
+  // and the base center pull. So it settles wherever the crowd pushes it,
   // almost always a far corner. Give degree-0 (and low-degree) nodes a
   // stronger pull toward the middle so an outlier like a standalone game
   // still reads as part of the piece instead of drifting off into a corner.
@@ -172,7 +172,7 @@ export function computeConstellation(
 
   // clamp into padded bounds, then normalize to 0-100%
   // The repulsion+centering forces are isotropic, so an unconstrained sim
-  // naturally settles into a roughly circular cluster -- which leaves both
+  // naturally settles into a roughly circular cluster. Which leaves both
   // sides empty inside a wide rectangular box. Rescale the settled bounding
   // box to actually fill the padded canvas instead of just clamping it.
   const PAD = 60;

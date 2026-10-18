@@ -1,5 +1,5 @@
 /**
- * Site-level metadata — the person, the studio, contact channels,
+ * Site-level metadata. The person, the studio, contact channels,
  * services offered. Single source of truth so nothing drifts.
  */
 
@@ -7,20 +7,20 @@ export const SITE = {
   title: 'Atharva Patil',
   role: 'Software engineer, founder of P4inz Interactive Labs',
   tagline: 'Software during the day, 3D and VFX on the side',
-  // Meta description — includes "p4inz" (the actual search handle) once,
+  // Meta description, includes "p4inz" (the actual search handle) once,
   // naturally, not stuffed. Homepage <title> stays clean/short on purpose;
   // this is the room to state the alias.
   description:
-    'Atharva Patil (p4inz) — solo founder of P4inz Interactive Labs. Privacy-first software, two Linux OSes, encrypted vault, dev tools, 3D/VFX.',
+    'Atharva Patil (p4inz), solo founder of P4inz Interactive Labs. Privacy-first software, two Linux OSes, encrypted vault, dev tools, 3D/VFX.',
   location: 'Navi Mumbai, India',
   // v5.29.0: renamed from Northbyte Studios. Third studio name overall
-  // (Obsidian Labs 2025 -> Northbyte Studios mid-2026 -> this, Sept 2026) —
+  // (Obsidian Labs 2025 -> Northbyte Studios mid-2026 -> this, Sept 2026)
   // see about.astro's timeline/identity sections for the full history.
   studio: 'P4inz Interactive Labs',
   studioFounded: '2026',
   currentVersion: 'v5.48.0',
   domain: 'atharvapatil.tech',
-  // Sitewide meta-keywords fallback — covers name/handle variants people
+  // Sitewide meta-keywords fallback, covers name/handle variants people
   // actually type (including the retired "painz" spelling and the
   // previous studio name, since people may still search it) so search
   // engines have a baseline signal on every page even without a
@@ -56,28 +56,28 @@ export const SERVICES: Service[] = [
   {
     slug: 'product',
     name: 'Product & Web Development',
-    short: 'Full-stack builds for products and marketing sites, from first line of code to a deployed, maintainable system.',
+    short: 'Full-stack builds for products and marketing sites, from the first line of code to a deployed system you can maintain.',
     bullets: ['Marketing & portfolio sites', 'Product dashboards & internal tools', 'Astro, Next.js and TypeScript builds'],
     cta: { label: 'See it in Kanvaz →', href: '/kanvaz' },
   },
   {
     slug: 'ui-ux',
     name: 'UI, UX & Product Design',
-    short: 'Interfaces designed for clarity first, wireframes through to high-fidelity, production-ready design systems.',
+    short: 'Interfaces designed for clarity first, from wireframes to high-fidelity screens and design systems that are ready for production.',
     bullets: ['Product & marketing interfaces', 'Design systems + tokens', 'User flows and prototypes'],
     cta: { label: 'See it in Nexus →', href: '/nexus' },
   },
   {
     slug: 'brand',
     name: 'Branding & Visual Identity',
-    short: 'Logo systems, color and type direction, and the visual language that makes a brand recognizable at a glance.',
+    short: 'Logo systems, color and type direction, and a visual identity people can recognize quickly.',
     bullets: ['Logo systems', 'Color + typographic direction', 'Brand books and guidelines'],
     cta: { label: 'See it in Mission OS →', href: '/mission-os' },
   },
   {
     slug: '3d-vfx',
     name: '3D & VFX & Visualization',
-    short: 'Renders, lighting studies, and motion work, for product showcases, brand visuals, or standalone pieces.',
+    short: 'Renders, lighting studies and motion work for product showcases, brand visuals or standalone pieces.',
     bullets: ['Product renders', 'Lighting studies', 'Motion + camera work'],
     cta: { label: 'See the 3D & VFX page →', href: '/3d' },
   },

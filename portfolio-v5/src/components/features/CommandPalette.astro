@@ -1,6 +1,6 @@
 ---
 /**
- * ⌘K / Ctrl+K / "/" command palette — ported from v4.5 with light-theme awareness
+ * ⌘K / Ctrl+K / "/" command palette, ported from v4.5 with light-theme awareness
  * and the new site data. Vanilla JS island, no framework.
  */
 import { PROJECTS } from '../../data/projects';
@@ -228,7 +228,7 @@ const commands = [
       return String(str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     }
 
-    // v5.6.6 polish — recent searches, match highlighting, richer nav keys.
+    // v5.6.6 polish: recent searches, match highlighting, richer nav keys.
     const RECENT_KEY = 'nb-cmdk-recent';
     const RECENT_MAX = 5;
     function loadRecent() {
@@ -397,9 +397,9 @@ const commands = [
     const trigger = document.getElementById('cmdkTrigger');
     if (trigger) trigger.addEventListener('click', () => { if (backdrop.hidden) open(); else close(); });
 
-    // v5.17.8 — real backing for the SearchAction schema in BaseLayout's
+    // v5.17.8, real backing for the SearchAction schema in BaseLayout's
     // JSON-LD (?q=). Without this the structured data would be claiming a
-    // search feature that doesn't actually work — Google validates that
+    // search feature that doesn't actually work: Google validates that
     // the target URL performs a real search, and so should this codebase.
     try {
       const params = new URLSearchParams(window.location.search);

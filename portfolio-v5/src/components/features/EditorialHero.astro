@@ -67,7 +67,7 @@ if (scrub) {
   <script>
     // Measures the pipe track's real pixel width so the traveling logo can
     // move with translateX (see .pipe-track img). Runs on layout changes
-    // only (load, resize, font swap) — never on scroll, so it adds nothing
+    // only (load, resize, font swap), never on scroll, so it adds nothing
     // to the per-frame cost the scroll animation itself already pays.
     (() => {
       const track = document.querySelector<HTMLElement>('.pipe-track');
@@ -139,7 +139,7 @@ if (scrub) {
   @media (prefers-reduced-motion: reduce) {
     .act { animation: none; opacity: 1; transform: none; }
   }
-  /* v5.17.1 fix — --text-h1's clamp() floors at a flat 44px for every
+  /* v5.17.1 fix, --text-h1's clamp() floors at a flat 44px for every
      viewport under ~680px, so a 320px phone and a 420px phone render
      identical type size against very different column widths. On the
      narrow end that reads heavy/stuffed against the edge. Scale it down
@@ -177,7 +177,7 @@ if (scrub) {
   }
   /* three glass cards that light up in turn, and a bar under them with the logo riding it */
   .pipe-step {
-    /* v5.28.0 fix — the old window was (fill - s + 0.1) / 0.1, which for
+    /* v5.28.0 fix. The old window was (fill - s + 0.1) / 0.1, which for
        step 1 (s=0) reaches 1 at fill=0: the first card was fully lit
        before any scrolling happened at all, on every device. Thresholds
        now sit at 0, 1/n, 2/n ... and each step's own window is exactly
@@ -224,7 +224,7 @@ if (scrub) {
     transform: scaleX(var(--fill));
   }
   .pipe-track img {
-    /* v5.28.0 fix — this used to move by animating `left`, which is a layout
+    /* v5.28.0 fix. This used to move by animating `left`, which is a layout
        property: the browser had to re-run layout on every scroll frame just
        to slide a circle, the exact thing scroll-driven animations exist to
        avoid, and it read as stutter on lower-end phones. --track-w (the

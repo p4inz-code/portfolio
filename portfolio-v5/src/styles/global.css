@@ -2,7 +2,7 @@
  * Global reset + base
  * ========================================================================== */
 /* Fontshare stylesheet is now loaded via a real <link rel=stylesheet>
-   in BaseLayout <head> (v5.12.0 fix) — the previous @import here was
+   in BaseLayout <head> (v5.12.0 fix). The previous @import here was
    render-blocking and invisible to the browser preloader. Fonts:
    Neue Machina (display), Neue Montreal (body + italic), Supply Mono
    (mono). */
@@ -42,7 +42,7 @@ body {
 }
 
 /* ============================================================================
- * Parchment grain — light-theme paper texture. Only applied in light mode.
+ * Parchment grain, light-theme paper texture. Only applied in light mode.
  *
  * The texture is an inline SVG feTurbulence pattern, encoded as a data-URI
  * background-image on a fixed pseudo-element covering the viewport. No
@@ -52,10 +52,10 @@ body {
  * darker (like ink specks in paper), not lighter.
  *
  * Kept very low opacity (~0.32) so it's texture, not visual noise. Fixed
- * positioning so it doesn't scroll away — matches real paper behavior
+ * positioning so it doesn't scroll away, matches real paper behavior
  * (the sheet doesn't move; the words do). Behind everything (z-index -1).
  *
- * Dark theme skips this entirely — Ultraviolet Cathedral doesn't want
+ * Dark theme skips this entirely, Ultraviolet Cathedral doesn't want
  * parchment grain.
  * ========================================================================== */
 :root[data-theme='light'] body::before {
@@ -71,7 +71,7 @@ body {
   background-repeat: repeat;
 }
 
-/* A slightly larger, softer secondary layer — reads as fiber, not pixel
+/* A slightly larger, softer secondary layer, reads as fiber, not pixel
    noise. Together the two layers give the cream a real "cotton paper"
    feel rather than "blurred jpeg". Light theme only. */
 :root[data-theme='light'] body::after {
@@ -88,7 +88,7 @@ body {
 }
 
 /* When the demo route hides site chrome, also hide the parchment
-   grain — the Mission OS demo forces its own dark aesthetic and the
+   grain, the Mission OS demo forces its own dark aesthetic and the
    paper texture would leak through as a dust layer over the desktop. */
 body:has(.demo-scope)::before,
 body:has(.demo-scope)::after { display: none; }
@@ -126,10 +126,10 @@ button {
 }
 
 /* ============================================================================
- * Custom scrollbars — v5.9.1 fix: kill the browser buttons (arrows) that
+ * Custom scrollbars, v5.9.1 fix: kill the browser buttons (arrows) that
  * were showing on some engines. Thumb now uses a real per-theme visual
- * (cream/paper on light, metallic-purple gradient on dark) — v5.10.3 add
- * — matches the "creamy / metallic shine on scroll" ask.
+ * (cream/paper on light, metallic-purple gradient on dark), v5.10.3 add
+ *, matches the "creamy / metallic shine on scroll" ask.
  *
  * Chromium/Edge/Safari:  ::-webkit-scrollbar family
  * Firefox:               scrollbar-width + scrollbar-color
@@ -147,7 +147,7 @@ html {
   background: transparent;
   border: none;
 }
-/* Kill the browser button arrows at the top / bottom of the track —
+/* Kill the browser button arrows at the top / bottom of the track
    these were still showing on some engines and reading as "system
    default leaked through." */
 ::-webkit-scrollbar-button,
@@ -166,7 +166,7 @@ html {
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
-/* THUMB — theme-specific accent. Set on :root so both light + dark can
+/* THUMB, theme-specific accent. Set on :root so both light + dark can
    override with their own visual treatment. */
 ::-webkit-scrollbar-thumb {
   background: var(--sb-thumb, var(--purple));
@@ -193,9 +193,9 @@ html {
 .wrap {
   max-width: var(--wrap);
   margin: 0 auto;
-  /* v5.17.5 fix — --wrap (1200px) is wider than a lot of real laptop/
+  /* v5.17.5 fix, --wrap (1200px) is wider than a lot of real laptop/
      half-split-window viewports (1024-1200px), so on those the fixed
-     24px padding was the ONLY buffer from the actual screen edge —
+     24px padding was the ONLY buffer from the actual screen edge
      read as "text too close to the border." Scales up smoothly on
      wider viewports; unchanged at mobile widths (4vw stays under the
      24px floor below ~600px). */
@@ -239,14 +239,14 @@ html {
 @media (prefers-reduced-motion: no-preference) {
   @view-transition { navigation: auto; }
   .nav { view-transition-name: site-nav; }
-  /* v5.32.0 fix — real bug, not just a feel/timing complaint: this page-nav
+  /* v5.32.0 fix, real bug, not just a feel/timing complaint: this page-nav
      cross-fade and ThemeToggle.astro's own document.startViewTransition()
      call both target the exact same browser-native ::view-transition-*(root)
      pseudo-elements (there's no way to tell "this transition came from a
      link click" from "this transition came from the theme button" other
      than tagging it ourselves). The two were fighting over the same
      properties every time the theme changed, and this one was winning
-     often enough to explain "it drops like a balloon" -- that's this
+     often enough to explain "it drops like a balloon", that's this
      rule's own 0.42s opacity+translateY(14px) settle, not the wipe.
      ThemeToggle sets html[data-wipe] for exactly the duration of its own
      transition; suppressed here so only the wipe animates during that

@@ -31,7 +31,7 @@ export const GET: APIRoute = () => {
     const bodyHtml = entry.body.map((p) => `&lt;p&gt;${escapeXml(p)}&lt;/p&gt;`).join('');
     return (
       `    <item>\n` +
-      `      <title>${escapeXml(entry.version)} — ${escapeXml(entry.summary)}</title>\n` +
+      `      <title>${escapeXml(entry.version)}: ${escapeXml(entry.summary)}</title>\n` +
       `      <link>${guid}</link>\n` +
       `      <guid isPermaLink="false">${guid}</guid>\n` +
       `      <pubDate>${d.toUTCString()}</pubDate>\n` +
@@ -44,7 +44,7 @@ export const GET: APIRoute = () => {
     `<?xml version="1.0" encoding="UTF-8"?>\n` +
     `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n` +
     `  <channel>\n` +
-    `    <title>${escapeXml(SITE.title)} — changelog</title>\n` +
+    `    <title>${escapeXml(SITE.title)}, changelog</title>\n` +
     `    <link>${SITE_URL}/status/</link>\n` +
     `    <atom:link href="${SITE_URL}/feed.xml" rel="self" type="application/rss+xml" />\n` +
     `    <description>${escapeXml(SITE.description)}</description>\n` +

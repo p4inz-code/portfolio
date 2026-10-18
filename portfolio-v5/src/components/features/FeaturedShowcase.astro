@@ -390,10 +390,10 @@ const defaultLabel = (kind: string) =>
   /* Ascent: a bigger frame with a colour grade (violet shadows, more punch), one recipe per theme */
   .chapter[data-scene='ascent'] { --grade: saturate(1.2) contrast(1.06); }
   :global(:root[data-theme='light']) .chapter[data-scene='ascent'] { --grade: saturate(1.08) brightness(1.08) contrast(1.02); }
-  /* v5.28.0 fix — this used to add a second gradient layer on top of the
+  /* v5.28.0 fix. This used to add a second gradient layer on top of the
      video with mix-blend-mode: soft-light for extra punch. Some GPUs fail
      to composite a hardware-decoded <video> under a blended sibling layer
-     and render it blank instead — reported as "the Ascent video doesn't
+     and render it blank instead, reported as "the Ascent video doesn't
      show up." The filter alone gets most of the same grade with none of
      that risk, so the blended overlay is gone. */
   .chapter[data-scene='ascent'] .show-img { filter: var(--grade); border-radius: 5px; box-shadow: 0 24px 60px -28px color-mix(in oklab, var(--purple-bright) 70%, transparent); }
@@ -749,13 +749,13 @@ const defaultLabel = (kind: string) =>
         animation-timing-function: var(--ease-io);
       }
 
-      /* v5.38.0 — mission and pursue never got their own reveal here: both
+      /* v5.38.0, mission and pursue never got their own reveal here: both
          fell through to reveal-default, and got reported (correctly) as
          looking the same on the main-page scroll deck, same as the
          case-study banner bug just fixed for the same underlying reason
          (a scene that isn't nexus/kanvaz/ascent has no override, so it's
          silently identical to every other unscened project). Two new,
-         real, different wipes -- not the extra decorative sub-elements
+         real, different wipes. Not the extra decorative sub-elements
          (scan line, cable, pin) the other three scenes have, since there's
          no matching markup for those here, just a different clip-path
          shape on the same .show-img the base rule already animates. */

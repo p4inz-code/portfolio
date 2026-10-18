@@ -24,7 +24,7 @@ const markColor: Record<ProjectStatus['kind'], string> = {
 };
 
 // Split "Public Beta · v10.12.0" -> ["Public Beta", "v10.12.0"] so the
-// label and version get different visual weight — one is the state, one
+// label and version get different visual weight, one is the state, one
 // is the number. Falls back gracefully if no version part is present.
 const parts = status.label.split(/\s·\s/);
 const stateLabel = parts[0];
@@ -43,7 +43,7 @@ const versionLabel = parts.length > 1 ? parts.slice(1).join(' · ') : '';
     display: inline-flex;
     align-items: baseline;
     gap: 8px;
-    /* No rounded pill, no border ring, no dot — this is the whole point.
+    /* No rounded pill, no border ring, no dot. This is the whole point.
        Reads as an editorial marker, not a status badge. */
     padding: 0;
     background: transparent;
@@ -60,7 +60,7 @@ const versionLabel = parts.length > 1 ? parts.slice(1).join(' · ') : '';
     font-size: 13px;
     letter-spacing: 0;
   }
-  /* The colored bar is the whole identity mark — a hard vertical slice
+  /* The colored bar is the whole identity mark, a hard vertical slice
      of color that reads like a tag on an editorial spread. */
   .mark-bar {
     display: inline-block;

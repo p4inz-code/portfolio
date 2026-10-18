@@ -6,10 +6,10 @@ import type { Project } from '../../data/projects';
  * regrouped by what they actually are (Web / App / CLI / OS) instead of by
  * featured-or-not. A few projects don't fit any of the four cleanly (the
  * game, the AI-skill packs, the methodology library) and are left out of
- * this view on purpose -- they're already covered above.
+ * this view on purpose, they're already covered above.
  *
  * Preview images here are either the same real media used elsewhere on the
- * site, or -- for repos that never got a dedicated screenshot -- GitHub's
+ * site, or, for repos that never got a dedicated screenshot, GitHub's
  * own auto-generated repository card, saved locally rather than hotlinked
  * (avoids depending on a live third-party fetch, and its rate limit, at
  * runtime). Where neither exists, the row just runs text-only: no
@@ -77,7 +77,7 @@ const grouped = GROUPS.map((g) => ({
     grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
     gap: var(--sp-6) var(--sp-5);
   }
-  /* v5.31.0 — every item is a real bordered card now, image or not.
+  /* v5.31.0. Every item is a real bordered card now, image or not.
      Text-only rows (no git-sourced preview available) used to look like
      bare floating text next to items that had one; a consistent card
      shell puts them on equal visual footing. */

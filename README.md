@@ -1,6 +1,6 @@
-# Atharva Patil — Portfolio
+# Atharva Patil: portfolio
 
-Personal portfolio site for **Atharva Patil** — solo founder of P4inz
+Personal portfolio site for **Atharva Patil**, solo founder of P4inz
 Interactive Labs, software engineer, and 3D / VFX student based in Navi Mumbai,
 India.
 
@@ -52,80 +52,80 @@ portfolio/
 
 ## Design system
 
-- **Palette** — dual theme. Dark = *Ultraviolet Cathedral* (`#0A0517`
+- Palette: dual theme. Dark = *Ultraviolet Cathedral* (`#0A0517`
   base, cream `#E8E1D0` text, purples `#B993FF` / `#7B3FE4`). Light =
   *Parchment Manuscript* (`#F3EDDD` base, deep ink `#1A0F28`, darker
   purples for AA contrast). Text and background pairs were checked for
   WCAG AA. Toggle with the button or the `T` key; the choice is kept in
   `localStorage['nb-theme']`.
-- **Type** — `Clash Display` (display), `General Sans` (body) and `Azeret
+- Type: `Clash Display` (display), `General Sans` (body) and `Azeret
   Mono` (mono), set as `--font-display`, `--font-body` and `--font-mono`,
   all served from Fontshare, free. (v5.27.0: the original picks here,
   Neue Machina / Neue Montreal / Supply Mono, are Pangram Pangram
-  families that turned out not to actually be on Fontshare — the request
+  families that turned out not to actually be on Fontshare. The request
   returned empty CSS and the site had been silently rendering system
   Helvetica/Arial. Replaced with real, free families in the same role.)
   Scene titles use their own faces: Technor and Kalam (Fontshare, one
   request each) and Jersey 10 (SIL OFL, self-hosted in `public/fonts/`).
-- **Motion** — scroll-linked effects use CSS scroll-driven animations
+- Motion: scroll-linked effects use CSS scroll-driven animations
   (`animation-timeline: view()` and `scroll()`), not JavaScript. Everything
   is gated on `@supports` and `prefers-reduced-motion`, and falls back to a
   static layout in browsers without support and below 900px.
 
 ## Signature interactions
 
-- **Home hero** — `/`. "I identify unmet needs in software and turn them
+- Home hero: `/`. "I identify unmet needs in software and turn them
   into products." The words light up as you scroll, then three glass cards
   (spot the gap, build it, ship it) light in turn while the AP logo rides a
   bar beneath them. A proof strip counts four plain facts up.
-- **Release ladder** — while the project chapters scroll, a glass ladder in
+- Release ladder: while the project chapters scroll, a glass ladder in
   the left gutter shows where you are with each project's real version, and
   the logo slides from dot to dot. Click a dot and it jumps straight to that
   chapter. It only appears where there is empty side space; below 1320px it
   is a small pill under the header, so it never sits on top of text.
-- **Tab icon** — the favicon is the AP mark in a ring that fills as you
+- Tab icon: the favicon is the AP mark in a ring that fills as you
   scroll (static under reduced motion or when motion is paused).
-- **Work deck** — `/work/`. Featured projects are a stack of sticky cards.
+- Work deck: `/work/`. Featured projects are a stack of sticky cards.
   Each picture arrives its own way (Nexus scan wipe, Kanvaz card dropped on
   the board, Ascent pixel wipe) and never gets cropped; the backgrounds move
   with the scroll. Below the deck is an index of every project, including
   client and event sites (AniFX Fest, Kalasadhana Academy).
-- **Scroll engine** — `src/scripts/progress.ts`. Native scroll timelines on
+- Scroll engine: `src/scripts/progress.ts`. Native scroll timelines on
   desktop; a small JS driver (`--p`, `--sp`) everywhere else (phones, Firefox,
   older Safari). Reversible, and static under reduced motion. Jumps are
   instant, not animated through the steps in between.
-- **Glass** — content cards on every page are translucent with a blur, in
+- Glass: content cards on every page are translucent with a blur, in
   both themes.
-- **Motion pause** — the pause button in the header stops ambient motion
+- Motion pause: the pause button in the header stops ambient motion
   (stars, glows, looping video, the running sprite). Scroll-driven motion is
   left alone because the visitor drives it. This is WCAG 2.2.2.
-- **Support** — `/support/`. Buy Me a Coffee for anywhere in the world, UPI
+- Support: `/support/`. Buy Me a Coffee for anywhere in the world, UPI
   for India. It is a plain link, not an embedded widget, so the site still
   loads nothing from third parties.
-- **Featured showcase** — `/` and `/work/`. Each featured project is a
+- Featured showcase: `/` and `/work/`. Each featured project is a
   pinned chapter: the words arrive first, one more scroll reveals the
   picture. Project names start as outlines and fill with the accent as you
   scroll. Every scroll step moves something; there are no dead stretches.
-- **Scenes** — Nexus, Kanvaz and Ascent each have their own look on their
+- Scenes: Nexus, Kanvaz and Ascent each have their own look on their
   page and in the showcase (`scene` prop on `BaseLayout`):
-  - *Nexus* — Technor titles, a floor grid flowing toward you, data
+  - *Nexus*: Technor titles, a floor grid flowing toward you, data
     packets, a scan beam, a wireframe cube. The picture wipes in.
-  - *Kanvaz* — Kalam titles, a dotted board that pans as you scroll, faint
+  - *Kanvaz*: Kalam titles, a dotted board that pans as you scroll, faint
     reference cards joined by flowing cables. A card drops onto the board.
-  - *Ascent* — Jersey 10 titles, a night sky with a nebula, star layers,
+  - *Ascent*: Jersey 10 titles, a night sky with a nebula, star layers,
     shooting stars and a moon that fills out as you scroll, over ridges that
     fall away. The gameplay frame is larger and colour graded for each
     theme. A level counter tracks the scroll, with a small run strip under it
     where the runner hops each obstacle, like the offline dino.
   - *Mission OS* and *Pursue OS* have their own backdrops too.
-- **Contact composer** — `/contact/`. A terminal-style card with
+- Contact composer: `/contact/`. A terminal-style card with
   keyboard-accessible custom selects, a live character count and
   `Ctrl`/`Cmd` + `Enter` to send, a live clock, copy-email and a send
   animation. Submitting opens a `mailto:` message with the fields
   formatted in the body. No backend, no fetch, nothing leaves the page.
-- **Command palette** — `⌘K` / `Ctrl+K` / `/`. Recent searches, match
+- Command palette: `⌘K` / `Ctrl+K` / `/`. Recent searches, match
   highlighting, keyboard navigation, suggestion chips on empty results.
-- **Mission OS demo** — `/mission-os/demo/`. Boot sequence to a desktop with
+- Mission OS demo: `/mission-os/demo/`. Boot sequence to a desktop with
   six windows (Installer, Settings, About, Files, Terminal, Firefox), each
   with a per-window error boundary. Labeled as a concept demo.
 
@@ -139,14 +139,14 @@ marked as mockups. The policy is written up at `/editorial/`.
 
 ## Discoverability suite
 
-- `sitemap.xml` — Astro endpoint, build-time `lastmod`.
-- `robots.txt` — full AI crawler allowlist.
-- `llms.txt` — AI-readable content index with identity resolution
+- `sitemap.xml`: Astro endpoint, build-time `lastmod`.
+- `robots.txt`: full AI crawler allowlist.
+- `llms.txt`: AI-readable content index with identity resolution
   (Atharva Patil ↔ p4inz ↔ p4inz-code ↔ P4inz Interactive Labs, formerly Northbyte Studios).
-- `ai.txt` — training and attribution terms.
+- `ai.txt`: training and attribution terms.
 - `humans.txt`, `.well-known/security.txt` (RFC 9116).
 - `manifest.webmanifest`, `browserconfig.xml`, `opensearch.xml`.
-- `feed.xml` — RSS 2.0 for the changelog.
+- `feed.xml`: RSS 2.0 for the changelog.
 - IndexNow key file for Bing, Yandex, Seznam and Naver.
 - JSON-LD `@graph` (Person + Organization + WebSite) on every page, plus
   per-page `SoftwareApplication`, `BreadcrumbList` and `FAQPage` nodes.
@@ -167,9 +167,9 @@ Node version pinned to 20 via `.nvmrc`.
 
 Cloudflare Pages, `main` branch.
 
-- **Build command** — `cd portfolio-v5 && npm install && npm run build`
-- **Output directory** — `portfolio-v5/dist`
-- **Node** — 20 (from `.nvmrc`)
+- Build command: `cd portfolio-v5 && npm install && npm run build`
+- Output directory: `portfolio-v5/dist`
+- Node: 20 (from `.nvmrc`)
 
 Every push to `main` rebuilds and deploys in about 90 seconds. `main` is
 production. `v5-astro` is a mirror kept in sync with fast-forward merges;
@@ -186,11 +186,11 @@ Every version bump lands with a changelog entry at
 
 All rights reserved. This portfolio's code is not open source. The
 individual products it showcases have their own licenses (MIT / GPLv3 /
-Apache 2.0 / Proprietary) — see each project's own repo.
+Apache 2.0 / Proprietary), see each project's own repo.
 
 ---
 
-**Contact** — atharva.patil.cg@gmail.com · Discord `p4inz` ·
+**Contact**, atharva.patil.cg@gmail.com · Discord `p4inz` ·
 GitHub [`p4inz-code`](https://github.com/p4inz-code)
 
 ---

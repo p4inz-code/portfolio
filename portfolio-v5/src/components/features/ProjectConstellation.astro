@@ -1,10 +1,10 @@
 ---
 /**
- * Project constellation -- a node-graph view of the same work shown
+ * Project constellation, a node-graph view of the same work shown
  * elsewhere on /work as a deck, an index, and a category list. Connects
  * projects by what actually links them (shared category, shared stack,
  * shared tag) instead of a flat list order. Layout is computed once at
- * build time (see ../../lib/constellation.ts) -- no physics simulation
+ * build time (see ../../lib/constellation.ts). No physics simulation
  * ships to the browser, only hover/focus highlight + drag-to-reposition.
  *
  * Deliberately the same idea as Kanvaz's own Map View feature (its README:
@@ -202,7 +202,7 @@ const edgePaths = edges.map((e) => {
       panel!.innerHTML = `
         <p class="cx-panel-title">${info.label}</p>
         <p class="cx-panel-tagline">${info.tagline}</p>
-        ${rows ? `<ul class="cx-panel-list">${rows}</ul>` : `<p class="cx-panel-tagline">No shared category, stack, or tag with the rest -- stands on its own.</p>`}
+        ${rows ? `<ul class="cx-panel-list">${rows}</ul>` : `<p class="cx-panel-tagline">No shared category, stack, or tag with the rest, stands on its own.</p>`}
       `;
     }
 
@@ -214,7 +214,7 @@ const edgePaths = edges.map((e) => {
 
       // draggable="false" on the element stops this in most browsers, but
       // some still fire native dragstart for <a> after a held-then-moved
-      // press -- belt and suspenders, since that's exactly the "works if I
+      // press, belt and suspenders, since that's exactly the "works if I
       // flick it, not if I hold it" symptom a real hold-to-drag hijack has.
       n.addEventListener('dragstart', (e) => e.preventDefault());
 
@@ -256,7 +256,7 @@ const edgePaths = edges.map((e) => {
         dragging = false;
         n.classList.remove('cx-dragging');
         if (moved) {
-          // this was a drag, not a click -- swallow the click Astro/browser
+          // this was a drag, not a click, swallow the click Astro/browser
           // is about to fire so it doesn't navigate away mid-rearrange
           const swallow = (ce: MouseEvent) => {
             ce.preventDefault();
@@ -274,7 +274,7 @@ const edgePaths = edges.map((e) => {
       n.addEventListener('blur', clear);
     });
 
-    // staggered entrance -- only once, the first time it scrolls into view
+    // staggered entrance. Only once, the first time it scrolls into view
     const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!reduceMotion && 'IntersectionObserver' in window) {
       const io = new IntersectionObserver(
@@ -389,7 +389,7 @@ const edgePaths = edges.map((e) => {
     user-select: none;
     -webkit-touch-callout: none; /* stops iOS's hold-on-a-link share sheet from hijacking the drag */
     -webkit-user-drag: none;
-    /* Always visible by default -- opacity never depends on JS running.
+    /* Always visible by default, opacity never depends on JS running.
        An entrance effect must never be the only thing making content
        visible; the stagger below only ever animates transform. */
     transition:
@@ -461,7 +461,7 @@ const edgePaths = edges.map((e) => {
 
 <style is:global>
   /* Astro's scoped-style attribute only applies to elements present in the
-     static template at build time -- it never reaches markup injected via
+     static template at build time. It never reaches markup injected via
      innerHTML from the client script above, so the panel's dynamic content
      (title/tagline/connection list) has to live here instead, unscoped. */
   #cxPanel .cx-panel-title {

@@ -1,11 +1,11 @@
 ---
 /**
- * 404 — same restrained, diagnostic register as LiveStats.astro:
+ * 404, same restrained, diagnostic register as LiveStats.astro:
  * shows exactly what was checked (route, status, route count, likely cause).
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
-<BaseLayout title="404 — Page not found — Atharva Patil" description="This route doesn't exist. Diagnosed, logged, and here's how to get back on track.">
+<BaseLayout title="404: Page not found | Atharva Patil" description="This route doesn't exist. Diagnosed, logged, and here's how to get back on track.">
   <section class="nf-section">
     <div class="wrap">
       <p class="nf-eyebrow">404 · route not found</p>
@@ -25,7 +25,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
 
       <div class="nf-game-wrap">
-        <p class="nf-game-label">While you're here <span>— keep the connection alive</span></p>
+        <p class="nf-game-label">While you're here: <span>keep the connection alive</span></p>
         <div class="nf-game-stage">
           <canvas id="nfGame" class="nf-game" width="640" height="220" role="img" aria-label="Signal Runner: a small game. Space or tap to jump packets, which end the run. Hold down or swipe down to duck under coins and collect them."></canvas>
           <button type="button" class="nf-game-duck" id="nfGameDuck" aria-label="Duck">▾</button>
@@ -37,7 +37,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   <script>
     /**
-     * Signal Runner — the 404 game.
+     * Signal Runner. The 404 game.
      *
      * Same genre as the offline dino (an endless side-scroller you can't
      * pause, timing is everything), built independently from it: a second
@@ -46,7 +46,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
      * + particle burst on both jump and crash, and a day/night sky that
      * sweeps as your uptime climbs. Colors are read live from the page's
      * own CSS variables, so dark and light both work with one palette.
-     * The loop only starts on input (space, tap, hold ↓) — nothing moves
+     * The loop only starts on input (space, tap, hold ↓). Nothing moves
      * on its own, so this is never "ambient motion" under WCAG 2.2.2.
      */
     (function () {
@@ -87,7 +87,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       const STAND_H = 18, DUCK_H = 11;
       // the Google dino's own curve: start slow, add a small constant amount
       // of speed every frame, cap it. It only reads as "progressive" if the
-      // start is genuinely slow and the ceiling is genuinely fast — split
+      // start is genuinely slow and the ceiling is genuinely fast, split
       // enough that the difference is obvious inside one run, not just over
       // several.
       const START_SPEED = 3.6, MAX_SPEED = 14, ACCEL = 0.0034;
@@ -152,14 +152,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       function spawn() {
         // two obstacle kinds so jump alone is not enough: a packet on the ground (jump it),
-        // or a coin at head height (duck it) — the split is what makes this a different game, not a reskin
+        // or a coin at head height (duck it). The split is what makes this a different game, not a reskin
         const kind = Math.random() < 0.62 ? 'packet' : 'coin';
         if (kind === 'packet') {
           obstacles.push({ kind, x: CSS_W + 10, w: 9 + Math.random() * 8, h: 13 + Math.random() * 11 });
         } else {
           obstacles.push({ kind, x: CSS_W + 10, w: 18, h: 18, fy: GROUND - STAND_H - 9 + Math.random() * 5, ph: Math.random() * 10 });
         }
-        // v5.44.0 — genuinely easy-to-hard, not hard-to-hardest: the start
+        // v5.44.0, genuinely easy-to-hard, not hard-to-hardest: the start
         // interval is close to the old game's, so early obstacles still
         // feel spaced out. What changes is how far it can compress once
         // speed builds (30 vs the old 22), so a long run gets meaningfully
@@ -194,10 +194,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         for (const p of particles) { p.x += p.vx; p.y += p.vy; p.vy += 0.15; p.life--; }
         particles = particles.filter((p) => p.life > 0);
 
-        // v5.44.0 fix — a coin killing the player on touch made no sense
+        // v5.44.0 fix, a coin killing the player on touch made no sense
         // the moment it looked like a coin instead of a drone. Packets
         // stay the real hazard (jump them); coins are now a pickup (duck
-        // under one to collect it, or just miss it — never fatal either way).
+        // under one to collect it, or just miss it, never fatal either way).
         for (const o of obstacles) {
           const px = player.x + 2, pw = player.w - 4;
           const py = player.y - player.h, ph = player.h;
@@ -211,7 +211,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             running = false; over = true; shake = 6;
             burst(player.x + player.w / 2, player.y - player.h / 2, colors.warn, 14);
             if (Math.floor(dist / 10) > best) { best = Math.floor(dist / 10); localStorage.setItem('nb-404-best', String(best)); }
-            hint.textContent = 'Connection lost at ' + Math.floor(dist / 10) + 'm — space / tap to retry';
+            hint.textContent = 'Connection lost at ' + Math.floor(dist / 10) + 'm, space / tap to retry';
           } else {
             o.collected = true;
             coins++;
@@ -254,7 +254,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         ctx.fillRect(player.x + 1, player.y - 3, 3, 3);
         ctx.fillRect(player.x + player.w - 4, player.y - 3, 3, 3);
 
-        // obstacles: packets on the ground, coins at head height — distinct shapes, distinct colors
+        // obstacles: packets on the ground, coins at head height, distinct shapes, distinct colors
         for (const o of obstacles) {
           if (o.kind === 'packet') {
             ctx.fillStyle = colors.bright;
@@ -324,20 +324,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       var trigger = document.getElementById('cmdkTrigger');
       if (btn && trigger) btn.addEventListener('click', function () { trigger.click(); });
 
-      // v5.17.0 fix — this page is a static file served by the host for
+      // v5.17.0 fix. This page is a static file served by the host for
       // ANY unmatched route, so Astro.url at build time is always /404/,
       // never the real bad URL. Read the actual requested path client-side
       // instead, same honesty standard as the live-stats widget.
       var pathEl = document.getElementById('nfPath');
       if (pathEl) pathEl.textContent = window.location.pathname + window.location.search;
 
-      window.__nbDiag && window.__nbDiag.log('router', '404 — no route matched ' + window.location.pathname, { recovered: true });
+      window.__nbDiag && window.__nbDiag.log('router', '404, no route matched ' + window.location.pathname, { recovered: true });
     })();
   </script>
 
   <style>
     .nf-section {
-      /* v5.44.0 fix — the old clamp(80px, 18vh, 160px) top padding plus
+      /* v5.44.0 fix. The old clamp(80px, 18vh, 160px) top padding plus
          min-height: 60vh + align-items: center read fine on a tall desktop
          viewport, but on a short mobile screen 18vh alone is ~140px, and
          stacked under the nav that reads as a dead gap before any content.

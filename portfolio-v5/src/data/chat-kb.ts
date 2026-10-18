@@ -43,7 +43,7 @@ export interface KbBundle {
   fallback: KbEntry;
 }
 
-// -- helpers -----------------------------------------------------------------
+// helpers -----------------------------------------------------------------
 
 const ALIASES: Record<string, string[]> = {
   'mission-os': ['mission os', 'missionos'],
@@ -118,7 +118,7 @@ const FOLLOWUP_Q: Record<Intent, (n: string) => string> = {
 // resolves to a free answer (enforced by the tests).
 const FOLLOW_STARTERS = ['What should I look at first?', 'Which project is right for me?', 'Are you available for freelance work?'];
 
-// -- per-project entries -------------------------------------------------------
+// per-project entries -------------------------------------------------------
 
 function projectEntries(p: Project): KbEntry[] {
   const aliases = ALIASES[p.slug] ?? [p.name.toLowerCase()];
@@ -157,7 +157,7 @@ function projectEntries(p: Project): KbEntry[] {
     all: [aliases],
     weight: 35,
     followups: followFor('overview'),
-    answer: bullets(`${p.name} -- ${p.tagline}`, [
+    answer: bullets(`${p.name}: ${p.tagline}`, [
       firstSentences(p.description),
       `Status: ${p.status.label}`,
       ...(licenseBullet ? [licenseBullet] : []),
@@ -171,7 +171,7 @@ function projectEntries(p: Project): KbEntry[] {
     all: a('status'),
     weight: INTENT_WEIGHT.status,
     followups: followFor('status'),
-    answer: bullets(`${p.name} -- ${p.status.label}`, [
+    answer: bullets(`${p.name}: ${p.status.label}`, [
       ...(p.currentVersion && !p.status.label.includes(p.currentVersion) ? [`Current version: ${p.currentVersion}`] : []),
       ...(p.nextMilestone ? [`Next: ${p.nextMilestone}`] : []),
     ]),
@@ -184,24 +184,24 @@ function projectEntries(p: Project): KbEntry[] {
       all: a('next'),
       weight: INTENT_WEIGHT.next,
       followups: followFor('next'),
-      answer: bullets(`${p.name} -- what's next`, [p.nextMilestone]),
+      answer: bullets(`${p.name}: what's next`, [p.nextMilestone]),
     });
   }
 
   let cost: string;
   let license: string;
   if (isClientOrEvent(p)) {
-    cost = `${p.name} is client/event work -- a website built for someone else, not a product with a price.`;
+    cost = `${p.name} is client/event work, a website built for someone else, not a product with a price.`;
     license = `${p.name} is a client/event website, not a product released under a license.`;
   } else if (p.license === 'Proprietary') {
     cost = `${p.name} is proprietary, and no price is listed on this site.`;
-    license = `${p.name} is proprietary -- the source isn't public.`;
+    license = `${p.name} is proprietary. The source isn't public.`;
   } else if (p.license) {
     cost = `${p.name} is free and open source (${p.license}).`;
     license = `${p.name} is open source under ${p.license}.`;
   } else {
     cost = `No price or license is listed for ${p.name} on this site yet.`;
-    license = `No license is listed for ${p.name} on this site yet -- check its repository for the current terms.`;
+    license = `No license is listed for ${p.name} on this site yet, check its repository for the current terms.`;
   }
   out.push({ ...base, id: `${p.slug}:cost`, all: a('cost'), weight: INTENT_WEIGHT.cost, followups: followFor('license'), answer: cost });
   out.push({ ...base, id: `${p.slug}:license`, all: a('license'), weight: INTENT_WEIGHT.license, followups: followFor('license'), answer: license });
@@ -224,7 +224,7 @@ function projectEntries(p: Project): KbEntry[] {
       all: a('download'),
       weight: INTENT_WEIGHT.download,
       followups: followFor('download'),
-      answer: bullets(`${p.name} -- where to find it:`, p.links.map((l) => `${l.label}: ${l.href}`)),
+      answer: bullets(`Where to find ${p.name}:`, p.links.map((l) => `${l.label}: ${l.href}`)),
     });
   }
 
@@ -254,12 +254,12 @@ function projectEntries(p: Project): KbEntry[] {
   }
 
   if (p.role) {
-    out.push({ ...base, id: `${p.slug}:role`, all: a('role'), weight: INTENT_WEIGHT.role, followups: followFor('overview'), answer: `${p.name} -- ${p.role}.` });
+    out.push({ ...base, id: `${p.slug}:role`, all: a('role'), weight: INTENT_WEIGHT.role, followups: followFor('overview'), answer: `${p.name}: ${p.role}.` });
   }
   return out;
 }
 
-// -- global entries ------------------------------------------------------------
+// global entries ------------------------------------------------------------
 
 const sentences = (text: string) => text.split(/(?<=[.!?])\s+/).map((s) => s.trim()).filter(Boolean);
 
@@ -291,7 +291,7 @@ function globalEntries(): KbEntry[] {
 
   const noTelemetry = PROJECTS.filter((p) => /(zero|no) telemetry/i.test(p.description)).sort(byOrder).map((p) => p.name);
 
-  const featured = FEATURED_PROJECTS.map((p) => `${p.name} -- ${p.tagline}`);
+  const featured = FEATURED_PROJECTS.map((p) => `${p.name}: ${p.tagline}`);
   const faq = (i: number) => SERVICE_FAQ[i];
   const faqAnswer = (i: number) => bullets('From the services page:', sentences(faq(i).a));
 
@@ -324,9 +324,9 @@ function globalEntries(): KbEntry[] {
       noProject: true,
       contact: true,
       followups: ['How does billing work?', 'Do you sign NDAs?', 'How can I contact you?'],
-      answer: bullets('Yes, selectively -- taking one or two new projects at a time.', [
+      answer: bullets('Yes, selectively, taking one or two new projects at a time.', [
         'Freelance, collaboration and hiring enquiries are all welcome',
-        `If timing is tight, ask -- he'll be honest about whether it works`,
+        `If timing is tight, ask, he'll be honest about whether it works`,
         'Replies within 1-2 days; the contact form is the best way in',
       ]),
     },
@@ -347,7 +347,7 @@ function globalEntries(): KbEntry[] {
       followups: ['Do you sign NDAs?', 'Who owns the code?', 'What if something breaks after launch?'],
       answer: bullets('How billing works (from the services page):', [
         ...sentences(BILLING.model),
-        'No public rate card -- send the shape of the project for a quote',
+        'No public rate card, send the shape of the project for a quote',
       ]),
     },
     {
@@ -419,7 +419,7 @@ function globalEntries(): KbEntry[] {
       weight: 43,
       noProject: true,
       followups: [FOLLOWUP_Q.stack(K), 'Which project is right for me?', 'What services do you offer?'],
-      answer: bullets('No single stack -- it depends on the product. The most-used:', [...common, 'Ask about a specific project for its full stack']),
+      answer: bullets('No single stack. It depends on the product. The most-used:', [...common, 'Ask about a specific project for its full stack']),
     },
     {
       id: 'best-work',
@@ -503,7 +503,7 @@ function globalEntries(): KbEntry[] {
       followups: ['What should I look at first?', 'Are you available for freelance work?', 'Where can I see your resume?'],
       answer: bullets('Atharva Patil (p4inz):', [
         `${SITE.role}`,
-        `Runs ${SITE.studio} solo -- design, code, testing and shipping`,
+        `Runs ${SITE.studio} solo: design, code, testing and shipping`,
         'Second-year VFX and 3D animation student at D. Y. Patil University',
         `Based in ${SITE.location}`,
       ]),
@@ -532,7 +532,7 @@ function globalEntries(): KbEntry[] {
       all: [['donate', 'sponsor', 'buy you a coffee', 'buymeacoffee', 'tip jar', 'support your work', 'support you', 'support the work']],
       weight: 42,
       noProject: true,
-      answer: bullets('Thanks -- optional, and nothing is paywalled:', [`Buy Me a Coffee: ${CONTACT.buyMeACoffee}`, `Donate page: ${CONTACT.donatePage}`]),
+      answer: bullets("Thanks. It is optional and nothing is paywalled:", [`Buy Me a Coffee: ${CONTACT.buyMeACoffee}`, `Donate page: ${CONTACT.donatePage}`]),
     },
     {
       id: 'about-bot',
@@ -552,7 +552,7 @@ function globalEntries(): KbEntry[] {
       all: [['sex', 'sexy', 'sexual', 'nude', 'nudes', 'naked', 'porn', 'pornography', 'horny', 'erotic', 'nsfw', 'boobs', 'send pics', 'send nudes', 'hot pics', 'onlyfans', 'hookup', 'hook up']],
       weight: 120,
       followups: FOLLOW_STARTERS,
-      answer: bullets("Let's keep this professional -- that's not something I can help with.", [
+      answer: bullets("Let's keep this professional, that's not something I can help with.", [
         "I'm happy to talk about Atharva's projects, licenses or availability",
         'Or pick one of the questions below',
       ]),
@@ -584,7 +584,7 @@ function globalEntries(): KbEntry[] {
       contact: true,
       followups: FOLLOW_STARTERS,
       answer: bullets("Personal details aren't something I share.", [
-        'The public side -- name, studio, location and work -- is on this site',
+        'The public side, name, studio, location and work, is on this site',
         'For anything else, the contact form reaches Atharva directly',
       ]),
     },
@@ -593,7 +593,7 @@ function globalEntries(): KbEntry[] {
       all: [['joke', 'jokes', 'funny', 'make me laugh', 'riddle', 'roast', 'poem', 'haiku', 'limerick', 'rap about']],
       weight: 55,
       followups: FOLLOW_STARTERS,
-      answer: bullets("Ha -- comedy isn't in my repertoire.", [
+      answer: bullets("Ha, comedy isn't in my repertoire.", [
         "I stick to Atharva's work",
         'Ask what he is building right now, or which project might suit you',
       ]),
@@ -608,7 +608,7 @@ function globalEntries(): KbEntry[] {
         'Try one of the questions below',
       ]),
     },
-    { id: 'thanks', all: [['thanks', 'thank you', 'thx', 'ty', 'cheers']], weight: 10, maxWords: 5, answer: 'Anytime -- ask another, or use the contact form to reach Atharva directly.' },
+    { id: 'thanks', all: [['thanks', 'thank you', 'thx', 'ty', 'cheers']], weight: 10, maxWords: 5, answer: 'Anytime: ask another, or use the contact form to reach Atharva directly.' },
     {
       id: 'greeting',
       all: [['hi', 'hello', 'hey', 'hii', 'yo', 'sup']],
@@ -620,7 +620,7 @@ function globalEntries(): KbEntry[] {
   ];
 }
 
-// -- skills, identity and the rest of what a visitor asks -------------------------
+// skills, identity and the rest of what a visitor asks -------------------------
 
 const KNOW = [
   'know', 'knows', 'knew', 'use', 'uses', 'used', 'using', 'work with', 'works with', 'worked with', 'working with',
@@ -648,7 +648,7 @@ function skillEntries(): KbEntry[] {
       const users = PROJECTS.filter((p) => (p.stack ?? []).some((t) => s.keys.some((k) => t.toLowerCase().includes(k))))
         .sort(byOrder)
         .map((p) => p.name);
-      const answer = bullets(`Yes -- ${s.name} is on his list${s.note ? ` (${s.note})` : ''}.`, [
+      const answer = bullets(`Yes, ${s.name} is on his list${s.note ? ` (${s.note})` : ''}.`, [
         ...(users.length ? [`Used in: ${list(users)}`] : []),
         'Ask for his full tech stack to see everything else',
       ]);
@@ -759,7 +759,7 @@ function extraEntries(): KbEntry[] {
       followups: ['What services do you offer?', 'How does billing work?', 'Are you available for freelance work?'],
       answer: bullets("Native mobile isn't something he covers directly.", [
         "If a project needs specialists he can't cover (native mobile, specific 3D shots), he recommends someone instead of reselling",
-        'Web, UI/UX, branding and 3D/VFX work are covered -- see the services list',
+        'Web, UI/UX, branding and 3D/VFX work are covered. See the services list',
       ]),
     },
     {
@@ -778,7 +778,7 @@ function extraEntries(): KbEntry[] {
       contact: true,
       followups: ['What should I look at first?', 'How does billing work?', 'Are you available for freelance work?'],
       answer: bullets('What you get working with him:', [
-        'One person runs the studio -- design, code, testing and shipping -- so you deal with him directly',
+        'One person runs the studio, design, code, testing and shipping, so you deal with him directly',
         'Real products with public versions and status, listed on /work',
         'Software engineering together with a VFX and 3D animation background',
         'Every message is read personally',
@@ -980,7 +980,7 @@ function refine(entries: KbEntry[]): KbEntry[] {
   return entries;
 }
 
-// -- bundle --------------------------------------------------------------------
+// bundle --------------------------------------------------------------------
 
 function buildGrounding(): string {
   const lines = [
@@ -1022,7 +1022,7 @@ export function buildKb(): KbBundle {
 
 /**
  * Starter chips shown in the widget, in display order. Each names the KB
- * entry it must resolve to -- the tests enforce that, so a chip can never
+ * entry it must resolve to. The tests enforce that, so a chip can never
  * send a visitor to a paid AI call or a dead end.
  */
 export const SUGGESTIONS: { q: string; id: string }[] = [
