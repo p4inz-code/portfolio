@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.52.0',
+    kind: 'released',
+    summary: "Weekly update, week of 26 October: Kanvaz guide rebuilt, user guide link added.",
+    body: [
+      "Checked every public repo against GitHub for the week. There are no new releases: Kanvaz is still v9.8.2, MINK v1.0.4 (on npm), CrossPort v1.1.2, DRAFT v0.1.0, Nexus v10.12.5, Veris v1.2.1, Project Ascent v0.14.1 (under rework), Glint v1.1.0 and Obscura v1.0.0.",
+      "Kanvaz's guide and landing page were rebuilt. The guide has instant search and new Installation, FAQ, Cookbook, Always on top, System requirements, Privacy, Troubleshooting, Glossary and Contact pages. The Kanvaz page and the chat now link to it. The repo also updated to Electron 44.10.0 to clear an npm audit warning, which is not part of a release yet.",
+    ],
+  },
+  {
     version: 'v5.51.0',
     kind: 'released',
     summary: "Project Ascent is marked as under rework.",
