@@ -39,7 +39,7 @@ crawlable and canonical.
   portable mode. **Source is proprietary**: the GitHub repo
   (`github.com/p4inz-code/nexus-desktop`) hosts releases and Discord
   discussion only; there is no public source repository. Do not describe
-  Nexus as open source. Status: On hold (development complete); latest public build v10.12.5.
+  Nexus as open source. Status: Active, development has reopened after a pause; latest public build v10.12.5.
 - [Kanvaz](https://atharvapatil.tech/kanvaz/): Visual reference workspace
   for VFX/3D artists: drag/drop/paste images, GIFs, video onto an
   infinite board, plus URL and File reference cards. Electron, vanilla JS,
@@ -127,9 +127,8 @@ crawlable and canonical.
 - [DRAFT](https://github.com/p4inz-code/Draft): Cross-platform visual
   workspace that hands structured canvas context to MCP-compatible AI
   agents as live data, not a screenshot. Especially suited to game/level
-  design; also works for UI mockups and diagrams. Status: **v0.1.0**,
-  the repo's own README calls this "active foundation development,
-  pre-v1." License: **source-available**, free to use for any purpose
+  design; also works for UI mockups and diagrams. Status: **On Hold ·
+  v0.1.0**. License: **source-available**, free to use for any purpose
   including commercial work; the source can be read and contributed to but
   not redistributed or used in a competing product. Not open source.
 - [Kanvaz Mini](https://github.com/p4inz-code/kanvaz-mini): A small,
