@@ -20,6 +20,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.57.0',
+    kind: 'released',
+    summary: "Project cards link to their own websites where one exists.",
+    body: [
+      "Kanvaz, Nexus, Outlinedesk and Ropework each have a site on GitHub Pages, and Kanvaz Mini has a guide page. Their project links now include a Website link, and the chat lists it with the other links when asked where to find a project.",
+    ],
+  },
+  {
     version: 'v5.56.0',
     kind: 'released',
     summary: "Status changes: Nexus is in development again, DRAFT is on hold, Pursue OS is close, and the About page lists the newest releases.",
