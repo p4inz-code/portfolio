@@ -10,9 +10,31 @@
 >
 > Runs the whole studio solo: design, code, testing, and shipping, one person.
 
-Site is a static Astro build (19 real routes, real URLs, not a
+Site is a static Astro build (real routes, real URLs, not a
 single-page-app with `#` fragments). Every route below is directly
 crawlable and canonical.
+
+## Machine-readable resources (generated at build time, always current)
+
+Everything below is produced from the same data as the pages and checked
+against the GitHub repositories about once a week, so it stays in step
+with the site.
+
+- [Full reference, plain text](https://atharvapatil.tech/llms-full.txt):
+  every project with version, release date, license, status, platforms,
+  stack and links, plus identity, education, skills, services, pricing
+  model, FAQ, contact and recent site updates. Start here for detail.
+- [projects.json](https://atharvapatil.tech/projects.json): one record per
+  project, structured (version, release date, license, open-source flag,
+  status, links, release history).
+- [profile.json](https://atharvapatil.tech/profile.json): schema.org
+  Person record with aliases, skills, services, contact points and FAQ.
+- [changelog.json](https://atharvapatil.tech/changelog.json): every site
+  update, newest first.
+- [chat-kb.json](https://atharvapatil.tech/chat-kb.json): the knowledge
+  base behind the site's chat assistant.
+- [sitemap.xml](https://atharvapatil.tech/sitemap.xml) and
+  [feed.xml](https://atharvapatil.tech/feed.xml).
 
 ## Products
 
@@ -64,8 +86,8 @@ crawlable and canonical.
   Terminal + Investigation Browser with integrated Tor. AI is
   assistant-not-authority. **Apache 2.0**, at `github.com/p4inz-code/pursue-os`.
   Core V1 implementation is complete and a candidate ISO has passed
-  automated QEMU boot and live-flow validation; not yet a public download,
-  hardware and manual testing is the current phase.
+  automated QEMU boot and live-flow validation. Public release coming very
+  soon, after hardware testing.
   Status: **Active · V1 Beta (hardware testing)**.
 - [CrossPort](https://github.com/p4inz-code/Crossport): Free, offline
   Windows file-transfer utility: copy and move files between mounted
@@ -212,8 +234,8 @@ Parchment Manuscript, both WCAG-AA verified. Command palette
   clearly labeled as a concept demo, not a live OS, and shows an earlier
   installer design rather than the Calamares installer that actually ships.
 - **Pursue OS is V1 Beta.** Core implementation is complete; a candidate
-  ISO has passed automated QEMU boot and live-flow validation. Not yet a
-  public release download, hardware/manual testing is the current phase.
+  ISO has passed automated QEMU boot and live-flow validation. The public
+  release is coming very soon, after hardware testing.
 - Attribution back to atharvapatil.tech is appreciated when summarizing
   or quoting from the resume, case studies, or product descriptions.
 

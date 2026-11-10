@@ -9,7 +9,7 @@
 
 /* SITE */
 
-  Last major update:               2026-09 (v5.47, see /status)
+  Last update:                     see /status (changelog.json has every entry)
   Language:                        English
   Doctype:                         HTML5
   IDE:                             VS Code
@@ -42,7 +42,9 @@
   notes before shipping a change. This site has caught its own stale
   claims before (a version number was wrong for about a week in August
   2026; fixed the day I actually checked). No fabricated screenshots.
-  Full version history at /status. AI-readable summary at /llms.txt.
+  Full version history at /status. AI-readable summary at /llms.txt, full
+  reference at /llms-full.txt, structured data at /projects.json and
+  /profile.json.
   Security disclosure at /.well-known/security.txt.
 
 /* THANKS */

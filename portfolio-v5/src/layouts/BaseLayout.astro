@@ -10,7 +10,7 @@ import SceneBackdrop from '../components/SceneBackdrop.astro';
 import SceneFx from '../components/SceneFx.astro';
 import LiveStats from '../components/LiveStats.astro';
 import ChatWidget from '../components/features/ChatWidget.astro';
-import { SITE, NAV, CONTACT } from '../data/site';
+import { SITE, NAV, CONTACT, SKILLS, SERVICES, EDUCATION } from '../data/site';
 import { PROJECTS, PRODUCT_COUNT, isOpenLicense } from '../data/projects';
 
 // Same population PRODUCT_COUNT uses (products only), computed so it can't drift.
@@ -78,8 +78,12 @@ const person = {
   alumniOf: {
     '@type': 'EducationalOrganization',
     name: 'D. Y. Patil University',
+    description: `${EDUCATION.degree}, ${EDUCATION.years}, ${EDUCATION.status}`,
   },
+  description: SITE.description,
+  makesOffer: SERVICES.map((sv) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: sv.name, description: sv.short } })),
   knowsAbout: [
+    ...SKILLS.flatMap((g) => g.items.map((i) => i.name)),
     'Software engineering',
     'Web development',
     'App development',
@@ -103,6 +107,9 @@ const person = {
     'https://github.com/p4inz-code/kanvaz',
     'https://p4inz-code.github.io/kanvaz/',
     'https://github.com/p4inz-code/kanvaz-mini',
+    'https://p4inz-code.github.io/nexus-desktop/',
+    'https://p4inz-code.github.io/outlinedesk/',
+    'https://p4inz-code.github.io/ropework/',
     'https://github.com/p4inz-code/pursue-os',
     'https://github.com/p4inz-code/obscura',
     'https://github.com/p4inz-code/mink',
@@ -116,6 +123,8 @@ const studio = {
   '@id': 'https://atharvapatil.tech/#studio',
   name: SITE.studio,
   url: 'https://atharvapatil.tech/',
+  alternateName: ['Northbyte Studios (former name)', 'Obsidian Labs (former name)'],
+  email: CONTACT.email,
   founder: { '@id': 'https://atharvapatil.tech/#person' },
   foundingDate: SITE.studioFounded,
   location: {

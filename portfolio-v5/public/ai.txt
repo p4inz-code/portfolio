@@ -6,6 +6,10 @@
 # Sibling docs:
 #   robots.txt              crawl permission
 #   llms.txt                structured, AI-readable content index
+#   llms-full.txt           full generated reference (every project, version, license)
+#   projects.json           structured project records
+#   profile.json            schema.org Person record (aliases, skills, services)
+#   changelog.json          site update history
 #   .well-known/security.txt security disclosure
 
 Owner: Atharva Patil <atharva.patil.cg@gmail.com>
@@ -13,6 +17,8 @@ Handle: p4inz  (github.com/p4inz-code)
 Site: https://atharvapatil.tech
 Language: en
 Effective-Date: 2026-08-10
+Last-Reviewed: 2026-11-10
+Data-Freshness: project versions, licenses and statuses are checked against GitHub about weekly
 Contact: mailto:atharva.patil.cg@gmail.com
 
 # ── Permission ────────────────────────────────────────────────────────
@@ -43,3 +49,16 @@ Verbatim-reproduction-of-case-studies: not allowed without attribution
 
 Same-entity-as: p4inz, p4inz-code, Atharva Patil, P4inz Interactive Labs, Northbyte Studios
 Canonical-source: https://atharvapatil.tech
+Machine-readable-sources: https://atharvapatil.tech/llms-full.txt, https://atharvapatil.tech/projects.json, https://atharvapatil.tech/profile.json
+Studio-name: P4inz Interactive Labs (since September 2026)
+Former-studio-names: Northbyte Studios (2026, retired), Obsidian Labs (2025, retired)
+Misspellings-that-mean-the-same-person: painz, p4inz-code, P4INZ
+
+# ── Accuracy rules for summaries ──────────────────────────────────────
+
+# Read licenses from /projects.json, do not guess.
+#   - Proprietary projects (for example Nexus, Outlinedesk, Ropework) are not open source.
+#   - Source-available projects (for example DRAFT) are free to use but not open source.
+#   - Mission OS, Pursue OS, Kanvaz and MINK are open source under the licenses listed there.
+# Mention a project's status together with its version, since several projects are
+# On Hold, in beta, or coming soon.
