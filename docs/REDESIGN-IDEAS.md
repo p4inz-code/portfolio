@@ -80,3 +80,67 @@ Every project gets the same small status light and one line of motion: pulse for
 - [Matter.js](https://github.com/liabru/matter-js)
 - [Hackernoon, the interaction budget for WebGL interfaces](https://hackernoon.com/the-interaction-budget-keeping-webgl-interfaces-usable-on-real-devices)
 - [Hontran, Core Web Vitals for animation heavy sites](https://www.hontran.dev/blog/core-web-vitals-for-animation-heavy-sites)
+
+---
+
+# Round 2: rarer ideas
+
+I searched Codrops, Hacker News mirrors, dev blogs and design galleries for unusual, current ideas. I could not search X, TikTok, LinkedIn or Reddit directly with the tools I have, so nothing below is a claim about what is trending there. Treat the sources as leads. The first filter was rarity: terminal portfolios, desktop OS sites, typing intros and Three.js hero scenes are all common, so I left them out.
+
+## What I found that is actually unusual
+
+- **Codrops, 2026:** a crumpled paper you can unfold and throw (Houdini bake plus cannon-es), a real-time datamosh transition between scenes, scroll-driven typography with ghost trails, custom brush-shaped cursor trails with WebGPU, and an HTML-in-Canvas proposal that is still behind a Chromium flag.
+- **Kinetic type driven by input:** one 2025 project maps scroll speed to font weight, microphone level to width and cursor speed to slant, smoothed so it sways instead of jittering. No 2026 site combining all three turned up.
+- **New CSS that few portfolios use yet:** `sibling-index()` for staggered motion without JavaScript, scroll-state queries to react to sticky or snapped elements, `@starting-style` for entry animations, and `corner-shape` for bevel, scoop and squircle corners (still experimental in Chrome).
+- **Rarely used browser APIs:** Web Audio, Gamepad, device orientation and Web MIDI. These show up in talks and tutorials but almost never on portfolios.
+- **A gap:** I found nothing that uses a time scrubber instead of scrolling. That could mean it is niche, or just untried.
+- **The one real viral example I found** was "Your AI Slop Bores Me" (March 2026), a site where humans answer questions like ChatGPT. It says people are tired of generic AI output, which matters for how we present our chat.
+- **A warning from the navigation results:** spatial and 3D navigation looks great in a prototype and often frustrates people in use, and it can break keyboard and screen reader order.
+
+## Seven ideas to recreate, ranked by how rare they are
+
+### 1. The scrubber (rarest)
+A timeline slider along the bottom of the page runs from the first studio year to now. Drag it and the whole site rewinds: projects appear and disappear, version numbers change, status lights change. It is built from the real changelog and release dates. It is the idea with no example in my search, and it makes the weekly updates visible.
+
+### 2. Proof stamps
+Every claim on the site (a version, a license, a status) carries a small stamp: "checked against GitHub, 10 Nov". Hover or tap and it shows the release or commit it came from. It makes the weekly sync visible and sets us apart from the generic-AI look people now distrust. It needs a little more data at build time, but no new library.
+
+### 3. Show your work chat
+Each chat answer gets a "where this came from" chip that names the data it used: a project entry, a release, the services page. It fits the way the chat already works, since most answers come from a fixed knowledge base. Almost no portfolio chat does this.
+
+### 4. The studio lamp (sky aware, private)
+The page lighting follows the visitor's own clock and the moon phase, worked out locally with a formula. There is no location lookup and no weather API, so the privacy promise holds. Late at night the page dims and the status lights stay readable.
+
+### 5. Type that listens
+Project names are set in a variable font. Weight follows how recently the project shipped, and a gentle slant follows cursor speed on desktop. On touch devices and with reduced motion, it is a static weight. Smoothing stops it jittering. Cost: axis animation is heavier than transform and opacity, so it is limited to a few headings.
+
+### 6. Controller and tilt
+Plug in a game controller and the Work page becomes navigable with the stick and buttons (Gamepad API). On phones, tilting moves the cards slightly (device orientation, which needs a permission prompt on iOS, so it stays optional). It suits a studio that makes games. Both are invisible until used, which is part of the charm.
+
+### 7. Unfolding changelog
+The changelog is a sheet of paper that unfolds as you scroll, with the fold lines as the entry dividers. We would do a light CSS version, using 3D transforms and `corner-shape` where it is available, instead of the Houdini and physics bake from the Codrops demo. Rare, and readable on a phone.
+
+## Small CSS touches that cost almost nothing
+
+- `sibling-index()` to stagger cards in with no script.
+- Scroll-state queries so the header changes when it sticks.
+- `@starting-style` for panels that open smoothly.
+- One-bit dither on project images that resolves to full colour on hover (a 2026 Codrops effect), done with a CSS filter or a tiny canvas.
+
+## What I would try first
+
+Start with **1, the scrubber** and **2, proof stamps**. Both come straight from data we already have, neither needs a heavy library, and nothing like the scrubber showed up in my search. Then **3**, since it extends the chat that already exists. The rest are optional extras once the core feels right.
+
+## Sources, round 2
+
+- [Codrops, exploring the HTML-in-Canvas proposal](https://tympanus.net/codrops/2026/05/13/exploring-the-html-in-canvas-proposal/)
+- [Codrops, real-time ASCII and dithering effects](https://tympanus.net/codrops/2026/01/04/efecto-building-real-time-ascii-and-dithering-effects-with-webgl-shaders/)
+- [Codrops, tutorials](https://tympanus.net/codrops/category/tutorials/)
+- [Chrome, what's new in web UI](https://developer.chrome.com/blog/new-in-web-ui-io26)
+- [modern-css.com, what's new in CSS](https://modern-css.com/whats-new/)
+- [Kinetica, kinetic typography project](https://creative-folio.vercel.app/works/kinetica)
+- [LogRocket, 5 weird web APIs](https://blog.logrocket.com/5-weird-web-apis/)
+- [Your AI Slop Bores Me, Wikipedia](https://en.wikipedia.org/wiki/Your_AI_Slop_Bores_Me)
+- [OMG Ubuntu, a personal site as a GNOME 2 desktop](https://www.omgubuntu.co.uk/2026/06/website-as-gnome-2-desktop/amp)
+- [F7, design trends 2026](https://f7.de/en/blog/designtrends-2026)
+- [Dev guide, variable font animation](https://camoa.github.io/dev-guides/css/css-craft/variable-font-animation/)
