@@ -492,7 +492,7 @@ export const PROJECTS: Project[] = [
     media: { src: '/assets/outlinedesk/outlinedesk-graph.webp', alt: 'Outlinedesk graph view in the dark theme.', kind: 'screenshot', ratio: '1400 / 876' },
     featured: false,
     order: 17,
-    href: 'https://github.com/p4inz-code/outlinedesk',
+    href: 'https://p4inz-code.github.io/outlinedesk/',
     isExternal: true,
     links: [
       { label: 'Downloads and guides', href: 'https://github.com/p4inz-code/outlinedesk', external: true },
@@ -542,7 +542,7 @@ export const PROJECTS: Project[] = [
     metaTags: ['Windows', 'Proprietary', 'Beta'],
     featured: false,
     order: 19,
-    href: 'https://github.com/p4inz-code/ropework',
+    href: 'https://p4inz-code.github.io/ropework/',
     isExternal: true,
     links: [
       { label: 'Website', href: 'https://p4inz-code.github.io/ropework/', external: true },
