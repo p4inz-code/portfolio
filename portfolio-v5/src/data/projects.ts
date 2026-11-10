@@ -529,6 +529,30 @@ export const PROJECTS: Project[] = [
     comingSoon: 'Coming soon. It is in early development with no release date yet.',
     nextMilestone: 'The security foundation (crypto core, encrypted storage and history, authentication) is built and tested. The interface is next.',
   },
+  {
+    slug: 'ropework',
+    name: 'Ropework',
+    tagline: 'A calm desktop client for Perforce Helix Core.',
+    description:
+      'A desktop client for Perforce Helix Core. It shows what will happen before it happens, undoes what it did, and keeps your files and server details on your network. It is a private beta. Ropework is an independent product and is not affiliated with Perforce Software. The public repository holds the website, downloads and release notes; the application source is private.',
+    status: { kind: 'beta', label: 'Private Beta' },
+    category: 'app',
+    tags: ['Windows', 'Perforce'],
+    metaTags: ['Windows', 'Proprietary', 'Beta'],
+    featured: false,
+    order: 19,
+    href: 'https://github.com/p4inz-code/ropework',
+    isExternal: true,
+    links: [
+      { label: 'Website', href: 'https://p4inz-code.github.io/ropework/', external: true },
+      { label: 'Downloads and release notes', href: 'https://github.com/p4inz-code/ropework', external: true },
+    ],
+    license: 'Proprietary',
+    platforms: ['Windows'],
+    role: 'Sole engineer',
+    started: 'November 2026',
+    nextMilestone: 'Windows 11 first, Ubuntu 24.04 next. You can download the beta and request a beta key on the website.',
+  },
 ];
 
 // Removed from the site (kept here as a record of why, not as dead weight

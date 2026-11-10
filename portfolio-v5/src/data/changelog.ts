@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.54.0',
+    kind: 'released',
+    summary: "Ropework added, MINK marked as in progress.",
+    body: [
+      "Ropework is a new desktop client for Perforce Helix Core, in private beta for Windows 11 with Ubuntu 24.04 next. It is listed as a beta with a link to its website, where the beta can be downloaded. The source is private.",
+      "MINK's page now says its next release is in progress. v1.0.4 is still the latest published version.",
+    ],
+  },
+  {
     version: 'v5.53.0',
     kind: 'released',
     summary: "Weekly update, week of 2 November: Kanvaz v9.8.3, Kanvaz Mini, Outlinedesk and Painfree Vault added.",

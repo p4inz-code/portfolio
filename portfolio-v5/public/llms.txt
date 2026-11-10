@@ -146,6 +146,12 @@ crawlable and canonical.
   Windows and Linux; source is private (proprietary). Paid after a free
   27-day trial; prices are in the repository README. Status: **Release
   Candidate · v1.6.0**, full release coming soon.
+- [Ropework](https://github.com/p4inz-code/ropework): A desktop client
+  for Perforce Helix Core that shows what will happen before it happens,
+  undoes what it did, and keeps files and server details on your
+  network. Independent of Perforce Software. Windows 11 first, Ubuntu
+  24.04 next; source is private (proprietary). Status: **Private Beta**;
+  beta downloads and keys are on its website.
 - Painfree Vault (no public repository): A private, offline-first
   personal security vault for Android. Early development, no public
   release yet. Proprietary. Status: **Coming Soon · In development**.

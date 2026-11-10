@@ -52,6 +52,7 @@ const ALIASES: Record<string, string[]> = {
   'kanvaz-mini': ['kanvaz mini', 'kanvazmini'],
   outlinedesk: ['outlinedesk', 'outline desk'],
   'painfree-vault': ['painfree vault', 'painfreevault', 'painfree'],
+  ropework: ['ropework', 'rope work'],
   'pursue-os': ['pursue os', 'pursue', 'pursueos'],
   veris: ['veris', 'veris cli'],
   ascent: ['ascent', 'project ascent'],
