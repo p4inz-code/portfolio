@@ -22,8 +22,10 @@
 .uni-cam { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; will-change: transform; }
 
 /* a planet and its label */
-.uni-body { position: absolute; left: 0; top: 0; display: grid; justify-items: center; gap: 10px; color: var(--text); text-decoration: none; transform-style: preserve-3d; will-change: transform, opacity; cursor: pointer; opacity: 0; visibility: hidden; transition: filter 0.3s; --d: 110px; margin: calc(var(--d) / -2) 0 0 calc(var(--d) / -2); width: var(--d); }
+.uni-body { position: absolute; left: 0; top: 0; display: grid; justify-items: center; gap: 10px; color: var(--text); text-decoration: none; transform-style: preserve-3d; will-change: transform, opacity; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; opacity: 0; visibility: hidden; transition: filter 0.3s; --d: 110px; margin: calc(var(--d) / -2) 0 0 calc(var(--d) / -2); width: var(--d); }
 .uni-body[data-vis='1'] { visibility: visible; }
+.uni-body[data-drag='1'] { cursor: grabbing; }
+.uni-body[data-drag='1'] .planet { box-shadow: 0 0 0 2px var(--purple-bright), 0 0 80px color-mix(in oklab, var(--c1) 80%, transparent); }
 .uni-body[data-born='0'] { visibility: hidden !important; }
 .uni-body:focus-visible { outline: none; }
 .uni-body:focus-visible .planet, .uni-body[data-hover='1'] .planet { box-shadow: 0 0 0 3px var(--warn), 0 0 60px color-mix(in oklab, var(--c1) 70%, transparent); }
@@ -142,3 +144,14 @@
   color: var(--text);
 }
 @media (max-width: 760px) { .uni-cap { bottom: 176px; } }
+
+/* suns: the centre of each galaxy, with a lens flare */
+.uni-sun { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-style: preserve-3d; pointer-events: none; opacity: 0; visibility: hidden; will-change: transform, opacity; }
+.uni-sun .core { position: absolute; left: -26px; top: -26px; width: 52px; height: 52px; border-radius: 50%; background: radial-gradient(circle, #fff 0 18%, var(--sun) 42%, transparent 72%); box-shadow: 0 0 70px 24px color-mix(in oklab, var(--sun) 55%, transparent); animation: uni-sun 5s ease-in-out infinite; }
+.uni-sun .flare { position: absolute; left: -150px; top: -1px; width: 300px; height: 2px; background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--sun) 80%, #fff), transparent); opacity: 0.55; mix-blend-mode: screen; }
+.uni-sun .flare.b { transform: rotate(90deg); width: 220px; left: -110px; }
+.uni-sun b { position: absolute; left: -90px; top: 38px; width: 180px; text-align: center; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: color-mix(in oklab, var(--sun) 70%, var(--text)); }
+@keyframes uni-sun { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+.uni-hint { position: absolute; z-index: 8; left: 50%; bottom: 58px; transform: translateX(-50%); max-width: min(560px, 86%); text-align: center; font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-mono); color: var(--muted); pointer-events: none; transition: opacity 0.8s; }
+.uni-hint[data-on='0'] { opacity: 0; }
+@media (max-width: 760px) { .uni-hint { bottom: 150px; } }
