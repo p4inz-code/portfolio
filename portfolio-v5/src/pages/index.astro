@@ -116,7 +116,7 @@ const caps = [
         <h2>Everything, as a list</h2>
         <ul>
           {bodies.map((b) => (
-            <li><a href={b.href} {...(b.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}><b>{b.name}</b><span>{b.tagline}</span><small><span class="light" data-kind={b.kind}></span>{b.status}</small></a></li>
+            <li><a href={b.site ?? b.href} {...(b.site || b.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}><b>{b.name}</b><span>{b.tagline}</span><small><span class="light" data-kind={b.kind}></span>{b.status}</small>{b.site && <em class="site-tag">Website ↗</em>}</a></li>
           ))}
         </ul>
       </div>

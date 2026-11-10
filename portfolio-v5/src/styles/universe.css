@@ -117,7 +117,8 @@
 }
 
 /* plain list under the universe: real links for crawlers, keyboards, no-motion visitors */
-.uni-list { padding: var(--sp-11) 0 var(--sp-9); }
+.uni-list { padding: var(--sp-11) 0 var(--sp-7); }
+.uni-list .site-tag { font-style: normal; font-family: var(--font-mono); font-size: var(--text-xxs); letter-spacing: var(--tracking-mono); color: var(--green-live); }
 .uni-list h2 { font-family: var(--font-display); font-size: var(--text-h2); letter-spacing: var(--tracking-tight); font-weight: 600; margin-bottom: var(--sp-6); }
 .uni-list ul { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--sp-4); }
 .uni-list li a { display: grid; gap: 6px; padding: var(--sp-5); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface-1); text-decoration: none; color: var(--text); min-height: 100%; }
