@@ -114,6 +114,7 @@ export const PROJECTS: Project[] = [
     href: '/nexus',
     isExternal: false,
     links: [
+      { label: 'Website', href: 'https://p4inz-code.github.io/nexus-desktop/', external: true },
       { label: 'Releases on GitHub', href: 'https://github.com/p4inz-code/nexus-desktop', external: true },
       { label: 'Join Beta on Discord', href: 'https://discord.gg/8UKt8s5FbW', external: true },
     ],
@@ -143,6 +144,7 @@ export const PROJECTS: Project[] = [
     href: '/kanvaz',
     isExternal: false,
     links: [
+      { label: 'Website', href: 'https://p4inz-code.github.io/kanvaz/', external: true },
       { label: 'View on GitHub', href: 'https://github.com/p4inz-code/kanvaz', external: true },
       { label: 'Download latest', href: 'https://github.com/p4inz-code/kanvaz/releases/latest', external: true },
       { label: 'User guide', href: 'https://p4inz-code.github.io/kanvaz/guide/', external: true },
