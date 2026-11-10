@@ -39,7 +39,7 @@ export function projectFacts(p: Project): ProjectFacts {
   const last = h?.releases.at(-1);
   return {
     slug: p.slug, name: p.name, tagline: p.tagline, summary: p.description, kind: p.status.kind, status: p.status.label,
-    version: last?.[1] ?? p.currentVersion ?? null, versionDate: last?.[0] ?? null, versionUrl: last?.[2] ?? null,
+    version: last?.[1]?.replace(/^v\./, 'v') ?? p.currentVersion ?? null, versionDate: last?.[0] ?? null, versionUrl: last?.[2] ?? null,
     license: p.license ?? null, openSource: isOpen(p), platforms: p.platforms ?? [], stack: p.stack ?? [],
     role: p.role ?? null, started: p.started ?? null, type: isClient(p) ? 'client website' : 'product',
     pageUrl: abs(p.href), links: p.links.map((l) => ({ label: l.label, url: abs(l.href) })),

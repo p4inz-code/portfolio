@@ -79,7 +79,7 @@ with the site.
   protection for boards on shared drives. Windows installer, Linux
   AppImage, macOS builds for Apple Silicon and Intel. Shipping most weeks
   with no fixed roadmap.
-  This is the flagship free product. Status: **Flagship · Active · v9.8.3**.
+  This is the flagship free product. Status: **Flagship · Active · v9.8.4**.
 - [Pursue OS](https://atharvapatil.tech/pursue-os/): Investigation-focused
   Linux OS for OSINT, DFIR, secure research, intelligence gathering /
   evidence-driven workflows. Two flagship interfaces: Investigation
@@ -156,9 +156,11 @@ with the site.
 - [Kanvaz Mini](https://github.com/p4inz-code/kanvaz-mini): A small,
   always-on-top reference window for images and GIFs, the quick version
   of Kanvaz and a separate app. Move, scale, rotate, flip, arrange into
-  rows, grayscale value check, click-through tracing mode, opens PureRef
+  rows, grayscale value check, a Palette of the main colors (click to
+  copy a hex code), composition Guides, Export of the whole board as one
+  PNG (v0.2.0), click-through tracing mode, opens PureRef
   .pur boards, saves .kmini files. Never uses the network. Windows and
-  Linux. **MIT**. Status: **Released · v0.1.0**.
+  Linux. **MIT**. Status: **Released · v0.2.0**.
 - [Outlinedesk](https://github.com/p4inz-code/outlinedesk): Offline
   production planner for animation, VFX and game studios: graph, table,
   board and timeline views, dependencies, critical path, baselines,

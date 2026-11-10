@@ -22,10 +22,11 @@ export const CHANGELOG: ChangelogEntry[] = [
   {
     version: 'v5.59.0',
     kind: 'released',
-    summary: "Fuller, always-current files for search engines and AI tools.",
+    summary: "Fuller, always-current files for search engines and AI tools, and Kanvaz v9.8.4 and Kanvaz Mini v0.2.0.",
     body: [
       "Four new files are built from the same data as the pages: llms-full.txt (every project with its version, release date, license, status and links, plus education, skills, services, pricing model, FAQ and contact), projects.json, profile.json and changelog.json. Release dates come from the GitHub repositories, which are checked about once a week.",
       "llms.txt, ai.txt, humans.txt and robots.txt now point to them, and the Pursue OS wording says its public release is coming very soon. The structured profile data on every page also lists the full skill set, the services and the websites for Nexus, Outlinedesk and Ropework. A test checks the new files for private repository names, wrong license claims and stale versions.",
+      "Synced with GitHub: Kanvaz v9.8.4 (10 November 2026) moves to Electron 45 and refreshes the guide site, and Kanvaz Mini v0.2.0 (10 November 2026) adds a color Palette, composition Guides and one-click PNG export.",
     ],
   },
   {
