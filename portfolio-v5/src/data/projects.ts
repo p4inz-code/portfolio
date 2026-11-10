@@ -103,7 +103,7 @@ export const PROJECTS: Project[] = [
     tagline: 'Your private files, sealed behind one password.',
     description:
       'Encrypted personal vault for Windows. AES-256-GCM authenticated encryption with Argon2id key derivation. Windows Hello unlock, in-app SHA-256-verified updater, portable mode. Fully offline, zero telemetry. Source is proprietary; public repo hosts releases and Discord community only.',
-    status: { kind: 'onHold', label: 'On Hold · v10.12.5' },
+    status: { kind: 'active', label: 'Active · v10.12.5' },
     category: 'app',
     tags: ['WPF', 'AES-256-GCM'],
     metaTags: ['Windows Desktop', 'AES-256-GCM', 'Fully Offline'],
@@ -123,8 +123,8 @@ export const PROJECTS: Project[] = [
     role: 'Sole engineer',
     started: 'March 2026',
     currentVersion: 'v10.12.5',
-    nextMilestone: 'Development is complete. The next release is on hold.',
-    notes: 'Flagship commercial product of P4inz Interactive Labs. Source is proprietary; the public repo hosts releases and community discussion only. The next version (v11, a full UI redesign) is complete; its release is on hold. The latest public build is v10.12.5.',
+    nextMilestone: 'Development has reopened after a pause. The latest public build is still v10.12.5, and there is no release date for the next version yet.',
+    notes: 'Flagship commercial product of P4inz Interactive Labs. Source is proprietary; the public repo hosts releases and community discussion only. The next version (v11) is a full UI redesign. Development has reopened after a pause, and the latest public build is v10.12.5.',
   },
   {
     slug: 'kanvaz',
@@ -179,7 +179,7 @@ export const PROJECTS: Project[] = [
     role: 'Creator and sole developer',
     started: '2026',
     currentVersion: 'V1 Beta',
-    comingSoon: 'Public release coming soon, after hardware testing.',
+    comingSoon: 'Public release coming very soon, after hardware testing.',
     nextMilestone: 'Hardware and manual testing on real devices, following a clean automated QEMU cold-boot pass. Candidate ISO built directly from the verified source tree; not yet hosted as a GitHub release download.',
     notes: 'Test results: 348/348 (Phase 9) and 310/310 (Phase 10) workspace tests passing, a 19/19 adversarial security suite (path traversal, blob/manifest tampering, hash breaks, framing attacks all fail closed), clean clippy + cargo fmt, and a 7/7 live investigation flow (case creation through cryptographic case verification) passing inside QEMU. Desktop is Sway on Debian 13 Trixie. "No ISO yet" was true when last recorded and is no longer true.',
   },
@@ -412,7 +412,7 @@ export const PROJECTS: Project[] = [
     tagline: 'Sketch it. The agent sees exactly what you sketched.',
     description:
       'A cross-platform visual workspace built to hand structured canvas context to MCP-compatible AI agents as live data, not a screenshot or a typed-out description after the fact. Especially suited to game and level design, but works the same way for UI mockups, software architecture diagrams, and storyboards. Not a drawing app, an image generator, or a whiteboard clone.',
-    status: { kind: 'active', label: 'Active · Foundation (Pre-v1)' },
+    status: { kind: 'onHold', label: 'On Hold · v0.1.0' },
     category: 'app',
     tags: ['MCP', 'Desktop'],
     metaTags: ['Cross-Platform', 'MCP', 'Pre-v1'],
@@ -427,8 +427,7 @@ export const PROJECTS: Project[] = [
     role: 'Sole engineer',
     started: '2026',
     currentVersion: 'v0.1.0',
-    comingSoon: 'Next release coming soon.',
-    nextMilestone: 'Repo\'s own README calls this "active foundation development (pre-v1)": real and working, not yet feature-complete.',
+    nextMilestone: 'On hold for now. v0.1.0 is the latest release, and the app is real and working but not yet feature-complete.',
   },
   {
     slug: 'reference-engineering',

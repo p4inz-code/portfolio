@@ -20,6 +20,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.56.0',
+    kind: 'released',
+    summary: "Status changes: Nexus is in development again, DRAFT is on hold, Pursue OS is close, and the About page lists the newest releases.",
+    body: [
+      "Nexus is marked active again: development reopened after a pause, and the latest public build is still v10.12.5 with no date for the next one. DRAFT is on hold at v0.1.0. Pursue OS is listed as coming very soon, still after hardware testing. Mission OS stays on hold.",
+      "The About page's latest row now lists Kanvaz, Kanvaz Mini, MINK and CrossPort with their current versions.",
+    ],
+  },
+  {
     version: 'v5.55.0',
     kind: 'released',
     summary: "The chat now handles odd and personal questions, and answers sound less alike.",
