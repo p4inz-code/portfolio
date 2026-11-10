@@ -117,7 +117,7 @@ const suggest = JSON.stringify(SUGGESTIONS.map((s) => s.q));
     const STORE_KEY = 'ap-chat-v1';
     const MAX_STORED = 24;
 
-    type Msg = { r: 'u' | 'b'; t: string; c?: boolean; f?: string[]; p?: string; i?: string };
+    type Msg = { r: 'u' | 'b'; t: string; c?: boolean; f?: string[]; p?: string; i?: string; s?: string };
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const coarse = window.matchMedia('(pointer: coarse)');
     const small = window.matchMedia('(max-width: 899px)');
@@ -326,7 +326,41 @@ const suggest = JSON.stringify(SUGGESTIONS.map((s) => s.q));
         }
       }
     }
-    function renderBot(text: string, contact: boolean | undefined, animate: boolean) {
+    // Lab: "show your work" chips. Says where each answer came from.
+    const GLOBAL_SRC: Record<string, string> = {
+      who: 'the About page', location: 'the About page', education: 'the About page', studio: 'the About page', handles: 'the About page',
+      pricing: 'the Services page (billing)', services: 'the Services page', availability: 'the Services page', nda: 'the Services page FAQ',
+      contact: 'the Contact page', profiles: 'the site identity data', resume: 'the Resume page', 'this-site': 'the site code and README',
+      'best-work': 'the featured projects data', count: 'project data, counted across every project', 'license-overview': 'project data, grouped by license',
+      'working-now': 'project data, filtered to what is in progress', 'coming-soon': 'project data, filtered to what is coming soon', 'which-for': 'project data, matched to what you do',
+      'privacy-overview': 'project data (the products with no telemetry)', 'tech-overview': 'the skills list on the site', 'site-news': 'the changelog on /status', 'site-cadence': 'the weekly check against GitHub',
+      'kanvaz-vs-mini': 'the Kanvaz and Kanvaz Mini repositories',
+    };
+    function describeSource(id: string | undefined, s: string | undefined): { label: string; detail: string } {
+      if (s === 'ai') return { label: 'AI model', detail: 'The question was not in the knowledge base, so an AI model answered. It only sees this site\'s own project data and is told not to guess.' };
+      if (s === 'cache') return { label: 'saved AI answer', detail: 'A previous AI answer to the same question, reused.' };
+      if (s === 'fallback' || !id) return { label: 'no match', detail: 'Nothing in the knowledge base matched, so this is the standard reply that points you to the contact form.' };
+      if (id.startsWith('boundary-') || id.startsWith('offtopic-')) return { label: 'built-in reply', detail: 'A fixed reply for messages outside what this assistant covers. No AI was used.' };
+      if (id.startsWith('bot-') || id === 'thanks' || id === 'greeting' || id === 'opinion' || id === 'trust-bot' || id === 'about-bot' || id === 'human-languages') return { label: 'built-in reply', detail: 'A fixed reply written for this kind of question. No AI was used.' };
+      if (id.startsWith('skill')) return { label: 'skills list', detail: 'From the skills list on the site (entry <code>' + id + '</code>). No AI was used.' };
+      if (id.includes(':')) { const [slug, intent] = id.split(':'); return { label: slug + ' project data', detail: 'From the <code>' + slug + '</code> entry in the project data, field <code>' + intent + '</code>. It is generated at build time from the same file that builds the pages, and checked against GitHub. No AI was used.' }; }
+      return { label: GLOBAL_SRC[id] ?? 'site data', detail: 'Built from ' + (GLOBAL_SRC[id] ?? 'the site data') + ' (entry <code>' + id + '</code>). No AI was used.' };
+    }
+    function sourceChipsOn(): boolean {
+      try { const s = JSON.parse(localStorage.getItem('lab:v1') || 'null'); return !s || !s.on || s.on.chatSource !== false; } catch { return true; }
+    }
+    function addSourceChip(row: HTMLElement, id: string | undefined, s: string | undefined) {
+      if (!sourceChipsOn()) return;
+      const src = describeSource(id, s);
+      const chip = el('button', 'chat-src') as HTMLButtonElement;
+      chip.type = 'button'; chip.setAttribute('aria-expanded', 'false');
+      chip.textContent = 'Source: ' + src.label;
+      const detail = el('div', 'chat-src-detail'); detail.hidden = true; detail.innerHTML = src.detail;
+      chip.addEventListener('click', () => { const open = detail.hidden; detail.hidden = !open; chip.setAttribute('aria-expanded', String(open)); });
+      row.after(chip); chip.after(detail);
+      chip.dataset.dyn = '1'; detail.dataset.dyn = '1';
+    }
+    function renderBot(text: string, contact: boolean | undefined, animate: boolean, meta?: { id?: string; s?: string }) {
       const row = el('div', 'chat-row');
       row.dataset.dyn = '1';
       const bubble = el('div', 'chat-bubble chat-bubble-bot');
@@ -341,6 +375,7 @@ const suggest = JSON.stringify(SUGGESTIONS.map((s) => s.q));
       row.appendChild(bubble);
       if (!animate) row.dataset.still = '1';
       thread!.appendChild(row);
+      if (meta) addSourceChip(row, meta.id, meta.s);
       return row;
     }
     // A short answer is best read with the suggestions below it in view; a
@@ -431,7 +466,7 @@ const suggest = JSON.stringify(SUGGESTIONS.map((s) => s.q));
       if (topic) payload.context = topic;
       if (seen.length) payload.seen = seen;
       if (history.length) payload.history = history;
-      let reply: { text: string; contact?: boolean; followups?: string[]; topic?: string; id?: string } = { text: FALLBACK, contact: true };
+      let reply: { text: string; contact?: boolean; followups?: string[]; topic?: string; id?: string; source?: string } = { text: FALLBACK, contact: true, source: 'fallback' };
       const ctrl = new AbortController();
       // Without a timeout a hung AI call would leave the widget "thinking"
       // forever.
@@ -454,6 +489,7 @@ const suggest = JSON.stringify(SUGGESTIONS.map((s) => s.q));
               followups: Array.isArray(data.followups) ? data.followups.filter((q: unknown) => typeof q === 'string') : [],
               topic: typeof data.topic === 'string' ? data.topic : undefined,
               id: typeof data.id === 'string' ? data.id : undefined,
+              source: typeof data.source === 'string' ? data.source : undefined,
             };
           }
           else if (data && data.reason === 'rate_limited') reply = { text: RATE_LIMITED, contact: true };
@@ -467,9 +503,9 @@ const suggest = JSON.stringify(SUGGESTIONS.map((s) => s.q));
       const elapsed = Date.now() - start;
       if (elapsed < minDelay) await new Promise((r) => setTimeout(r, minDelay - elapsed));
       hideTyping();
-      msgs.push({ r: 'b', t: reply.text, c: reply.contact, f: reply.followups, p: reply.topic, i: reply.id });
+      msgs.push({ r: 'b', t: reply.text, c: reply.contact, f: reply.followups, p: reply.topic, i: reply.id, s: reply.source });
       saveMsgs();
-      const answerRow = renderBot(reply.text, reply.contact, true);
+      const answerRow = renderBot(reply.text, reply.contact, true, { id: reply.id, s: reply.source });
       setBusy(false);
       renderSuggest(false, reply.followups);
       revealAnswer(answerRow);
@@ -509,7 +545,7 @@ const suggest = JSON.stringify(SUGGESTIONS.map((s) => s.q));
     // restore a previous conversation (pages are full reloads) ----------
     for (const m of msgs) {
       if (m.r === 'u') renderUser(m.t, false);
-      else renderBot(m.t, m.c, false);
+      else renderBot(m.t, m.c, false, { id: m.i, s: m.s });
     }
     clearBtn.hidden = msgs.length === 0;
     const lastBot = [...msgs].reverse().find((m) => m.r === 'b');

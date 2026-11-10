@@ -27,6 +27,27 @@ function stripHtmlComments() {
   };
 }
 
+// Preview only (astro dev): forward the chat to the live API so "show your work" can be tried
+// locally. The page's origin is not on the API's allow list, so the request is re-sent with it.
+function devChatProxy() {
+  return {
+    name: 'dev-chat-proxy',
+    hooks: {
+      'astro:server:setup': ({ server }) => {
+        server.middlewares.use('/api/chat', async (req, res) => {
+          if (req.method !== 'POST') { res.statusCode = 405; res.end(); return; }
+          const chunks = [];
+          for await (const c of req) chunks.push(c);
+          try {
+            const r = await fetch('https://atharvapatil.tech/api/chat', { method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://atharvapatil.tech' }, body: Buffer.concat(chunks) });
+            res.statusCode = r.status; res.setHeader('content-type', 'application/json'); res.end(await r.text());
+          } catch { res.statusCode = 502; res.end('{"ok":false}'); }
+        });
+      },
+    },
+  };
+}
+
 // v5.0 bootstrap. Static output, zero JS by default, per-component hydration only where
 // interactivity is genuinely needed (cmd+K palette, theme toggle, signature moves).
 // Cloudflare Pages picks up the /dist output; no adapter needed for pure static.
@@ -39,5 +60,5 @@ export default defineConfig({
     inlineStylesheets: 'auto',
   },
   compressHTML: true,
-  integrations: [stripHtmlComments()],
+  integrations: [stripHtmlComments(), devChatProxy()],
 });

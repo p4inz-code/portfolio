@@ -1,66 +1,125 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import EditorialHero from '../components/features/EditorialHero.astro';
-import Section from '../components/layout/Section.astro';
-import ProjectCard from '../components/features/ProjectCard.astro';
-import ObscuraCard from '../components/features/ObscuraCard.astro';
-import FeaturedShowcase from '../components/features/FeaturedShowcase.astro';
-import Button from '../components/ui/Button.astro';
-import ProofStrip from '../components/features/ProofStrip.astro';
-import ShippingRail from '../components/features/ShippingRail.astro';
-import { FEATURED_PROJECTS, SUPPORTING_PROJECTS, PRODUCT_COUNT } from '../data/projects';
+import { PROJECTS } from '../data/projects';
 import { SITE } from '../data/site';
+import timeline from '../data/lab-timeline.json';
+import '../styles/lab.css';
+import '../styles/universe.css';
 
-const projectCount = PRODUCT_COUNT;
-const NUM = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight'];
-const featuredWord = NUM[FEATURED_PROJECTS.length] ?? String(FEATURED_PROJECTS.length);
+const TL = timeline.projects as Record<string, { repo: string; created: string; releases: [string, string, string][] }>;
+const GALAXY: Record<string, number> = {
+  'mission-os': 0, 'pursue-os': 0, mink: 0,
+  kanvaz: 1, 'kanvaz-mini': 1, nexus: 1, outlinedesk: 1, ropework: 1, glint: 1, crossport: 1, draft: 1, 'painfree-vault': 1,
+  veris: 2, obscura: 2, '3d-ref-skills': 2, 'reference-engineering': 2,
+  ascent: 3, 'anifx-fest': 3, kalasadhana: 3,
+};
+const today = new Date(timeline.checkedAt + 'T00:00:00Z').getTime();
+const days = (d: string) => Math.max(0, Math.round((today - new Date(d + 'T00:00:00Z').getTime()) / 864e5));
+
+const bodies = PROJECTS.filter((p) => p.slug in GALAXY).map((p) => {
+  const t = TL[p.slug];
+  const last = t?.releases.at(-1);
+  const ref = last?.[0] ?? t?.created;
+  return {
+    slug: p.slug,
+    name: p.name,
+    tagline: p.tagline,
+    kind: p.status.kind,
+    status: p.status.label,
+    license: p.license ?? null,
+    href: p.href,
+    external: p.isExternal,
+    version: last?.[1] ?? null,
+    date: last?.[0] ?? null,
+    created: t?.created ?? null,
+    galaxy: GALAXY[p.slug],
+    stack: p.stack ?? [],
+    latestUrl: last?.[2] ?? null,
+    repo: t?.repo ?? null,
+    recency: ref ? Math.max(0, Math.min(1, 1 - days(ref) / 140)) : 0.2,
+    releases: t?.releases ?? [],
+  };
+});
+const latest = [...bodies].filter((b) => b.date).sort((a, b) => b.date!.localeCompare(a.date!))[0];
+const fmt = (d: string) => new Date(d + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+const udata = { checkedAt: timeline.checkedAt, bodies, latest: { name: latest.name, tag: latest.version!, date: fmt(latest.date!) } };
+const caps = [
+  { n: '01', h: 'Operating systems and a language', p: 'Two Linux systems and a compiler written from scratch.' },
+  { n: '02', h: 'Desktop apps', p: 'Reference boards, an encrypted vault, a production planner, a Perforce client and small tools.' },
+  { n: '03', h: 'Security and craft tools', p: 'A scanner, a code protector and the reference engineering work.' },
+  { n: '04', h: 'Games and the web', p: 'A precision platformer, and sites built for real clients.' },
+];
 ---
-<BaseLayout title={`${SITE.title}: Software · 3D · VFX · P4inz`} keywords="Atharva Patil, p4inz, P4INZ, painz, p4inz web dev, p4inz app dev, p4inz cli dev, p4inz game dev, P4inz Interactive Labs, Northbyte Studios">
-  <EditorialHero
-    scrub
-    eyebrow={`Atharva Patil · ${SITE.location}`}
-    text="I identify *unmet needs* in software and turn them into *products.*"
-    steps={[
-      { label: 'Spot the gap', sub: 'Something people keep working around' },
-      { label: 'Build it', sub: 'Alone, end to end' },
-      { label: 'Ship it', sub: 'A real version, a real download' },
-    ]}
-    intro={`I'm Atharva, a solo founder in Navi Mumbai, and a second-year 3D animation student on the side. ${projectCount} products so far, each one starting from something that annoyed me or someone I know. No marketing team, nothing phoning home. Every case study links to a real repository or download, and the version numbers say so when something is still rough.`}
-  >
-    <div class="hero-actions">
-      <Button href="/work" variant="primary">See selected work →</Button>
-      <Button href="/contact" variant="ghost">Get in touch</Button>
+<BaseLayout title={`${SITE.title}: Software · 3D · VFX · P4inz`} keywords="Atharva Patil, p4inz, P4INZ, painz, p4inz web dev, p4inz app dev, p4inz cli dev, p4inz game dev, P4inz Interactive Labs">
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@variable&display=swap" />
+  <script type="application/json" id="uni-data" set:html={JSON.stringify(udata)} />
+  <div class="lamp" id="lamp" aria-hidden="true"></div>
+
+  <div class="uni">
+    <div class="uni-track">
+      <div class="uni-stage">
+        <div class="uni-neb a"></div><div class="uni-neb b"></div><div class="uni-neb c"></div>
+        <canvas class="uni-stars" id="uni-stars" aria-hidden="true"></canvas>
+
+        <div class="uni-world" aria-label="Projects floating in space. Use the list below for a plain version.">
+          <div class="uni-cam" id="uni-cam"><div class="uni-skills" id="uni-skills" aria-hidden="true"><span style="--i:0">3D</span><span style="--i:1">VFX</span><span style="--i:2">Motion</span><span style="--i:3">Web</span><span style="--i:4">Systems</span></div></div>
+        </div>
+
+        <div class="uni-hero" id="uni-hero">
+          <div class="uni-hero-in">
+            <p class="uni-eyebrow">Atharva Patil · P4inz Interactive Labs · {SITE.location}</p>
+            <h1 class="uni-h1"><span>Software.</span> <span>3D.</span> <span>VFX.</span> <em><span>Motion.</span></em> <span>Web.</span></h1>
+            <p class="uni-sub">{bodies.length} things I have built are floating out there, from operating systems to a platformer. Scroll to fly through them, and click any one to land on it.</p>
+            <div class="uni-cta"><a class="primary" href="/work/">See selected work</a><a href="/contact/">Get in touch</a><a href="#uni-list" id="uni-skip">Skip to the list</a></div>
+            <div class="uni-scroll">Scroll to travel<i></i></div>
+          </div>
+        </div>
+
+        {caps.map((c) => <div class="uni-cap"><span class="n">{c.n} / 04</span><h2>{c.h}</h2><p>{c.p}</p></div>)}
+
+        <div class="uni-prog" aria-hidden="true"><i></i></div>
+        <div class="uni-vig"></div><div class="uni-grain"></div>
+
+        <aside class="uni-panel" id="uni-panel" data-open="0" aria-label="Project details">
+          <button class="x" id="uni-p-close" type="button" aria-label="Close project details">×</button>
+          <h2 id="uni-p-name"></h2>
+          <p class="tag" id="uni-p-tag"></p>
+          <dl class="meta" id="uni-p-meta"></dl>
+          <div class="acts" id="uni-p-acts"></div>
+          <p class="stampline" id="uni-p-stamp"></p>
+        </aside>
+
+        <div class="uni-hud">
+          <label class="uni-time"><span>Time</span><input id="uni-time" type="range" min="0" max="100" value="100" aria-label="Rewind the universe to an earlier date" /><output id="uni-date">Now</output></label>
+          <span class="uni-pal" role="group" aria-label="Palette">
+            <button type="button" data-pal="ultraviolet" aria-pressed="true" style="--sw:#b993ff" aria-label="Ultraviolet palette"></button>
+            <button type="button" data-pal="amber" aria-pressed="false" style="--sw:#ffb02e" aria-label="Amber palette"></button>
+            <button type="button" data-pal="moss" aria-pressed="false" style="--sw:#8fd8a5" aria-label="Moss palette"></button>
+            <button type="button" data-pal="signal" aria-pressed="false" style="--sw:#ff5a4e" aria-label="Signal palette"></button>
+          </span>
+          <button class="txt" id="uni-lamp" type="button" aria-pressed="true">Lamp on</button>
+          <button class="txt" id="uni-replay" type="button">Replay intro</button>
+          <button class="txt" id="uni-tilt" type="button" hidden>Enable tilt</button>
+          <a href="/lab/">All ideas</a>
+          <a href="/classic/">Classic home</a>
+        </div>
+      </div>
     </div>
-  </EditorialHero>
 
-  <ProofStrip projectCount={projectCount} />
+    <section class="uni-list" id="uni-list">
+      <div class="wrap">
+        <h2>Everything, as a list</h2>
+        <ul>
+          {bodies.map((b) => (
+            <li><a href={b.href} {...(b.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}><b>{b.name}</b><span>{b.tagline}</span><small><span class="light" data-kind={b.kind}></span>{b.status}</small></a></li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  </div>
 
-  <Section eyebrow="Featured work" heading={`${featuredWord} projects to start with.`}>
-    <FeaturedShowcase projects={FEATURED_PROJECTS} />
-  </Section>
-
-  <ShippingRail projects={FEATURED_PROJECTS} />
-
-  <Section eyebrow="Also on the shelf" heading="Open source, on hold, or maintained." intro="Smaller work, older projects, and things that don't need a case study of their own.">
-    <div class="secondary-grid">
-      {SUPPORTING_PROJECTS.map((p) => (
-        p.slug === 'obscura' ? <ObscuraCard project={p} /> : <ProjectCard project={p} variant="compact" />
-      ))}
-    </div>
-  </Section>
-
-  <style>
-    .hero-actions {
-      margin-top: var(--sp-8);
-      display: flex; flex-wrap: wrap; gap: var(--sp-3);
-    }
-    .secondary-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--sp-4);
-    }
-    @media (max-width: 900px) {
-      .secondary-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+  <script>
+    import { initUniverse } from '../lab/universe.ts';
+    initUniverse();
+  </script>
 </BaseLayout>

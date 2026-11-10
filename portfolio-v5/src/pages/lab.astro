@@ -1,0 +1,256 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { PROJECTS } from '../data/projects';
+import { CHANGELOG } from '../data/changelog';
+import timeline from '../data/lab-timeline.json';
+import '../styles/lab.css';
+
+// ---- data for the lab, built once at build time from the same files the site uses ----
+const TL = timeline.projects as Record<string, { repo: string; created: string; releases: [string, string, string][] }>;
+const labProjects = PROJECTS.filter((p) => TL[p.slug]).map((p) => {
+  const t = TL[p.slug];
+  const last = t.releases.at(-1);
+  return {
+    slug: p.slug,
+    name: p.name,
+    tagline: p.tagline,
+    kind: p.status.kind,
+    status: p.status.label,
+    license: p.license ?? null,
+    href: p.href,
+    external: p.isExternal,
+    order: p.order,
+    created: t.created,
+    repo: t.repo,
+    releases: t.releases,
+    latestTag: last?.[1] ?? null,
+    latestDate: last?.[0] ?? null,
+    latestUrl: last?.[2] ?? null,
+  };
+}).sort((a, b) => a.order - b.order);
+
+const checkedAt = timeline.checkedAt;
+const fmt = (d: string) => new Date(d + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+const fmtLong = (d: string) => new Date(d + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+
+// week feed: releases and new repos in the 21 days before the check
+const cutoff = new Date(new Date(checkedAt + 'T00:00:00Z').getTime() - 21 * 864e5).toISOString().slice(0, 10);
+const feed = labProjects.flatMap((p) => {
+  const rows: { name: string; del?: string; add: string; date: string }[] = [];
+  p.releases.forEach((r, i) => {
+    if (r[0] >= cutoff) rows.push({ name: p.name, del: p.releases[i - 1]?.[1], add: r[1], date: r[0] });
+  });
+  if (p.created >= cutoff && p.releases.length === 0) rows.push({ name: p.name, add: 'added to the site', date: p.created });
+  return rows;
+}).sort((a, b) => b.date.localeCompare(a.date));
+
+const latestRelease = [...labProjects].filter((p) => p.latestDate).sort((a, b) => b.latestDate!.localeCompare(a.latestDate!))[0];
+const clientData = {
+  checkedAt,
+  projects: labProjects.map(({ releases, ...p }) => ({ ...p, releases })),
+  latest: { name: latestRelease.name, tag: latestRelease.latestTag, date: fmt(latestRelease.latestDate!) },
+};
+
+const pages = [
+  { label: 'Work', href: '/work/', kw: 'projects portfolio work' },
+  { label: 'About', href: '/about/', kw: 'about who atharva studio' },
+  { label: 'Services', href: '/services/', kw: 'services hire freelance pricing' },
+  { label: 'Contact', href: '/contact/', kw: 'contact email hire message' },
+  { label: 'Resume', href: '/resume/', kw: 'resume cv' },
+  { label: 'Status and changelog', href: '/status/', kw: 'status changelog updates' },
+  { label: 'Kanvaz', href: '/kanvaz/', kw: 'kanvaz reference' },
+  { label: 'Nexus', href: '/nexus/', kw: 'nexus vault' },
+  { label: 'Pursue OS', href: '/pursue-os/', kw: 'pursue os' },
+  { label: 'Mission OS', href: '/mission-os/', kw: 'mission os' },
+  { label: 'Project Ascent', href: '/ascent/', kw: 'ascent game' },
+  { label: 'Support', href: '/support/', kw: 'support donate' },
+];
+
+const foldEntries = CHANGELOG.slice(0, 6);
+const listen = labProjects.filter((p) => p.latestDate).sort((a, b) => b.latestDate!.localeCompare(a.latestDate!)).slice(0, 7);
+---
+<BaseLayout title="Lab: redesign preview | Atharva Patil" description="A private preview of redesign ideas for atharvapatil.tech." keywords="">
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@variable&display=swap" />
+  <script type="application/json" id="lab-data" set:html={JSON.stringify(clientData)} />
+  <div class="lab-lamp-host"><div class="lamp" id="lamp" aria-hidden="true"></div></div>
+
+  <div class="lab">
+    <header class="lab-hero lab-wrap">
+      <p class="lab-num">LAB · PREVIEW BRANCH · NOT LIVE</p>
+      <h1>Ideas to try, <em>one switch each.</em></h1>
+      <p>This page runs every redesign idea from the research note on real data from this site and GitHub. Use the Lab panel (bottom left) to switch each idea on or off and to try four palettes. Nothing here is on the live site.</p>
+    </header>
+
+    <section class="lab-sec" data-feature="door" id="door-sec">
+      <div class="lab-wrap">
+        <div class="lab-sec-head"><span class="lab-num">01</span><h2>One door</h2>
+          <p>Search the site and ask the chat from the same box. Pick a page or press Enter on a question and the chat answers.</p>
+          <p class="lab-try">TRY: type <b>kanvaz</b>, then <b>how much is outlinedesk</b>.</p></div>
+        <div class="door">
+          <input class="door-input" id="door-input" type="text" role="combobox" aria-expanded="false" aria-controls="door-list" aria-label="Search the site or ask a question" placeholder="Jump to a page or ask a question" autocomplete="off" />
+          <ul class="door-list" id="door-list" role="listbox" hidden></ul>
+        </div>
+        <script type="application/json" id="door-pages" set:html={JSON.stringify(pages)} />
+      </div>
+    </section>
+
+    <section class="lab-sec" data-feature="drift" id="drift-sec">
+      <div class="lab-wrap">
+        <div class="lab-sec-head"><span class="lab-num">02</span><h2>Drift field</h2>
+          <p>Projects as floating cards. Size follows how recently each shipped, and the ring shows status. Drag one, throw it, or click to open it. On phones it becomes a swipeable row, and with reduced motion a plain grid.</p>
+          <p class="lab-try">TRY: <b>drag and throw</b> a card. Tilt your phone or use a controller to nudge the field.</p></div>
+        <div class="drift" id="drift" role="list" aria-label="Projects"></div>
+        <p class="drift-hint">Status lights: steady green is released, pulse is in progress, slow blink is beta, flicker is coming soon, dim is on hold.</p>
+      </div>
+    </section>
+
+    <section class="lab-sec" data-feature="scrub" id="scrub-sec">
+      <div class="lab-wrap">
+        <div class="lab-sec-head"><span class="lab-num">03</span><h2>The scrubber</h2>
+          <p>Drag the slider to rewind the whole portfolio. Projects appear when their repository was created, and each shows the version that was out on that date. The data is the real release history from GitHub.</p>
+          <p class="lab-try">TRY: press <b>Play</b>, or drag the slider with arrow keys, mouse or touch.</p></div>
+        <div class="scrub-date" id="scrub-date" aria-live="polite">&nbsp;</div>
+        <div class="scrub-sub" id="scrub-sub"></div>
+        <div class="scrub-controls">
+          <button class="scrub-play" id="scrub-play" type="button">Play</button>
+          <input class="scrub-range" id="scrub-range" type="range" min="0" max="100" value="100" step="1" aria-label="Date on the portfolio timeline" data-pad />
+        </div>
+        <div class="scrub-marks" aria-hidden="true"><span>Jun 2026</span><span>Aug</span><span>Oct</span><span>Now</span></div>
+        <div class="scrub-grid" id="scrub-grid"></div>
+      </div>
+    </section>
+
+    <section class="lab-sec" data-feature="stamps" id="stamps-sec">
+      <div class="lab-wrap">
+        <div class="lab-sec-head"><span class="lab-num">04</span><h2>Proof stamps</h2>
+          <p>Every claim carries a stamp saying when it was last checked against GitHub. Open one to see exactly where the claim comes from.</p>
+          <p class="lab-try">TRY: tap or click a <b>stamp</b>.</p></div>
+        <div class="facts" id="facts"></div>
+      </div>
+    </section>
+
+    <section class="lab-sec" data-feature="type" id="type-sec">
+      <div class="lab-wrap">
+        <div class="lab-sec-head"><span class="lab-num">05</span><h2>Type that listens</h2>
+          <p>Names get heavier the more recently the project shipped, and lean with your cursor speed and scroll speed. On touch screens and with reduced motion the weights stay still.</p>
+          <p class="lab-try">TRY: sweep the cursor across the names, then scroll fast.</p></div>
+        <div class="listen" id="listen">
+          {listen.map((p) => (
+            <a href={p.href} {...(p.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} data-date={p.latestDate}><span>{p.name}</span><small>{p.latestTag} · {fmt(p.latestDate!)}</small></a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="lab-sec" data-feature="feed" id="feed-sec">
+      <div class="lab-wrap">
+        <div class="lab-sec-head"><span class="lab-num">06</span><h2>The week feed</h2>
+          <p>What changed in the last three weeks, written like a diff: the version before, the version after.</p></div>
+        <div class="diff">
+          <div class="diff-h">checked against GitHub on {fmtLong(checkedAt)} · since {fmt(cutoff)}</div>
+          {feed.map((r) => (
+            <div class="diff-row"><span class="name">{r.name}</span><span>
+              {r.del && <span class="diff-del">- {r.del}</span>}
+              <span class="diff-add">+ {r.add}</span><span class="diff-meta">{fmt(r.date)}</span></span></div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="lab-sec" data-feature="pin" id="pin-sec">
+      <div class="lab-wrap">
+        <div class="lab-sec-head"><span class="lab-num">07</span><h2>The Kanvaz pinboard</h2>
+          <p>The Kanvaz page laid out like Kanvaz: screenshots pinned on a board with typed connections between them. Drag any card and the cables follow.</p>
+          <p class="lab-try">TRY: <b>drag</b> a screenshot around the board.</p></div>
+        <div class="pin" id="pin"></div>
+      </div>
+    </section>
+
+    <section class="lab-sec" data-feature="fold" id="fold-sec">
+      <div class="lab-wrap">
+        <div class="lab-sec-head"><span class="lab-num">08</span><h2>Unfolding changelog</h2>
+          <p>The changelog as a folded sheet. Each entry unfolds as it scrolls into view, using only CSS scroll animation. Browsers without it show the flat sheet.</p>
+          <p class="lab-try">TRY: <b>scroll</b> slowly through the sheet.</p></div>
+        <div class="fold">
+          {foldEntries.map((e) => (
+            <article class="fold-panel"><h3>{e.version}</h3><p>{e.summary}</p></article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="lab-sec" data-feature="css" id="css-sec">
+      <div class="lab-wrap">
+        <div class="lab-sec-head"><span class="lab-num">09</span><h2>Small CSS touches</h2>
+          <p>Four effects that cost almost nothing: staggered entry with sibling-index(), a header that changes when it sticks, panels that open with a starting style, and a one-bit dither that resolves to colour.</p></div>
+        <div class="touch-grid">
+          <div class="touch"><h3>Stagger</h3><p>Bars enter one after another with no script setting the delays.</p>
+            <div class="stagger" id="stagger" data-on="0">{Array.from({ length: 6 }).map((_, i) => <i style={`--i:${i};width:${55 + ((i * 17) % 40)}%`}></i>)}</div>
+            <button class="lab-btn" type="button" id="stagger-btn">Replay</button></div>
+          <div class="touch"><h3>Sticky state</h3><p>The bar turns solid when it sticks to the top of the box.</p>
+            <div class="stick-scroll"><div class="stick-bar">Scroll inside this box</div>
+              <p>First entry.</p><p>Second entry.</p><p>Third entry.</p><p>Fourth entry.</p><p>Fifth entry.</p><p>Sixth entry.</p><p>Seventh entry.</p></div></div>
+          <div class="touch"><h3>Starting style</h3><p>A panel that fades and slides in without JavaScript timing.</p>
+            <div class="pop-demo"><button class="lab-btn" type="button" id="pop-btn" aria-expanded="false">Open panel</button>
+              <div class="pop-box" id="pop-box" hidden>Opened with @starting-style and an allow-discrete display transition.</div></div></div>
+          <div class="touch"><h3>One-bit dither</h3><p>A real screenshot, dithered to two colours. Hover or focus to see it in colour.</p>
+            <div class="dither" id="dither" tabindex="0"><canvas></canvas><img src="/assets/kanvaz/kanvaz-showcase-dark.webp" alt="Kanvaz board in the dark theme" loading="lazy" /></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lab-sec" data-feature="input" id="input-sec">
+      <div class="lab-wrap">
+        <div class="lab-sec-head"><span class="lab-num">10</span><h2>Controller and tilt</h2>
+          <p>Plug in a game controller and press any button: the stick moves a highlight between the interactive things on this page. On a phone, tilt the device to move the drift field.</p></div>
+        <div class="pad-state">
+          <span class="pad-chip" id="pad-status"><span class="light" data-kind="onHold"></span> No controller yet</span>
+          <button class="lab-btn" type="button" id="tilt-btn">Enable tilt</button>
+          <span class="pad-chip" id="tilt-status">Tilt off</span>
+        </div>
+        <div class="pad-keys">
+          <div><kbd>Stick</kbd> or <kbd>D-pad</kbd> move the highlight</div>
+          <div><kbd>A</kbd> opens, <kbd>B</kbd> clears</div>
+          <div><kbd>LB</kbd> <kbd>RB</kbd> step the scrubber</div>
+          <div><kbd>Y</kbd> shows or hides the Lab panel</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lab-sec" data-feature="lamp" id="lamp-sec">
+      <div class="lab-wrap">
+        <div class="lab-sec-head"><span class="lab-num">11</span><h2>Studio lamp</h2>
+          <p>The page tint follows your own clock and the moon phase, worked out in your browser. There is no location lookup and no weather service.</p></div>
+        <div class="lamp-read" id="lamp-read"><span class="lamp-moon"><i id="lamp-moon-i"></i></span><span id="lamp-text"></span></div>
+      </div>
+    </section>
+
+    <section class="lab-sec" data-feature="chatSource" id="chat-sec">
+      <div class="lab-wrap">
+        <div class="lab-sec-head"><span class="lab-num">12</span><h2>Show your work chat</h2>
+          <p>Open the chat (bottom right) and ask anything. Each answer gets a small source chip that says where it came from. Tap the chip for the detail.</p>
+          <p class="lab-try">TRY: ask <b>what license is kanvaz under</b>, then <b>do you have feelings</b>.</p></div>
+        <button class="lab-btn" type="button" id="open-chat">Open the chat</button>
+      </div>
+    </section>
+  </div>
+
+  <details class="lab-panel" id="lab-panel" open>
+    <summary>Lab · switches</summary>
+    <div class="lab-panel-body">
+      <div><h3>Ideas</h3><div id="lab-toggles"></div></div>
+      <div><h3>Palette (dark theme)</h3>
+        <div class="lab-pal" id="lab-pal">
+          <button type="button" data-pal="ultraviolet" aria-pressed="true" style="--sw:#b993ff"><i></i>Ultraviolet</button>
+          <button type="button" data-pal="amber" aria-pressed="false" style="--sw:#ffb02e"><i></i>Amber</button>
+          <button type="button" data-pal="moss" aria-pressed="false" style="--sw:#8fd8a5"><i></i>Moss</button>
+          <button type="button" data-pal="signal" aria-pressed="false" style="--sw:#ff5a4e"><i></i>Signal</button>
+        </div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="lab-btn" type="button" id="lab-replay">Replay intro</button><button class="lab-btn" type="button" id="lab-reset">Reset</button></div>
+    </div>
+  </details>
+
+  <script>
+    import '../lab/main.ts';
+  </script>
+</BaseLayout>
