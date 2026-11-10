@@ -20,6 +20,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.58.0',
+    kind: 'released',
+    summary: "The Outlinedesk and Ropework cards open their own websites.",
+    body: [
+      "Clicking the Outlinedesk or Ropework card now goes to its website on GitHub Pages instead of its GitHub repository. The repository downloads are still listed in each project's links.",
+    ],
+  },
+  {
     version: 'v5.57.0',
     kind: 'released',
     summary: "Project cards link to their own websites where one exists.",
