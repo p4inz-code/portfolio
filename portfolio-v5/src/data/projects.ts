@@ -503,7 +503,7 @@ export const PROJECTS: Project[] = [
     started: '2026',
     currentVersion: 'v1.6.0',
     comingSoon: 'Full release coming soon.',
-    pricing: 'Paid, with a free 27-day trial of every feature. Prices are in Indian rupees and listed in the repository README.',
+    pricing: 'Paid, with a free 27-day trial of every feature. Prices are in Indian rupees, from its README: Solo is 149 a month or 1,599 a year, Team (up to 8 seats) is 1,999 a month or 21,999 a year, and Student is 299 in the launch year. The other plans are in the repository README.',
     nextMilestone: 'The 1.6.0 release candidate is for outside testers, so expect rough edges. Team changes arrive when files sync rather than live, roles are by convention, there is no Mac version and the installers are not code-signed yet.',
     notes: 'The public repository hosts downloads, guides and release notes only; the source is private.',
   },

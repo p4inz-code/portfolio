@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.55.0',
+    kind: 'released',
+    summary: "The chat now handles odd and personal questions, and answers sound less alike.",
+    body: [
+      "The chat answers a wider set of questions without calling the AI model: whether it has feelings, a name or a body, who made it, whether it can be trusted, what it likes, what time it is, the meaning of life, hello world and sudo. It also handles goodbyes, thanks, compliments, apologies and short replies like ok, and it can say it won't pass a message to Atharva and point to the contact form.",
+      "New site questions are covered: what changed on the site recently (read from this changelog), how often the site is updated, how Kanvaz and Kanvaz Mini differ, and what Outlinedesk costs, with its plan prices taken from its README.",
+      "Boundary replies, thanks and greetings now have several openings that are picked by the question, so repeated small talk doesn't read like a template. The AI prompt was rewritten for plain, human wording and gained guidance for playful questions. 38 tests cover it, including 37 new odd-question rows.",
+    ],
+  },
+  {
     version: 'v5.54.0',
     kind: 'released',
     summary: "Ropework added, MINK marked as in progress.",

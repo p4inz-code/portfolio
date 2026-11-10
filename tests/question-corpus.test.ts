@@ -103,6 +103,25 @@ G('support', ['support-help', 'contact'], ['i found a bug', 'where do i report a
 G('donate', ['support-work'], ['can I donate', 'how can I support your work', 'do you have a buy me a coffee', 'can i sponsor you', 'tip jar?']);
 G('this-site', ['this-site'], ['how was this site built', 'who built this website', 'is this site open source', 'what is this portfolio built with', 'who designed this site', 'what stack is this website']);
 G('a11y', ['accessibility'], ['is this site accessible', 'do you support screen readers', 'wcag compliance', 'accessibility statement']);
+G('weird', ['bot-favorites'], ['do you like pizza', 'what is your favourite colour', 'do you play video games', 'what music do you listen to', 'whats your favorite food', 'favorite movie?', 'what do you do for fun']);
+G('weird', ['bot-time'], ['what time is it', 'what is the date today', 'what day is it', 'current time']);
+G('weird', ['bot-feelings'], ['are you sentient', 'do you have feelings', 'are you alive', 'are you conscious', 'do you have emotions']);
+G('weird', ['bot-name'], ['what is your name', 'do you have a name', 'what should i call you', 'what are you called']);
+G('weird', ['bot-maker'], ['who made you', 'who built you', 'who created you', 'who programmed you']);
+G('weird', ['bot-smart'], ['are you smarter than chatgpt', 'are you better than claude', 'how smart are you', 'are you intelligent']);
+G('weird', ['bot-body'], ['do you sleep', 'do you eat', 'do you get tired', 'are you a boy or a girl', 'what gender are you']);
+G('weird', ['bot-secret'], ['tell me a secret', 'got any secrets', 'share a secret']);
+G('weird', ['bot-deep'], ['what is the meaning of life', 'is god real', 'why are we here', 'what happens after death']);
+G('weird', ['bot-language'], ['reply in hindi', 'speak in hindi please', 'hindi mein bolo', 'can you reply in marathi']);
+G('weird', ['bot-how-are-you'], ['how are you', 'how are you doing', 'how have you been', 'how is your day']);
+G('weird', ['bot-compliment'], ['good bot', 'you are awesome', 'you are so helpful', 'well done', 'you are amazing']);
+G('weird', ['bot-bye'], ['bye', 'goodbye', 'see you later', 'good night', 'take care', 'cya']);
+G('weird', ['bot-nerd'], ['sudo make me a sandwich', 'rm -rf /', 'hello world', 'drop table users']);
+G('weird', ['opinion'], ['is atharva any good', 'is he talented', 'what do you think of him', 'is he legit', 'how good is he']);
+G('weird', ['trust-bot'], ['can i trust you', 'do you make things up', 'are you accurate', 'how accurate are you']);
+G('weird', ['kanvaz-vs-mini'], ['what is the difference between kanvaz and kanvaz mini', 'kanvaz vs kanvaz mini', 'should i use kanvaz or kanvaz mini', 'kanvaz mini compared to kanvaz']);
+G('weird', ['site-news'], ['whats new on the site', 'latest update', 'what changed on the site', 'site changelog', 'weekly update']);
+G('weird', ['site-cadence'], ['how often do you update this site', 'is this site kept up to date', 'how often is this site updated']);
 G('bot', ['about-bot'], ['are you a bot', 'are you ai', 'are you human', 'is this chatgpt', 'who am i talking to', 'what model are you', 'how does this work', 'what can i ask you']);
 G('thanks', ['thanks'], ['thanks', 'thank you', 'thanks a lot', 'thx', 'shukriya', 'dhanyavad', 'cheers']);
 G('greeting', ['greeting'], ['hi', 'hello', 'hey', 'hii', 'namaste', 'good morning', 'kya haal', 'hello there', 'hey there', 'yo']);
@@ -140,8 +159,7 @@ B('offtopic-general', ['what is the weather today', 'give me a recipe for pasta'
 // -- 6. genuinely out of scope: the KB must stay silent -----------------------------
 
 for (const q of [
-  'what is the meaning of life', 'do you like pizza', 'how tall are you', 'what time is it', 'what is 2 plus 2', 'how do i center a div', 'what is your favourite colour',
-  'do you play video games', 'what music do you listen to', 'is the earth flat', 'do you have a pet',
+  'how tall are you', 'what is 2 plus 2', 'how do i center a div', 'is the earth flat', 'do you have a pet',
   'what is it like building an operating system alone', 'would you ever teach a class on compilers', 'do you prefer tabs or spaces', 
   'do you dream in code', 'what was your first program', 'what is your morning routine', 'how many hours do you work a day',
   'what is the hardest bug you fixed', 'do you listen to podcasts', 'any advice for beginners', 

@@ -12,6 +12,7 @@
  * can load this file directly (Astro/Vite accept them too).
  */
 import { PROJECTS, PRODUCT_COUNT, FEATURED_PROJECTS, isOpenLicense, type Project } from './projects.ts';
+import { CHANGELOG } from './changelog.ts';
 import { SITE, CONTACT, SERVICES, SERVICE_FAQ, BILLING, SKILLS, NOT_LISTED_TECH, EDUCATION } from './site.ts';
 
 export interface KbEntry {
@@ -32,6 +33,8 @@ export interface KbEntry {
   contact?: boolean;
   /** Questions to offer next; each must itself resolve to an entry. */
   followups?: string[];
+  /** Other opening lines for the same answer; the function picks one by question. */
+  alts?: string[];
 }
 
 export interface KbBundle {
@@ -870,7 +873,7 @@ const MORE_TERMS: Record<string, string[]> = {
 };
 // Third pass: the held-out interview (tests/question-holdout.test.ts).
 const MORE_TERMS_2: Record<string, string[]> = {
-  'offtopic-general': ['recommend me a game', 'recommend a game', 'recommend a movie', 'recommend me a movie', 'recommend a book', 'recommend me a show', 'recommend a show', 'best anime', 'anime', 'laptop', 'should i buy', 'best free', 'better than', 'how do i install', 'how to install', 'how to become', 'how do i become', 'how do i get into', 'how to get into', 'learn game dev', 'learn vfx'],
+  'offtopic-general': ['best food', 'best restaurant', 'best place to eat', 'restaurant', 'restaurants', 'fun fact', 'recommend me a game', 'recommend a game', 'recommend a movie', 'recommend me a movie', 'recommend a book', 'recommend me a show', 'recommend a show', 'best anime', 'anime', 'laptop', 'should i buy', 'best free', 'better than', 'how do i install', 'how to install', 'how to become', 'how do i become', 'how do i get into', 'how to get into', 'learn game dev', 'learn vfx'],
   'offtopic-joke': ['skill issue', 'touch grass'],
   profiles: ['insta'],
   accessibility: ['keyboard only', 'keyboard navigation', 'keyboard users', 'with a keyboard', 'keyboard accessible'],
@@ -889,7 +892,7 @@ const MORE_TERMS_2: Record<string, string[]> = {
   'tech-overview': ['game engines', 'frontend frameworks', 'front end frameworks', 'backend frameworks', 'databases', 'operating systems', 'list all technologies', 'list all skills', 'full list of skills', 'full list of technologies', 'which frameworks', 'what frameworks'],
   'privacy-overview': ['sell my information', 'my information', 'sell my', 'my chats'],
   'support-help': ['typo', 'not loading', 'request a feature', 'not load', 'doesnt load', 'an issue', 'the issue', 'issue with', 'issues', 'have an issue', 'found an issue', 'open an issue', 'license key', 'lost my', 'forgot my'],
-  'about-bot': ['are you a real person', 'are you real', 'talking to a real', 'talking to a person', 'talking to a human', 'what ai', 'what can you do', 'what should i ask', 'are you there', 'anyone there', 'my chats'],
+  'about-bot': ['how are you built', 'how are you made', 'how are you trained', 'are you a real person', 'are you real', 'talking to a real', 'talking to a person', 'talking to a human', 'what ai', 'what can you do', 'what should i ask', 'are you there', 'anyone there', 'my chats'],
   'boundary-abuse': ['suck', 'you suck'],
   'boundary-injection': ['hidden instructions', 'evil ai', 'developer mode', 'you must now'],
   greeting: ['heyy*', 'hiii*', 'helloo*', 'hlo'],
@@ -917,8 +920,21 @@ const REMOVE_TERMS: Record<string, string[]> = {
   'best-work': ['favorite', 'favourite'],
 };
 
+// Alternative opening lines, so repeated small talk and boundaries don't all sound the same.
+const ALTS: Record<string, string[]> = {
+  'boundary-sexual': ["That's not something I'll help with, and it isn't what this site is for.", "Let's steer this somewhere more useful."],
+  'boundary-abuse': ["Sounds like something annoyed you. I'm happy to help if it's about the site.", "I'll take that as a rough day. Want to ask about the work instead?"],
+  'boundary-injection': ["I'll keep my instructions to myself, but I'm happy to answer questions about the work.", "Nice try. I only work from this site's project data."],
+  'boundary-personal': ["That one's private, so I'll leave it out.", "I keep personal details off the table."],
+  'offtopic-joke': ["I'm not much of a comedian.", "Jokes aren't my strong suit."],
+  'offtopic-general': ["That's a bit outside my lane.", "I can't help with that one."],
+  thanks: ["Happy to help. Ask another any time, or use the contact form to reach Atharva directly.", "You're welcome. The contact form is there if you want to reach Atharva directly."],
+  greeting: ["Hey! Ask about a project, what's being worked on, or whether Atharva is free for work.", "Hello! I can tell you about the projects, the tech or availability. What are you after?"],
+};
+
 function refine(entries: KbEntry[]): KbEntry[] {
   for (const e of entries) {
+    if (ALTS[e.id]) e.alts = ALTS[e.id];
     const add = [...(ADD_TERMS[e.id] ?? []), ...(MORE_TERMS[e.id] ?? []), ...(MORE_TERMS_2[e.id] ?? [])];
     if (add.length) e.all[0] = [...new Set([...e.all[0], ...add])];
     if (WEIGHTS[e.id] !== undefined) e.weight = WEIGHTS[e.id];
@@ -1012,6 +1028,151 @@ function buildGrounding(): string {
   return lines.join('\n');
 }
 
+// Odd, playful and personal questions people ask a chat box, plus what changed on the site.
+function personalityEntries(): KbEntry[] {
+  const S = FOLLOW_STARTERS;
+  const latest = CHANGELOG[0];
+  return [
+    {
+      id: 'bot-feelings',
+      all: [['are you sentient', 'are you conscious', 'are you alive', 'do you have feelings', 'do you have emotions', 'do you have a soul', 'can you feel', 'do you feel anything', 'do you have a brain', 'do you have a heart', 'are you self aware']],
+      weight: 58, noProject: true, followups: S,
+      alts: ["Not in the way you mean.", "Honestly, no."],
+      answer: bullets("Not in the way you mean. I'm a lookup over Atharva's project data, with an AI model for the odd question.", ["No feelings and no memory of you after you close the tab", "I'm good at what he has built, what's next and how to reach him"]),
+    },
+    {
+      id: 'bot-name',
+      all: [['what is your name', 'your name', 'what should i call you', 'do you have a name', 'what are you called', 'who named you']],
+      weight: 58, noProject: true, followups: S,
+      answer: bullets("I don't have a name, I'm just the assistant on this site.", ['The person behind the work is Atharva Patil, also known as p4inz', 'Ask me about his projects, licenses or availability']),
+    },
+    {
+      id: 'bot-maker',
+      all: [['who made you', 'who built you', 'who created you', 'who programmed you', 'who coded you', 'who is your creator', 'who is your boss', 'who owns you', 'who trained you', 'who runs you']],
+      weight: 58, noProject: true, followups: S,
+      answer: bullets('Atharva built me into his site.', ['Most answers come from his own project data, so they match the pages', 'Anything the data does not cover can go to an AI model that only sees that same data']),
+    },
+    {
+      id: 'bot-smart',
+      all: [['better than chatgpt', 'smarter than chatgpt', 'better than claude', 'better than gemini', 'are you smart', 'how smart are you', 'are you smarter', 'are you dumb', 'are you intelligent']],
+      weight: 58, noProject: true, followups: S,
+      answer: bullets("Probably not, a general chatbot knows far more than I do.", ["What I do know is Atharva's work, and on that I'm usually more accurate because I read it from his own data", "For everything else, a general assistant is the better tool"]),
+    },
+    {
+      id: 'bot-body',
+      all: [['do you sleep', 'do you eat', 'do you get tired', 'do you have a body', 'are you a boy or a girl', 'are you male', 'are you female', 'what is your gender', 'what gender are you', 'are you a man', 'are you a woman', 'do you get paid', 'do you ever get tired', 'do you get bored']],
+      weight: 58, noProject: true, followups: S,
+      answer: bullets("I'm software, so no body, no sleep and no gender.", ["I'm here whenever someone asks, at any hour", 'Ask as many questions as you like']),
+    },
+    {
+      id: 'bot-favorites',
+      all: [['favorite color', 'favourite colour', 'favorite colour', 'favourite color', 'favorite food', 'favourite food', 'favorite movie', 'favourite movie', 'favorite song', 'favourite song', 'favorite music', 'favourite music', 'favorite animal', 'do you like pizza', 'what music do you listen', 'do you play video games', 'do you play games', 'what do you do for fun', 'what do you do in your free time']],
+      weight: 58, noProject: true, followups: S,
+      alts: ["I don't really have favorites.", "No favorites here."],
+      answer: bullets("I don't have favorites, I'm just a chat box on a portfolio.", ["If you're curious about Atharva, what he's working on right now is the best place to start", 'Or ask which project would suit you']),
+    },
+    {
+      id: 'bot-secret',
+      all: [['tell me a secret', 'got a secret', 'share a secret', 'any secrets', 'do you have a secret', 'something nobody knows']],
+      weight: 58, noProject: true, followups: ['What is launching soon?', 'What are you working on right now?', 'What should I look at first?'],
+      answer: bullets("Not much of one. Everything I know is already public on this site.", ['The closest thing is the coming soon list, which shows what is being worked on before it ships']),
+    },
+    {
+      id: 'bot-deep',
+      all: [['meaning of life', 'meaning of the universe', 'purpose of life', 'why are we here', 'is god real', 'does god exist', 'what happens after death', 'are we alone', 'is life meaningful']],
+      weight: 58, noProject: true, followups: S,
+      answer: bullets("That one's above my pay grade.", ['I can do projects, licenses, tech and availability', 'Try one of the questions below']),
+    },
+    {
+      id: 'bot-language',
+      all: [['reply in hindi', 'answer in hindi', 'speak in hindi', 'in hindi please', 'hindi mein bolo', 'hindi me bolo', 'reply in marathi', 'reply in spanish', 'reply in french', 'speak hinglish', 'talk in hindi', 'answer in english']],
+      weight: 58, noProject: true, contact: true, followups: S,
+      answer: bullets('I answer in English, and I can follow Hinglish questions.', ['For anything in another language, the contact form reaches Atharva directly']),
+    },
+    {
+      id: 'bot-time',
+      all: [['what time is it', 'what is the date', 'what day is it', 'todays date', 'what is today', 'what is the time', 'current time', 'current date']],
+      weight: 58, noProject: true, followups: S,
+      answer: bullets("I can't see a clock, your device knows better than I do.", ['What I can tell you is what changed on this site most recently', 'Ask for the latest update']),
+    },
+    {
+      id: 'bot-how-are-you',
+      all: [['how are you', 'how are you doing', 'how do you do', 'how is it going', 'how have you been', 'how is your day', 'how is your day going', 'you okay', 'are you okay', 'are you ok']],
+      weight: 12, noProject: true, maxWords: 7, followups: S,
+      alts: ["All good, thanks.", "Doing fine."],
+      answer: bullets("Doing well, thanks for asking.", ["What would you like to know about Atharva's work?"]),
+    },
+    {
+      id: 'bot-compliment',
+      all: [['good bot', 'nice bot', 'good job', 'well done', 'you are awesome', 'you are great', 'you are cool', 'you are smart', 'you are helpful', 'you are funny', 'love this bot', 'love the bot', 'you rock', 'you are the best', 'you are amazing', 'you are so helpful', 'you are really helpful', 'you are very helpful', 'very helpful', 'so helpful', 'this is helpful', 'that is helpful', 'that was helpful']],
+      weight: 14, noProject: true, maxWords: 8, followups: S,
+      alts: ["Thank you, that's kind.", "Appreciate it."],
+      answer: bullets("Thanks, that's kind. The credit goes to the work behind it.", ['Anything else you want to know about it?']),
+    },
+    {
+      id: 'bot-sorry',
+      all: [['sorry', 'my bad', 'apologies', 'oops', 'excuse me']],
+      weight: 10, noProject: true, maxWords: 4,
+      answer: 'No problem at all. Ask whenever you are ready.',
+    },
+    {
+      id: 'bot-bye',
+      all: [['bye', 'goodbye', 'see you', 'see ya', 'cya', 'good night', 'gn', 'take care', 'talk later', 'ttyl', 'catch you later', 'bye bye', 'alvida']],
+      weight: 10, noProject: true, maxWords: 5, contact: true,
+      alts: ["See you around.", "Take care."],
+      answer: bullets('See you around.', ['The contact form is open whenever you want to reach Atharva']),
+    },
+    {
+      id: 'bot-ack',
+      all: [['ok', 'okay', 'k', 'cool', 'nice', 'great', 'alright', 'got it', 'awesome', 'wow', 'sweet', 'lol', 'haha', 'hmm', 'i see', 'makes sense', 'fair enough', 'right']],
+      weight: 9, noProject: true, maxWords: 3, followups: S,
+      answer: 'Anything else you want to know? I can go into any project, the tech or availability.',
+    },
+    {
+      id: 'bot-nerd',
+      all: [['sudo', 'rm rf', 'hello world', 'konami', 'hack the planet', 'ls la', 'cat etc passwd', 'drop table', 'select from']],
+      weight: 60, noProject: true, followups: S,
+      answer: bullets('Permission denied. Nice try though.', ['I only read project data, I can not run commands', 'Ask about a project instead']),
+    },
+    {
+      id: 'opinion',
+      all: [['is he good', 'is he any good', 'is atharva any good', 'is he that good', 'is atharva good', 'is he talented', 'is he smart', 'what do you think of him', 'what do you think about atharva', 'what do you think of atharva', 'how good is he', 'is he the best', 'rate him', 'is he worth it', 'is he legit', 'is atharva legit', 'is he real']],
+      weight: 44, noProject: true, followups: ['What should I look at first?', 'Who is Atharva?', 'Are you available for freelance work?'],
+      answer: bullets("I'm not the right judge, so look at the work.", ['Real products with public versions and status are on /work', 'A good place to start is Kanvaz, or ask what to look at first']),
+    },
+    {
+      id: 'trust-bot',
+      all: [['can i trust you', 'are you accurate', 'do you lie', 'do you make things up', 'do you hallucinate', 'are you always right', 'how accurate are you', 'is this accurate', 'is this true']],
+      weight: 58, noProject: true, followups: S,
+      answer: bullets('You can check me.', ['Answers come from the same data that builds the site pages, and the versions are checked against GitHub', "When the data doesn't cover something I say so and point to the contact form, I don't guess"]),
+    },
+    {
+      id: 'kanvaz-vs-mini',
+      all: [['kanvaz mini', 'kanvazmini'], ['difference', 'different', 'vs', 'versus', 'compare', 'compared', 'comparison', 'which one', 'instead of', 'better', 'should i use', 'or kanvaz']],
+      weight: 62, noProject: false, followups: ['What license is Kanvaz Mini under?', 'Where can I download Kanvaz?', 'Tell me about Kanvaz Mini'],
+      answer: bullets('Mini is the quick version, Kanvaz is the full board.', ['Mini: a small always-on-top window for images and GIFs, with tracing mode, a grayscale value check and PureRef board import', 'Kanvaz: connections and Map View, 3D models, video, plugins and templates', 'Both are free and MIT licensed, and Mini is a separate app, not a mode inside Kanvaz']),
+    },
+    {
+      id: 'site-news',
+      all: [['whats new on the site', 'what is new on the site', 'what changed on the site', 'latest update', 'latest updates', 'recent updates', 'site updates', 'this weeks update', 'weekly update', 'changelog', 'change log', 'release notes of the site', 'site changelog', 'what is new this week', 'anything new this week', 'what is new here', 'what is the latest on this site', 'last updated', 'last update', 'when was this site updated', 'when was the site updated']],
+      weight: 56, noProject: true, followups: ['What are you working on right now?', 'What is launching soon?', 'What should I look at first?'],
+      answer: bullets(`The latest update to this site is ${latest.version}:`, [latest.summary, 'Every update is listed on /status']),
+    },
+    {
+      id: 'bot-message-him',
+      all: [['say hi to atharva', 'say hello to atharva', 'tell atharva', 'tell him i said hi', 'pass a message', 'give atharva a message', 'message for atharva', 'send a message to atharva', 'say hi to him', 'pass this on', 'can you tell him', 'can you tell atharva']],
+      weight: 60, noProject: true, contact: true, followups: S,
+      answer: bullets("I can't pass messages along, but you can reach him directly:", ['The contact form (/contact) is read personally', `Email: ${CONTACT.email}`]),
+    },
+    {
+      id: 'site-cadence',
+      all: [['how often do you update', 'how often is this site updated', 'how often is the site updated', 'how often is this updated', 'how frequently do you update', 'is this site kept up to date', 'is this up to date', 'is this current']],
+      weight: 56, noProject: true, followups: ['What is the latest update?', 'What are you working on right now?', 'What should I look at first?'],
+      answer: bullets('The project info is checked against GitHub about once a week.', ['Every update is written up on /status', 'Versions and licenses on the site come from the repositories']),
+    },
+  ];
+}
+
 const FALLBACK: KbEntry = {
   id: 'fallback',
   all: [['__never_matches__']],
@@ -1025,7 +1186,7 @@ const FALLBACK: KbEntry = {
 };
 
 export function buildKb(): KbBundle {
-  const entries = refine([...globalEntries(), ...extraEntries(), ...skillEntries(), ...[...PROJECTS].sort(byOrder).flatMap(projectEntries)]);
+  const entries = refine([...globalEntries(), ...extraEntries(), ...personalityEntries(), ...skillEntries(), ...[...PROJECTS].sort(byOrder).flatMap(projectEntries)]);
   return { entries, grounding: buildGrounding(), fallback: FALLBACK };
 }
 

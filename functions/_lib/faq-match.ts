@@ -12,6 +12,8 @@ export interface KbEntry {
   maxWords?: number;
   contact?: boolean;
   followups?: string[];
+  /** Other ways to open the same answer (replace its first line), picked by the question so replies don't all sound alike. */
+  alts?: string[];
 }
 
 // Text-speak that people type on a phone; mapped before matching, whole tokens only.

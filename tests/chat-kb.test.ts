@@ -26,6 +26,16 @@ test('answers are a lead line plus "- " bullets, never loose paragraphs', () => 
   }
 });
 
+test('alternative opening lines are single, plain lines (no dashes) and are used by the function', () => {
+  for (const e of entries) {
+    for (const a of e.alts ?? []) {
+      assert.ok(a.trim().length > 3 && !a.includes('\n'), `${e.id}: alt must be one line`);
+      assert.ok(!/[—–]| -- /.test(a), `${e.id}: no dashes in alt`);
+    }
+  }
+  assert.ok(entries.some((e) => (e.alts?.length ?? 0) > 0), 'some entries have alternative voices');
+});
+
 test('every URL in an answer is https or a known site path', () => {
   const urls = entries.flatMap((e) => e.answer.match(/https?:\/\/\S+/g) ?? []);
   for (const u of urls) assert.match(u, /^https:\/\//, `insecure/odd url ${u}`);
