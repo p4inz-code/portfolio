@@ -57,7 +57,7 @@ crawlable and canonical.
   protection for boards on shared drives. Windows installer, Linux
   AppImage, macOS builds for Apple Silicon and Intel. Shipping most weeks
   with no fixed roadmap.
-  This is the flagship free product. Status: **Flagship · Active · v9.8.2**.
+  This is the flagship free product. Status: **Flagship · Active · v9.8.3**.
 - [Pursue OS](https://atharvapatil.tech/pursue-os/): Investigation-focused
   Linux OS for OSINT, DFIR, secure research, intelligence gathering /
   evidence-driven workflows. Two flagship interfaces: Investigation
@@ -98,6 +98,7 @@ crawlable and canonical.
   (`mink repl`). **Apache 2.0**, open source. Rust, just under 3,000
   native-execution regression tests (up from 1928 at v1.0.0). v1.0.4
   (26 Sept 2026) fixes a build failure in v1.0.3; the npm package serves it.
+  A larger update (v1.3.0) is in progress, likely about a month away.
   Status: **Released · v1.0.4**.
 - [Project Ascent](https://atharvapatil.tech/ascent/): 25-level, 5-act 2D
   precision platformer built in Godot 4. Full moveset from the start
@@ -131,6 +132,23 @@ crawlable and canonical.
   pre-v1." License: **source-available**, free to use for any purpose
   including commercial work; the source can be read and contributed to but
   not redistributed or used in a competing product. Not open source.
+- [Kanvaz Mini](https://github.com/p4inz-code/kanvaz-mini): A small,
+  always-on-top reference window for images and GIFs, the quick version
+  of Kanvaz and a separate app. Move, scale, rotate, flip, arrange into
+  rows, grayscale value check, click-through tracing mode, opens PureRef
+  .pur boards, saves .kmini files. Never uses the network. Windows and
+  Linux. **MIT**. Status: **Released · v0.1.0**.
+- [Outlinedesk](https://github.com/p4inz-code/outlinedesk): Offline
+  production planner for animation, VFX and game studios: graph, table,
+  board and timeline views, dependencies, critical path, baselines,
+  custom columns and formulas, Excel and CSV import and export,
+  automation rules, sharing through a folder. No account, no telemetry.
+  Windows and Linux; source is private (proprietary). Paid after a free
+  27-day trial; prices are in the repository README. Status: **Release
+  Candidate · v1.6.0**, full release coming soon.
+- Painfree Vault (no public repository): A private, offline-first
+  personal security vault for Android. Early development, no public
+  release yet. Proprietary. Status: **Coming Soon · In development**.
 Not listed on purpose: Docflow (discontinued, won't restart) and a Discord
 bot repo at `github.com/p4inz-code/p4inz` (not dead, just postponed. The
 work is done, it's on hold for hosting-budget reasons, expected back on the

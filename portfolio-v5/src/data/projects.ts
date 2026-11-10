@@ -42,6 +42,8 @@ export interface Project {
   platforms?: string[];
   /** Owner-confirmed: a release is on the way. No dates, no promises of detail. */
   comingSoon?: string;
+  /** What it costs, where that is known and worth stating. Used by the chat. */
+  pricing?: string;
   role?: string;
   started?: string;
   currentVersion?: string;
@@ -130,7 +132,7 @@ export const PROJECTS: Project[] = [
     tagline: 'Your canvas. Your references.',
     description:
       'Visual reference workspace for VFX and 3D artists. Live 3D model preview (glTF, OBJ, FBX, STL, USD, and more), typed connections with a Map View, a Scratch Board drawing layer, a Task Tracker, shared cards across boards, MoodLock (a read-only, always-on-top view for working from references), and 14 board templates. Plugin system with a local-only MCP Bridge: an AI agent can read and edit the active board, off by default and undo-reversible. Windows, macOS and Linux builds. Free forever, MIT-licensed, no telemetry.',
-    status: { kind: 'active', label: 'Flagship · Active · v9.8.2' },
+    status: { kind: 'active', label: 'Flagship · Active · v9.8.3' },
     category: 'app',
     tags: ['Electron', 'MIT'],
     metaTags: ['Electron', 'MIT', 'Open Source'],
@@ -150,10 +152,10 @@ export const PROJECTS: Project[] = [
     platforms: ['Windows', 'macOS', 'Linux'],
     role: 'Sole engineer + designer',
     started: 'June 2026',
-    currentVersion: 'v9.8.2',
+    currentVersion: 'v9.8.3',
     comingSoon: 'Next release coming soon.',
     nextMilestone: 'Shipping most weeks, driven by user feedback. No fixed roadmap.',
-    notes: 'Week of 26 Oct 2026: no new release (v9.8.2 is still the latest), but the user guide and landing page were rebuilt. The guide now has instant search plus Installation, FAQ, Cookbook, Always on top, System requirements, Privacy, Troubleshooting, Glossary and Contact pages, and the landing page picks the download for your OS. The repo also moved to Electron 44.10.0 to clear an npm audit warning; that is not in a release yet. v9.8.2 (7 Oct 2026) gave MoodLock a titlebar lock button, arrow-key flipping through references and a remembered window position. v9.8.1 (6 Oct) introduced MoodLock (Ctrl+Shift+L: isolate cards, hide all chrome, stay on top, read-only), fixed "Always on top" losing to apps like ZBrush, and added a 14-second README walkthrough. v9.8.0 (4 Oct) added overwrite protection for boards on shared drives, reading-order Presentation Mode, a live user guide at p4inz-code.github.io/kanvaz and CI-verified release assets. Before that, v9.7.0 (30 Sept 2026) added an official AI Export plugin (a JSON + Markdown export of the board any AI agent can read, no MCP connection or server needed), Home Screen window controls, and separate Apple Silicon and Intel macOS installers, plus a fix to an async board-switching bug. Between v8.8.5 and v9.6.0 (Sept 2026) there were ten more releases: security/platform hardening (v9.0.0), 13 render modes plus Kanvaz Link and Open With (v9.1.0), a Blender picker and preview quality gates (v9.2.0), OBJ material support and HDR/EXR previews (v9.3.0), Krita/Clip Studio/Procreate recognition (v9.4.0), a third board type, Scratch Board, with board-wide annotations and Illustrator-style tools (v9.5.0), and a second pass fixing Map View overlap, a Windows dialog-freeze bug, and BMP export (v9.6.0). Screenshots on the case study page are the real v9.6.0 set from the repository, plus the new walkthrough clip.',
+    notes: 'v9.8.3 (5 Nov 2026) moved to Electron 44.10.0 for two security advisories, turned the user guide into a searchable site with Installation, FAQ, Cookbook, Troubleshooting, Glossary and Contact pages, introduced Kanvaz Mini as a separate smaller app, added a z-order diagnostic for Kanvaz going behind ZBrush, and set up weekly maintenance checks. v9.8.2 (7 Oct 2026) gave MoodLock a titlebar lock button, arrow-key flipping through references and a remembered window position. v9.8.1 (6 Oct) introduced MoodLock (Ctrl+Shift+L: isolate cards, hide all chrome, stay on top, read-only), fixed "Always on top" losing to apps like ZBrush, and added a 14-second README walkthrough. v9.8.0 (4 Oct) added overwrite protection for boards on shared drives, reading-order Presentation Mode, a live user guide at p4inz-code.github.io/kanvaz and CI-verified release assets. Before that, v9.7.0 (30 Sept 2026) added an official AI Export plugin (a JSON + Markdown export of the board any AI agent can read, no MCP connection or server needed), Home Screen window controls, and separate Apple Silicon and Intel macOS installers, plus a fix to an async board-switching bug. Between v8.8.5 and v9.6.0 (Sept 2026) there were ten more releases: security/platform hardening (v9.0.0), 13 render modes plus Kanvaz Link and Open With (v9.1.0), a Blender picker and preview quality gates (v9.2.0), OBJ material support and HDR/EXR previews (v9.3.0), Krita/Clip Studio/Procreate recognition (v9.4.0), a third board type, Scratch Board, with board-wide annotations and Illustrator-style tools (v9.5.0), and a second pass fixing Map View overlap, a Windows dialog-freeze bug, and BMP export (v9.6.0). Screenshots on the case study page are the real v9.6.0 set from the repository, plus the new walkthrough clip.',
   },
   {
     slug: 'pursue-os',
@@ -309,6 +311,7 @@ export const PROJECTS: Project[] = [
     role: 'Sole engineer',
     started: '2026',
     currentVersion: 'v1.0.4',
+    comingSoon: 'Next release (v1.3.0) is in progress, likely about a month away.',
     nextMilestone: 'Linux support (the previous milestone) is done and execution-verified via WSL. Ongoing work is Windows API-parity coverage against Python, tracked session-by-session in the repo.',
     notes: 'v1.0.0 shipped 2026-08-24 with 1928 compiler tests. Between v1.0.1 and v1.0.3 it gained a full Linux x86_64 backend, real threads and an async runtime, a package manager, a test runner, a REPL, regex, TLS networking, and DEFLATE/zip compression, taking the regression suite to just under 3,000 native-execution tests. v1.0.2 to v1.0.4 are real, tagged versions without formal GitHub release notes the way v1.0.0/v1.0.1 have. v1.0.4 (26 Sept 2026) fixes a `mod collections;` build failure that v1.0.3 shipped with, and the npm package now serves v1.0.4.',
   },
@@ -445,6 +448,86 @@ export const PROJECTS: Project[] = [
     role: 'Creator',
     started: '2026',
     nextMilestone: 'Ongoing documentation and worked-example expansion.',
+  },
+  {
+    slug: 'kanvaz-mini',
+    name: 'Kanvaz Mini',
+    tagline: 'A small reference window that stays on top of your work.',
+    description:
+      'The quick version of Kanvaz: a small, always-on-top reference window for images and GIFs. Drop, paste or open images, then move, scale, rotate, flip and arrange them into rows. Grayscale checks values, and a click-through tracing mode lets you draw over a reference. It opens PureRef .pur boards and saves single .kmini files. Free, MIT-licensed, and it never uses the network. It is a separate app from Kanvaz, not a mode inside it.',
+    status: { kind: 'released', label: 'Released · v0.1.0' },
+    category: 'app',
+    tags: ['Electron', 'MIT', 'Windows', 'Linux'],
+    metaTags: ['Electron', 'MIT', 'Open Source'],
+    media: { src: '/assets/kanvaz-mini/kanvaz-mini-board.webp', alt: 'Kanvaz Mini showing eight reference images arranged into rows.', kind: 'screenshot', ratio: '1000 / 640' },
+    featured: false,
+    order: 16,
+    href: 'https://github.com/p4inz-code/kanvaz-mini',
+    isExternal: true,
+    links: [
+      { label: 'View on GitHub', href: 'https://github.com/p4inz-code/kanvaz-mini', external: true },
+      { label: 'Download latest', href: 'https://github.com/p4inz-code/kanvaz-mini/releases/latest', external: true },
+      { label: 'Guide page', href: 'https://p4inz-code.github.io/kanvaz/guide/kanvaz-mini.html', external: true },
+    ],
+    license: 'MIT',
+    stack: ['Electron', 'JavaScript'],
+    platforms: ['Windows', 'Linux'],
+    role: 'Sole engineer',
+    started: 'October 2026',
+    currentVersion: 'v0.1.0',
+    nextMilestone: 'macOS is not targeted yet: keep-on-top over full-screen apps has not been tested there.',
+    notes: 'First release 29 Oct 2026. Introduced alongside Kanvaz v9.8.3 as the smaller companion app.',
+  },
+  {
+    slug: 'outlinedesk',
+    name: 'Outlinedesk',
+    tagline: 'Plan the whole production. See what slips, and why.',
+    description:
+      'Offline production planner for animation, VFX and game studios. You lay out sequences, shots and tasks and say which work depends on which, and it works out dates, progress, the critical path and risks. It has graph, table, board and timeline views, a status grid with one row per shot, a working calendar with holiday packs, baselines, custom columns and formulas, Excel and CSV import and export, and local automation rules. A project is one file on your own computer or shared drive, shared through a folder, with no account and no telemetry. A Blender add-on exists. Windows and Linux; the source is private.',
+    status: { kind: 'testing', label: 'Release Candidate · v1.6.0' },
+    category: 'app',
+    tags: ['Windows', 'Linux', 'Planning'],
+    metaTags: ['Windows', 'Linux', 'Paid'],
+    media: { src: '/assets/outlinedesk/outlinedesk-graph.webp', alt: 'Outlinedesk graph view in the dark theme.', kind: 'screenshot', ratio: '1400 / 876' },
+    featured: false,
+    order: 17,
+    href: 'https://github.com/p4inz-code/outlinedesk',
+    isExternal: true,
+    links: [
+      { label: 'Downloads and guides', href: 'https://github.com/p4inz-code/outlinedesk', external: true },
+      { label: 'Website', href: 'https://p4inz-code.github.io/outlinedesk/', external: true },
+    ],
+    license: 'Proprietary',
+    platforms: ['Windows', 'Linux'],
+    role: 'Sole engineer',
+    started: '2026',
+    currentVersion: 'v1.6.0',
+    comingSoon: 'Full release coming soon.',
+    pricing: 'Paid, with a free 27-day trial of every feature. Prices are in Indian rupees and listed in the repository README.',
+    nextMilestone: 'The 1.6.0 release candidate is for outside testers, so expect rough edges. Team changes arrive when files sync rather than live, roles are by convention, there is no Mac version and the installers are not code-signed yet.',
+    notes: 'The public repository hosts downloads, guides and release notes only; the source is private.',
+  },
+  {
+    slug: 'painfree-vault',
+    name: 'Painfree Vault',
+    tagline: 'A private, offline vault for Android.',
+    description:
+      'A private, offline-first personal security vault for Android, made by P4inz Interactive Labs. It is in early development and has no public release yet.',
+    status: { kind: 'comingSoon', label: 'Coming Soon · In development' },
+    category: 'app',
+    tags: ['Android', 'Offline'],
+    metaTags: ['Android', 'Proprietary'],
+    featured: false,
+    order: 18,
+    href: '/work',
+    isExternal: false,
+    links: [],
+    license: 'Proprietary',
+    platforms: ['Android'],
+    role: 'Sole engineer',
+    started: 'October 2026',
+    comingSoon: 'Coming soon. It is in early development with no release date yet.',
+    nextMilestone: 'The security foundation (crypto core, encrypted storage and history, authentication) is built and tested. The interface is next.',
   },
 ];
 

@@ -36,7 +36,7 @@ for (const p of PROJECTS) {
     FOLLOW.forEach(([q, intent], fi) => {
       if ((oi + fi) % 3 !== 0) return; // a rotating third of the grid keeps this fast and varied
       const id = `${p.slug}:${intent}`;
-      dialogues.push({ name: `${p.slug}: ${open} -> ${q}`, turns: [{ q: open, expect: `${p.slug}:overview` }, { q, expect: byId.has(id) ? id : '-|' + p.slug + ':' }] });
+      dialogues.push({ name: `${p.slug}: ${open} -> ${q}`, turns: [{ q: open, expect: `${p.slug}:overview` }, { q, expect: byId.has(id) ? id : '-|profiles|' + p.slug + ':' }] });
     });
   });
 

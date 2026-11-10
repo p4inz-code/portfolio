@@ -20,6 +20,17 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.53.0',
+    kind: 'released',
+    summary: "Weekly update, week of 2 November: Kanvaz v9.8.3, Kanvaz Mini, Outlinedesk and Painfree Vault added.",
+    body: [
+      "Kanvaz is at v9.8.3 (5 November): Electron 44.10.0 for two security advisories, a searchable guide site, and weekly maintenance checks. The Kanvaz page now mentions Kanvaz Mini.",
+      "Three projects were added. Kanvaz Mini (v0.1.0, MIT, Windows and Linux) is a small always-on-top reference window and a separate app from Kanvaz. Outlinedesk is an offline production planner for animation, VFX and game studios, at release candidate v1.6.0 for Windows and Linux with a paid plan after a free 27-day trial; its source is private. Painfree Vault is a private offline vault for Android that is still in early development, so it is listed as coming soon with no further details.",
+      "The chat can now tell Kanvaz Mini apart from Kanvaz when a question names the smaller app.",
+      "MINK is marked as in progress: its next release, v1.3.0, is likely about a month away. v1.0.4 is still the latest published version.",
+    ],
+  },
+  {
     version: 'v5.52.0',
     kind: 'released',
     summary: "Weekly update, week of 26 October: Kanvaz guide rebuilt, user guide link added.",

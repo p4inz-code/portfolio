@@ -72,10 +72,28 @@ function rank(entries: KbEntry[], q: string): KbEntry[] {
   if (!q) return [];
   const tokens = q.split(' ');
   const padded = ` ${q} `;
-  const hits = entries.filter((e) => entryMatches(e, padded, tokens));
+  let hits = entries.filter((e) => entryMatches(e, padded, tokens));
   if (hits.length === 0) return [];
 
-  const mentioned = new Set(hits.filter((e) => e.project).map((e) => e.project as string));
+  let mentioned = new Set(hits.filter((e) => e.project).map((e) => e.project as string));
+  if (mentioned.size > 1) {
+    // "Kanvaz Mini" also contains "Kanvaz": when one project's name sits inside another
+    // project's longer name that is also in the question, the longer one wins.
+    const present = new Map<string, string[]>();
+    for (const m of mentioned) {
+      const ov = entries.find((e) => e.id === `${m}:overview`);
+      present.set(m, (ov?.all[0] ?? []).filter((t) => padded.includes(` ${t} `)));
+    }
+    const dominated = new Set(
+      [...mentioned].filter((m) =>
+        [...mentioned].some((n) => n !== m && present.get(n)!.some((an) => present.get(m)!.some((am) => an !== am && ` ${an} `.includes(` ${am} `)))),
+      ),
+    );
+    if (dominated.size) {
+      hits = hits.filter((e) => !e.project || !dominated.has(e.project));
+      mentioned = new Set(hits.filter((e) => e.project).map((e) => e.project as string));
+    }
+  }
   if (mentioned.size > 1) return [];
 
   const candidates = hits.filter((e) => !(e.noProject && mentioned.size > 0));

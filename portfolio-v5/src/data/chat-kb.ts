@@ -49,6 +49,9 @@ const ALIASES: Record<string, string[]> = {
   'mission-os': ['mission os', 'missionos'],
   nexus: ['nexus'],
   kanvaz: ['kanvaz', 'kanvas', 'canvaz'],
+  'kanvaz-mini': ['kanvaz mini', 'kanvazmini'],
+  outlinedesk: ['outlinedesk', 'outline desk'],
+  'painfree-vault': ['painfree vault', 'painfreevault', 'painfree'],
   'pursue-os': ['pursue os', 'pursue', 'pursueos'],
   veris: ['veris', 'veris cli'],
   ascent: ['ascent', 'project ascent'],
@@ -186,7 +189,7 @@ function projectEntries(p: Project): KbEntry[] {
       all: a('next'),
       weight: INTENT_WEIGHT.next,
       followups: followFor('next'),
-      answer: bullets(`${p.name}: what's next`, [p.nextMilestone]),
+      answer: bullets(`${p.name}: what's next`, [...(p.comingSoon ? [p.comingSoon] : []), p.nextMilestone]),
     });
   }
 
@@ -196,7 +199,7 @@ function projectEntries(p: Project): KbEntry[] {
     cost = `${p.name} is client/event work, a website built for someone else, not a product with a price.`;
     license = `${p.name} is a client/event website, not a product released under a license.`;
   } else if (p.license === 'Proprietary') {
-    cost = `${p.name} is proprietary, and no price is listed on this site.`;
+    cost = p.pricing ? `${p.name}: ${p.pricing}` : `${p.name} is proprietary, and no price is listed on this site.`;
     license = `${p.name} is proprietary. The source isn't public.`;
   } else if (p.license === 'Source-available') {
     cost = `${p.name} is free to use for any purpose, including commercial work.`;
