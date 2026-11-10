@@ -7,7 +7,7 @@ interface Body {
   slug: string; name: string; tagline: string; kind: string; status: string; license: string | null;
   href: string; external: boolean; version: string | null; date: string | null; created: string | null;
   galaxy: number; stack: string[]; latestUrl: string | null; repo: string | null; recency: number;
-  releases: [string, string, string][];
+  releases: [string, string, string][]; site: string | null;
 }
 interface UData { checkedAt: string; bodies: Body[]; galaxies: string[]; latest: { name: string; tag: string; date: string } }
 interface P3 { b: Body; el: HTMLAnchorElement; p: PBody; vis: boolean; label: HTMLElement; ver: HTMLElement; trail: { x: number; y: number }[]; hue: number; px: number }
@@ -67,6 +67,7 @@ export function initUniverse() {
       const sats = b.stack.slice(0, 3).map((s, k) => `<i class="sat" title="${s.replace(/"/g, '')}" style="--r:${Math.round(d * 0.78 + k * 16)}px;--t:${8 + k * 3.5 + rng() * 3}s;--delay:${-rng() * 8}s"></i>`).join('');
       el.innerHTML = `<span class="planet" style="animation-duration:${30 + Math.round(rng() * 30)}s"><span class="ring"></span></span><span class="sats">${sats}</span><span class="uni-label"><b></b><small><span class="light" data-kind="${b.kind}"></span><span class="v"></span></small></span>`;
       (el.querySelector('b') as HTMLElement).textContent = b.name;
+      if (b.site) el.dataset.site = '1';
       const ver = el.querySelector('.v') as HTMLElement;
       ver.textContent = b.version ?? b.status.split(' · ')[0];
       cam.appendChild(el);
@@ -241,9 +242,10 @@ export function initUniverse() {
     if (b.license) row('License', b.license);
     if (b.stack.length) row('Built with', b.stack.slice(0, 5).join(', '));
     const acts = $('#uni-p-acts', panel)!; acts.innerHTML = '';
-    const a1 = document.createElement('a'); a1.className = 'primary'; a1.href = b.href; a1.textContent = b.external ? 'Open project' : 'Open case study';
+    if (b.site) { const w = document.createElement('a'); w.className = 'primary'; w.href = b.site; w.target = '_blank'; w.rel = 'noopener noreferrer'; w.textContent = 'Visit website'; acts.appendChild(w); }
+    const a1 = document.createElement('a'); a1.className = b.site ? '' : 'primary'; a1.href = b.href; a1.textContent = b.external ? 'Open project' : 'Open case study';
     if (b.external) { a1.target = '_blank'; a1.rel = 'noopener noreferrer'; }
-    acts.appendChild(a1);
+    if (!(b.site && b.href === b.site)) acts.appendChild(a1);
     if (b.repo && !(b.external && b.href.startsWith(b.repo))) { const a2 = document.createElement('a'); a2.href = b.repo; a2.target = '_blank'; a2.rel = 'noopener noreferrer'; a2.textContent = 'GitHub'; acts.appendChild(a2); }
     const sl = $('#uni-p-stamp', panel)!; sl.innerHTML = '';
     if (b.latestUrl) { sl.append(`Checked ${fmtShort(data.checkedAt)} against GitHub · `); const l = document.createElement('a'); l.href = b.latestUrl; l.target = '_blank'; l.rel = 'noopener noreferrer'; l.textContent = 'release ' + b.version; sl.appendChild(l); }

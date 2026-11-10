@@ -38,6 +38,8 @@ const bodies = PROJECTS.filter((p) => p.slug in GALAXY).map((p) => {
     repo: t?.repo ?? null,
     recency: ref ? Math.max(0, Math.min(1, 1 - days(ref) / 140)) : 0.2,
     releases: t?.releases ?? [],
+    // the project's own website (GitHub Pages) when it has one
+    site: p.links.find((l) => /^(website|guide page)$/i.test(l.label) && /github\.io/.test(l.href))?.href ?? null,
   };
 });
 const latest = [...bodies].filter((b) => b.date).sort((a, b) => b.date!.localeCompare(a.date!))[0];
