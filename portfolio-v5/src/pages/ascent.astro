@@ -12,10 +12,11 @@ const softwareJsonLd = {
   '@type': 'SoftwareApplication',
   '@id': 'https://atharvapatil.tech/ascent/#software',
   name: 'Project Ascent',
-  description: '25-level, 5-act 2D precision platformer built in Godot 4. Offline-first, cross-platform.',
+  description: 'Free, open source 2D platformer with 40 levels and 8 bosses, built in Godot 4. Levels rebuild themselves every time you die. Cross-platform, no accounts or tracking.',
   applicationCategory: 'GameApplication',
   operatingSystem: 'Windows, macOS, Linux, Web',
   softwareVersion: project.currentVersion,
+  license: 'https://www.gnu.org/licenses/gpl-3.0.html',
   url: 'https://atharvapatil.tech/ascent/',
   author: { '@id': 'https://atharvapatil.tech/#person' },
   keywords: 'Project Ascent, project ascent p4inz, project ascent painz, p4inz game dev, Godot platformer',
@@ -38,75 +39,144 @@ const moveset = [
   { name: 'Wall slide + wall jump', desc: 'Run into a wall with speed to catch it.' },
   { name: 'Dash', desc: 'Air dash with landing refresh and momentum handling.' },
   { name: 'Spin', desc: 'Double-tap jump in mid-air for brief hazard invulnerability on a cooldown.' },
-  { name: 'Slide, ground pound, wall run, ledge grab, grapple', desc: 'Six more verbs, only three of which claim their own key: the rest derive from inputs the player already knows.' },
+  { name: 'Slide, ground pound, wall run, ledge grab, grapple', desc: 'Five more verbs, only some of which claim their own key: the rest derive from inputs the player already knows.' },
+  { name: 'Slash + three health cells', desc: 'Slash drones, flip switches and stun chasers. Spikes and drones take one cell, lava takes all three.' },
+  { name: 'One-charge abilities', desc: 'Super jump and glide pickups, spent with the ability key.' },
 ];
 
 const acts = [
-  { act: 'Act I: Learn', levels: 'L1-L5', desc: 'Introduction to movement. Jump, dash, precision. Ends with the first boss chase.' },
-  { act: 'Act II: Master', levels: 'L6-L10', desc: 'Longer levels, tighter precision, movement combinations. Second boss encounter.' },
-  { act: 'Act III: Survive', levels: 'L11-L15', desc: 'Environmental pressure, demanding routes. Shadow Chase boss.' },
-  { act: 'Act IV: Endure', levels: 'L16-L20', desc: 'High difficulty, complex combinations. Tempest 2-phase boss.' },
-  { act: 'Act V: Ascend', levels: 'L21-L25', desc: 'Maximum challenge, endurance, final escalation. Dawn 3-phase final boss.' },
+  { act: 'Act I: Cinder', levels: 'L1-L5', desc: 'Ends with the Borer: an auto-run over thin tiles on a lava lake while it surfaces behind you.' },
+  { act: 'Act II: Scrapyard', levels: 'L6-L10', desc: 'The first levels that rebuild on every death. Ends with the Compactor, a climb up a shaft with a rising flood and falling junk.' },
+  { act: 'Act III: Freezer', levels: 'L11-L15', desc: "Ends with the Warden's Mile: an ice corridor, a lantern-carrying Warden and shadow pockets to hide in." },
+  { act: 'Act IV: Storm', levels: 'L16-L20', desc: 'Ends with the Tempest: ground-pound the reactor rods while lightning strikes where you stood a moment ago.' },
+  { act: 'Act V: Summit Forge', levels: 'L21-L25', desc: 'Ends with Dawn: outrun a collapse across heat vents.' },
+  { act: 'Act VI: Underworks', levels: 'L26-L30', desc: 'Ends with the Hive.' },
+  { act: 'Act VII: Rift', levels: 'L31-L35', desc: 'Ends with the Rift Warden, a black hole that chases you.' },
+  { act: 'Act VIII: Core', levels: 'L36-L40', desc: 'Ends with the Echo exam, which remixes pieces from five of the earlier acts.' },
 ];
 
 const bosses = [
-  { level: 'L5', boss: 'First Chase', minions: 4, speed: '170 px/s' },
-  { level: 'L10', boss: 'Master Escape', minions: 5, speed: '220 px/s' },
-  { level: 'L15', boss: 'Shadow Chase', minions: 5, speed: '200 px/s' },
-  { level: 'L20', boss: 'Tempest', minions: 6, speed: '250 px/s' },
-  { level: 'L25', boss: 'Dawn (Final)', minions: 6, speed: '300 px/s' },
+  { level: 'L5', boss: 'The Borer', format: 'Lava runner' },
+  { level: 'L10', boss: 'The Compactor', format: 'Flood climb' },
+  { level: 'L15', boss: 'The Warden', format: 'Stealth hunt' },
+  { level: 'L20', boss: 'The Tempest', format: 'Lightning arena' },
+  { level: 'L25', boss: 'Dawn', format: 'Collapse and heat vents' },
+  { level: 'L30', boss: 'The Hive', format: 'Machine level with a chase' },
+  { level: 'L35', boss: 'The Rift Warden', format: 'Black hole' },
+  { level: 'L40', boss: 'The Echo', format: 'Exam' },
 ];
 ---
-<BaseLayout scene={project.scene} title="Project Ascent: Precision Platformer · Atharva Patil" description="25-level, 5-act 2D precision platformer built in Godot 4. Full moveset from the start, five boss chases, offline-first. Playable in the browser on itch.io." keywords="Project Ascent, project ascent p4inz, project ascent painz, p4inz game dev, painz platformer, Godot platformer, itch.io platformer" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
+<BaseLayout scene={project.scene} title="Project Ascent: 40-Level Platformer · Atharva Patil" description="Free, open source 2D platformer with 40 levels and 8 bosses, built in Godot 4. Levels rebuild themselves every time you die. The redesign is in development and v0.18.0 is the official test release. Playable in the browser on itch.io." keywords="Project Ascent, project ascent p4inz, project ascent painz, p4inz game dev, painz platformer, Godot platformer, itch.io platformer" extraJsonLd={[softwareJsonLd, breadcrumbJsonLd]}>
   <CaseHero project={project} />
 
   <section class="stat-row-wrap">
     <div class="wrap">
       <dl class="stat-row">
-        <div class="stat-cell"><dt>Levels</dt><dd>25</dd></div>
-        <div class="stat-cell"><dt>Acts</dt><dd>5</dd></div>
-        <div class="stat-cell"><dt>Boss chases</dt><dd>5</dd></div>
-        <div class="stat-cell"><dt>Test suites</dt><dd>18</dd></div>
+        <div class="stat-cell"><dt>Levels</dt><dd>40</dd></div>
+        <div class="stat-cell"><dt>Acts</dt><dd>8</dd></div>
+        <div class="stat-cell"><dt>Bosses</dt><dd>8</dd></div>
+        <div class="stat-cell"><dt>Test scripts</dt><dd>100+</dd></div>
       </dl>
     </div>
   </section>
 
-  <Section eyebrow="What it is" heading="One idea: the only thing between you and the top is your own timing.">
+  <Section eyebrow="What it is" heading="A climber, a rotten tower, and levels that re-roll every time you die.">
     <div class="body-copy">
-      <p>Project Ascent gives you the full moveset from the start. Nothing is locked behind progress. The levels get harder because they ask more of the same tools, not because they hand you a new one every ten minutes.</p>
-      <p>Offline-first: no accounts, no backend, no ads, and no network runtime. The only thing that ever touches the network is an optional update check over HTTPS with a required checksum.</p>
+      <p>You fall out of the sky into the Spire, a tower with no ground below it. The way out is a gate at the top that needs 100 cores, and PIP, the AI in your suit, comes along for the climb and is not nice about it. The whole moveset is yours from the first second. Nothing is locked behind progress, and the levels get harder because they ask more of the same tools.</p>
+      <p>From level 6 on, every death rolls a new version of the level, with different obstacles, pits and timing. A bot plays each roll before you see it, so every level you get can be beaten. You just never get the same one twice. There are also roll codes to replay one roll and a daily set of seeds.</p>
+      <p>No accounts, no ads and no tracking. The only network traffic is a daily update check that you can turn off, and it never runs in the browser build. The game is free and open source under GPL-3.0.</p>
     </div>
   </Section>
 
-  <Section eyebrow="Screenshots" heading="Live captures from the shipping web build.">
+  <Section eyebrow="Status" heading="The redesign is still in development. v0.18.0 is the official test release.">
+    <div class="body-copy">
+      <p>This version of the game is a rebuild of the first one: 40 levels instead of 25, eight boss formats, slash combat, rolled levels, an Endless mode and a new look. The version before it, v0.14.1, is the last build of the old game.</p>
+      <p>v0.18.0 came out on 18 November 2026 and adds updates inside the game. It is free to play in the browser on <a href="https://p4inz-code.itch.io/project-ascent" target="_blank" rel="noopener noreferrer">itch.io</a> and to download from <a href="https://github.com/p4inz-code/project-ascent/releases/latest" target="_blank" rel="noopener noreferrer">GitHub</a>. Work toward v1.0.0 continues, and the repo roadmap lists what is done, what is tested and what is still open.</p>
+    </div>
+  </Section>
+
+  <Section eyebrow="Screenshots" heading="Captures from the redesign test builds.">
     <div class="shot-grid">
       <Screenshot
-        src="/assets/ascent/ascent-01-level1.png"
-        alt="Project Ascent: Level 1, Act I Introduction. Player silhouette standing on a starting platform beneath a large rising sun against a night sky, HUD showing run timer top-right."
-        caption="Level 1 · Act I: Learn"
-        aspect="16 / 10"
+        src="/assets/ascent/ascent-01-title.webp"
+        alt="Project Ascent title screen: a pixel-art city skyline under a purple moon, an astronaut standing on a brick ledge, and a menu with Play, Tutorial, Endless, Story and Quit."
+        caption="Title screen"
+        aspect="16 / 9"
         span="third"
+        width={1600}
+        height={900}
       />
       <Screenshot
-        src="/assets/ascent/ascent-02-midair.png"
-        alt="Project Ascent: player mid-air between two floating platforms in Level 1, run timer reading 0:00.81, second attempt underway."
-        caption="Mid-air, Level 1"
-        aspect="16 / 10"
+        src="/assets/ascent/ascent-02-borer.webp"
+        alt="Project Ascent, level 5: a red warning banner reading 'The Borer has surfaced' above an astronaut leaping between thin tiles over a lake of lava."
+        caption="Level 5 · The Borer"
+        aspect="16 / 9"
         span="third"
+        width={1600}
+        height={900}
       />
       <Screenshot
-        src="/assets/ascent/ascent-03-controls.png"
-        alt="Project Ascent. The expanded controls panel, listing move, jump, dash, slide, grapple, ability, spin, ground pound, air dash, wall run, and ledge grab with their keyboard and controller bindings."
-        caption="Full controls reference"
-        aspect="16 / 10"
+        src="/assets/ascent/ascent-03-tempest.webp"
+        alt="Project Ascent, level 20 Tempest: an astronaut in a rainy purple landscape with tall lightning rods and a large banded planet in the sky."
+        caption="Level 20 · The Tempest"
+        aspect="16 / 9"
         span="third"
+        width={1600}
+        height={900}
       />
       <Screenshot
-        src="/assets/ascent/ascent-04-pause-menu.png"
-        alt="Project Ascent: pause menu with a glowing neon panel, listing Resume, Restart Level, Settings, Progress, Levels, and Reset Progress. No Quit to Desktop option on the web build."
-        caption="Pause menu (web build)"
-        aspect="16 / 10"
+        src="/assets/ascent/ascent-04-hive.webp"
+        alt="Project Ascent, level 30 The Hive: a teal floor with three green pools set into the floor above lava, and a counter reading Hive 0 of 6."
+        caption="Level 30 · The Hive"
+        aspect="16 / 9"
         span="third"
+        width={1600}
+        height={900}
+      />
+      <Screenshot
+        src="/assets/ascent/ascent-05-core.webp"
+        alt="Project Ascent, level 40 The Core: a red-tinted level with a warning banner reading 'The Echo has found you', a lava pit and two chaser distance markers."
+        caption="Level 40 · The Core"
+        aspect="16 / 9"
+        span="third"
+        width={1600}
+        height={900}
+      />
+      <Screenshot
+        src="/assets/ascent/ascent-06-level-clear.webp"
+        alt="Project Ascent: the Level 7 Cleared card showing time, attempts and cores, with a line from PIP at the top of the screen."
+        caption="Level clear card"
+        aspect="16 / 9"
+        span="third"
+        width={1600}
+        height={900}
+      />
+      <Screenshot
+        src="/assets/ascent/ascent-07-endless.webp"
+        alt="Project Ascent, Endless mode stage 1: a stage that mixes lava, ice, spikes and rain, with a best-score counter under the health cells."
+        caption="Endless mode"
+        aspect="16 / 9"
+        span="third"
+        width={1600}
+        height={900}
+      />
+      <Screenshot
+        src="/assets/ascent/ascent-08-pip.webp"
+        alt="Project Ascent: PIP's suit channel screen, where the player picks STRONG or WEAK mode and sets language and scare levels."
+        caption="PIP and the STRONG / WEAK choice"
+        aspect="16 / 9"
+        span="third"
+        width={1600}
+        height={900}
+      />
+      <Screenshot
+        src="/assets/ascent/ascent-09-character.webp"
+        alt="Project Ascent settings, Character tab: a preview of the astronaut Trevor with gear options and suit, trim and visor colour swatches."
+        caption="Settings · Character"
+        aspect="16 / 9"
+        span="third"
+        width={1600}
+        height={900}
       />
     </div>
   </Section>
@@ -122,7 +192,7 @@ const bosses = [
     </div>
   </Section>
 
-  <Section eyebrow="Campaign" heading="Five acts, twenty-five levels.">
+  <Section eyebrow="Campaign" heading="Eight acts, forty levels.">
     <div class="act-list">
       {acts.map((a) => (
         <div class="act-row">
@@ -134,33 +204,35 @@ const bosses = [
     </div>
   </Section>
 
-  <Section eyebrow="Boss encounters" heading="Every chase runs on a visible countdown.">
+  <Section eyebrow="Boss encounters" heading="Every fifth level is a boss with its own rules.">
     <div class="body-copy">
-      <p>Letting the timer expire speeds the chase up. It never kills you outright.</p>
+      <p>Each boss changes what the level asks of you instead of adding a health bar. The Hive on level 30 is still a machine level with a chase, and a format of its own is still to come.</p>
     </div>
     <table class="boss-table">
       <thead>
-        <tr><th>Level</th><th>Boss</th><th>Minions</th><th>Speed</th></tr>
+        <tr><th>Level</th><th>Boss</th><th>Format</th></tr>
       </thead>
       <tbody>
         {bosses.map((b) => (
-          <tr><td>{b.level}</td><td>{b.boss}</td><td>{b.minions}</td><td>{b.speed}</td></tr>
+          <tr><td>{b.level}</td><td>{b.boss}</td><td>{b.format}</td></tr>
         ))}
       </tbody>
     </table>
   </Section>
 
-  <Section eyebrow="Testing" heading="18 automated suites, including a full 25-level reachability sweep.">
+  <Section eyebrow="Testing" heading="More than 100 automated test scripts, and every rolled level is bot-proven.">
     <div class="body-copy">
       <p>Two of these suites exist because an earlier gate proved the wrong thing. <code>test_level_rhythm.gd</code> checks that no jump demands more rise than the player can actually deliver, using an envelope measured from the real controller rather than assumed from a config value: the reachability suite once passed two levels despite both shipping impossible final jumps, because a bot could reach the ledge by wall-jumping off that ledge's own face. That proves a bot can get there, not that the jump is fair.</p>
       <p><code>test_chaser_ledges.gd</code> asserts a chaser stops at a cliff instead of walking into it. Three previous fixes for "enemies falling" addressed collision layers and a recovery teleport; none of them checked whether there was ground ahead, which was the actual cause.</p>
       <p>The runner also fails a suite on any GDScript parse or compile error, not just a non-zero exit code, since a script that fails to compile otherwise reports zero failures while having asserted nothing at all.</p>
+      <p>The level generator for the rolled levels has its own proof. Every obstacle's timing window is measured by sweeping the real player physics, no window is narrower than five frames, and a perfect bot has to clear 100 rolls without a hit. The updater has a fake GitHub server that runs 13 failure cases over real HTTP, such as a wrong checksum, a changed byte, a dropped connection and a redirect to another site.</p>
     </div>
   </Section>
 
   <Section eyebrow="Platforms" heading="Windows, macOS, Linux, and browser from one codebase.">
     <div class="body-copy">
-      <p>Windows ships with a standalone launcher that checks for updates over a signed HTTPS request. macOS and Linux are real, boot-tested export targets, unzip and run. The web build is playable directly on <a href="https://p4inz-code.itch.io/project-ascent" target="_blank" rel="noopener noreferrer">itch.io</a>. Controller support covers Xbox and PlayStation pads, with on-screen prompts that match whichever is connected. Touch controls for mobile are planned next.</p>
+      <p>Windows ships with a standalone launcher. Since v0.18.0 the game checks GitHub once a day for a newer version, downloads it with a progress bar, compares its SHA-256 against the published checksum, and asks before restarting. If anything fails, the old version keeps working. The check has three modes (Automatic, Notify me and Off) and sends nothing about the player. The web build is playable directly on <a href="https://p4inz-code.itch.io/project-ascent" target="_blank" rel="noopener noreferrer">itch.io</a>.</p>
+      <p>The macOS and Linux builds are provided, but so far they have only been checked for their file layout, not run, and they have no launcher. Windows needs Windows 10 or 11 (64-bit), about 250 MB of memory and 130 MB of disk. Controller prompts match Xbox, PlayStation or Switch pads. Phones and consoles are not supported.</p>
     </div>
   </Section>
 

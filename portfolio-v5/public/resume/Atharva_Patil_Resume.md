@@ -64,7 +64,7 @@ Software engineer and product builder focused on desktop applications, developer
 
 ### Additional projects
 
-- Project Ascent: 25-level 2D precision platformer, Godot 4 · shipped to itch.io with an 18-suite automated test process
+- Project Ascent: 40-level 2D platformer with levels that rebuild on every death, Godot 4 · free on itch.io, redesign in development, 100+ automated test scripts
 - Obscura: Luau AST toolkit for Roblox developers · MIT · v1.0.0, 340/340 tests passing
 
 ---

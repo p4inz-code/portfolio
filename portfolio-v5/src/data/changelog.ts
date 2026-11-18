@@ -20,6 +20,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: 'v5.60.0',
+    kind: 'released',
+    summary: "Project Ascent page rewritten for the redesign: v0.18.0 test release, 40 levels, new screenshots and a new hero clip.",
+    body: [
+      "The Ascent page still described the old game (25 levels, 5 acts, v0.14.1, \"under rework\"). It now matches the repo: 40 levels in 8 acts, a boss every fifth level in a different format, levels that rebuild on every death after level 5, slash combat and three health cells, an Endless mode, and PIP. The status reads Redesign in Development, because the redesign is not finished, and says that v0.18.0 (18 November 2026) is the official test release. The license is corrected from Proprietary to GPL-3.0.",
+      "All four old screenshots (web captures from v0.14) are replaced by nine from the redesign: title screen, the Borer, the Tempest, the Hive, the Core, the level clear card, Endless, PIP's STRONG or WEAK choice and the character settings. The hero clip on the home page and the Work page is new too, and fades through five of those captures. It is a slideshow of real screenshots, not recorded gameplay, and the alt text says so.",
+      "The boss table of chase speeds, which belonged to the old game, is replaced by a table of the eight boss formats. The Platforms text no longer calls the macOS and Linux builds boot-tested: the repo says they have only been checked for their file layout, so the page says that. The test count is now 100+ scripts (103 in the repo), not 18. About, the resume page and its Markdown file, llms.txt and the chat answers follow the same data. The resume PDF still has the old Ascent line and needs a re-render.",
+    ],
+  },
+  {
     version: 'v5.59.0',
     kind: 'released',
     summary: "Fuller, always-current files for search engines and AI tools, and Kanvaz v9.8.4 and Kanvaz Mini v0.2.0.",
